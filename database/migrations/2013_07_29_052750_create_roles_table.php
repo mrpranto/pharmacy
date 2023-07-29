@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100)->unique();
             $table->text('description')->nullable();
-            $table->foreignId('created_by')->nullable()->constrained('users', 'id');
-            $table->foreignId('updated_by')->nullable()->constrained('users', 'id');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->boolean('is_delete_able')->default(true);
             $table->timestamps();
         });
     }

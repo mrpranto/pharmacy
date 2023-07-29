@@ -13,7 +13,7 @@ class Role extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['name', 'description', 'created_by', 'updated_by'];
+    protected $fillable = ['name', 'description', 'created_by', 'updated_by', 'is_delete_able'];
 
     /**
      * @return BelongsToMany

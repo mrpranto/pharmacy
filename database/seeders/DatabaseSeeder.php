@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +13,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $roles = [[
+                'name' => 'Admin',
+                'description' => 'This is an admin role it\'s not delete able',
+                'is_delete_able' => false
+            ]];
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        foreach ($roles as $role){
+            Role::query()->create($role);
+        }
+
+        User::query()->create([
+            'role_id' => Role::query()->first()->id,
+            'name' => 'Pranto',
+            'email' => 'prantoabir1@gmail.com',
+            'phone_number' => '01710750665',
+            'password' => bcrypt('11223344'),
+        ]);
     }
 }
