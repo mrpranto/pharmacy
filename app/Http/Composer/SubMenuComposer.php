@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Composer;
+
+class SubMenuComposer
+{
+    public function users(): array
+    {
+        return [
+            [
+                'name' => __t('roles'),
+                'url' => ('groups.index'),
+                'path' => 'roles',
+                'permission' => auth()->user()->can('app.roles.index')
+            ],
+            [
+                'name' => __t('users'),
+                'url' => ('companies.index'),
+                'path' => 'users',
+                'permission' => auth()->user()->can('app.user.index')
+            ],
+            [
+                'name' => __t('test'),
+                'url' => url('/test'),
+                'path' => 'test',
+                'permission' => auth()->user()->can('app.user.index')
+            ]
+        ];
+    }
+}

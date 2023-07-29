@@ -26,4 +26,8 @@ Route::group(['middleware' => 'authenticate'], function (){
    Route::get('home', [DashboardController::class, 'home']);
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+   Route::get('test', function (){
+      return view('vue-test');
+   });
+
 });

@@ -25,16 +25,17 @@
     <!-- end common css -->
 
     @stack('style')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body data-base-url="{{url('/')}}">
 
 <script src="{{ asset('assets/js/spinner.js') }}"></script>
 
-<div class="main-wrapper" id="app">
+<div class="main-wrapper">
     @include('layout.sidebar')
     <div class="page-wrapper">
         @include('layout.header')
-        <div class="page-content">
+        <div class="page-content" id="app">
             @yield('content')
         </div>
         @include('layout.footer')
