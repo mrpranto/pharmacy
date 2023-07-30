@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -35,6 +36,17 @@ class DatabaseSeeder extends Seeder
             'email' => 'prantoabir1@gmail.com',
             'phone_number' => '01710750665',
             'password' => bcrypt('11223344'),
+        ]);
+
+        Setting::query()->create([
+            'type' => 'general',
+            'settings_info' => [
+                "date_format" => "d.m.Y",
+                "time_format" => "H:i:s A",
+                "currency_symbol" => '৳',
+                "currency_symbol_position" => "before_amount",
+                "pagination" => "10"
+            ]
         ]);
 
     }

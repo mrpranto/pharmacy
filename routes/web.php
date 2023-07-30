@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,9 @@ Route::post('login', [AuthController::class, 'processLogin']);
 Route::group(['middleware' => 'authenticate'], function (){
    Route::get('home', [DashboardController::class, 'home']);
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+   Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');
+   Route::post('setting', [SettingsController::class, 'storeSetting']);
 
    Route::get('test', function (){
       return view('vue-test');
