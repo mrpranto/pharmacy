@@ -9,6 +9,10 @@ app.component('example-component', ExampleComponent);
 
 import RoleListComponent from './components/roles/RoleList.vue';
 app.component('role-list-component', RoleListComponent);
+import DescriptionComponent from './components/roles/DescriptionComponent.vue';
+app.component('role-description-component', DescriptionComponent);
+import Action from './components/roles/Action.vue';
+app.component('role-action-component', Action);
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);

@@ -28,6 +28,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-sm-12">
+
                     <Loader v-if="options.loader"/>
                     <table class="table table-bordered text-center" v-else>
                         <thead>
@@ -39,56 +40,65 @@
                             </template>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
-                            <template v-for="(column) in options.columns">
-                                <td v-if="column.isVisible">
-                                    <template v-if="column.type === 'sl'">
-                                        {{ (parseInt(row_index) + parseInt(1)) }}
-                                    </template>
-                                    <template v-else-if="column.type === 'text'">
-                                        {{ row[column.key] }}
-                                    </template>
-                                    <template v-else-if="column.type === 'link'">
-                                        <a :href="column.url">{{ row[column.key] }}</a>
-                                    </template>
-                                    <template v-else-if="column.type === 'object'">
-                                        {{ column.modifier(row[column.key], row) }}
-                                    </template>
-                                    <template v-else-if="column.type === 'component'">
-                                        <template v-if="column.rowValues">
+                        <a-dropdown :trigger="['contextmenu']">
+                            <tbody>
+                            <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
+                                <template v-for="(column) in options.columns">
+                                    <td v-if="column.isVisible">
+                                        <template v-if="column.type === 'sl'">
+                                            {{ (parseInt(row_index) + parseInt(1)) }}
+                                        </template>
+                                        <template v-else-if="column.type === 'text'">
+                                            {{ row[column.key] }}
+                                        </template>
+                                        <template v-else-if="column.type === 'link'">
+                                            <a :href="column.url">{{ row[column.key] }}</a>
+                                        </template>
+                                        <template v-else-if="column.type === 'object'">
+                                            {{ column.modifier(row[column.key], row) }}
+                                        </template>
+                                        <template v-else-if="column.type === 'component'">
+                                            <template v-if="column.rowValues">
+                                                <component
+                                                    :is="column.componentName"
+                                                    :item="row"
+                                                    :value="row[column.key]"
+                                                />
+                                            </template>
+                                            <template v-else>
+                                                <component
+                                                    :is="column.componentName"
+                                                    :value="row[column.key]"
+                                                />
+                                            </template>
+                                        </template>
+                                        <template v-else-if="column.type === 'action'">
                                             <component
                                                 :is="column.componentName"
-                                                :item="row"
+                                                :row="row"
                                                 :value="row[column.key]"
+                                                :row_index="row_index"
                                             />
                                         </template>
-                                        <template v-else>
-                                            <component
-                                                :is="column.componentName"
-                                                :value="row[column.key]"
-                                            />
-                                        </template>
-                                    </template>
-                                    <template v-else-if="column.type === 'action'">
-                                        <component
-                                            :is="column.componentName"
-                                            :row="row"
-                                            :value="row[column.key]"
-                                            :row_index="row_index"
-                                        />
-                                    </template>
-                                    <template v-else-if="column.type === 'custom-html'">
+                                        <template v-else-if="column.type === 'custom-html'">
                                             <span :class="column.className"
                                                   v-html="column.modifier(row[column.key], row)"></span>
-                                    </template>
-                                    <template v-else-if="column.type === 'custom-data'">
-                                        {{ column.modifier(row) }}
-                                    </template>
-                                </td>
+                                        </template>
+                                        <template v-else-if="column.type === 'custom-data'">
+                                            {{ column.modifier(row) }}
+                                        </template>
+                                    </td>
+                                </template>
+                            </tr>
+                            </tbody>
+                            <template #overlay>
+                                <a-menu>
+                                    <a-menu-item key="1">1st menu item</a-menu-item>
+                                    <a-menu-item key="2">2nd menu item</a-menu-item>
+                                    <a-menu-item key="3">3rd menu item</a-menu-item>
+                                </a-menu>
                             </template>
-                        </tr>
-                        </tbody>
+                        </a-dropdown>
                     </table>
                 </div>
             </div>
@@ -228,7 +238,7 @@ export default {
         async searchData() {
             await this.$parent.getData()
         },
-        async clearSearch(){
+        async clearSearch() {
             this.options.request.search = '';
             await this.$parent.getData()
         }

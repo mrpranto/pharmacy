@@ -48,8 +48,15 @@ export default {
                     },
                     {
                         title: 'Description',
-                        type: 'text',
+                        type: 'component',
+                        componentName:'role-description-component',
                         key: 'description',
+                        isVisible: true
+                    },
+                    {
+                        title: 'Action',
+                        type: 'action',
+                        componentName:'role-action-component',
                         isVisible: true
                     },
                 ],
