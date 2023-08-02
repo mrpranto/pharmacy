@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,9 @@ Route::group(['middleware' => 'authenticate'], function (){
 
    Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');
    Route::post('setting', [SettingsController::class, 'storeSetting']);
+
+   Route::resource('roles', RoleController::class);
+   Route::get('get-roles', [RoleController::class, 'getRoles']);
 
    Route::get('test', function (){
       return view('vue-test');

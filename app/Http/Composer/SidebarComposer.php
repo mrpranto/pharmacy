@@ -35,7 +35,6 @@ class SidebarComposer
                 [
                     'name' => __t('users'),
                     'icon' => 'users',
-                    'url' => url('home'),
                     'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
                     'subMenu'    => $this->subMenu->users(),
                     'id' => 'users',

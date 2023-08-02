@@ -7,6 +7,8 @@ use App\Services\BaseServices;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 class SettingServices extends BaseServices
 {
@@ -24,6 +26,10 @@ class SettingServices extends BaseServices
             ->newQuery()
             ->where('type', request('type'))
             ->first();
+
+        Artisan::call('cache:clear');
+
+        Cache::set('general_setting', $setting->settings_info);
 
         return  $setting->settings_info;
     }

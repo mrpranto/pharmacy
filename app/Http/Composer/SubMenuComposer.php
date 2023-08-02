@@ -9,7 +9,7 @@ class SubMenuComposer
         return [
             [
                 'name' => __t('roles'),
-                'url' => ('groups.index'),
+                'url' => route('roles.index'),
                 'path' => 'roles',
                 'permission' => auth()->user()->can('app.roles.index')
             ],

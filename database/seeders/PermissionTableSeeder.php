@@ -30,6 +30,11 @@ class PermissionTableSeeder extends Seeder
                 'slug' => 'app.dashboard'
             ],
             [
+                'module_id' => $this->module('Setting'),
+                'name' => 'Access Setting',
+                'slug' => 'app.setting'
+            ],
+            [
                 'module_id' => $this->module('Users'),
                 'name' => 'User List',
                 'slug' => 'app.user.index'

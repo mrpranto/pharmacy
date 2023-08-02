@@ -30,7 +30,9 @@ class DatabaseSeeder extends Seeder
             ->permissions()
             ->sync($permissions);
 
-        User::query()->create([
+        Role::factory(100)->create();
+
+        User::query()->updateOrCreate([
             'role_id' => Role::query()->first()->id,
             'name' => 'Pranto',
             'email' => 'prantoabir1@gmail.com',
@@ -38,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('11223344'),
         ]);
 
-        Setting::query()->create([
+        Setting::query()->updateOrCreate([
             'type' => 'general',
             'settings_info' => [
                 "date_format" => "d.m.Y",

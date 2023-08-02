@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Setting\SettingServices;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class SettingsController extends Controller
 {
@@ -15,6 +16,8 @@ class SettingsController extends Controller
 
     public function getSetting(): View
     {
+        Gate::authorize('app.setting');
+
         return view('pages.settings.settings',['setting' => $this->services->getSetting()]);
     }
 

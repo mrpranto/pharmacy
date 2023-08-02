@@ -189,12 +189,14 @@
                                     <span>Edit Profile</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('setting') }}?type=general" class="nav-link">
-                                    <i data-feather="settings"></i>
-                                    <span>Setting</span>
-                                </a>
-                            </li>
+                            @if(auth()->user()->can('app.setting'))
+                                <li class="nav-item">
+                                    <a href="{{ route('setting') }}?type=general" class="nav-link">
+                                        <i data-feather="settings"></i>
+                                        <span>Setting</span>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="javascript:;" onclick="document.getElementById('logout').submit();"
                                    class="nav-link">

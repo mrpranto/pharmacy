@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
+
 if (!function_exists('active_class')) {
     /**
      * @param $path
@@ -57,5 +59,15 @@ if (!function_exists('__t')) {
 
         $string = strtr(__("default.{$key}"), $vars);
         return $isCapitalized ? ucwords($string) : $string;
+    }
+}
+
+if (! function_exists('pagination')){
+    /**
+     * @return mixed
+     */
+    function pagination(): mixed
+    {
+        return Cache::get('general_setting') ? Cache::get('general_setting')['pagination'] : 10;
     }
 }
