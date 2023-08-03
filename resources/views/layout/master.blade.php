@@ -41,6 +41,24 @@
         </div>
         @include('layout.footer')
     </div>
+
+{{--    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">Extra large modal</button>--}}
+
+    <div class="modal fade offline-warning-show" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mt-2">
+                            <div class="alert alert-danger text-center">
+                                You are offline, Your app will be not running until you connection is restore.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- base js -->
@@ -77,6 +95,14 @@
         })
         @endif
     });
+
+    window.addEventListener('offline', function(event){
+        $('.offline-warning-show').modal('show')
+    });
+    window.addEventListener('online', function(event){
+        $('.offline-warning-show').modal('hide')
+    });
+    
 </script>
 </body>
 </html>
