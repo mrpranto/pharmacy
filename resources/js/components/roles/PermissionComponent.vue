@@ -8,9 +8,7 @@
 export default {
     name: "PermissionComponent",
     props: ['value'],
-    methods:{
-
-    }
+    methods: {}
 }
 </script>
 <style scoped>

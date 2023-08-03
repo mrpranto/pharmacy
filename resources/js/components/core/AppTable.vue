@@ -53,7 +53,9 @@
                                 <hr>
                                 <div class="dropdown-item d-flex justify-content-end">
                                     <span></span>
-                                    <button class="btn btn-sm btn-default float-right" @click.prevent="clearColumnVisibility" type="button">Clear</button>
+                                    <button class="btn btn-sm btn-default float-right"
+                                            @click.prevent="clearColumnVisibility" type="button">Clear
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +242,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            $(".hide-show-column").click(function(e){
+            $(".hide-show-column").click(function (e) {
                 e.stopPropagation();
             })
         })
@@ -325,9 +327,9 @@ export default {
         changePerPage(page) {
             this.options.request.per_page = page
         },
-        clearColumnVisibility(){
+        clearColumnVisibility() {
             let i;
-            for(i = 0; i < this.options.columns.length; i++){
+            for (i = 0; i < this.options.columns.length; i++) {
                 this.options.columns[i].isVisible = true;
             }
         }
@@ -360,7 +362,7 @@ export default {
 }
 
 /* Add scrollbar to an element */
-.scroll{
+.scroll {
     max-height: 200px; /* Set the maximum height of the element */
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
@@ -380,12 +382,14 @@ export default {
     background-color: #b4b1b1; /* Set the color of the scrollbar thumb */
     border-radius: 50px;
 }
+
 .scroll:active::-webkit-scrollbar-thumb,
 .scroll:focus::-webkit-scrollbar-thumb,
 .scroll:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
-.hide-show-column:hover .dropdown-item:hover{
+
+.hide-show-column:hover .dropdown-item:hover {
     background-color: #FFFFFF;
     color: #0c1427;
 }
