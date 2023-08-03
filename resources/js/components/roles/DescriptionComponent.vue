@@ -9,8 +9,8 @@ export default {
     props: ['value'],
     methods:{
         showLimitedText(){
-            if (this.value.length > 100) {
-                return this.value.substring(0, 100) + ' ...';
+            if (this.value.length > 80) {
+                return this.value.substring(0, 80) + ' ...';
             }else {
                 return this.value
             }

@@ -38,7 +38,7 @@ export default {
                     {
                         title: 'Sl',
                         type: 'sl',
-                        isVisible: true
+                        isVisible: false
                     },
                     {
                         title: 'Name',
@@ -49,20 +49,33 @@ export default {
                     {
                         title: 'Description',
                         type: 'component',
-                        componentName:'role-description-component',
+                        componentName: 'role-description-component',
                         key: 'description',
+                        isVisible: true
+                    },
+                    {
+                        title: 'Permissions',
+                        type: 'component',
+                        componentName: 'role-permission-component',
+                        key: 'permissions',
                         isVisible: true
                     },
                     {
                         title: 'Action',
                         type: 'action',
-                        componentName:'role-action-component',
+                        componentName: 'role-action-component',
                         isVisible: true
                     },
                 ],
                 request: {
-                    per_page: 30,
+                    per_page: 10,
                     search: '',
+                },
+                exportAble: {
+                    csv: 'http://127.0.0.1:8000/roles',
+                    excel: 'http://127.0.0.1:8000/roles',
+                    pdf: 'http://127.0.0.1:8000/roles',
+                    print: 'http://127.0.0.1:8000/roles',
                 }
             }
         }
