@@ -1,6 +1,38 @@
 <?php
 return [
     'dashboard' => 'Dashboard',
+    'welcome_dashboard' => 'Welcome to dashboard',
     'users' => 'Users',
-    'roles' => 'Roles'
+    'roles' => 'Roles',
+    'add_role' => 'Add new role',
+    'role_create' => 'Role Create Successful.',
+    'loading' => 'Loading...',
+    'show_details' => 'Show details',
+    'you_can_show' => 'You can show or hide your specific column',
+    'clear' => 'Clear',
+    'first_page' => 'First Page',
+    'previous_page' => 'Previous Page',
+    'next_page' => 'Next Page',
+    'last_page' => 'Last Page',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'entries' => 'entries',
+
+    'sl' => 'Sl',
+    'name' => 'Name',
+    'description' => 'Description',
+    'permissions' => 'Permissions',
+    'action' => 'Action',
+
+    'setting' => 'Setting',
+    'general_setting' => 'General Setting',
+    'general' => 'General',
+    'date_format' => 'Date Format',
+    'time_format' => 'Time Format',
+    '24_hours' => '24 hours',
+    '12_hours' => '12 hours',
+    'currency_symbol' => 'Currency Symbol',
+    'currency_symbol_position' => 'Currency Symbol Position',
+    'pagination' => 'Pagination'
 ];

@@ -5,7 +5,7 @@
                 <div class="d-flex align-items-center">
                     <a class="active" href="#"><span class="icon"><i data-feather="inbox"
                                                                      class="text-primary-muted"></i></span></a>
-                    <span>General Setting</span>
+                    <span>{{ __t('general_setting') }}</span>
                 </div>
             </div>
         </div>
@@ -15,8 +15,7 @@
             <form action="{{ route('setting') }}" method="post">
                 @csrf
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">Date
-                        format</label>
+                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('date_format') }}</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="setting[general][date_format]">
                             <option {{ $setting['date_format'] == 'd-m-Y' ? 'selected' : '' }} value="d-m-Y">DD-MM-YYYY</option>
@@ -33,21 +32,21 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">Time format</label>
+                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('time_format') }}</label>
                     <div class="col-sm-10">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input"
                                            name="setting[general][time_format]" id="24_hours" {{ $setting['time_format'] == 'H:i:s A' ? 'checked' : '' }} value="H:i:s A">
-                                    24 Hours
+                                    {{ __t('24_hours') }}
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input"
                                            name="setting[general][time_format]" id="12_hours" {{ $setting['time_format'] == 'h:i:s A' ? 'checked' : '' }} value="h:i:s A">
-                                    12 Hours
+                                    {{ __t('12_hours') }}
                                 </label>
                             </div>
                         </div>
@@ -55,8 +54,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">Currency
-                        Symbol</label>
+                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('currency_symbol') }}</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="setting[general][currency_symbol]">
                             <option {{ $setting['currency_symbol'] == 'BDT' ? 'selected' : '' }} value="BDT">BDT</option>
@@ -67,8 +65,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">Currency
-                        Symbol Position</label>
+                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('currency_symbol_position') }}</label>
                     <div class="col-sm-10">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
@@ -115,7 +112,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">Pagination</label>
+                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('pagination') }}</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="setting[general][pagination]">
                             <option {{ $setting['pagination'] == '10' ? 'selected' : '' }} value="10">10</option>

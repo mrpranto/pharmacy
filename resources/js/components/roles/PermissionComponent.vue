@@ -1,7 +1,7 @@
 <template>
     <div>
         <button type="button" class="btn btn-outline-secondary btn-xs" @click="showModal" v-if="value.length">
-            <i class="mdi mdi-eye-check"></i> Show Details
+            <i class="mdi mdi-eye-check"></i> {{ __('default.show_details') }}
         </button>
         <a-modal v-model:open="open" title="Permission Details" :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }">

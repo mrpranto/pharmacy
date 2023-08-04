@@ -2,16 +2,16 @@
     <div>
         <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
             <div>
-                <h4 class="mb-3 mb-md-0">Roles</h4>
+                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }}</h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Loading...
+                    {{ __('default.loading') }}
                 </button>
                 <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
                     <i class="mdi mdi-plus"></i>
-                    Add New Role
+                    {{ __('default.add_role') }}
                 </button>
             </div>
         </div>
@@ -70,7 +70,7 @@ export default {
                 responseData: {},
                 columns: [
                     {
-                        title: 'Sl',
+                        title: 'sl',
                         type: 'sl',
                         isVisible: false
                     },

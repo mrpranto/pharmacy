@@ -10,7 +10,7 @@
                             <div class="aside-content">
                                 <div class="aside-header">
                                     <span class="title text-center">
-                                        <i data-feather="settings"></i> Settings
+                                        <i data-feather="settings"></i> {{ __t('setting') }}
                                     </span>
                                 </div>
                                 <div class="aside-compose"></div>
@@ -18,7 +18,7 @@
                                     <ul class="nav">
                                         <li class="{{ request()->get('type') == 'general' ? 'active' : '' }}">
                                             <a href="{{ route('setting') }}?type=general">
-                                                <span class="icon"><i data-feather="inbox"></i></span>General
+                                                <span class="icon"><i data-feather="inbox"></i></span> {{ __t('general') }}
                                             </a>
                                         </li>
                                     </ul>

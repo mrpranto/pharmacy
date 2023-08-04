@@ -33,7 +33,7 @@
                                  style="padding: 25px">
                                 <div class="dropdown-item">
                                     <p>
-                                        You can show or hide your specific column
+                                        {{ __('default.you_can_show') }}
                                     </p>
                                 </div>
                                 <hr>
@@ -54,7 +54,7 @@
                                 <div class="dropdown-item d-flex justify-content-end">
                                     <span></span>
                                     <button class="btn btn-sm btn-default float-right"
-                                            @click.prevent="clearColumnVisibility" type="button">Clear
+                                            @click.prevent="clearColumnVisibility" type="button"> {{ __('default.clear') }}
                                     </button>
                                 </div>
                             </div>
@@ -163,7 +163,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-sm-2">
-                    Showing {{ from }} to {{ to }} of {{ total }} entries
+                    {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }} {{ total }} {{ __('default.entries') }}
                 </div>
                 <div class="col-sm-6 offset-4">
                     <div class="btn-toolbar mb-3 justify-content-end" role="toolbar"
@@ -183,22 +183,22 @@
                             <a class="btn btn-gray btn btn-icon-text btn-left-radius"
                                :class="options.responseData.current_page === 1 ? 'disabled' : ''"
                                @click.prevent="getFirstPage">
-                                <i class="mdi mdi-chevron-double-left"></i> First Page
+                                <i class="mdi mdi-chevron-double-left"></i> {{ __('default.first_page') }}
                             </a>
                             <a class="btn btn-gray btn btn-icon-text"
                                :class="options.responseData.prev_page_url == null ? 'disabled' : ''"
                                @click.prevent="getPreviousPage">
-                                <i class="mdi mdi-chevron-left"></i> Previous Page
+                                <i class="mdi mdi-chevron-left"></i> {{ __('default.previous_page') }}
                             </a>
                             <a class="btn btn-gray btn btn-icon-text"
                                :class="options.responseData.next_page_url == null ? 'disabled' : ''"
                                @click.prevent="getNextPage">
-                                Next Page<i class="mdi mdi-chevron-right"></i>
+                                {{ __('default.next_page') }} <i class="mdi mdi-chevron-right"></i>
                             </a>
                             <a class="btn btn-gray btn btn-icon-text btn-right-radius"
                                :class="options.responseData.last_page === options.responseData.current_page ? 'disabled' : ''"
                                @click.prevent="getLastPage">
-                                Last Page <i class="mdi mdi-chevron-double-right"></i>
+                                {{ __('default.last_page') }} <i class="mdi mdi-chevron-double-right"></i>
                             </a>
                         </div>
                     </div>
