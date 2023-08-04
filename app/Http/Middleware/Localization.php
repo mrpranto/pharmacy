@@ -1,32 +1,29 @@
 <?php
 
-namespace App\Providers;
+namespace App\Http\Middleware;
 
+use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpFoundation\Response;
 
-class TranslationServiceProvider extends ServiceProvider
+class Localization
 {
     /**
-     * Register services.
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function register(): void
+    public function handle(Request $request, Closure $next): Response
     {
-        //
-    }
 
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
         Cache::rememberForever('translations', function () {
 
             $translations = collect();
-            $locale = App::getLocale();
+            app()->setLocale(session()->get('lang'));
+            $locale = app()->getLocale();
 
             $translations[$locale] = [
                 'php' => $this->phpTranslations($locale),
@@ -35,12 +32,9 @@ class TranslationServiceProvider extends ServiceProvider
 
             return $translations;
         });
-    }
 
-    /**
-     * @param $locale
-     * @return Collection
-     */
+        return $next($request);
+    }
     private function phpTranslations($locale): Collection
     {
         $path = lang_path("$locale");

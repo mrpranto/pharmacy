@@ -102,7 +102,7 @@
                             <tr>
                                 <template v-for="(col) in options.columns">
                                     <th class="bg-gray" v-if="col.isVisible">
-                                        {{ col.title }}
+                                        {{ __('default.'+col.title) }}
                                     </th>
                                 </template>
                             </tr>

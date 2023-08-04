@@ -133,7 +133,7 @@
         $('.offline-warning-show').modal('hide')
     });
 
-    window._locale = '{{ app()->getLocale() }}'
+    window._locale = '{{ session()->get('lang') ?? app()->getLocale() }}'
     window._translations = {!! cache('translations') !!};
 
 </script>

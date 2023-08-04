@@ -26,6 +26,7 @@ Route::post('login', [AuthController::class, 'processLogin']);
 
 Route::group(['middleware' => 'authenticate'], function (){
    Route::get('home', [DashboardController::class, 'home']);
+   Route::get('lang/{lang}', [DashboardController::class, 'setLang'])->name('set-lang');
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
    Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');

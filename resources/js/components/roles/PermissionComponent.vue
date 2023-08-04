@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-outline-secondary btn-xs" @click="showModal" v-if="value.length">
             <i class="mdi mdi-eye-check"></i> {{ __('default.show_details') }}
         </button>
-        <a-modal v-model:open="open" title="Permission Details" :ok-button-props="{ hidden: true }"
+        <a-modal v-model:open="open" :title="__('default.permissions_details')" :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }">
             <template v-for="(permission) in value">
                 <span class="badge badge-pill badge-primary m-1"> <small>{{ permission.module.name }}</small> <i class="mdi mdi-arrow-right"></i> {{ permission.name }}</span>

@@ -75,27 +75,27 @@ export default {
                         isVisible: false
                     },
                     {
-                        title: 'Name',
+                        title: 'name',
                         type: 'text',
                         key: 'name',
                         isVisible: true
                     },
                     {
-                        title: 'Description',
+                        title: 'description',
                         type: 'component',
                         componentName: 'role-description-component',
                         key: 'description',
                         isVisible: true
                     },
                     {
-                        title: 'Permissions',
+                        title: 'permissions',
                         type: 'component',
                         componentName: 'role-permission-component',
                         key: 'permissions',
                         isVisible: true
                     },
                     {
-                        title: 'Action',
+                        title: 'action',
                         type: 'action',
                         componentName: 'role-action-component',
                         isVisible: true

@@ -170,7 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SideBarComposerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        App\Providers\TranslationServiceProvider::class,
+//        App\Providers\TranslationServiceProvider::class,
     ])->toArray(),
 
     /*

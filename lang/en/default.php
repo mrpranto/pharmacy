@@ -24,6 +24,7 @@ return [
     'description' => 'Description',
     'permissions' => 'Permissions',
     'action' => 'Action',
+    'select_all' => 'Select all',
 
     'setting' => 'Setting',
     'general_setting' => 'General Setting',
@@ -34,5 +35,8 @@ return [
     '12_hours' => '12 hours',
     'currency_symbol' => 'Currency Symbol',
     'currency_symbol_position' => 'Currency Symbol Position',
-    'pagination' => 'Pagination'
+    'pagination' => 'Pagination',
+
+    'save' => 'Save',
+    'close' => 'Close',
 ];

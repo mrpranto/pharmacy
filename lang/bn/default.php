@@ -14,5 +14,31 @@ return [
     '12_hours' => '১২ ঘন্টা',
     'currency_symbol' => 'কারেন্সি সিম্বল',
     'currency_symbol_position' => 'কারেন্সি সিম্বল পজিশন',
-    'pagination' => 'পৃষ্ঠা সংখ্যা'
+    'pagination' => 'পৃষ্ঠা সংখ্যা',
+
+    'add_role' => 'নতুন রোল তৈরী করুন ',
+    'loading' => 'লোডয়িং...',
+    'show_details' => 'বিস্তারিত দেখুন',
+    'you_can_show' => 'আপনি চাইলে কলাম দেখতে এবং লুকাতে পারেন। ',
+    'clear' => 'পরিষ্কার',
+    'first_page' => 'প্রথম পৃষ্ঠা',
+    'previous_page' => 'আগের পৃষ্ঠা',
+    'next_page' => 'পরের পৃষ্ঠা',
+    'last_page' => 'শেষের পৃষ্ঠা',
+    'showing' => 'দেখাচ্ছে',
+    'to' => 'থেকে',
+    'of' => 'হইতে',
+    'entries' => 'এন্ট্রি',
+
+    'sl' => 'সিরিয়াল',
+    'name' => 'নাম',
+    'description' => 'বর্ণনা',
+    'permissions' => 'অনুমতি',
+    'permissions_details' => 'অনুমতি বিস্তারিত',
+    'action' => 'প্রক্রিয়া',
+    'select_all' => 'সব নির্বাচন করুন',
+
+    'save' => 'সংরক্ষণ',
+    'close' => 'বন্ধ',
+
 ];

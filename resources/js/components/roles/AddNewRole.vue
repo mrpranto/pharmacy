@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-drawer
-            title="Add New Role"
+            :title="__('default.add_role')"
             :width="720"
             :open="formState.openCreateRole"
             :body-style="{ paddingBottom: '80px' }"
@@ -9,7 +9,7 @@
             @close="$parent.onClose"
         >
             <a-form v-bind="formState.layout">
-                <a-form-item label="Name">
+                <a-form-item :label="__('default.name')">
                     <a-input v-model:value="formState.formData.name"
                              :class="validation.name ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="validation.name">{{
@@ -17,14 +17,14 @@
                         }}
                     </div>
                 </a-form-item>
-                <a-form-item :name="['description']" label="Description">
+                <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="formState.formData.description"
                                 :class="validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="validation.description">
                         {{ validation.description[0] }}
                     </div>
                 </a-form-item>
-                <a-form-item :name="['permissions']" label="Permissions">
+                <a-form-item :name="['permissions']" :label="__('default.permissions')">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="ant-form-item-explain-error mt-2" style="" v-if="validation.permissions">
@@ -35,7 +35,7 @@
                                 <div class="form-check">
                                     <label class="form-check-label cursor-pointer">
                                         <input type="checkbox" class="form-check-input" v-model="selectAll">
-                                        Select All
+                                        {{ __('default.select_all') }}
                                         <i class="input-frame"></i></label>
                                 </div>
                             </div>
@@ -75,10 +75,10 @@
             </a-form>
             <template #footer>
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
-                    <i class="mdi mdi-window-close"></i> Close
+                    <i class="mdi mdi-window-close"></i> {{ __('default.save') }}
                 </a-button>
                 <a-button type="primary" style="margin-right: 8px" @click.prevent="saveRole">
-                    <i class="mdi mdi-content-save mr-1"></i> Save
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.close') }}
                 </a-button>
             </template>
         </a-drawer>
