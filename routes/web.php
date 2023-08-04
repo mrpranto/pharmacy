@@ -33,6 +33,7 @@ Route::group(['middleware' => 'authenticate'], function (){
 
    Route::resource('roles', RoleController::class);
    Route::get('get-roles', [RoleController::class, 'getRoles']);
+   Route::get('get-permissions', [RoleController::class, 'getPermissions']);
 
    Route::get('test', function (){
       return view('vue-test');

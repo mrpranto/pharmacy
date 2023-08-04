@@ -5,8 +5,12 @@
                 <h4 class="mb-3 mb-md-0">Roles</h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showDrawer">
-                    <i class="btn-icon-prepend" data-feather="plus"></i>
+                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
+                    <i class="mdi mdi-plus"></i>
                     Add New Role
                 </button>
             </div>
@@ -23,98 +27,45 @@
         </div>
 
 
-        <a-drawer
-            title="Create a new account"
-            :width="720"
-            :open="options.openCreateRole"
-            :body-style="{ paddingBottom: '80px' }"
-            :footer-style="{ textAlign: 'right' }"
-            @close="onClose"
-        >
-            <a-form  layout="vertical">
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="Name" name="name">
-                            <a-input placeholder="Please enter user name" />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="Url" name="url">
-                            <a-input
-                                style="width: 100%"
-                                addon-before="http://"
-                                addon-after=".com"
-                                placeholder="please enter url"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="Owner" name="owner">
-                            <a-select placeholder="Please a-s an owner">
-                                <a-select-option value="xiao">Xiaoxiao Fu</a-select-option>
-                                <a-select-option value="mao">Maomao Zhou</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="Type" name="type">
-                            <a-select placeholder="Please choose the type">
-                                <a-select-option value="private">Private</a-select-option>
-                                <a-select-option value="public">Public</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="12">
-                        <a-form-item label="Approver" name="approver">
-                            <a-select placeholder="Please choose the approver">
-                                <a-select-option value="jack">Jack Ma</a-select-option>
-                                <a-select-option value="tom">Tom Liu</a-select-option>
-                            </a-select>
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-                        <a-form-item label="DateTime" name="dateTime">
-                            <a-date-picker
-                                style="width: 100%"
-                                :get-popup-container="trigger => trigger.parentElement"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-row :gutter="16">
-                    <a-col :span="24">
-                        <a-form-item label="Description" name="description">
-                            <a-textarea
-                                :rows="4"
-                                placeholder="please enter url description"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-form>
-            <template #extra>
-                <a-space>
-                    <a-button @click="onClose">Cancel</a-button>
-                    <a-button type="primary" @click="onClose">Submit</a-button>
-                </a-space>
-            </template>
-        </a-drawer>
+        <AddNewRole :formState="formState"/>
 
     </div>
 </template>
 
 <script>
+import AddNewRole from "./AddNewRole.vue";
+
 export default {
     name: 'RoleList',
+    components: {AddNewRole},
     props: ['name'],
     data() {
         return {
+            formState: {
+                openCreateRole: false,
+                disabled: false,
+                responsePermissions:[],
+                formData: {
+                    name: '',
+                    description: '',
+                    permissions: []
+                },
+                layout: {
+                    labelCol: {span: 4},
+                    wrapperCol: {span: 20},
+                },
+                validateMessages: {
+                    required: '${label} is required!',
+                    types: {
+                        email: '${label} is not a valid email!',
+                        number: '${label} is not a valid number!',
+                    },
+                    number: {
+                        range: '${label} must be between ${min} and ${max}',
+                    },
+                }
+            },
             options: {
-                openCreateRole:false,
                 loader: false,
                 responseData: {},
                 columns: [
@@ -182,11 +133,23 @@ export default {
                     console.error(err)
                 })
         },
-        showDrawer(){
-            this.options.openCreateRole = true;
+        async getPermissions(){
+            this.formState.disabled = true
+            await axios.get('/get-permissions')
+                .then(response => {
+                    this.formState.responsePermissions = response.data
+                    this.formState.disabled = false
+                })
+                .catch(err => {
+                console.error(err)
+            })
         },
-        onClose(){
-            this.options.openCreateRole = false;
+        showAddForm() {
+            this.getPermissions()
+            this.formState.openCreateRole = true;
+        },
+        onClose() {
+            this.formState.openCreateRole = false;
         }
     }
 }

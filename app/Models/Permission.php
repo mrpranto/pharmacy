@@ -16,6 +16,8 @@ class Permission extends Model
      */
     protected $fillable = ['module_id', 'name', 'slug'];
 
+    protected $with = ['module'];
+
     /**
      * @return BelongsTo
      */

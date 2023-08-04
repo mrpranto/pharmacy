@@ -2,9 +2,11 @@
 
 namespace App\Services\Roles;
 
+use App\Models\Module;
 use App\Models\Role;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -29,5 +31,10 @@ class RoleServices extends BaseServices
             ->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%'.request()->get('search').'%'))
             ->paginate(request()->get('per_page') ?? pagination());
+    }
+
+    public function permissions(): Collection|array
+    {
+        return Module::query()->with('permission')->get();
     }
 }

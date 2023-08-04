@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\Roles\RoleServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Psr\Container\ContainerExceptionInterface;
@@ -29,6 +30,8 @@ class RoleController extends Controller
     }
 
     /**
+     * Getting roles.
+     *
      * @return LengthAwarePaginator
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -36,6 +39,16 @@ class RoleController extends Controller
     public function getRoles(): LengthAwarePaginator
     {
         return $this->services->getRoles();
+    }
+
+    /**
+     * Getting Permissions.
+     *
+     * @return Collection|array
+     */
+    public function getPermissions(): Collection|array
+    {
+        return $this->services->permissions();
     }
 
     /**

@@ -42,7 +42,6 @@
         @include('layout.footer')
     </div>
 
-{{--    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">Extra large modal</button>--}}
 
     <div class="modal fade offline-warning-show" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-xl">
@@ -102,7 +101,7 @@
     window.addEventListener('online', function(event){
         $('.offline-warning-show').modal('hide')
     });
-    
+
 </script>
 </body>
 </html>

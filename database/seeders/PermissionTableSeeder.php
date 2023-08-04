@@ -40,9 +40,49 @@ class PermissionTableSeeder extends Seeder
                 'slug' => 'app.user.index'
             ],
             [
+                'module_id' => $this->module('Users'),
+                'name' => 'Add New User',
+                'slug' => 'app.user.create'
+            ],
+            [
+                'module_id' => $this->module('Users'),
+                'name' => 'Edit User',
+                'slug' => 'app.user.edit'
+            ],
+            [
+                'module_id' => $this->module('Users'),
+                'name' => 'Show User',
+                'slug' => 'app.user.show'
+            ],
+            [
+                'module_id' => $this->module('Users'),
+                'name' => 'Delete User',
+                'slug' => 'app.user.delete'
+            ],
+            [
                 'module_id' => $this->module('Roles'),
                 'name' => 'Role List',
                 'slug' => 'app.roles.index'
+            ],
+            [
+                'module_id' => $this->module('Roles'),
+                'name' => 'Add New Role',
+                'slug' => 'app.roles.create'
+            ],
+            [
+                'module_id' => $this->module('Roles'),
+                'name' => 'Edit Role',
+                'slug' => 'app.roles.edit'
+            ],
+            [
+                'module_id' => $this->module('Roles'),
+                'name' => 'Show Role',
+                'slug' => 'app.roles.show'
+            ],
+            [
+                'module_id' => $this->module('Roles'),
+                'name' => 'Delete Role',
+                'slug' => 'app.roles.delete'
             ],
         ];
     }
