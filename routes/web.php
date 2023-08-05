@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -25,16 +26,26 @@ Route::get('login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('login', [AuthController::class, 'processLogin']);
 
 Route::group(['middleware' => 'authenticate'], function (){
+    //Initial routes.
    Route::get('home', [DashboardController::class, 'home']);
    Route::get('lang/{lang}', [DashboardController::class, 'setLang'])->name('set-lang');
+
+   //Logout route.
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+   //Settings route.
    Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');
    Route::post('setting', [SettingsController::class, 'storeSetting']);
 
+   //Roles route.
    Route::resource('roles', RoleController::class);
    Route::get('get-roles', [RoleController::class, 'getRoles']);
    Route::get('get-permissions', [RoleController::class, 'getPermissions']);
+
+   //Users route.
+   Route::resource('users', UserController::class);
+   Route::get('get-users', [UserController::class, 'getUsers']);
+   Route::post('upload-profile-picture', [UserController::class, 'uploadProfilePicture']);
 
    Route::get('test', function (){
       return view('vue-test');

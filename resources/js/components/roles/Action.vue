@@ -7,6 +7,9 @@
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete && row.is_delete_able === 1">
             <a-button danger shape="circle" @click.prevent="$parent.$parent.showDeleteForm(row.id)"><i class="mdi mdi-trash-can"></i></a-button>
         </a-tooltip>
+        <a-tooltip title="Can't change default permissions."  v-if="row.is_delete_able === 0">
+            <i class="mdi mdi-information cursor-pointer"></i>
+        </a-tooltip>
     </div>
 </template>
 <script>

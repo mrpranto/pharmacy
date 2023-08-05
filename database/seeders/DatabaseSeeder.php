@@ -30,8 +30,6 @@ class DatabaseSeeder extends Seeder
             ->permissions()
             ->sync($permissions);
 
-        Role::factory(100)->create();
-
         User::query()->updateOrCreate([
             'role_id' => Role::query()->first()->id,
             'name' => 'Pranto',
@@ -39,6 +37,8 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '01710750665',
             'password' => bcrypt('11223344'),
         ]);
+
+        User::factory(100)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',

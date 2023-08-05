@@ -15,7 +15,7 @@ class SubMenuComposer
             ],
             [
                 'name' => __t('users'),
-                'url' => ('companies.index'),
+                'url' => route('users.index'),
                 'path' => 'users',
                 'permission' => auth()->user()->can('app.user.index')
             ],

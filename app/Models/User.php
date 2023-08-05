@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,10 @@ class User extends Authenticatable
         'phone_number',
         'password',
     ];
+
+    const PROFILE_PICTURE_TYPE = 'profile_picture';
+
+    protected $with = ['profilePicture'];
 
     public function role(): BelongsTo
     {
@@ -49,6 +54,15 @@ class User extends Authenticatable
     public function rolePermissions(): mixed
     {
         return $this->role->permissions();
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function profilePicture(): MorphOne
+    {
+        return $this->morphOne(File::class, 'fileable')
+            ->where('type', self::PROFILE_PICTURE_TYPE);
     }
 
     /**

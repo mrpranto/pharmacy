@@ -51,4 +51,10 @@ return [
     'role_delete_successful' => 'রোল মুছে ফেলা সফল হয়েছে ',
     'role_update' => 'রোল সম্পাদনা সফল হয়েছে',
 
+    'add_user' => 'নতুন ব্যাবহারকারী তৈরি করুন',
+    'email' =>  'ইমেইল',
+    'phone_number' => 'ফোন নাম্বার',
+    'profile_picture' => 'প্রোফাইল ছবি',
+    'password' => 'পাসওয়ার্ড'
+
 ];

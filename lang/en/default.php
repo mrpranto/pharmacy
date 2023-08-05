@@ -49,5 +49,11 @@ return [
     'error' => 'Error',
     'role_delete_successful' => 'Role delete successful.',
     'role_update' => 'Role update successful',
-    'permissions_details' => 'Permissions details'
+    'permissions_details' => 'Permissions details',
+
+    'add_user' => 'Add User',
+    'email' =>  'Email',
+    'phone_number' => 'Phone Number',
+    'profile_picture' => 'Profile Picture',
+    'password' => 'Password'
 ];
