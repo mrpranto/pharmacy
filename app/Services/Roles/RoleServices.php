@@ -23,6 +23,20 @@ class RoleServices extends BaseServices
     }
 
     /**
+     * @return array
+     */
+    public function accessPermissions(): array
+    {
+        return [
+            'permission' => [
+                'create' => auth()->user()->can('app.roles.create'),
+                'edit' => auth()->user()->can('app.roles.edit'),
+                'delete' => auth()->user()->can('app.roles.delete')
+            ]
+        ];
+    }
+
+    /**
      * @return LengthAwarePaginator
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -114,14 +128,14 @@ class RoleServices extends BaseServices
                     ->where('id', $id)
                     ->first();
 
-                $role->update([
+                    $role->update([
                         'name' => $request->name,
                         'description' => $request->description,
                         'is_delete_able' => $request->isDeleteAble
                     ]);
 
                     $role->permissions()
-                    ->sync($request->permissions);
+                        ->sync($request->permissions);
             });
 
             return response()->json(['success' => __t('role_update')]);
@@ -143,10 +157,16 @@ class RoleServices extends BaseServices
                 ->where('id', $id)
                 ->first();
 
-            $role->permissions()
-                ->detach();
+            if ($role->is_delete_able == false){
 
-            $role->delete();
+                throw new \Exception('This role is not delete able.');
+
+            }else{
+
+                $role->permissions()->detach();
+
+                $role->delete();
+            }
 
             return response()->json(['success' => __t('role_delete_successful')]);
 

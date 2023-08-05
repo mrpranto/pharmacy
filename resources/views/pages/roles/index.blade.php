@@ -1,10 +1,10 @@
 @extends('layout.master')
-@section('title', 'Roles')
+@section('title', __t('roles'))
 @push('plugin-styles')
     <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet"/>
 @endpush
 @section('content')
-    <role-list-component :name="'Pranto'"/>
+    <role-list-component :permission="{{ json_encode($permission) }}"></role-list-component>
 @endsection
 
 @push('plugin-scripts')

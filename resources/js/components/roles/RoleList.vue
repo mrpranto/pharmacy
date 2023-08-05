@@ -4,7 +4,7 @@
             <div>
                 <h4 class="mb-3 mb-md-0">{{ __('default.roles') }}</h4>
             </div>
-            <div class="d-flex align-items-center flex-wrap text-nowrap">
+            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     {{ __('default.loading') }}
@@ -39,7 +39,7 @@ import {notification} from "ant-design-vue";
 export default {
     name: 'RoleList',
     components: {EditRole, AddNewRole},
-    props: ['name'],
+    props: ['permission'],
     data() {
         return {
             formState: {
@@ -91,6 +91,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        permission: this.permission,
                         componentName: 'role-action-component',
                         isVisible: true
                     },
@@ -99,12 +100,7 @@ export default {
                     per_page: 10,
                     search: '',
                 },
-                exportAble: {
-                    csv: 'http://127.0.0.1:8000/roles',
-                    excel: 'http://127.0.0.1:8000/roles',
-                    pdf: 'http://127.0.0.1:8000/roles',
-                    print: 'http://127.0.0.1:8000/roles',
-                }
+                exportAble: {}
             }
         }
     },

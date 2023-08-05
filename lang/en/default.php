@@ -49,4 +49,5 @@ return [
     'error' => 'Error',
     'role_delete_successful' => 'Role delete successful.',
     'role_update' => 'Role update successful',
+    'permissions_details' => 'Permissions details'
 ];

@@ -1,19 +1,12 @@
 
 <template>
     <div>
-        <div class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown">
-                <more-outlined />
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
-                <a class="dropdown-item text-primary cursor-pointer" @click.prevent="$parent.$parent.getEditData(row)">
-                    <i class="mdi mdi-lead-pencil text-primary"></i> {{ __('default.edit') }}
-                </a>
-                <a class="dropdown-item text-danger cursor-pointer" @click.prevent="$parent.$parent.showDeleteForm(row.id)">
-                    <i class="mdi mdi-trash-can text-danger"></i> {{ __('default.delete') }}
-                </a>
-            </div>
-        </div>
+        <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit && row.is_delete_able === 1">
+            <a-button shape="circle" @click.prevent="$parent.$parent.getEditData(row)"><i class="mdi mdi-lead-pencil"></i></a-button>
+        </a-tooltip>
+        <a-tooltip :title="__('default.delete')"  v-if="permission.delete && row.is_delete_able === 1">
+            <a-button danger shape="circle" @click.prevent="$parent.$parent.showDeleteForm(row.id)"><i class="mdi mdi-trash-can"></i></a-button>
+        </a-tooltip>
     </div>
 </template>
 <script>
@@ -21,7 +14,7 @@ import { MoreOutlined } from '@ant-design/icons-vue';
 export default {
     name: "Action",
     components:{MoreOutlined},
-    props:['row'],
+    props:['row', 'permission'],
     mounted() {
 
     }

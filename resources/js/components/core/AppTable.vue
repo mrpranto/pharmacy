@@ -143,6 +143,7 @@
                                             <component
                                                 :is="column.componentName"
                                                 :row="row"
+                                                :permission="column.permission"
                                                 :value="row[column.key]"
                                                 :row_index="row_index"
                                             />
