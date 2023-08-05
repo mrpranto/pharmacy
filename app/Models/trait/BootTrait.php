@@ -14,8 +14,8 @@ trait BootTrait
         parent::boot();
         static::creating(function ($model) {
             $model->fill([
-                'created_by' => auth()->id() ?? User::query()->first()->id,
-                'updated_by' => auth()->id() ?? User::query()->first()->id,
+                'created_by' => auth()->id() ?? optional(User::query()->first())->id,
+                'updated_by' => auth()->id() ?? optional(User::query()->first())->id,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -24,7 +24,7 @@ trait BootTrait
         static::updating(function ($model) {
             $model->fill([
                 'updated_at' => now(),
-                'updated_by' => auth()->id() ?? User::query()->first()->id,
+                'updated_by' => auth()->id() ?? optional(User::query()->first())->id,
             ]);
         });
     }

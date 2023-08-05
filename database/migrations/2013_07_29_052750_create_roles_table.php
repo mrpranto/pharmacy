@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->boolean('is_delete_able')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
