@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\trait\BootTrait;
+use App\Models\trait\CreatedByRelationship;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, CreatedByRelationship, BootTrait;
 
     /**
      * @var string[]

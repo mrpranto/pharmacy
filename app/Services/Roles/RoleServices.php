@@ -72,6 +72,7 @@ class RoleServices extends BaseServices
                     ->updateOrCreate([
                         'name' => $request->name,
                         'description' => $request->description,
+                        'is_delete_able' => $request->isDeleteAble
                     ])
                     ->permissions()
                     ->sync($request->permissions);
@@ -79,6 +80,77 @@ class RoleServices extends BaseServices
 
             return response()->json(['success' => __t('role_create')]);
         } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return $this
+     */
+    public function validateUpdate($request, $id): static
+    {
+        $request->validate([
+            'name' => 'required|string|unique:roles,name,'.$id,
+            'description' => 'required',
+            'permissions' => 'required|array'
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update($request, $id): JsonResponse
+    {
+        try {
+            DB::transaction(function () use ($request, $id) {
+                $role = $this->model
+                    ->newQuery()
+                    ->where('id', $id)
+                    ->first();
+
+                $role->update([
+                        'name' => $request->name,
+                        'description' => $request->description,
+                        'is_delete_able' => $request->isDeleteAble
+                    ]);
+
+                    $role->permissions()
+                    ->sync($request->permissions);
+            });
+
+            return response()->json(['success' => __t('role_update')]);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
+    {
+        try {
+
+            $role = $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->first();
+
+            $role->permissions()
+                ->detach();
+
+            $role->delete();
+
+            return response()->json(['success' => __t('role_delete_successful')]);
+
+        }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }
     }

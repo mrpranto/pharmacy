@@ -42,7 +42,7 @@
                                         <template v-for="(column) in options.columns">
                                             <div class="col-12 d-flex justify-content-between"
                                                  style="padding-bottom: 0px; padding-top: 3px">
-                                                <p>{{ column.title }}</p>
+                                                <p>{{ __('default.'+column.title) }}</p>
                                                 <div class="material-switch pull-right">
                                                     <a-switch v-model:checked="column.isVisible" size="small"/>
                                                 </div>
@@ -82,8 +82,9 @@
                 </div>
                 <div class="col-sm-2">
                     <a-input v-model:value="options.request.search"
+                             style="border-radius: 20px"
                              @pressEnter="searchData"
-                             placeholder="Search...">
+                             :placeholder="__('default.search')+'...'">
                         <template #suffix>
                             <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!options.request.search"/>
                             <a-tooltip title="Clear Search" @click.prevent="clearSearch" v-else>

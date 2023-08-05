@@ -18,7 +18,7 @@ class Localization
      */
     public function handle(Request $request, Closure $next): Response
     {
-
+        Cache::forget('translations');
         Cache::rememberForever('translations', function () {
 
             $translations = collect();

@@ -18,6 +18,7 @@ return [
     'to' => 'to',
     'of' => 'of',
     'entries' => 'entries',
+    'edit_role' => 'Edit Role',
 
     'sl' => 'Sl',
     'name' => 'Name',
@@ -25,6 +26,7 @@ return [
     'permissions' => 'Permissions',
     'action' => 'Action',
     'select_all' => 'Select all',
+    'is_delete_able' => 'Is Delete Able',
 
     'setting' => 'Setting',
     'general_setting' => 'General Setting',
@@ -39,4 +41,12 @@ return [
 
     'save' => 'Save',
     'close' => 'Close',
+    'search' => 'Search',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'update' => 'Update',
+    'success' => 'Success',
+    'error' => 'Error',
+    'role_delete_successful' => 'Role delete successful.',
+    'role_update' => 'Role update successful',
 ];

@@ -4,7 +4,7 @@ return [
     'welcome_dashboard' => 'ড্যাশবোর্ডে স্বাগতম',
     'users' => 'ব্যাবহারকারী',
     'roles' => 'রোলস',
-    'role_create' => 'রোলে তৈরী সফল হয়েছে।',
+    'role_create' => 'রোল তৈরী সফল হয়েছে।',
     'setting' => 'সেটিং',
     'general_setting' => 'সাধারণ সেটিং',
     'general' => 'সাধারণ',
@@ -37,8 +37,18 @@ return [
     'permissions_details' => 'অনুমতি বিস্তারিত',
     'action' => 'প্রক্রিয়া',
     'select_all' => 'সব নির্বাচন করুন',
+    'is_delete_able' => 'মুছে ফেলা সম্ভব',
 
     'save' => 'সংরক্ষণ',
     'close' => 'বন্ধ',
+    'search' => 'অনুসন্ধান',
+    'edit' => 'সম্পাদনা',
+    'delete' => 'মুছে ফেলুন',
+    'edit_role' => 'রোল সম্পাদনা',
+    'update' => 'আপডেট',
+    'success' => 'সাফল্য',
+    'error' => 'ত্রুটি',
+    'role_delete_successful' => 'রোল মুছে ফেলা সফল হয়েছে ',
+    'role_update' => 'রোল সম্পাদনা সফল হয়েছে',
 
 ];

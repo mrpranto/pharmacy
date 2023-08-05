@@ -14,7 +14,7 @@
                     <span class="font-weight-medium ml-1 mr-1">English</span>
                     @else
                         <i class="flag-icon flag-icon-bd mt-1" title="bd"></i>
-                        <span class="font-weight-medium ml-1 mr-1">Bangla</span>
+                        <span class="font-weight-medium ml-1 mr-1">বাংলা</span>
                     @endif
                 </a>
                 <div class="dropdown-menu" aria-labelledby="languageDropdown">
@@ -23,7 +23,7 @@
                         <i class="flag-icon flag-icon-us" title="us" id="us"></i> <span class="ml-1"> English </span>
                     </a>
                     <a href="{{ route('set-lang', 'bn') }}" class="dropdown-item py-2">
-                        <i class="flag-icon flag-icon-bd" title="bd" id="bd"></i> <span class="ml-1"> Bangla </span>
+                        <i class="flag-icon flag-icon-bd" title="bd" id="bd"></i> <span class="ml-1"> বাংলা </span>
                     </a>
                 </div>
             </li>

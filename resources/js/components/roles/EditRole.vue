@@ -1,12 +1,12 @@
 <template>
     <div>
         <a-drawer
-            :title="__('default.add_role')"
+            :title="__('default.edit_role')"
             :width="720"
-            :open="formState.openCreateRole"
+            :open="formState.openEditRole"
             :body-style="{ paddingBottom: '80px' }"
             :footer-style="{ textAlign: 'right' }"
-            @close="$parent.onClose"
+            @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
                 <a-form-item :label="__('default.name')">
@@ -77,11 +77,11 @@
 
             </a-form>
             <template #footer>
-                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
+                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="saveRole">
-                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                <a-button type="primary" style="margin-right: 8px" @click.prevent="editRole">
+                    <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
         </a-drawer>
@@ -91,7 +91,7 @@
 import {notification} from 'ant-design-vue';
 
 export default {
-    name: "AddNewRole",
+    name: "EditRole",
     props: {
         formState: {
             type: Object,
@@ -110,15 +110,15 @@ export default {
         }
     },
     methods: {
-        async saveRole() {
-            await axios.post('/roles', this.formState.formData)
+        async editRole() {
+            await axios.put(`/roles/${this.formState.current_id}`, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = ''
                         this.formState.formData.description = ''
                         this.formState.formData.permissions = []
                         this.$parent.getData()
-                        this.$parent.onClose()
+                        this.$parent.onEditClose()
                         this.showSuccessMessage(response.data.success)
                     } else {
                         this.showErrorMessage(response.data.error)

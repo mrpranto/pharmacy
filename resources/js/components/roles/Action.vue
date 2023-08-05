@@ -6,11 +6,12 @@
                 <more-outlined />
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
+                <a class="dropdown-item text-primary cursor-pointer" @click.prevent="$parent.$parent.getEditData(row)">
+                    <i class="mdi mdi-lead-pencil text-primary"></i> {{ __('default.edit') }}
+                </a>
+                <a class="dropdown-item text-danger cursor-pointer" @click.prevent="$parent.$parent.showDeleteForm(row.id)">
+                    <i class="mdi mdi-trash-can text-danger"></i> {{ __('default.delete') }}
+                </a>
             </div>
         </div>
     </div>
@@ -19,7 +20,11 @@
 import { MoreOutlined } from '@ant-design/icons-vue';
 export default {
     name: "Action",
-    components:{MoreOutlined}
+    components:{MoreOutlined},
+    props:['row'],
+    mounted() {
+
+    }
 }
 </script>
 <style scoped>
