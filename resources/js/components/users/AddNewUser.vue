@@ -12,49 +12,49 @@
                 <a-form-item :label="__('default.roles')" required>
                     <a-select
                         v-model:value="formState.formData.role_id"
-                        :class="validation.role_id ? 'ant-input ant-input-status-error': ''"
+                        :class="formState.validation.role_id ? 'ant-input ant-input-status-error': ''"
                         show-search
                         :placeholder="__('default.roles')"
                         :options="roles"
                         :filter-option="roleFilterOption"
                     ></a-select>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.role_id">{{
-                            validation.role_id[0]
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.role_id">{{
+                            formState.validation.role_id[0]
                         }}
                     </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.name')" required>
                     <a-input v-model:value="formState.formData.name"
-                             :class="validation.name ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.name">{{
-                            validation.name[0]
+                             :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
+                            formState.validation.name[0]
                         }}
                     </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.email')">
                     <a-input type="email" v-model:value="formState.formData.email"
-                             :class="validation.email ? 'ant-input ant-input-status-error': ''">
+                             :class="formState.validation.email ? 'ant-input ant-input-status-error': ''">
                         <template #prefix>
                             <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
                         </template>
                     </a-input>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.email">{{
-                            validation.email[0]
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.email">{{
+                            formState.validation.email[0]
                         }}
                     </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.phone_number')" required>
                     <a-input type="number" v-model:value="formState.formData.phone_number"
-                             :class="validation.phone_number ? 'ant-input ant-input-status-error': ''">
+                             :class="formState.validation.phone_number ? 'ant-input ant-input-status-error': ''">
                         <template #prefix>
                             <PhoneOutlined style="color: rgba(0, 0, 0, 0.25)"/>
                         </template>
                     </a-input>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.phone_number">{{
-                            validation.phone_number[0]
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.phone_number">{{
+                            formState.validation.phone_number[0]
                         }}
                     </div>
                 </a-form-item>
@@ -62,13 +62,13 @@
                 <a-form-item :label="__('default.password')" required>
                     <a-input-password
                         v-model:value="formState.formData.password"
-                        :class="validation.password ? 'ant-input ant-input-status-error': ''">
+                        :class="formState.validation.password ? 'ant-input ant-input-status-error': ''">
                         <template #prefix>
                             <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
                         </template>
                     </a-input-password>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.password">{{
-                            validation.password[0]
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.password">{{
+                            formState.validation.password[0]
                         }}
                     </div>
                 </a-form-item>
@@ -108,7 +108,6 @@ export default {
     components: {UserOutlined, LockOutlined, PhoneOutlined, UploadOutlined},
     data() {
         return {
-            validation: {},
             selectedImage: null, // To store the selected image file
             previewURL: 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
             formData: new FormData(),
@@ -157,7 +156,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
-                        this.validation = err.response.data.errors
+                        this.formState.validation = err.response.data.errors
                     } else {
                         console.error(err)
                     }

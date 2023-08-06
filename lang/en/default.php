@@ -58,5 +58,6 @@ return [
     'password' => 'Password',
     'user_create' => 'User Create Successful',
     'edit_user' => 'Edit User',
-    'user_update' => 'User Update Successful'
+    'user_update' => 'User Update Successful',
+    'user_delete' => 'User Delete Successful',
 ];

@@ -187,4 +187,21 @@ class UserServices extends BaseServices
             'path' => $file_path
         ]);
     }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
+    {
+        try {
+
+            $this->model->newQuery()->where('id', $id)->delete();
+
+            return response()->json(['success' => __t('user_delete')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
 }

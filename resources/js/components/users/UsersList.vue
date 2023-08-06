@@ -49,6 +49,7 @@ export default {
                 disabled: false,
                 current_id: '',
                 responseRole:[],
+                validation: {},
                 formData: {
                     role_id: '',
                     name: '',
@@ -150,6 +151,7 @@ export default {
                 password: '',
             }
             this.getRoles();
+            this.formState.validation = {};
             this.formState.openCreate = true;
         },
         async getRoles(){
@@ -175,6 +177,7 @@ export default {
                 password: '',
                 profile_picture: user?.profile_picture,
             }
+            this.formState.validation = {};
             this.formState.openEdit = true;
         },
         onEditClose() {
@@ -194,12 +197,12 @@ export default {
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    this.deleteRole(id)
+                    this.deleteUser(id)
                 }
             })
         },
-        async deleteRole(id){
-            await axios.delete(`/roles/${id}`)
+        async deleteUser(id){
+            await axios.delete(`/users/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()
