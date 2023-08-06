@@ -2,14 +2,18 @@
     <div>
         <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
             <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.users') }}</h4>
+                <h4 class="mb-3 mb-md-0">{{ __('default.users') }}
+                    <app-table-counter-component :total="options.total"/>
+                </h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
+                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
+                        v-if="formState.disabled">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     {{ __('default.loading') }}
                 </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
+                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm"
+                        v-else>
                     <i class="mdi mdi-plus"></i>
                     {{ __('default.add_user') }}
                 </button>
@@ -26,8 +30,8 @@
             </div>
         </div>
 
-        <AddNewUser :formState="formState" />
-        <EditUser :formState="formState" />
+        <AddNewUser :formState="formState"/>
+        <EditUser :formState="formState"/>
     </div>
 </template>
 
@@ -48,14 +52,14 @@ export default {
                 openEdit: false,
                 disabled: false,
                 current_id: '',
-                responseRole:[],
+                responseRole: [],
                 validation: {},
                 formData: {
                     role_id: '',
                     name: '',
                     email: null,
-                    phone_number:'',
-                    password:'',
+                    phone_number: '',
+                    password: '',
                     profile_picture: {}
                 },
                 layout: {
@@ -66,6 +70,7 @@ export default {
             options: {
                 loader: false,
                 responseData: {},
+                total: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -96,7 +101,7 @@ export default {
                         key: 'role',
                         isVisible: true,
                         modifier: (role) => {
-                            return role ? '<span class="badge badge-primary">'+role.name+'</span>' : ''
+                            return role ? '<span class="badge badge-primary">' + role.name + '</span>' : ''
                         }
                     },
                     {
@@ -105,7 +110,7 @@ export default {
                         key: 'profile_picture',
                         isVisible: true,
                         modifier: (row) => {
-                            return row ? '<img src="'+row.full_url+'" class="img-thumbnail" style="width: 50px;height: 50px" alt="">' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
+                            return row ? '<img src="' + row.full_url + '" class="img-thumbnail" style="width: 50px;height: 50px" alt="">' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
                         }
                     },
                     {
@@ -137,6 +142,7 @@ export default {
             await axios.get(url ?? '/get-users', {params: this.options.request})
                 .then(response => {
                     this.options.responseData = response.data;
+                    this.options.total = response.data.total
                     this.options.loader = false;
                 })
                 .catch(err => {
@@ -154,7 +160,7 @@ export default {
             this.formState.validation = {};
             this.formState.openCreate = true;
         },
-        async getRoles(){
+        async getRoles() {
             await axios.get('/get-roles-for-users')
                 .then(response => {
                     this.formState.responseRole = response.data
@@ -166,7 +172,7 @@ export default {
         onClose() {
             this.formState.openCreate = false;
         },
-        getEditData(user){
+        getEditData(user) {
             this.getRoles()
             this.formState.current_id = user.id;
             this.formState.formData = {
@@ -183,7 +189,7 @@ export default {
         onEditClose() {
             this.formState.openEdit = false;
         },
-        showDeleteForm(id){
+        showDeleteForm(id) {
             const swalWithBootstrapButtons = Swal.mixin()
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
@@ -201,7 +207,7 @@ export default {
                 }
             })
         },
-        async deleteUser(id){
+        async deleteUser(id) {
             await axios.delete(`/users/${id}`)
                 .then(response => {
                     if (response.data.success) {

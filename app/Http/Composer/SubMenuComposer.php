@@ -18,12 +18,6 @@ class SubMenuComposer
                 'url' => route('users.index'),
                 'path' => 'users',
                 'permission' => auth()->user()->can('app.user.index')
-            ],
-            [
-                'name' => __t('test'),
-                'url' => url('/test'),
-                'path' => 'test',
-                'permission' => auth()->user()->can('app.user.index')
             ]
         ];
     }

@@ -3,6 +3,11 @@
         <i data-feather="menu"></i>
     </a>
     <div class="navbar-content">
+        <form class="search-form">
+            <div class="input-group">
+                <span id="clock"></span>
+            </div>
+        </form>
 
         <ul class="navbar-nav">
             <li class="nav-item dropdown">

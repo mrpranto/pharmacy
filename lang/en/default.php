@@ -60,4 +60,5 @@ return [
     'edit_user' => 'Edit User',
     'user_update' => 'User Update Successful',
     'user_delete' => 'User Delete Successful',
+    'total' => 'Total',
 ];

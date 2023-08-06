@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
             <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }}</h4>
+                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }} <app-table-counter-component :total="options.total"/></h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
@@ -63,6 +63,7 @@ export default {
             options: {
                 loader: false,
                 responseData: {},
+                total: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -118,6 +119,7 @@ export default {
             await axios.get(url ?? '/get-roles', {params: this.options.request})
                 .then(response => {
                     this.options.responseData = response.data;
+                    this.options.total = response.data.total;
                     this.options.loader = false;
                 })
                 .catch(err => {

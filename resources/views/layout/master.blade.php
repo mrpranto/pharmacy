@@ -75,6 +75,7 @@
 
 <!-- common js -->
 <script src="{{ asset('assets/js/template.js') }}"></script>
+<script src="{{ asset('/js/clock.js') }}"></script>
 <!-- end common js -->
 
 @stack('custom-scripts')

@@ -24,6 +24,8 @@ app.component('user-action-component', UserAction);
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
+import Counter from './components/core/Counter.vue';
+app.component('app-table-counter-component', Counter);
 
 
 
