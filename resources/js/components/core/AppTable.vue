@@ -325,6 +325,10 @@ export default {
                     this.options.request[key] = ""
                 }
             }
+            this.page = {
+                value: 1,
+                label: 1
+            }
             await this.$parent.getData()
         },
         changePerPage(page) {

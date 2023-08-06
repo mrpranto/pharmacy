@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\UserServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -37,9 +38,12 @@ class UserController extends Controller
         return $this->services->getUsers();
     }
 
-    public function uploadProfilePicture()
+    /**
+     * @return Collection|array
+     */
+    public function getRoles(): Collection|array
     {
-        dd(request()->all());
+        return $this->services->getRoles();
     }
 
     /**
@@ -47,7 +51,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->services->validateStore($request)->store($request);
     }
 
     /**

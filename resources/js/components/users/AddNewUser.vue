@@ -9,7 +9,22 @@
             @close="$parent.onClose"
         >
             <a-form v-bind="formState.layout">
-                <a-form-item :label="__('default.name')">
+                <a-form-item :label="__('default.roles')" required>
+                    <a-select
+                        v-model:value="formState.formData.role_id"
+                        :class="validation.role_id ? 'ant-input ant-input-status-error': ''"
+                        show-search
+                        :placeholder="__('default.roles')"
+                        :options="roles"
+                        :filter-option="roleFilterOption"
+                    ></a-select>
+                    <div class="ant-form-item-explain-error" style="" v-if="validation.role_id">{{
+                            validation.role_id[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.name')" required>
                     <a-input v-model:value="formState.formData.name"
                              :class="validation.name ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="validation.name">{{
@@ -19,7 +34,7 @@
                 </a-form-item>
 
                 <a-form-item :label="__('default.email')">
-                    <a-input v-model:value="formState.formData.email"
+                    <a-input type="email" v-model:value="formState.formData.email"
                              :class="validation.email ? 'ant-input ant-input-status-error': ''">
                         <template #prefix>
                             <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
@@ -31,8 +46,8 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.phone_number')">
-                    <a-input v-model:value="formState.formData.phone_number"
+                <a-form-item :label="__('default.phone_number')" required>
+                    <a-input type="number" v-model:value="formState.formData.phone_number"
                              :class="validation.phone_number ? 'ant-input ant-input-status-error': ''">
                         <template #prefix>
                             <PhoneOutlined style="color: rgba(0, 0, 0, 0.25)"/>
@@ -44,7 +59,7 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.password')">
+                <a-form-item :label="__('default.password')" required>
                     <a-input-password
                         v-model:value="formState.formData.password"
                         :class="validation.password ? 'ant-input ant-input-status-error': ''">
@@ -62,7 +77,7 @@
                     <input type="file" class="form-control mr-2" @change="previewImage" accept="image/*" />
 
                     <!-- Display the preview of the selected image -->
-                    <img v-if="previewURL" :src="previewURL" class="img-thumbnail" alt="Selected Image" style="width: 100px; height: 100px; margin-top: 20px">
+                    <img v-if="previewURL" :src="previewURL" class="img-thumbnail" alt="Selected Image" style="width: 100px; height: 100px; margin-top: 20px;border-radius: 50%;">
                 </a-form-item>
 
 
@@ -95,19 +110,44 @@ export default {
         return {
             validation: {},
             selectedImage: null, // To store the selected image file
-            previewURL: '',
+            previewURL: 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
+            formData: new FormData(),
+            roles:[]
         }
     },
-    watch: {},
+    watch: {
+        'formState.responseRole':{
+            immediate: true,
+            deep: true,
+            handler() {
+                if (this.formState.responseRole) {
+                    this.getRoles();
+                }
+            },
+        }
+    },
     mounted() {
 
     },
     methods: {
         async save() {
-            await axios.post('/users', this.formState.formData)
+            this.formData.append('role_id', this.formState.formData.role_id);
+            this.formData.append('name', this.formState.formData.name);
+            this.formData.append('email', this.formState.formData.email);
+            this.formData.append('phone_number', this.formState.formData.phone_number);
+            this.formData.append('password', this.formState.formData.password);
+            await axios.post('/users', this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = ''
+                        this.formState.formData.email = ''
+                        this.formState.formData.phone_number = ''
+                        this.formState.formData.password = ''
+                        this.formState.formData.profile_picture = {}
                         this.$parent.getData()
                         this.$parent.onClose()
                         this.showSuccessMessage(response.data.success)
@@ -122,6 +162,17 @@ export default {
                         console.error(err)
                     }
                 })
+        },
+        getRoles(){
+            this.roles = this.formState.responseRole.map(item => {
+                return {
+                    value:item.id,
+                    label:item.name
+                }
+            })
+        },
+        roleFilterOption(input, option){
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
         showSuccessMessage(message) {
             notification['success']({
@@ -138,6 +189,7 @@ export default {
         previewImage(event) {
             // Get the selected image file
             this.selectedImage = event.target.files[0];
+            this.formData.append('profile_picture', event.target.files[0]);
 
             // Create a FileReader to read the selected image and generate a preview URL
             let reader = new FileReader();

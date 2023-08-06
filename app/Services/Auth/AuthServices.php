@@ -5,7 +5,9 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Services\BaseServices;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -42,6 +44,8 @@ class AuthServices extends BaseServices
         if ($this->model){
             $credentials = ['phone_number' => $this->model->phone_number, 'password' => request()->get('password')];
             if (Auth::attempt($credentials)){
+                Session::put('lang', 'en');
+
                 return redirect()->intended('/home')->with('success', 'Your login successful.');
             }else{
                 return redirect()->route('login')->withErrors(['password' => 'Incorrect password.']);

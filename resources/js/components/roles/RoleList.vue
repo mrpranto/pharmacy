@@ -48,6 +48,7 @@ export default {
                 disabled: false,
                 responsePermissions:[],
                 current_id: '',
+                selectAll: false,
                 formData: {
                     name: '',
                     description: '',
@@ -142,6 +143,7 @@ export default {
                 isDeleteAble: true,
                 permissions: [],
             }
+            this.formState.selectAll = false;
             this.formState.openCreateRole = true;
         },
         onClose() {
@@ -156,6 +158,7 @@ export default {
                 isDeleteAble: role.is_delete_able ? true : false,
                 permissions: role.permissions.map(item => item.id),
             }
+            this.formState.selectAll = false;
             this.formState.openEditRole = true;
         },
         onEditClose() {

@@ -55,5 +55,6 @@ return [
     'email' =>  'Email',
     'phone_number' => 'Phone Number',
     'profile_picture' => 'Profile Picture',
-    'password' => 'Password'
+    'password' => 'Password',
+    'user_create' => 'User Create Successful',
 ];

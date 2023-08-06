@@ -26,37 +26,7 @@
     <!-- end common css -->
 
     @stack('style')
-    <style>
-
-        /* Add scrollbar to an element */
-        body {
-            max-height: 200px; /* Set the maximum height of the element */
-            overflow-y: auto; /* Enable vertical scrolling */
-            scrollbar-width: thin; /* Set the width of the scrollbar */
-            scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
-        }
-
-        /* Customize scrollbar appearance for WebKit browsers */
-        body::-webkit-scrollbar {
-            width: 2px; /* Set the width of the scrollbar */
-        }
-
-        body::-webkit-scrollbar-track {
-            background-color: #ededed; /* Set the color of the scrollbar track */
-        }
-
-        body::-webkit-scrollbar-thumb {
-            background-color: #b4b1b1; /* Set the color of the scrollbar thumb */
-            border-radius: 50px;
-        }
-
-        body:active::-webkit-scrollbar-thumb,
-        body:focus::-webkit-scrollbar-thumb,
-        body:hover::-webkit-scrollbar-thumb {
-            visibility: visible;
-        }
-
-    </style>
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body data-base-url="{{url('/')}}">

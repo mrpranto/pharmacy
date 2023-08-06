@@ -45,7 +45,7 @@ Route::group(['middleware' => 'authenticate'], function (){
    //Users route.
    Route::resource('users', UserController::class);
    Route::get('get-users', [UserController::class, 'getUsers']);
-   Route::post('upload-profile-picture', [UserController::class, 'uploadProfilePicture']);
+   Route::get('get-roles-for-users', [UserController::class, 'getRoles']);
 
    Route::get('test', function (){
       return view('vue-test');

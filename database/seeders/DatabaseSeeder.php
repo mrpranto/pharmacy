@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('11223344'),
         ]);
 
+        Role::factory(100)->create();
         User::factory(100)->create();
 
         Setting::query()->updateOrCreate([

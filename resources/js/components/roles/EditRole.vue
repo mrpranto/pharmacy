@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <div class="form-check">
                                     <label class="form-check-label cursor-pointer">
-                                        <input type="checkbox" class="form-check-input" v-model="selectAll">
+                                        <input type="checkbox" class="form-check-input" v-model="formState.selectAll">
                                         {{ __('default.select_all') }}
                                         <i class="input-frame"></i></label>
                                 </div>
@@ -101,11 +101,10 @@ export default {
     data() {
         return {
             validation: {},
-            selectAll: false
         }
     },
     watch: {
-        'selectAll': function () {
+        'formState.selectAll': function () {
             this.selectAllPermission()
         }
     },
@@ -146,7 +145,7 @@ export default {
         },
         selectAllPermission() {
             const permissions = [];
-            if (this.selectAll) {
+            if (this.formState.selectAll) {
                 this.formState.responsePermissions.forEach(item => {
                     item.permission.forEach(subItem => {
                         permissions.push(subItem.id)

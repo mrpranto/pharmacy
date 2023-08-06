@@ -55,6 +55,7 @@ return [
     'email' =>  'ইমেইল',
     'phone_number' => 'ফোন নাম্বার',
     'profile_picture' => 'প্রোফাইল ছবি',
-    'password' => 'পাসওয়ার্ড'
+    'password' => 'পাসওয়ার্ড',
+    'user_create' => 'ব্যবহারকারী তৈরি সফল হয়েছে'
 
 ];

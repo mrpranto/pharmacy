@@ -46,16 +46,18 @@ export default {
                 openEdit: false,
                 disabled: false,
                 current_id: '',
+                responseRole:[],
                 formData: {
+                    role_id: '',
                     name: '',
-                    email:'',
+                    email: null,
                     phone_number:'',
                     password:'',
-                    profile_picture: ''
+                    profile_picture: {}
                 },
                 layout: {
-                    labelCol: {span: 4},
-                    wrapperCol: {span: 20},
+                    labelCol: {span: 5},
+                    wrapperCol: {span: 19},
                 }
             },
             options: {
@@ -86,12 +88,21 @@ export default {
                         isVisible: true
                     },
                     {
+                        title: 'roles',
+                        type: 'custom-html',
+                        key: 'role',
+                        isVisible: true,
+                        modifier: (role) => {
+                            return role ? '<span class="badge badge-primary">'+role.name+'</span>' : ''
+                        }
+                    },
+                    {
                         title: 'profile_picture',
                         type: 'custom-html',
                         key: 'profile_picture',
                         isVisible: true,
                         modifier: (row) => {
-                            return row ? '' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
+                            return row ? '<img src="'+row.full_url+'" class="img-thumbnail" style="width: 50px;height: 50px" alt="">' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
                         }
                     },
                     {
@@ -132,8 +143,21 @@ export default {
         showAddForm() {
             this.formState.formData = {
                 name: '',
+                email: null,
+                phone_number: '',
+                password: '',
             }
+            this.getRoles();
             this.formState.openCreate = true;
+        },
+        async getRoles(){
+            await axios.get('/get-roles-for-users')
+                .then(response => {
+                    this.formState.responseRole = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         },
         onClose() {
             this.formState.openCreate = false;

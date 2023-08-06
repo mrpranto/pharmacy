@@ -27,7 +27,6 @@ class DashboardController extends Controller
     {
         if (in_array($lang, ['en', 'bn'])) {
             Session::put('lang', $lang);
-            Artisan::call('cache:clear');
         }
         return redirect()->back();
     }

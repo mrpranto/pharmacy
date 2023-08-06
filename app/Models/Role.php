@@ -19,8 +19,6 @@ class Role extends Model
      */
     protected $fillable = ['name', 'description', 'created_by', 'updated_by', 'is_delete_able'];
 
-    protected $with = ['permissions', 'users'];
-
     /**
      * @return BelongsToMany
      */
