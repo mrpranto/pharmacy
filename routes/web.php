@@ -29,6 +29,7 @@ Route::group(['middleware' => 'authenticate'], function (){
     //Initial routes.
    Route::get('home', [DashboardController::class, 'home']);
    Route::get('lang/{lang}', [DashboardController::class, 'setLang'])->name('set-lang');
+   Route::get('color-mode/{mode}', [DashboardController::class, 'setColorMode'])->name('set-color-mode');
 
    //Logout route.
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');

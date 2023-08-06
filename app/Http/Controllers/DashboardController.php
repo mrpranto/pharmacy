@@ -30,4 +30,12 @@ class DashboardController extends Controller
         }
         return redirect()->back();
     }
+
+    public function setColorMode($mode)
+    {
+        if (in_array($mode, ['dark', 'white'])) {
+            Session::put('color-mode', $mode);
+        }
+        return redirect()->back();
+    }
 }

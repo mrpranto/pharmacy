@@ -22,7 +22,14 @@
     @stack('plugin-styles')
 
     <!-- common css -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
+    @if(session()->get('color-mode') == 'white')
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
+    @elseif(session()->get('color-mode') == 'dark')
+        <link href="{{ asset('css/app-dark.css') }}" rel="stylesheet"/>
+    @else
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
+    @endif
+
     <!-- end common css -->
 
     @stack('style')
@@ -44,7 +51,8 @@
     </div>
 
 
-    <div class="modal fade offline-warning-show" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade offline-warning-show" tabindex="-1" role="dialog" data-backdrop="static"
+         data-keyboard="false">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-body">
@@ -97,10 +105,10 @@
         @endif
     });
 
-    window.addEventListener('offline', function(event){
+    window.addEventListener('offline', function (event) {
         $('.offline-warning-show').modal('show')
     });
-    window.addEventListener('online', function(event){
+    window.addEventListener('online', function (event) {
         $('.offline-warning-show').modal('hide')
     });
 

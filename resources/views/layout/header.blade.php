@@ -10,13 +10,14 @@
         </form>
 
         <ul class="navbar-nav">
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
 
                     @if(session()->get('lang') == 'en')
                         <i class="flag-icon flag-icon-us mt-1" title="us"></i>
-                    <span class="font-weight-medium ml-1 mr-1">English</span>
+                        <span class="font-weight-medium ml-1 mr-1">English</span>
                     @else
                         <i class="flag-icon flag-icon-bd mt-1" title="bd"></i>
                         <span class="font-weight-medium ml-1 mr-1">বাংলা</span>
@@ -32,6 +33,23 @@
                     </a>
                 </div>
             </li>
+
+            <li class="nav-item dropdown">
+                @if(session()->get('color-mode') == 'white')
+                    <a class="nav-link" href="{{ route('set-color-mode', 'dark') }}">
+                        <i data-feather="moon"></i>
+                    </a>
+                @elseif(session()->get('color-mode') == 'dark')
+                    <a class="nav-link" href="{{ route('set-color-mode', 'white') }}">
+                        <i data-feather="sun"></i>
+                    </a>
+                @else
+                    <a class="nav-link" href="{{ route('set-color-mode', 'dark') }}">
+                        <i data-feather="moon"></i>
+                    </a>
+                @endif
+            </li>
+
             <li class="nav-item dropdown nav-messages">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -177,12 +195,16 @@
             <li class="nav-item dropdown nav-profile">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <img src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}" alt="profile">
+                    <img src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}"
+                         alt="profile">
+                    {{ auth()->user()->name }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="profileDropdown">
                     <div class="dropdown-header d-flex flex-column align-items-center">
                         <div class="figure mb-3">
-                            <img style="width: 80px;height: 80px" src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}" alt="">
+                            <img style="width: 80px;height: 80px"
+                                 src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}"
+                                 alt="">
                         </div>
                         <div class="info text-center">
                             <p class="name font-weight-bold mb-0">{{ auth()->user()->name }}</p>

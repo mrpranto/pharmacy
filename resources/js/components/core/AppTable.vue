@@ -347,6 +347,7 @@ export default {
 <style scoped>
 .bg-gray {
     background-color: #f2f4f9;
+    //background-color: #070d19;
 }
 
 .btn-gray {
