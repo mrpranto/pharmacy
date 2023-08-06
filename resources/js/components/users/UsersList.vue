@@ -27,6 +27,7 @@
         </div>
 
         <AddNewUser :formState="formState" />
+        <EditUser :formState="formState" />
     </div>
 </template>
 
@@ -34,10 +35,11 @@
 
 import {notification} from "ant-design-vue";
 import AddNewUser from "./AddNewUser.vue";
+import EditUser from "./EditUser.vue";
 
 export default {
     name: 'UsersList',
-    components: {AddNewUser},
+    components: {EditUser, AddNewUser},
     props: ['permission'],
     data() {
         return {
@@ -162,18 +164,21 @@ export default {
         onClose() {
             this.formState.openCreate = false;
         },
-        getEditData(role){
-            this.formState.current_id = role.id,
+        getEditData(user){
+            this.getRoles()
+            this.formState.current_id = user.id;
             this.formState.formData = {
-                name: role.name,
-                description: role.description,
-                isDeleteAble: role.is_delete_able ? true : false,
-                permissions: role.permissions.map(item => item.id),
+                role_id: user.role_id,
+                name: user.name,
+                email: user.email,
+                phone_number: user.phone_number,
+                password: '',
+                profile_picture: user?.profile_picture,
             }
-            this.formState.openEditRole = true;
+            this.formState.openEdit = true;
         },
         onEditClose() {
-            this.formState.openEditRole = false;
+            this.formState.openEdit = false;
         },
         showDeleteForm(id){
             const swalWithBootstrapButtons = Swal.mixin()

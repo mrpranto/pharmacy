@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit">
+        <a-tooltip :title="__('default.edit')" @click.prevent="$parent.$parent.getEditData(row)" class="mr-1" v-if="permission.edit">
             <a-button shape="circle" ><i class="mdi mdi-lead-pencil"></i></a-button>
         </a-tooltip>
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete">

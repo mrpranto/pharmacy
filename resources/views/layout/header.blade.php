@@ -172,12 +172,12 @@
             <li class="nav-item dropdown nav-profile">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <img src="{{ asset('/images/avatar.png') }}" alt="profile">
+                    <img src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}" alt="profile">
                 </a>
                 <div class="dropdown-menu" aria-labelledby="profileDropdown">
                     <div class="dropdown-header d-flex flex-column align-items-center">
                         <div class="figure mb-3">
-                            <img style="width: 80px;height: 80px" src="{{ asset('/images/avatar.png') }}" alt="">
+                            <img style="width: 80px;height: 80px" src="{{ optional(auth()->user()->profilePicture)->full_url ?? asset('/images/avatar.png') }}" alt="">
                         </div>
                         <div class="info text-center">
                             <p class="name font-weight-bold mb-0">{{ auth()->user()->name }}</p>

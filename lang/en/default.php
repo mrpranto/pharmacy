@@ -57,4 +57,6 @@ return [
     'profile_picture' => 'Profile Picture',
     'password' => 'Password',
     'user_create' => 'User Create Successful',
+    'edit_user' => 'Edit User',
+    'user_update' => 'User Update Successful'
 ];
