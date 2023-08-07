@@ -102,7 +102,7 @@
                             <thead>
                             <tr>
                                 <template v-for="(col) in options.columns">
-                                    <th class="bg-gray" v-if="col.isVisible">
+                                    <th class="font-bold" v-if="col.isVisible">
                                         {{ __('default.'+col.title) }}
                                     </th>
                                 </template>
@@ -345,9 +345,9 @@ export default {
 </script>
 
 <style scoped>
-.bg-gray {
-    background-color: #f2f4f9;
-    //background-color: #070d19;
+.font-bold {
+    font-weight: bolder;
+    font-size: 15px;
 }
 
 .btn-gray {
