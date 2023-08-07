@@ -4,6 +4,10 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Product\CategoryController;
+use App\Http\Controllers\Product\CompanyController;
+use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Product\UnitController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +51,14 @@ Route::group(['middleware' => 'authenticate'], function (){
    Route::resource('users', UserController::class);
    Route::get('get-users', [UserController::class, 'getUsers']);
    Route::get('get-roles-for-users', [UserController::class, 'getRoles']);
+
+   //Products route
+    Route::group(['prefix' => 'product'], function (){
+        Route::resource('products', ProductController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('companies', CompanyController::class);
+        Route::resource('units', UnitController::class);
+    });
 
    Route::get('test', function (){
       return view('vue-test');

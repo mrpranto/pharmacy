@@ -39,6 +39,13 @@ class SidebarComposer
                     'subMenu'    => $this->subMenu->users(),
                     'id' => 'users',
                 ],
+                [
+                    'name' => __t('products'),
+                    'icon' => 'briefcase',
+                    'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
+                    'subMenu'    => $this->subMenu->products(),
+                    'id' => 'products',
+                ],
             ]
         ]);
     }

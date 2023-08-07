@@ -61,4 +61,9 @@ return [
     'user_update' => 'User Update Successful',
     'user_delete' => 'User Delete Successful',
     'total' => 'Total',
+
+    'products' => 'Products',
+    'categories' => 'Categories',
+    'companies' => 'Companies',
+    'units' => 'Units',
 ];

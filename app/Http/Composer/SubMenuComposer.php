@@ -4,6 +4,9 @@ namespace App\Http\Composer;
 
 class SubMenuComposer
 {
+    /**
+     * @return array[]
+     */
     public function users(): array
     {
         return [
@@ -19,6 +22,39 @@ class SubMenuComposer
                 'path' => 'users',
                 'permission' => auth()->user()->can('app.user.index')
             ]
+        ];
+    }
+
+    /**
+     * @return array[]
+     */
+    public function products(): array
+    {
+        return [
+            [
+                'name' => __t('products'),
+                'url' => route('products.index'),
+                'path' => 'product/products',
+                'permission' => auth()->user()->can('app.roles.index')
+            ],
+            [
+                'name' => __t('categories'),
+                'url' => route('categories.index'),
+                'path' => 'product/categories',
+                'permission' => auth()->user()->can('app.user.index')
+            ],
+            [
+                'name' => __t('companies'),
+                'url' => route('companies.index'),
+                'path' => 'product/companies',
+                'permission' => auth()->user()->can('app.user.index')
+            ],
+            [
+                'name' => __t('units'),
+                'url' => route('units.index'),
+                'path' => 'product/units',
+                'permission' => auth()->user()->can('app.user.index')
+            ],
         ];
     }
 }
