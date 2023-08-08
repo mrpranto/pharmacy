@@ -35,25 +35,25 @@ class SubMenuComposer
                 'name' => __t('products'),
                 'url' => route('products.index'),
                 'path' => 'product/products',
-                'permission' => auth()->user()->can('app.roles.index')
+                'permission' => auth()->user()->can('app.product.index')
             ],
             [
                 'name' => __t('categories'),
                 'url' => route('categories.index'),
                 'path' => 'product/categories',
-                'permission' => auth()->user()->can('app.user.index')
+                'permission' => auth()->user()->can('app.category.index')
             ],
             [
                 'name' => __t('companies'),
                 'url' => route('companies.index'),
                 'path' => 'product/companies',
-                'permission' => auth()->user()->can('app.user.index')
+                'permission' => auth()->user()->can('app.company.index')
             ],
             [
                 'name' => __t('units'),
                 'url' => route('units.index'),
                 'path' => 'product/units',
-                'permission' => auth()->user()->can('app.user.index')
+                'permission' => auth()->user()->can('app.unit.index')
             ],
         ];
     }

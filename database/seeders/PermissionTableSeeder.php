@@ -59,6 +59,11 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete User',
                 'slug' => 'app.user.delete'
             ],
+
+
+            /*
+             * Role permission
+             * */
             [
                 'module_id' => $this->module('Roles'),
                 'name' => 'Role List',
@@ -83,6 +88,125 @@ class PermissionTableSeeder extends Seeder
                 'module_id' => $this->module('Roles'),
                 'name' => 'Delete Role',
                 'slug' => 'app.roles.delete'
+            ],
+
+
+            /*
+             * Category permission
+             * */
+            [
+                'module_id' => $this->module('Categories'),
+                'name' => 'Category List',
+                'slug' => 'app.category.index'
+            ],
+            [
+                'module_id' => $this->module('Categories'),
+                'name' => 'Add New Category',
+                'slug' => 'app.category.create'
+            ],
+            [
+                'module_id' => $this->module('Categories'),
+                'name' => 'Edit Category',
+                'slug' => 'app.category.edit'
+            ],
+            [
+                'module_id' => $this->module('Categories'),
+                'name' => 'Show Category',
+                'slug' => 'app.category.show'
+            ],
+            [
+                'module_id' => $this->module('Categories'),
+                'name' => 'Delete Category',
+                'slug' => 'app.category.delete'
+            ],
+
+
+            /*
+             * Companies permission
+             * */
+            [
+                'module_id' => $this->module('Companies'),
+                'name' => 'Company List',
+                'slug' => 'app.company.index'
+            ],
+            [
+                'module_id' => $this->module('Companies'),
+                'name' => 'Add New Company',
+                'slug' => 'app.company.create'
+            ],
+            [
+                'module_id' => $this->module('Companies'),
+                'name' => 'Edit Company',
+                'slug' => 'app.company.edit'
+            ],
+            [
+                'module_id' => $this->module('Companies'),
+                'name' => 'Show Company',
+                'slug' => 'app.company.show'
+            ],
+            [
+                'module_id' => $this->module('Companies'),
+                'name' => 'Delete Company',
+                'slug' => 'app.company.delete'
+            ],
+
+
+            /*
+             * Unit permission
+             * */
+            [
+                'module_id' => $this->module('Units'),
+                'name' => 'Unit List',
+                'slug' => 'app.unit.index'
+            ],
+            [
+                'module_id' => $this->module('Units'),
+                'name' => 'Add New Unit',
+                'slug' => 'app.unit.create'
+            ],
+            [
+                'module_id' => $this->module('Units'),
+                'name' => 'Edit Unit',
+                'slug' => 'app.unit.edit'
+            ],
+            [
+                'module_id' => $this->module('Units'),
+                'name' => 'Show Unit',
+                'slug' => 'app.unit.show'
+            ],
+            [
+                'module_id' => $this->module('Units'),
+                'name' => 'Delete Unit',
+                'slug' => 'app.unit.delete'
+            ],
+
+            /*
+             * Product permission
+             * */
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Product List',
+                'slug' => 'app.product.index'
+            ],
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Add New Product',
+                'slug' => 'app.product.create'
+            ],
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Edit Product',
+                'slug' => 'app.product.edit'
+            ],
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Show Product',
+                'slug' => 'app.product.show'
+            ],
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Delete Product',
+                'slug' => 'app.product.delete'
             ],
         ];
     }

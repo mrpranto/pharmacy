@@ -3,32 +3,50 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Services\Product\Categories\CategoryServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param CategoryServices $categoryServices
      */
-    public function index()
+    public function __construct(CategoryServices $categoryServices)
     {
-        return view('pages.products.categories.index');
+        $this->services = $categoryServices;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(): View
     {
-        //
+        return view('pages.products.categories.index', $this->services->accessPermissions());
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getCategories(): LengthAwarePaginator
+    {
+        return $this->services->getCategories();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        return $this->services
+            ->validate($request)
+            ->store($request);
     }
 
     /**
@@ -40,19 +58,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
+        return $this->services
+            ->validateUpdate($request, $id)
+            ->update($request, $id);
     }
 
     /**

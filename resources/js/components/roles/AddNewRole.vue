@@ -9,7 +9,7 @@
             @close="$parent.onClose"
         >
             <a-form v-bind="formState.layout">
-                <a-form-item :label="__('default.name')">
+                <a-form-item :label="__('default.name')" required>
                     <a-input v-model:value="formState.formData.name"
                              :class="validation.name ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="validation.name">{{

@@ -36,14 +36,17 @@ class SidebarComposer
                     'name' => __t('users'),
                     'icon' => 'users',
                     'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
-                    'subMenu'    => $this->subMenu->users(),
+                    'subMenu' => $this->subMenu->users(),
                     'id' => 'users',
                 ],
                 [
                     'name' => __t('products'),
                     'icon' => 'briefcase',
-                    'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
-                    'subMenu'    => $this->subMenu->products(),
+                    'permission' => auth()->user()->canany([
+                        'app.category.index', 'app.company.index',
+                        'app.unit.index', 'app.product.index'
+                    ]),
+                    'subMenu' => $this->subMenu->products(),
                     'id' => 'products',
                 ],
             ]

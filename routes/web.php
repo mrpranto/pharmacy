@@ -55,7 +55,10 @@ Route::group(['middleware' => 'authenticate'], function (){
    //Products route
     Route::group(['prefix' => 'product'], function (){
         Route::resource('products', ProductController::class);
+
         Route::resource('categories', CategoryController::class);
+        Route::get('get-categories', [CategoryController::class, 'getCategories']);
+
         Route::resource('companies', CompanyController::class);
         Route::resource('units', UnitController::class);
     });

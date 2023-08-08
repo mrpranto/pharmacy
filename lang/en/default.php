@@ -66,4 +66,10 @@ return [
     'categories' => 'Categories',
     'companies' => 'Companies',
     'units' => 'Units',
+
+    'add_new_category' => 'Add new category',
+    'edit_category' => 'Edit category',
+    'status' => 'Status',
+    'category_create' => 'Category create successful',
+    'category_edit' => 'Category edit successful',
 ];

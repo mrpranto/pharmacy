@@ -16,11 +16,20 @@ app.component('role-action-component', Action);
 import PermissionComponent from './components/roles/PermissionComponent.vue';
 app.component('role-permission-component', PermissionComponent);
 
-
+/*
+* Users component
+* */
 import UsersListComponent from './components/users/UsersList.vue';
 app.component('user-list-component', UsersListComponent);
 import UserAction from './components/users/Action.vue';
 app.component('user-action-component', UserAction);
+
+
+import CategoryListComponent from './components/products/categories/CategoryList.vue';
+app.component('category-list-component', CategoryListComponent);
+import CategoryAction from './components/products/categories/Action.vue';
+app.component('category-action-component', CategoryAction);
+
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
