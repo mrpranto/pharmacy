@@ -16,10 +16,12 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $a = [true, false];
+        $k = array_rand($a);
         return [
-            'name' => fake()->unique()->colorName(),
+            'name' => fake()->unique()->firstName(),
             'description' => fake()->realText,
-            'status' => true
+            'status' => $a[$k]
         ];
     }
 }

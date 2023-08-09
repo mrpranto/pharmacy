@@ -72,4 +72,5 @@ return [
     'status' => 'Status',
     'category_create' => 'Category create successful',
     'category_edit' => 'Category edit successful',
+    'category_delete' => 'Category delete successful',
 ];

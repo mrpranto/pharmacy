@@ -5,15 +5,15 @@
             <a-button shape="circle" @click.prevent="$parent.$parent.getEditData(row)"><i class="mdi mdi-lead-pencil"></i></a-button>
         </a-tooltip>
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete">
-            <a-button danger shape="circle" @click.prevent="$parent.$parent.showDeleteForm(row.id)"><i class="mdi mdi-trash-can"></i></a-button>
+            <a-button shape="circle" @click.prevent="$parent.$parent.showDeleteForm(row.id)"><i class="mdi mdi-trash-can"></i></a-button>
         </a-tooltip>
     </div>
 </template>
 <script>
-import { MoreOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined, FormOutlined } from '@ant-design/icons-vue';
 export default {
     name: "Action",
-    components:{MoreOutlined},
+    components:{MoreOutlined, FormOutlined},
     props:['row', 'permission'],
     mounted() {
 

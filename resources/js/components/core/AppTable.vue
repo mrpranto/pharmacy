@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-1">
+                <div class="col-sm-10">
                     <div class="btn-group" role="group">
                         <div class="dropdown show mr-1">
                             <a class="btn btn btn-gray btn-rounded"
@@ -20,7 +20,7 @@
                                    :key="per_page_index">{{ per_page }}</a>
                             </div>
                         </div>
-                        <div class="dropdown show">
+                        <div class="dropdown show mr-1">
                             <a class="btn btn btn-gray btn-rounded"
                                href="javascript:void(0)"
                                id="dropdownMenuLink"
@@ -42,7 +42,7 @@
                                         <template v-for="(column) in options.columns">
                                             <div class="col-12 d-flex justify-content-between"
                                                  style="padding-bottom: 0px; padding-top: 3px">
-                                                <p>{{ __('default.'+column.title) }}</p>
+                                                <p>{{ __('default.' + column.title) }}</p>
                                                 <div class="material-switch pull-right">
                                                     <a-switch v-model:checked="column.isVisible" size="small"/>
                                                 </div>
@@ -54,32 +54,83 @@
                                 <div class="dropdown-item d-flex justify-content-end">
                                     <span></span>
                                     <button class="btn btn-sm btn-default float-right"
-                                            @click.prevent="clearColumnVisibility" type="button"> {{ __('default.clear') }}
+                                            @click.prevent="clearColumnVisibility" type="button"> {{
+                                            __('default.clear')
+                                        }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" title="Refresh" class="btn btn btn-rounded btn-gray mr-1" @click.prevent="refreshTable">
+                            <i class="mdi mdi-reload"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group" v-if="options.exportAble &&
+                    (options.exportAble.csv || options.exportAble.excel || options.exportAble.pdf ||options.exportAble.print)">
+                        <div class="dropdown show mr-1">
+                            <a class="btn btn btn-gray btn-rounded"
+                               href="javascript:void(0)"
+                               id="dropdownMenuLink"
+                               data-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                <i class="mdi mdi-export"></i> Export
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.csv">
+                                    <i class="mdi mdi-file-excel"></i> CSV
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.excel">
+                                    <i class="mdi mdi-file-excel-box"></i> EXCEL
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.pdf">
+                                    <i class="mdi mdi-file-pdf"></i> PDF
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.print">
+                                    <i class="mdi mdi-printer"></i> PRINT
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <div class="dropdown show mr-1" v-if="options.request.hasOwnProperty('status')">
+                            <a class="btn btn btn-rounded mt-2" :class="options.request.status !== '' ? 'btn-outline-primary' : 'btn-gray'"
+                               href="javascript:void(0)"
+                               id="dropdownMenuLink"
+                               data-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                Status
+                            </a>
+                            <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1" style="padding: 25px">
+                                <div class="dropdown-item scroll">
+                                    <div class="row pt-2">
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <a-form-item :label="__('default.status')">
+                                                <a-radio-group v-model:value="options.request.status">
+                                                    <a-radio value="1">Active</a-radio>
+                                                    <a-radio value="0">In-active</a-radio>
+                                                </a-radio-group>
+                                            </a-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item d-flex justify-content-end">
+                                    <span></span>
+                                    <button class="btn btn-sm btn-default float-right"
+                                            @click.prevent="clearStatusFilter" type="button"> {{
+                                            __('default.clear')
+                                        }}
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-9">
-                    <div class="btn-group" role="group" aria-label="Basic example" v-if="options.exportAble">
-                        <button type="button" class="btn btn btn-rounded btn-gray" v-if="options.exportAble.csv">
-                            <i class="mdi mdi-file-excel"></i> CSV
-                        </button>
-                        <button type="button" class="btn btn btn-gray" v-if="options.exportAble.excel">
-                            <i class="mdi mdi-file-excel-box"></i> EXCEL
-                        </button>
-                        <button type="button" class="btn btn btn-gray" v-if="options.exportAble.pdf">
-                            <i class="mdi mdi-file-pdf"></i> PDF
-                        </button>
-                        <button type="button" class="btn btn btn-gray" v-if="options.exportAble.print">
-                            <i class="mdi mdi-printer"></i> PRINT
-                        </button>
-                        <button type="button" class="btn btn btn-rounded btn-gray" @click.prevent="refreshTable">
-                            <i class="mdi mdi-reload"></i> REFRESH
-                        </button>
-                    </div>
-                </div>
+
                 <div class="col-sm-2">
                     <a-input v-model:value="options.request.search"
                              style="border-radius: 20px"
@@ -98,12 +149,12 @@
                 <div class="col-sm-12">
                     <Loader v-if="options.loader"/>
                     <div class="table-responsive" v-else>
-                        <table class="table table-bordered text-center">
+                        <table class="table table-bordered text-center table-hover table-striped">
                             <thead>
                             <tr>
                                 <template v-for="(col) in options.columns">
                                     <th class="font-bold" v-if="col.isVisible">
-                                        {{ __('default.'+col.title) }}
+                                        {{ __('default.' + col.title) }}
                                     </th>
                                 </template>
                             </tr>
@@ -165,7 +216,8 @@
             </div>
             <div class="row mt-3">
                 <div class="col-sm-2">
-                    {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }} {{ total }} {{ __('default.entries') }}
+                    {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }}
+                    {{ total }} {{ __('default.entries') }}
                 </div>
                 <div class="col-sm-6 offset-4">
                     <div class="btn-toolbar mb-3 justify-content-end" role="toolbar"
@@ -248,6 +300,10 @@ export default {
             $(".hide-show-column").click(function (e) {
                 e.stopPropagation();
             })
+
+            $(".filter-column").click(function (e) {
+                e.stopPropagation();
+            })
         })
     },
     watch: {
@@ -262,6 +318,9 @@ export default {
             },
         },
         'options.request.per_page': function () {
+            this.$parent.getData()
+        },
+        'options.request.status': function () {
             this.$parent.getData()
         }
     },
@@ -339,6 +398,12 @@ export default {
             for (i = 0; i < this.options.columns.length; i++) {
                 this.options.columns[i].isVisible = true;
             }
+        },
+        clearStatusFilter(){
+            if (this.options.request.status){
+                this.options.request.status = '';
+                this.$parent.getData()
+            }
         }
     }
 }
@@ -398,6 +463,11 @@ export default {
 }
 
 .hide-show-column:hover .dropdown-item:hover {
+    background-color: #FFFFFF;
+    color: #0c1427;
+}
+
+.filter-column:hover .dropdown-item:hover {
     background-color: #FFFFFF;
     color: #0c1427;
 }

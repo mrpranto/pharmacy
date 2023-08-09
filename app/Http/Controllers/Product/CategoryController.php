@@ -72,6 +72,6 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->services->delete($id);
     }
 }

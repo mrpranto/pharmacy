@@ -5,7 +5,7 @@
             <a-button shape="circle" ><i class="mdi mdi-lead-pencil"></i></a-button>
         </a-tooltip>
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete" @click.prevent="$parent.$parent.showDeleteForm(row.id)">
-            <a-button danger shape="circle"><i class="mdi mdi-trash-can"></i></a-button>
+            <a-button shape="circle"><i class="mdi mdi-trash-can"></i></a-button>
         </a-tooltip>
     </div>
 </template>

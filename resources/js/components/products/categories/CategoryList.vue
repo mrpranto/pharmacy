@@ -34,6 +34,7 @@
 <script>
 import AddNewCategory from "./AddNewCategory.vue";
 import EditCategory from "./EditCategory.vue";
+import {notification} from "ant-design-vue";
 
 export default {
     name: "CategoryList",
@@ -107,6 +108,7 @@ export default {
                 request: {
                     per_page: 10,
                     search: '',
+                    status: ''
                 },
                 exportAble: {}
             }
@@ -156,6 +158,50 @@ export default {
         },
         onEditClose(){
             this.formState.openEdit = false;
+        },
+        showDeleteForm(id) {
+            const swalWithBootstrapButtons = Swal.mixin()
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You want to delete this!",
+                icon: 'question',
+                width: 400,
+                showCancelButton: true,
+                confirmButtonClass: 'ml-2',
+                confirmButtonText: ' <i class="mdi mdi-check"></i> Yes, delete it!',
+                cancelButtonText: '<i class="mdi mdi-close"></i> No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    this.delete(id)
+                }
+            })
+        },
+        async delete(id) {
+            await axios.delete(`/product/categories/${id}`)
+                .then(response => {
+                    if (response.data.success) {
+                        this.getData()
+                        this.showSuccessMessage(response.data.success)
+                    } else {
+                        this.showErrorMessage(response.data.error)
+                    }
+                })
+                .catch(err => {
+                    this.showErrorMessage(err.data.error)
+                })
+        },
+        showSuccessMessage(message) {
+            notification['success']({
+                message: 'Success',
+                description: message,
+            });
+        },
+        showErrorMessage(message) {
+            notification['error']({
+                message: 'Error',
+                description: message,
+            });
         },
     }
 }

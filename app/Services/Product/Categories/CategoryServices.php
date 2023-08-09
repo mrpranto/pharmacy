@@ -42,6 +42,7 @@ class CategoryServices extends BaseServices
     {
         return $this->model->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
+            ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
             ->orderBy('id', 'desc')
             ->paginate(request()->get('per_page') ?? pagination());
     }
@@ -82,6 +83,11 @@ class CategoryServices extends BaseServices
         }
     }
 
+    /**
+     * @param $request
+     * @param $id
+     * @return $this
+     */
     public function validateUpdate($request, $id): static
     {
         $request->validate([
@@ -92,6 +98,12 @@ class CategoryServices extends BaseServices
 
         return $this;
     }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
     public function update($request, $id): JsonResponse
     {
         try {
@@ -109,6 +121,23 @@ class CategoryServices extends BaseServices
             return response()->json(['success' => __t('category_edit')]);
 
         } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
+    {
+        try {
+
+            $this->model->newQuery()->where('id', $id)->delete();
+
+            return response()->json(['success' => __t('category_delete')]);
+
+        }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }
     }

@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
 
         Role::factory(100)->create();
         User::factory(100)->create();
-        Category::factory(20)->create();
+        Category::factory(200)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',
