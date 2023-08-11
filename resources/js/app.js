@@ -36,7 +36,9 @@ app.component('app-table-component', AppTable);
 import Counter from './components/core/Counter.vue';
 app.component('app-table-counter-component', Counter);
 
-
+import {showErrorMessage, showSuccessMessage} from './helper.js';
+app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
+app.config.globalProperties.$showErrorMessage = showErrorMessage;
 
 const trans = {
     methods: {

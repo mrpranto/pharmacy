@@ -16,9 +16,14 @@
                                 <div class="aside-compose"></div>
                                 <div class="aside-nav collapse">
                                     <ul class="nav">
+                                        <li class="{{ request()->get('type') == 'app_setting' ? 'active' : '' }}">
+                                            <a href="{{ route('setting') }}?type=app_setting">
+                                                <span class="icon"><i data-feather="grid"></i></span> {{ __t('app_setting') }}
+                                            </a>
+                                        </li>
                                         <li class="{{ request()->get('type') == 'general' ? 'active' : '' }}">
                                             <a href="{{ route('setting') }}?type=general">
-                                                <span class="icon"><i data-feather="inbox"></i></span> {{ __t('general') }}
+                                                <span class="icon"><i data-feather="globe"></i></span> {{ __t('general') }}
                                             </a>
                                         </li>
                                     </ul>
@@ -29,6 +34,8 @@
 
                         @if(request()->get('type') == 'general')
                             @include('pages.settings._general_setting')
+                        @elseif(request()->get('type') == 'app_setting')
+                            @include('pages.settings._app_setting')
                         @endif
                     </div>
 

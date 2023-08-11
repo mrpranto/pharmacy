@@ -132,7 +132,6 @@ class CategoryServices extends BaseServices
     public function delete($id): JsonResponse
     {
         try {
-
             $this->model->newQuery()->where('id', $id)->delete();
 
             return response()->json(['success' => __t('category_delete')]);

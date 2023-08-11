@@ -69,31 +69,20 @@ export default {
                         this.formState.formData.status = true
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success)
                     } else {
-                        this.showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error)
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.formState.validation = err.response.data.errors
                     } else {
+                        this.$showErrorMessage(err)
                         console.error(err)
                     }
                 })
-        },
-        showSuccessMessage(message) {
-            notification['success']({
-                message: 'Success',
-                description: message,
-            });
-        },
-        showErrorMessage(message) {
-            notification['error']({
-                message: 'Error',
-                description: message,
-            });
-        },
+        }
     },
 }
 </script>

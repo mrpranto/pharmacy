@@ -27,11 +27,17 @@ class SettingServices extends BaseServices
             ->where('type', request('type'))
             ->first();
 
-        Artisan::call('cache:clear');
+        if ($setting){
+            Artisan::call('cache:clear');
 
-        Cache::set('general_setting', $setting->settings_info);
+            if (request()->filled('general')){
+                Cache::set('general_setting', $setting->settings_info);
+            }
 
-        return  $setting->settings_info;
+            return  $setting->settings_info;
+        }
+
+        return (object) [];
     }
 
     /**

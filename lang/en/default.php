@@ -73,4 +73,9 @@ return [
     'category_create' => 'Category create successful',
     'category_edit' => 'Category edit successful',
     'category_delete' => 'Category delete successful',
+
+    'app_setting' => 'App setting',
+    'app_name' => 'App name',
+    'mobile' => 'Mobile',
+    'address' => 'Address',
 ];

@@ -35,7 +35,7 @@ function showTime(){
     s = ( s < 10 ) ? s = "0" + s : s;
 
     //putting time in one variable
-    var time = month + " " + day + ", " + fullYear + " - " + h + ":" + m + ":" + s + " " + session;
+    var time = month + " " + day + ", " + fullYear + " &nbsp;    " + h + ":" + m + ":" + s + " " + session;
     //putting time in our div
     $('#clock').html(time);
     //to change time in every seconds

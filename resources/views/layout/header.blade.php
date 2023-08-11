@@ -5,7 +5,7 @@
     <div class="navbar-content">
         <form class="search-form">
             <div class="input-group">
-                <span id="clock"></span>
+                <span id="clock" style="font-family: monospace, monospace"></span>
             </div>
         </form>
 
@@ -215,7 +215,7 @@
                         <ul class="profile-nav p-0 pt-3">
                             @if(auth()->user()->can('app.setting'))
                                 <li class="nav-item">
-                                    <a href="{{ route('setting') }}?type=general" class="nav-link">
+                                    <a href="{{ route('setting') }}?type=app_setting" class="nav-link">
                                         <i data-feather="settings"></i>
                                         <span>Setting</span>
                                     </a>

@@ -12,6 +12,6 @@ class Unit extends Model
     use HasFactory, BootTrait, CreatedByRelationship;
 
     protected $fillable = [
-        'name', 'short_name', 'description', 'status', 'created_by', 'updated_by'
+        'pack_size', 'name', 'short_name', 'description', 'status', 'created_by', 'updated_by'
     ];
 }

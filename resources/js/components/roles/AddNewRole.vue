@@ -118,9 +118,9 @@ export default {
                         this.formState.formData.permissions = []
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success)
                     } else {
-                        this.showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error)
                     }
                 })
                 .catch(err => {
@@ -128,20 +128,9 @@ export default {
                         this.validation = err.response.data.errors
                     } else {
                         console.error(err)
+                        this.$showErrorMessage(err)
                     }
                 })
-        },
-        showSuccessMessage(message) {
-            notification['success']({
-                message: 'Success',
-                description: message,
-            });
-        },
-        showErrorMessage(message) {
-            notification['error']({
-                message: 'Error',
-                description: message,
-            });
         },
         selectAllPermission() {
             const permissions = [];

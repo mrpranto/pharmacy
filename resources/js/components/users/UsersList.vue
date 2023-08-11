@@ -212,27 +212,16 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         this.getData()
-                        this.showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success)
                     } else {
-                        this.showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error)
                     }
                 })
                 .catch(err => {
-                    this.showErrorMessage(err.data.error)
+                    this.$showErrorMessage(err.data.error)
                 })
         },
-        showSuccessMessage(message) {
-            notification['success']({
-                message: 'Success',
-                description: message,
-            });
-        },
-        showErrorMessage(message) {
-            notification['error']({
-                message: 'Error',
-                description: message,
-            });
-        },
+
     }
 }
 </script>

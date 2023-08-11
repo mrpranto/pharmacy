@@ -149,15 +149,16 @@ export default {
                         this.formState.formData.profile_picture = {}
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success)
                     } else {
-                        this.showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error)
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.formState.validation = err.response.data.errors
                     } else {
+                        this.$showErrorMessage(err)
                         console.error(err)
                     }
                 })
@@ -172,18 +173,6 @@ export default {
         },
         roleFilterOption(input, option){
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-        },
-        showSuccessMessage(message) {
-            notification['success']({
-                message: 'Success',
-                description: message,
-            });
-        },
-        showErrorMessage(message) {
-            notification['error']({
-                message: 'Error',
-                description: message,
-            });
         },
         previewImage(event) {
             // Get the selected image file

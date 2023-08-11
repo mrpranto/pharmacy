@@ -102,6 +102,8 @@
             icon: 'success',
             title: '{{ session()->get('success') }}'
         })
+        let audio = new Audio('{{ asset('/assets/sounds/success.mp3') }}');
+        audio.play();
         @endif
     });
 
@@ -112,8 +114,12 @@
         $('.offline-warning-show').modal('hide')
     });
 
-    window._locale = '{{ session()->get('lang') ?? app()->getLocale() }}'
-    window._translations = {!! cache('translations') !!};
+    window._locale = '{{ session()->get('lang') ?? app()->getLocale() }}';
+    @if(request()->is('setting'))
+        window._translations = "{!! cache('translations') !!}";
+    @else
+        window._translations = {!! cache('translations') !!};
+    @endif
 
 </script>
 </body>
