@@ -117,6 +117,7 @@ export default {
         this.getData()
     },
     mounted() {
+        console.log(this.$notification_position, this.$notification_sound)
     },
     methods:{
         async getData(url) {
@@ -180,13 +181,13 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         this.getData()
-                        this.$showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
-                        this.$showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }
                 })
                 .catch(err => {
-                    this.$showErrorMessage(err.data.error)
+                    this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
         }
     }

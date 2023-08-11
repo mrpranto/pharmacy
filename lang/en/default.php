@@ -78,4 +78,6 @@ return [
     'app_name' => 'App name',
     'mobile' => 'Mobile',
     'address' => 'Address',
+    'notification_sound' => 'Notification Sound',
+    'notification_show_position' => 'Notification Position'
 ];

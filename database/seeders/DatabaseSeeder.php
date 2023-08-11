@@ -50,7 +50,9 @@ class DatabaseSeeder extends Seeder
                 "time_format" => "H:i:s A",
                 "currency_symbol" => '৳',
                 "currency_symbol_position" => "before_amount",
-                "pagination" => "10"
+                "pagination" => "10",
+                "notification_sound" => "on",
+                "notification_show_position" => "topRight",
             ]
         ]);
 

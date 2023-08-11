@@ -159,16 +159,16 @@ export default {
                         this.validation = {}
                         this.$parent.getData()
                         this.$parent.onEditClose()
-                        this.$showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
-                        this.$showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.formState.validation = err.response.data.errors
                     } else {
-                        this.$showErrorMessage(err)
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
                     }
                 })

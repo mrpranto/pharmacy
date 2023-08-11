@@ -118,9 +118,9 @@ export default {
                         this.formState.formData.permissions = []
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.$showSuccessMessage(response.data.success)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
-                        this.$showErrorMessage(response.data.error)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }
                 })
                 .catch(err => {
@@ -128,7 +128,7 @@ export default {
                         this.validation = err.response.data.errors
                     } else {
                         console.error(err)
-                        this.$showErrorMessage(err)
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                     }
                 })
         },

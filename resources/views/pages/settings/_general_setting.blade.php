@@ -1,4 +1,4 @@
-<div class="col-lg-9 email-content">
+<div class="col-lg-10 email-content">
     <div class="email-head">
         <div class="email-head-subject">
             <div class="title d-flex align-items-center justify-content-between">
@@ -122,6 +122,68 @@
                             <option {{ $setting['pagination'] == '50' ? 'selected' : '' }} value="50">50</option>
                             <option {{ $setting['pagination'] == '100' ? 'selected' : '' }} value="100">100</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="notification_sound" class="col-sm-2 col-form-label text-right">{{ __t('notification_sound') }}</label>
+                    <div class="col-sm-10">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][notification_sound]" id="notification_sound"
+                                           {{ $setting['notification_sound'] == 'on' ? 'checked' : '' }}
+                                           value="on">
+                                    On
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][notification_sound]" id="notification_sound"
+                                           {{ $setting['notification_sound'] == 'off' ? 'checked' : '' }}
+                                           value="off">
+                                    Off
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="notification_show_position" class="col-sm-2 col-form-label text-right">{{ __t('notification_show_position') }}</label>
+                    <div class="col-sm-10">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][notification_show_position]" id="top"
+                                           {{ $setting['notification_show_position'] == 'top' ? 'checked' : '' }}
+                                           value="top">
+                                    Top
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][notification_show_position]" id="topLeft"
+                                           {{ $setting['notification_show_position'] == 'topLeft' ? 'checked' : '' }}
+                                           value="topLeft">
+                                    Top Left
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][notification_show_position]" id="topRight"
+                                           {{ $setting['notification_show_position'] == 'topRight' ? 'checked' : '' }}
+                                           value="topRight">
+                                    Top Right
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -78,5 +78,7 @@ return [
     'app_name' => 'অ্যাপ নাম',
     'mobile' => 'মোবাইল নম্বর',
     'address' => 'ঠিকানা',
+    'notification_sound' => 'নোটিফিকেশন সাউন্ড',
+    'notification_show_position' => 'নোটিফিকেশন পজিশন',
 
 ];
