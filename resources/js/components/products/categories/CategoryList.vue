@@ -117,7 +117,7 @@ export default {
         this.getData()
     },
     mounted() {
-        console.log(this.$notification_position, this.$notification_sound)
+
     },
     methods:{
         async getData(url) {

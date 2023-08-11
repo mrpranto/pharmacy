@@ -48,14 +48,23 @@
                         <template v-for="(module, module_index) in formState.responsePermissions">
                             <div class="col-sm-6">
                                 <div class="alert alert-secondary text-center cursor-pointer"
-                                     data-toggle="collapse"
                                      :href="'#module_'+module_index"
                                      role="button"
                                      aria-expanded="false"
                                      :aria-controls="'module_'+module_index">
-                                    {{ module.name }}
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <label class="form-check-label cursor-pointer">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       :value="module.id"
+                                                       v-model="formState.formData.module_ids">
+                                                {{ module.name }}
+                                                <i class="input-frame"></i></label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="collapse show" :id="'module_'+module_index">
+                                <div class="show" :id="'module_'+module_index">
                                     <div class="form-group">
                                         <template v-for="(permission) in module.permission">
                                             <div class="form-check">
@@ -106,6 +115,9 @@ export default {
     watch: {
         'formState.selectAll': function () {
             this.selectAllPermission()
+        },
+        'formState.formData.module_ids': function () {
+            this.selectEditGroupPermission()
         }
     },
     methods: {
@@ -143,6 +155,19 @@ export default {
                 this.formState.formData.permissions = permissions
             }else {
                 this.formState.formData.permissions = []
+            }
+        },
+        selectEditGroupPermission() {
+            const permissions = [];
+            if (this.formState.formData.module_ids.length > 0){
+                this.formState.responsePermissions.forEach(item => {
+                    if (this.formState.formData.module_ids.includes(item.id)) {
+                        item.permission.forEach(subItem => {
+                            permissions.push(subItem.id)
+                        })
+                    }
+                })
+                this.formState.formData.permissions = permissions
             }
         }
     },

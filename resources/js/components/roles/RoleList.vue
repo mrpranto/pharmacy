@@ -2,14 +2,18 @@
     <div>
         <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
             <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }} <app-table-counter-component :total="options.total"/></h4>
+                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }}
+                    <app-table-counter-component :total="options.total"/>
+                </h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
+                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
+                        v-if="formState.disabled">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     {{ __('default.loading') }}
                 </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
+                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm"
+                        v-else>
                     <i class="mdi mdi-plus"></i>
                     {{ __('default.add_role') }}
                 </button>
@@ -27,7 +31,7 @@
         </div>
 
         <AddNewRole :formState="formState"/>
-        <EditRole :formState="formState" />
+        <EditRole :formState="formState"/>
     </div>
 </template>
 
@@ -46,14 +50,15 @@ export default {
                 openCreateRole: false,
                 openEditRole: false,
                 disabled: false,
-                responsePermissions:[],
+                responsePermissions: [],
                 current_id: '',
                 selectAll: false,
                 formData: {
                     name: '',
                     description: '',
                     isDeleteAble: true,
-                    permissions: []
+                    permissions: [],
+                    module_ids: [],
                 },
                 layout: {
                     labelCol: {span: 4},
@@ -126,7 +131,7 @@ export default {
                     console.error(err)
                 })
         },
-        async getPermissions(){
+        async getPermissions() {
             this.formState.disabled = true
             await axios.get('/get-permissions')
                 .then(response => {
@@ -134,8 +139,8 @@ export default {
                     this.formState.disabled = false
                 })
                 .catch(err => {
-                console.error(err)
-            })
+                    console.error(err)
+                })
         },
         showAddForm() {
             this.getPermissions()
@@ -144,6 +149,7 @@ export default {
                 description: '',
                 isDeleteAble: true,
                 permissions: [],
+                module_ids: [],
             }
             this.formState.selectAll = false;
             this.formState.openCreateRole = true;
@@ -151,22 +157,23 @@ export default {
         onClose() {
             this.formState.openCreateRole = false;
         },
-        getEditData(role){
+        getEditData(role) {
             this.getPermissions()
-            this.formState.current_id = role.id,
-            this.formState.formData = {
-                name: role.name,
-                description: role.description,
-                isDeleteAble: role.is_delete_able ? true : false,
-                permissions: role.permissions.map(item => item.id),
-            }
+            this.formState.current_id = role.id;
+                this.formState.formData = {
+                    name: role.name,
+                    description: role.description,
+                    isDeleteAble: role.is_delete_able ? true : false,
+                    module_ids: role.permissions.map(item => item.module_id),
+                    permissions: role.permissions.map(item => item.id),
+                }
             this.formState.selectAll = false;
             this.formState.openEditRole = true;
         },
         onEditClose() {
             this.formState.openEditRole = false;
         },
-        showDeleteForm(id){
+        showDeleteForm(id) {
             const swalWithBootstrapButtons = Swal.mixin()
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
@@ -184,7 +191,7 @@ export default {
                 }
             })
         },
-        async deleteRole(id){
+        async deleteRole(id) {
             await axios.delete(`/roles/${id}`)
                 .then(response => {
                     if (response.data.success) {
