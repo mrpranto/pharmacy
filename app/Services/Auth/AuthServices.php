@@ -44,6 +44,7 @@ class AuthServices extends BaseServices
         if ($this->model){
             $credentials = ['phone_number' => $this->model->phone_number, 'password' => request()->get('password')];
             if (Auth::attempt($credentials)){
+
                 Session::put('lang', 'en');
 
                 return redirect()->intended('/home')->with('success', 'Your login successful.');

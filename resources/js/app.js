@@ -40,8 +40,8 @@ app.config.globalProperties.$general_setting = window._general_setting;
 import {showErrorMessage, showSuccessMessage} from './helper.js';
 app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
 app.config.globalProperties.$showErrorMessage = showErrorMessage;
-app.config.globalProperties.$notification_position = window._general_setting.notification_show_position;
-app.config.globalProperties.$notification_sound = window._general_setting.notification_sound;
+app.config.globalProperties.$notification_position = window._general_setting?.notification_show_position;
+app.config.globalProperties.$notification_sound = window._general_setting?.notification_sound;
 
 const trans = {
     methods: {

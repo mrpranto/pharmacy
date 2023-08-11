@@ -28,7 +28,6 @@ class SettingServices extends BaseServices
             ->first();
 
         if ($setting){
-            Artisan::call('cache:clear');
 
             if (request()->filled('general')){
                 Cache::set('general_setting', $setting->settings_info);
@@ -67,6 +66,11 @@ class SettingServices extends BaseServices
                     ])->save();
             }
         }
+
+        Artisan::call('cache:clear');
+
+        $setting = Setting::query()->where('type', 'general')->first();
+        Cache::set('general_setting', $setting->settings_info);
 
         return redirect()->back()->with('success', 'Setting created successful.');
     }

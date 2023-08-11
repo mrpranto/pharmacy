@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (!Cache::get('general_setting')){
+        if (Cache::get('general_setting') == null){
             $setting = Setting::query()->where('type', 'general')->first();
             Cache::set('general_setting', $setting->settings_info);
         }

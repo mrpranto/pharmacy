@@ -92,18 +92,26 @@
         'use strict';
         const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end',
             showConfirmButton: false,
             timer: 3000
         });
 
         @if(session()->get('success'))
-        Toast.fire({
-            icon: 'success',
-            title: '{{ session()->get('success') }}'
-        })
-        let audio = new Audio('{{ asset('/assets/sounds/success.mp3') }}');
-        audio.play();
+            @if(is_array(cache('general_setting')))
+                @php
+                    $position = cache('general_setting')['notification_show_position'];
+                    $notification_position = $position == 'topLeft' ? 'top-start' : ($position == 'topRight' ? 'top-end' : 'top')
+                @endphp
+                Toast.fire({
+                    position: "{{ $notification_position }}",
+                    icon: 'success',
+                    title: '{{ session()->get('success') }}'
+                })
+                @if(cache('general_setting')['notification_sound'] == 'on')
+                    let audio = new Audio('{{ asset('/assets/sounds/success.mp3') }}');
+                    audio.play();
+                @endif
+            @endif
         @endif
     });
 
@@ -116,7 +124,7 @@
 
     window._locale = '{{ session()->get('lang') ?? app()->getLocale() }}';
     @if(request()->is('setting'))
-        window._translations = "{!! cache('translations') !!}";
+        window._translations = `{!! cache('translations') !!}`;
     @else
         window._translations = {!! cache('translations') !!};
     @php
