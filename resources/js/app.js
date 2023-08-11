@@ -31,6 +31,12 @@ import CategoryAction from './components/products/categories/Action.vue';
 app.component('category-action-component', CategoryAction);
 
 
+import CompanyListComponent from './components/products/companies/CompanyList.vue';
+app.component('company-list-component', CompanyListComponent);
+import CompanyAction from './components/products/companies/Action.vue';
+app.component('company-action-component', CompanyAction);
+
+
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
 import Counter from './components/core/Counter.vue';

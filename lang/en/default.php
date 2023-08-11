@@ -79,5 +79,8 @@ return [
     'mobile' => 'Mobile',
     'address' => 'Address',
     'notification_sound' => 'Notification Sound',
-    'notification_show_position' => 'Notification Position'
+    'notification_show_position' => 'Notification Position',
+
+    'add_new_company' => 'Add new company',
+    'company_create' => 'Company create successful'
 ];

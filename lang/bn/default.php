@@ -81,4 +81,7 @@ return [
     'notification_sound' => 'নোটিফিকেশন সাউন্ড',
     'notification_show_position' => 'নোটিফিকেশন পজিশন',
 
+    'add_new_company' => 'নতুন কোম্পানি তৈরি করুন',
+    'company_create' => 'কোম্পানি তৈরি সফল হয়েছে',
+
 ];

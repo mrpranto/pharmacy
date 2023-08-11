@@ -3,24 +3,39 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Services\Product\Companies\CompaniesServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CompanyController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param CompaniesServices $companiesServices
      */
-    public function index()
+    public function __construct(CompaniesServices $companiesServices)
     {
-        return view('pages.products.companies.index');
+        $this->services = $companiesServices;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(): View
     {
-        //
+        return view('pages.products.companies.index', $this->services->accessPermissions());
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getCompanies(): LengthAwarePaginator
+    {
+        return $this->services->getCompanies();
     }
 
     /**
@@ -28,7 +43,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->services->validate($request)->store($request);
     }
 
     /**

@@ -60,6 +60,8 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-categories', [CategoryController::class, 'getCategories']);
 
         Route::resource('companies', CompanyController::class);
+        Route::get('get-companies', [CompanyController::class, 'getCompanies']);
+
         Route::resource('units', UnitController::class);
     });
 
