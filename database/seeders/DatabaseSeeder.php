@@ -46,11 +46,21 @@ class DatabaseSeeder extends Seeder
         Setting::query()->updateOrCreate([
             'type' => 'general',
             'settings_info' => [
-                "date_format" => "d.m.Y",
+                "date_format" => "m d, Y",
                 "time_format" => "H:i:s A",
                 "currency_symbol" => '৳',
                 "currency_symbol_position" => "before_amount",
                 "pagination" => "10"
+            ]
+        ]);
+
+        Setting::query()->updateOrCreate([
+            'type' => 'app_setting',
+            'settings_info' => [
+                "name" => "Chief Drug Agency",
+                "email" => "ferozsarker28@gmail.com",
+                "mobile" => '+88001718143428',
+                "address" => "Thana Road ,Bot tola,Pirgonj,Rangpur",
             ]
         ]);
 

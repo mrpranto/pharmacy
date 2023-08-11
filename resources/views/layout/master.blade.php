@@ -119,6 +119,10 @@
         window._translations = "{!! cache('translations') !!}";
     @else
         window._translations = {!! cache('translations') !!};
+    @php
+        $general_setting = json_encode(cache('general_setting'))
+    @endphp
+        window._general_setting = {!! $general_setting !!};
     @endif
 
 </script>

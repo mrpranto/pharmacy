@@ -39,6 +39,7 @@ app.component('app-table-counter-component', Counter);
 import {showErrorMessage, showSuccessMessage} from './helper.js';
 app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
 app.config.globalProperties.$showErrorMessage = showErrorMessage;
+app.config.globalProperties.$general_setting = window._general_setting;
 
 const trans = {
     methods: {

@@ -105,7 +105,7 @@ export default {
                     },
                 ],
                 request: {
-                    per_page: 10,
+                    per_page: this.$general_setting.pagination,
                     search: '',
                     status: ''
                 },
@@ -117,7 +117,6 @@ export default {
         this.getData()
     },
     mounted() {
-
     },
     methods:{
         async getData(url) {
