@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -26,6 +27,8 @@ class CompanyController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('app.company.index');
+
         return view('pages.products.companies.index', $this->services->accessPermissions());
     }
 
@@ -36,6 +39,8 @@ class CompanyController extends Controller
      */
     public function getCompanies(): LengthAwarePaginator
     {
+        Gate::authorize('app.company.index');
+
         return $this->services->getCompanies();
     }
 
@@ -44,6 +49,8 @@ class CompanyController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        Gate::authorize('app.company.create');
+
         return $this->services->validate($request)->store($request);
     }
 
@@ -60,6 +67,8 @@ class CompanyController extends Controller
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        Gate::authorize('app.company.edit');
+
         return $this->services->validateUpdate($request, $id)->update($request, $id);
     }
 
@@ -68,6 +77,8 @@ class CompanyController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
+        Gate::authorize('app.company.delete');
+
         return $this->services->delete($id);
     }
 }

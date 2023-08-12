@@ -3,10 +3,19 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Services\Product\Units\UnitServices;
 use Illuminate\Http\Request;
 
 class UnitController extends Controller
 {
+    /**
+     * @param UnitServices $unitServices
+     */
+    public function __construct(UnitServices $unitServices)
+    {
+        $this->services = $unitServices;
+    }
+
     /**
      * Display a listing of the resource.
      */

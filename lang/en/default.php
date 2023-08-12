@@ -85,5 +85,7 @@ return [
     'company_create' => 'Company create successful',
     'company_edit' => 'Company update successful',
     'edit_company' => 'Edit Company',
-    'company_delete' => 'Company delete successful'
+    'company_delete' => 'Company delete successful',
+
+    'add_new_unit' => 'Add new unit',
 ];
