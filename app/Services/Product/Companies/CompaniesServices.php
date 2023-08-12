@@ -43,7 +43,9 @@ class CompaniesServices extends BaseServices
         return $this->model->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
-            ->orderBy('id', 'desc')
+            ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
+                $q->orderBy(request()->get('order_by'), request()->get('order_dir'));
+            })
             ->paginate(request()->get('per_page') ?? pagination());
     }
 
@@ -56,7 +58,7 @@ class CompaniesServices extends BaseServices
         $request->validate([
             'name' => 'required|string|unique:companies,name',
             'email' => 'nullable|email|unique:companies,email',
-            'phone_number' => 'nullable|numeric|unique:companies,phone_number',
+            'phone_number' => 'nullable|unique:companies,phone_number',
             'description' => 'nullable',
             'status' => 'required|boolean'
         ]);
@@ -95,7 +97,7 @@ class CompaniesServices extends BaseServices
         $request->validate([
             'name' => 'required|string|unique:companies,name,' . $id,
             'email' => 'nullable|email|unique:companies,email,' . $id,
-            'phone_number' => 'nullable|numeric|unique:companies,phone_number,' . $id,
+            'phone_number' => 'nullable|unique:companies,phone_number,' . $id,
             'description' => 'nullable',
             'status' => 'required|boolean'
         ]);
@@ -139,7 +141,7 @@ class CompaniesServices extends BaseServices
             $this->model->newQuery()->where('id', $id)->delete();
 
             return response()->json(['success' => __t('company_delete')]);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }

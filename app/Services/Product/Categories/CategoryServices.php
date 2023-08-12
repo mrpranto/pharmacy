@@ -43,7 +43,7 @@ class CategoryServices extends BaseServices
         return $this->model->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
-            ->orderBy('id', 'desc')
+            ->when(request()->filled('order_by') && request()->filled('order_dir'), fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
             ->paginate(request()->get('per_page') ?? pagination());
     }
 

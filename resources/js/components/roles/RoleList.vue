@@ -79,6 +79,7 @@ export default {
                         title: 'name',
                         type: 'text',
                         key: 'name',
+                        orderAble: true,
                         isVisible: true
                     },
                     {
@@ -86,6 +87,7 @@ export default {
                         type: 'component',
                         componentName: 'role-description-component',
                         key: 'description',
+                        orderAble: true,
                         isVisible: true
                     },
                     {
@@ -106,6 +108,8 @@ export default {
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
+                    order_by: 'id',
+                    order_dir: 'desc'
                 },
                 exportAble: {}
             }

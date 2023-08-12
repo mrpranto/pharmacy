@@ -71,13 +71,15 @@ export default {
                         title: 'name',
                         type: 'text',
                         key: 'name',
-                        isVisible: true
+                        isVisible: true,
+                        orderAble:true
                     },
                     {
                         title: 'description',
                         type: 'custom-html',
                         key: 'description',
                         isVisible: true,
+                        orderAble:true,
                         modifier: (description) => {
                             if (description?.length > 100) {
                                 return description?.substring(0, 100) + ' ...';
@@ -91,6 +93,7 @@ export default {
                         type: 'custom-html',
                         key: 'status',
                         isVisible: true,
+                        orderAble:true,
                         modifier: (status) => {
                             return  status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
@@ -107,7 +110,9 @@ export default {
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
-                    status: ''
+                    status: '',
+                    order_by: 'id',
+                    order_dir: 'desc'
                 },
                 exportAble: {}
             }

@@ -75,30 +75,35 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        orderAble: false,
                         isVisible: false
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
+                        orderAble: true,
                         isVisible: true
                     },
                     {
                         title: 'email',
                         type: 'text',
                         key: 'email',
+                        orderAble: true,
                         isVisible: true
                     },
                     {
                         title: 'phone_number',
                         type: 'text',
                         key: 'phone_number',
+                        orderAble: true,
                         isVisible: true
                     },
                     {
                         title: 'roles',
                         type: 'custom-html',
                         key: 'role',
+                        orderAble: false,
                         isVisible: true,
                         modifier: (role) => {
                             return role ? '<span class="badge badge-primary">' + role.name + '</span>' : ''
@@ -108,6 +113,7 @@ export default {
                         title: 'profile_picture',
                         type: 'custom-html',
                         key: 'profile_picture',
+                        orderAble: false,
                         isVisible: true,
                         modifier: (row) => {
                             return row ? '<img src="' + row.full_url + '" class="img-thumbnail" style="width: 50px;height: 50px" alt="">' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
@@ -124,6 +130,8 @@ export default {
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
+                    order_by: 'id',
+                    order_dir: 'desc'
                 },
                 exportAble: {}
             }

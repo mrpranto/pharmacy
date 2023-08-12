@@ -63,7 +63,8 @@
                         </div>
                     </div>
                     <div class="btn-group">
-                        <button type="button" title="Refresh" class="btn btn btn-rounded btn-gray mr-1" @click.prevent="refreshTable">
+                        <button type="button" title="Refresh" class="btn btn btn-rounded btn-gray mr-1"
+                                @click.prevent="refreshTable">
                             <i class="mdi mdi-reload"></i>
                         </button>
                     </div>
@@ -97,7 +98,8 @@
 
                     <div class="btn-group">
                         <div class="dropdown show mr-1" v-if="options.request.hasOwnProperty('status')">
-                            <a class="btn btn btn-rounded mt-2" :class="options.request.status !== '' ? 'btn-outline-primary' : 'btn-gray'"
+                            <a class="btn btn btn-rounded mt-2"
+                               :class="options.request.status !== '' ? 'btn-outline-primary' : 'btn-gray'"
                                href="javascript:void(0)"
                                id="dropdownMenuLink"
                                data-toggle="dropdown"
@@ -105,7 +107,8 @@
                                aria-expanded="false">
                                 Status
                             </a>
-                            <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1" style="padding: 25px">
+                            <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
+                                 style="padding: 25px">
                                 <div class="dropdown-item scroll">
                                     <div class="row pt-2">
                                         <div class="col-12 d-flex justify-content-between">
@@ -149,13 +152,29 @@
                 <div class="col-sm-12">
                     <Loader v-if="options.loader"/>
                     <div class="table-responsive" v-else>
-                        <table class="table table-bordered text-center table-hover table-striped">
+                        <table class="table table-bordered table-hover table-striped">
                             <thead>
                             <tr>
                                 <template v-for="(col) in options.columns">
-                                    <th class="font-bold" v-if="col.isVisible">
-                                        {{ __('default.' + col.title) }}
-                                    </th>
+                                    <td v-if="col.isVisible">
+                                        <span class="font-bold pull-left">
+                                            {{ __('default.' + col.title) }}
+                                        </span>
+
+
+                                        <template v-if="col.orderAble && col.type !== 'action'">
+                                            <span @click.prevent="getOrderBy(col.key)">
+                                                <span class="sort_arrow cursor-pointer"
+                                                      :class="options.request.order_by === col.key && options.request.order_dir === 'desc' ? '' : 'text-thin'">
+                                                    &darr;
+                                               </span>
+                                                <span class="sort_arrow cursor-pointer"
+                                                      :class="options.request.order_by === col.key && options.request.order_dir === 'asc' ? '' : 'text-thin'">
+                                                    &uarr;
+                                                </span>
+                                            </span>
+                                        </template>
+                                    </td>
                                 </template>
                             </tr>
                             </thead>
@@ -399,11 +418,16 @@ export default {
                 this.options.columns[i].isVisible = true;
             }
         },
-        clearStatusFilter(){
-            if (this.options.request.status){
+        clearStatusFilter() {
+            if (this.options.request.status) {
                 this.options.request.status = '';
                 this.$parent.getData()
             }
+        },
+        getOrderBy(orderBy){
+            this.options.request.order_by = orderBy;
+            this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : '');
+            this.$parent.getData();
         }
     }
 }
@@ -472,4 +496,12 @@ export default {
     color: #0c1427;
 }
 
+.sort_arrow {
+    font-weight: lighter;
+    float: right;
+}
+
+.text-thin {
+    color: #c2bfbf;
+}
 </style>

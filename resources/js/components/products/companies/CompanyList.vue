@@ -68,34 +68,39 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
-                        isVisible: false
+                        isVisible: false,
+                        orderAble: false
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
-                        isVisible: true
+                        isVisible: true,
+                        orderAble: true
                     },
                     {
                         title: 'email',
                         type: 'text',
                         key: 'email',
-                        isVisible: true
+                        isVisible: true,
+                        orderAble: true
                     },
                     {
                         title: 'phone_number',
                         type: 'text',
                         key: 'phone_number',
-                        isVisible: true
+                        isVisible: true,
+                        orderAble: true
                     },
                     {
                         title: 'description',
                         type: 'custom-html',
                         key: 'description',
                         isVisible: true,
+                        orderAble: true,
                         modifier: (description) => {
-                            if (description?.length > 100) {
-                                return description?.substring(0, 100) + ' ...';
+                            if (description?.length > 80) {
+                                return description?.substring(0, 80) + ' ...';
                             }else {
                                 return description
                             }
@@ -106,6 +111,7 @@ export default {
                         type: 'custom-html',
                         key: 'status',
                         isVisible: true,
+                        orderAble: true,
                         modifier: (status) => {
                             return  status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
@@ -122,7 +128,9 @@ export default {
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
-                    status: ''
+                    status: '',
+                    order_by: 'id',
+                    order_dir: 'desc'
                 },
                 exportAble: {}
             }

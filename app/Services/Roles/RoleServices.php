@@ -47,7 +47,7 @@ class RoleServices extends BaseServices
             ->newQuery()
             ->with(['permissions'])
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
-            ->orderBy('id', 'desc')
+            ->when(request()->filled('order_by') && request()->filled('order_dir'), fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
             ->paginate(request()->get('per_page') ?? pagination());
     }
 

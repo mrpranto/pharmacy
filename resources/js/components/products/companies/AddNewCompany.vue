@@ -29,7 +29,7 @@
                 </a-form-item>
 
                 <a-form-item :label="__('default.phone_number')" >
-                    <a-input v-model:value="formState.formData.phone_number" type="number" :placeholder="__('default.phone_number')"
+                    <a-input v-model:value="formState.formData.phone_number" type="text" :placeholder="__('default.phone_number')"
                              :class="formState.validation.phone_number ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.phone_number">{{
                             formState.validation.phone_number[0]
