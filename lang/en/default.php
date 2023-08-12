@@ -82,5 +82,8 @@ return [
     'notification_show_position' => 'Notification Position',
 
     'add_new_company' => 'Add new company',
-    'company_create' => 'Company create successful'
+    'company_create' => 'Company create successful',
+    'company_edit' => 'Company update successful',
+    'edit_company' => 'Edit Company',
+    'company_delete' => 'Company delete successful'
 ];

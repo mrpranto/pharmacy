@@ -81,6 +81,64 @@ class CompaniesServices extends BaseServices
 
             return response()->json(['success' => __t('company_create')]);
 
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $request
+     * @return $this
+     */
+    public function validateUpdate($request, $id): static
+    {
+        $request->validate([
+            'name' => 'required|string|unique:companies,name,' . $id,
+            'email' => 'nullable|email|unique:companies,email,' . $id,
+            'phone_number' => 'nullable|numeric|unique:companies,phone_number,' . $id,
+            'description' => 'nullable',
+            'status' => 'required|boolean'
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update($request, $id): JsonResponse
+    {
+        try {
+
+            $this->model->newQuery()
+                ->where('id', $id)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone_number' => $request->phone_number,
+                    'description' => $request->description,
+                    'status' => $request->status,
+                ]);
+
+            return response()->json(['success' => __t('company_edit')]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
+    {
+        try {
+            $this->model->newQuery()->where('id', $id)->delete();
+
+            return response()->json(['success' => __t('company_delete')]);
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }

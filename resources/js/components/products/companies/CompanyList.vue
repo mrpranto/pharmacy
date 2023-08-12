@@ -27,16 +27,18 @@
         </div>
 
         <AddNewCompany :formState="formState" />
+        <EditCompany :formState="formState" />
 
     </div>
 </template>
 <script>
 
 import AddNewCompany from "./AddNewCompany.vue";
+import EditCompany from "./EditCompany.vue";
 
 export default {
     name: "CompanyList",
-    components: {AddNewCompany},
+    components: {EditCompany, AddNewCompany},
     props: ['permission'],
     data() {
         return {
@@ -163,6 +165,8 @@ export default {
         getEditData(row) {
             this.formState.formData = {
                 name: row.name,
+                email: row.email,
+                phone_number: row.phone_number,
                 description: row.description,
                 status: row.status === 1 ? true : false,
             }
@@ -192,7 +196,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/product/categories/${id}`)
+            await axios.delete(`/product/companies/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()
