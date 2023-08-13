@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
             <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.categories') }} <app-table-counter-component :total="options.total"/></h4>
+                <h4 class="mb-3 mb-md-0">{{ __('default.units') }} <app-table-counter-component :total="options.total"/></h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
@@ -26,13 +26,19 @@
             </div>
         </div>
 
+        <AddNewUnit :formState="formState"/>
+        <EditUnit :formState="formState"/>
+
     </div>
 </template>
 <script>
 
+import AddNewUnit from "./AddNewUnit.vue";
+import EditUnit from "./EditUnit.vue";
+
 export default {
     name: "UnitList",
-    components: {},
+    components: {EditUnit, AddNewUnit},
     props: ['permission'],
     data() {
         return {
@@ -43,6 +49,7 @@ export default {
                 current_id: '',
                 formData: {
                     name: '',
+                    pack_size: '',
                     description: '',
                     status: true,
                 },
@@ -66,6 +73,13 @@ export default {
                         title: 'name',
                         type: 'text',
                         key: 'name',
+                        isVisible: true,
+                        orderAble:true
+                    },
+                    {
+                        title: 'pack_size',
+                        type: 'text',
+                        key: 'pack_size',
                         isVisible: true,
                         orderAble:true
                     },
@@ -98,7 +112,7 @@ export default {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
-                        componentName: 'category-action-component',
+                        componentName: 'unit-action-component',
                         isVisible: true
                     },
                 ],
@@ -123,7 +137,7 @@ export default {
         async getData(url) {
             this.options.loader = true;
             this.options.responseData = [];
-            await axios.get(url ?? '/product/get-categories', {params: this.options.request})
+            await axios.get(url ?? '/product/get-units', {params: this.options.request})
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
@@ -134,13 +148,16 @@ export default {
                 })
         },
         showAddForm() {
+            this.formState.disabled = true;
             this.formState.formData = {
                 name: '',
+                pack_size: '',
                 description: '',
                 status: true,
             }
             this.formState.validation = {};
             this.formState.openCreate = true;
+            this.formState.disabled = false;
         },
         onClose(){
             this.formState.openCreate = false;
@@ -148,6 +165,7 @@ export default {
         getEditData(row) {
             this.formState.formData = {
                 name: row.name,
+                pack_size: row.pack_size,
                 description: row.description,
                 status: row.status === 1 ? true : false,
             }
@@ -177,7 +195,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/product/categories/${id}`)
+            await axios.delete(`/product/units/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

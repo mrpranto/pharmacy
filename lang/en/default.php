@@ -88,4 +88,9 @@ return [
     'company_delete' => 'Company delete successful',
 
     'add_new_unit' => 'Add new unit',
+    'pack_size' => 'Pack size',
+    'unit_create' => 'Unit create successful',
+    'edit_unit' => 'Edit unit',
+    'unit_edit' => 'Unit update successful',
+    'unit_delete' => 'Unit delete successful'
 ];

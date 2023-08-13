@@ -148,21 +148,22 @@
                     </a-input>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-sm-12">
-                    <Loader v-if="options.loader"/>
-                    <div class="table-responsive" v-else>
-                        <table class="table table-bordered table-hover table-striped">
-                            <thead>
-                            <tr>
-                                <template v-for="(col) in options.columns">
-                                    <td v-if="col.isVisible">
+            <Loader v-if="options.loader"/>
+            <div v-else>
+                <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <template v-for="(col) in options.columns">
+                                        <td v-if="col.isVisible">
                                         <span class="font-bold pull-left">
                                             {{ __('default.' + col.title) }}
                                         </span>
 
 
-                                        <template v-if="col.orderAble && col.type !== 'action'">
+                                            <template v-if="col.orderAble && col.type !== 'action'">
                                             <span @click.prevent="getOrderBy(col.key)">
                                                 <span class="sort_arrow cursor-pointer"
                                                       :class="options.request.order_by === col.key && options.request.order_dir === 'desc' ? '' : 'text-thin'">
@@ -173,106 +174,107 @@
                                                     &uarr;
                                                 </span>
                                             </span>
-                                        </template>
-                                    </td>
-                                </template>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
-                                <template v-for="(column) in options.columns">
-                                    <td v-if="column.isVisible">
-                                        <template v-if="column.type === 'sl'">
-                                            {{ (parseInt(row_index) + parseInt(1)) }}
-                                        </template>
-                                        <template v-else-if="column.type === 'text'">
-                                            {{ row[column.key] }}
-                                        </template>
-                                        <template v-else-if="column.type === 'link'">
-                                            <a :href="column.url">{{ row[column.key] }}</a>
-                                        </template>
-                                        <template v-else-if="column.type === 'object'">
-                                            {{ column.modifier(row[column.key], row) }}
-                                        </template>
-                                        <template v-else-if="column.type === 'component'">
-                                            <template v-if="column.rowValues">
+                                            </template>
+                                        </td>
+                                    </template>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
+                                    <template v-for="(column) in options.columns">
+                                        <td v-if="column.isVisible">
+                                            <template v-if="column.type === 'sl'">
+                                                {{ (parseInt(row_index) + parseInt(1)) }}
+                                            </template>
+                                            <template v-else-if="column.type === 'text'">
+                                                {{ row[column.key] }}
+                                            </template>
+                                            <template v-else-if="column.type === 'link'">
+                                                <a :href="column.url">{{ row[column.key] }}</a>
+                                            </template>
+                                            <template v-else-if="column.type === 'object'">
+                                                {{ column.modifier(row[column.key], row) }}
+                                            </template>
+                                            <template v-else-if="column.type === 'component'">
+                                                <template v-if="column.rowValues">
+                                                    <component
+                                                        :is="column.componentName"
+                                                        :item="row"
+                                                        :value="row[column.key]"
+                                                    />
+                                                </template>
+                                                <template v-else>
+                                                    <component
+                                                        :is="column.componentName"
+                                                        :value="row[column.key]"
+                                                    />
+                                                </template>
+                                            </template>
+                                            <template v-else-if="column.type === 'action'">
                                                 <component
                                                     :is="column.componentName"
-                                                    :item="row"
+                                                    :row="row"
+                                                    :permission="column.permission"
                                                     :value="row[column.key]"
+                                                    :row_index="row_index"
                                                 />
                                             </template>
-                                            <template v-else>
-                                                <component
-                                                    :is="column.componentName"
-                                                    :value="row[column.key]"
-                                                />
-                                            </template>
-                                        </template>
-                                        <template v-else-if="column.type === 'action'">
-                                            <component
-                                                :is="column.componentName"
-                                                :row="row"
-                                                :permission="column.permission"
-                                                :value="row[column.key]"
-                                                :row_index="row_index"
-                                            />
-                                        </template>
-                                        <template v-else-if="column.type === 'custom-html'">
+                                            <template v-else-if="column.type === 'custom-html'">
                                             <span :class="column.className"
                                                   v-html="column.modifier(row[column.key], row)"></span>
-                                        </template>
-                                        <template v-else-if="column.type === 'custom-data'">
-                                            {{ column.modifier(row) }}
-                                        </template>
-                                    </td>
-                                </template>
-                            </tr>
-                            </tbody>
-                        </table>
+                                            </template>
+                                            <template v-else-if="column.type === 'custom-data'">
+                                                {{ column.modifier(row) }}
+                                            </template>
+                                        </td>
+                                    </template>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-sm-2">
-                    {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }}
-                    {{ total }} {{ __('default.entries') }}
-                </div>
-                <div class="col-sm-6 offset-4">
-                    <div class="btn-toolbar mb-3 justify-content-end" role="toolbar"
-                         aria-label="Toolbar with button groups">
-                        <div class="input-group mr-3">
-                            <a-select
-                                v-model:value="page"
-                                show-search
-                                placeholder="Pages"
-                                style="width: 100px;"
-                                :options="pages"
-                                @change="getPaginate"
-                            ></a-select>
+                <div class="row mt-3">
+                    <div class="col-sm-2">
+                        {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }}
+                        {{ total }} {{ __('default.entries') }}
+                    </div>
+                    <div class="col-sm-6 offset-4">
+                        <div class="btn-toolbar mb-3 justify-content-end" role="toolbar"
+                             aria-label="Toolbar with button groups">
+                            <div class="input-group mr-3">
+                                <a-select
+                                    v-model:value="page"
+                                    show-search
+                                    placeholder="Pages"
+                                    style="width: 100px;"
+                                    :options="pages"
+                                    @change="getPaginate"
+                                ></a-select>
 
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-gray btn btn-icon-text btn-left-radius"
-                               :class="options.responseData.current_page === 1 ? 'disabled' : ''"
-                               @click.prevent="getFirstPage">
-                                <i class="mdi mdi-chevron-double-left"></i> {{ __('default.first_page') }}
-                            </a>
-                            <a class="btn btn-gray btn btn-icon-text"
-                               :class="options.responseData.prev_page_url == null ? 'disabled' : ''"
-                               @click.prevent="getPreviousPage">
-                                <i class="mdi mdi-chevron-left"></i> {{ __('default.previous_page') }}
-                            </a>
-                            <a class="btn btn-gray btn btn-icon-text"
-                               :class="options.responseData.next_page_url == null ? 'disabled' : ''"
-                               @click.prevent="getNextPage">
-                                {{ __('default.next_page') }} <i class="mdi mdi-chevron-right"></i>
-                            </a>
-                            <a class="btn btn-gray btn btn-icon-text btn-right-radius"
-                               :class="options.responseData.last_page === options.responseData.current_page ? 'disabled' : ''"
-                               @click.prevent="getLastPage">
-                                {{ __('default.last_page') }} <i class="mdi mdi-chevron-double-right"></i>
-                            </a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-gray btn btn-icon-text btn-left-radius"
+                                   :class="options.responseData.current_page === 1 ? 'disabled' : ''"
+                                   @click.prevent="getFirstPage">
+                                    <i class="mdi mdi-chevron-double-left"></i> {{ __('default.first_page') }}
+                                </a>
+                                <a class="btn btn-gray btn btn-icon-text"
+                                   :class="options.responseData.prev_page_url == null ? 'disabled' : ''"
+                                   @click.prevent="getPreviousPage">
+                                    <i class="mdi mdi-chevron-left"></i> {{ __('default.previous_page') }}
+                                </a>
+                                <a class="btn btn-gray btn btn-icon-text"
+                                   :class="options.responseData.next_page_url == null ? 'disabled' : ''"
+                                   @click.prevent="getNextPage">
+                                    {{ __('default.next_page') }} <i class="mdi mdi-chevron-right"></i>
+                                </a>
+                                <a class="btn btn-gray btn btn-icon-text btn-right-radius"
+                                   :class="options.responseData.last_page === options.responseData.current_page ? 'disabled' : ''"
+                                   @click.prevent="getLastPage">
+                                    {{ __('default.last_page') }} <i class="mdi mdi-chevron-double-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

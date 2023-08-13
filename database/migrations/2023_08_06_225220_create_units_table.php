@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('pack_size');
-            $table->string('name', 100)->unique();
+            $table->string('name', 100);
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();

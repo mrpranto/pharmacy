@@ -50,12 +50,13 @@
                 @endif
             </li>
 
+
             <li class="nav-item dropdown nav-messages">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i data-feather="mail"></i>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="messageDropdown">
+<!--                <div class="dropdown-menu" aria-labelledby="messageDropdown">
                     <div class="dropdown-header d-flex align-items-center justify-content-between">
                         <p class="mb-0 font-weight-medium">9 New Messages</p>
                         <a href="javascript:;" class="text-muted">Clear all</a>
@@ -125,7 +126,7 @@
                     <div class="dropdown-footer d-flex align-items-center justify-content-center">
                         <a href="javascript:;">View all</a>
                     </div>
-                </div>
+                </div>-->
             </li>
             <li class="nav-item dropdown nav-notifications">
                 <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
@@ -135,7 +136,7 @@
                         <div class="circle"></div>
                     </div>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="notificationDropdown">
+<!--                <div class="dropdown-menu" aria-labelledby="notificationDropdown">
                     <div class="dropdown-header d-flex align-items-center justify-content-between">
                         <p class="mb-0 font-weight-medium">6 New Notifications</p>
                         <a href="javascript:;" class="text-muted">Clear all</a>
@@ -190,8 +191,10 @@
                     <div class="dropdown-footer d-flex align-items-center justify-content-center">
                         <a href="javascript:;">View all</a>
                     </div>
-                </div>
+                </div>-->
             </li>
+
+
             <li class="nav-item dropdown nav-profile">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">

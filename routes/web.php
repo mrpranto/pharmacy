@@ -63,6 +63,7 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-companies', [CompanyController::class, 'getCompanies']);
 
         Route::resource('units', UnitController::class);
+        Route::get('get-units', [UnitController::class, 'getUnits']);
     });
 
    Route::get('test', function (){

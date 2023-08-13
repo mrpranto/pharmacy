@@ -36,6 +36,11 @@ app.component('company-list-component', CompanyListComponent);
 import CompanyAction from './components/products/companies/Action.vue';
 app.component('company-action-component', CompanyAction);
 
+import UnitListComponent from './components/products/units/UnitList.vue';
+app.component('unit-list-component', UnitListComponent);
+import UnitAction from './components/products/units/Action.vue';
+app.component('unit-action-component', UnitAction);
+
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);

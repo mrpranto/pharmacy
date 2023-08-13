@@ -116,8 +116,9 @@
                     <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('pagination') }}</label>
                     <div class="col-sm-10">
                         <select class="form-control" name="setting[general][pagination]">
+                            <option {{ $setting['pagination'] == '5' ? 'selected' : '' }} value="5">5</option>
                             <option {{ $setting['pagination'] == '10' ? 'selected' : '' }} value="10">10</option>
-                            <option {{ $setting['pagination'] == '15' ? 'selected' : '' }} value="15">15</option>
+                            <option {{ $setting['pagination'] == '20' ? 'selected' : '' }} value="20">20</option>
                             <option {{ $setting['pagination'] == '30' ? 'selected' : '' }} value="30">30</option>
                             <option {{ $setting['pagination'] == '50' ? 'selected' : '' }} value="50">50</option>
                             <option {{ $setting['pagination'] == '100' ? 'selected' : '' }} value="100">100</option>
