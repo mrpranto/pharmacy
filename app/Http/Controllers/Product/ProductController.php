@@ -39,6 +39,14 @@ class ProductController extends Controller
     }
 
     /**
+     * @return array
+     */
+    public function getDependency(): array
+    {
+        return $this->services->getDependency();
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

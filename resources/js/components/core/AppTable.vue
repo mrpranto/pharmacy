@@ -132,6 +132,51 @@
                             </div>
                         </div>
                     </div>
+
+                    <template v-for="(filter) in options.filters">
+                        <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
+                            <div class="dropdown show mr-1">
+                                <a class="btn btn btn-rounded btn-gray mt-2"
+                                   href="javascript:void(0)"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    {{ __('default.' + filter.title) }}
+                                </a>
+                                <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
+                                     style="padding: 25px">
+                                    <div class="dropdown-item scroll">
+                                        <div class="row pt-2">
+                                            <div class="col-12 d-flex justify-content-between">
+                                                <a-form-item :label="__('default.' + filter.title)">
+                                                    <a-select
+                                                        class="filter-select"
+                                                        style="width: 200px"
+                                                        show-search
+                                                        :placeholder="__('default.' + filter.title)"
+                                                        :options="filter.option"
+                                                        :filter-option="filter.filterOption"
+                                                        @change=""
+                                                    ></a-select>
+                                                </a-form-item>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item d-flex justify-content-end">
+                                        <span></span>
+                                        <button class="btn btn-sm btn-default float-right"
+                                                @click.prevent="clearStatusFilter" type="button"> {{
+                                                __('default.clear')
+                                            }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
                 </div>
 
                 <div class="col-sm-2">
@@ -294,6 +339,10 @@ export default {
         options: {
             type: Object,
             required: true
+        },
+        filters: {
+            type: Array,
+            required: false
         }
     },
     data() {
@@ -325,6 +374,10 @@ export default {
             $(".filter-column").click(function (e) {
                 e.stopPropagation();
             })
+
+            $(".filter-select").click(function (e) {
+                e.stopPropagation();
+            })
         })
     },
     watch: {
@@ -343,7 +396,7 @@ export default {
         },
         'options.request.status': function () {
             this.$parent.getData()
-        }
+        },
     },
     methods: {
         getPages() {
@@ -426,7 +479,7 @@ export default {
                 this.$parent.getData()
             }
         },
-        getOrderBy(orderBy){
+        getOrderBy(orderBy) {
             this.options.request.order_by = orderBy;
             this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : '');
             this.$parent.getData();

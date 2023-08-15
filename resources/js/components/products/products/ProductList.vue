@@ -146,14 +146,39 @@ export default {
                     order_by: 'id',
                     order_dir: 'desc'
                 },
-                exportAble: {}
-            }
+                exportAble: {},
+                filters: [
+                    {
+                        title: 'category',
+                        type: "drop-down-filter",
+                        key: "category",
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                    {
+                        title: 'company',
+                        type: "drop-down-filter",
+                        key: "company",
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                    {
+                        title: 'unit',
+                        type: "drop-down-filter",
+                        key: "unit",
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                ],
+            },
         }
     },
     created() {
         this.getData()
     },
     mounted() {
+    },
+    watch:{
 
     },
     methods: {
@@ -164,13 +189,44 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.getDependency()
                     this.options.loader = false;
                 })
                 .catch(err => {
                     console.error(err)
                 })
         },
-        showAddForm() {
+        async getDependency() {
+            await axios.get('/product/get-dependency')
+                .then(response => {
+                    this.options.filters[0].option = response.data.categories.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    });
+                    this.options.filters[1].option = response.data.companies.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    });
+                    this.options.filters[2].option = response.data.units.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name + ` (${item.pack_size})`
+                        }
+                    });
+
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        selectFilterOption(input, option) {
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        },
+        /*showAddForm() {
             this.formState.disabled = true;
             this.formState.formData = {
                 name: '',
@@ -230,7 +286,7 @@ export default {
                 .catch(err => {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
-        }
+        }*/
     }
 }
 </script>

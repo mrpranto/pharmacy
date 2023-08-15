@@ -2,7 +2,10 @@
 
 namespace App\Services\Product\Products;
 
+use App\Models\Product\Category;
+use App\Models\Product\Company;
 use App\Models\Product\Product;
+use App\Models\Product\Unit;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Psr\Container\ContainerExceptionInterface;
@@ -61,5 +64,17 @@ class ProductServices extends BaseServices
                 }
             })
             ->paginate(request()->get('per_page') ?? pagination());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDependency(): array
+    {
+        return [
+          'categories' => Category::query()->active()->get(['id', 'name']),
+          'companies' => Company::query()->active()->get(['id', 'name']),
+          'units' => Unit::query()->active()->get(['id', 'name', 'pack_size']),
+        ];
     }
 }
