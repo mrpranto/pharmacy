@@ -56,6 +56,7 @@ Route::group(['middleware' => 'authenticate'], function (){
    //Products route
     Route::group(['prefix' => 'product'], function (){
         Route::resource('products', ProductController::class);
+        Route::get('get-products', [ProductController::class, 'getProducts']);
 
         Route::resource('categories', CategoryController::class);
         Route::get('get-categories', [CategoryController::class, 'getCategories']);
@@ -66,32 +67,4 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::resource('units', UnitController::class);
         Route::get('get-units', [UnitController::class, 'getUnits']);
     });
-
-   Route::get('test', function (){
-      $files =  \Illuminate\Support\Facades\Storage::allFiles('pharmacy-management/db-backup/');
-
-
-       $file = $files[0];
-       $disk = \Illuminate\Support\Facades\Storage::disk(config('backup.backup.destination.disks')[0]);
-       if ($disk->exists($file)) {
-           $fs = \Illuminate\Support\Facades\Storage::disk(config('backup.backup.destination.disks')[0])->getDriver();
-           $stream = $fs->readStream($file);
-           return \Response::stream(function () use ($stream) {
-               fpassthru($stream);
-           }, 200, [
-               "Content-Type" => $fs->mimeType($file),
-               "Content-Length" => $fs->fileSize($file),
-               "Content-disposition" => "attachment; filename=\"" . basename($file) . "\"",
-           ]);
-       }
-
-//      return view('vue-test',['files' => $files]);
-   });
-
-   Route::get('get-backup', function (){
-      \Illuminate\Support\Facades\Artisan::call('backup:run --only-db');
-
-      return true;
-   });
-
 });

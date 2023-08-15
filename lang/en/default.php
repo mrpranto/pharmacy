@@ -97,4 +97,9 @@ return [
     'backup' => 'Backup',
     'download' => 'Download',
     'please_click_here' => 'Please click here for take a backup',
+    'add_new_product' => 'Add new product',
+    'category' => 'Category',
+    'company' => 'Company',
+    'unit' => 'Unit',
+    'barcode' => 'Barcode',
 ];

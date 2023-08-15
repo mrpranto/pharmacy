@@ -41,6 +41,11 @@ app.component('unit-list-component', UnitListComponent);
 import UnitAction from './components/products/units/Action.vue';
 app.component('unit-action-component', UnitAction);
 
+import ProductListComponent from './components/products/products/ProductList.vue';
+app.component('product-list-component', ProductListComponent);
+import ProductNameComponent from './components/products/products/ProductName.vue';
+app.component('product-name-component', ProductNameComponent);
+
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
