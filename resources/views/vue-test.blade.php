@@ -1,5 +1,9 @@
 @extends('layout.master')
 @section('title', 'Vue-test')
 @section('content')
-    <example-component>
+
+    @foreach($files as $file)
+        <a href="{{ $file }}"  download="{{ $file }}">{{ $file }}</a> <br>
+    @endforeach
+
 @endsection

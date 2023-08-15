@@ -41,6 +41,7 @@ class CategoryServices extends BaseServices
     public function getCategories(): LengthAwarePaginator
     {
         return $this->model->newQuery()
+            ->active()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))

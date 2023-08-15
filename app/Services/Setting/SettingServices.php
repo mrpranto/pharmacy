@@ -4,11 +4,11 @@ namespace App\Services\Setting;
 
 use App\Models\Setting;
 use App\Services\BaseServices;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 class SettingServices extends BaseServices
 {
@@ -73,5 +73,57 @@ class SettingServices extends BaseServices
         Cache::set('general_setting', $setting->settings_info);
 
         return redirect()->back()->with('success', 'Setting created successful.');
+    }
+
+    /**
+     * @return RedirectResponse|void
+     * @throws FilesystemException
+     */
+    public function backup()
+    {
+        try {
+            if ($this->takeDatabaseBackup() === true){
+                $files =  Storage::allFiles(config('backup.backup.name'));
+                $file = $files[0];
+                $disk = Storage::disk(config('backup.backup.destination.disks')[0]);
+                if ($disk->exists($file)) {
+                    $fs = Storage::disk(config('backup.backup.destination.disks')[0])->getDriver();
+                    $stream = $fs->readStream($file);
+                    return \Response::stream(function () use ($stream) {
+                        fpassthru($stream);
+                    }, 200, [
+                        "Content-Type" => $fs->mimeType($file),
+                        "Content-Length" => $fs->fileSize($file),
+                        "Content-disposition" => "attachment; filename=\"" . basename($file) . "\"",
+                    ]);
+                }else{
+                    return redirect()->back()->with(['error' => 'No backup found.']);
+                }
+            }
+
+        }catch (\Exception $exception){
+            return redirect()->back()->with(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @return bool|RedirectResponse
+     */
+    private function takeDatabaseBackup(): bool|RedirectResponse
+    {
+        try {
+
+            $disk = Storage::disk(config('backup.backup.destination.disks')[0]);
+            $files =  Storage::allFiles(config('backup.backup.name'));
+            if (is_array($files) && count($files) && $disk->exists($files[0])) {
+                $disk->delete($files[0]);
+            }
+            Artisan::call('backup:run --only-db');
+
+            return true;
+
+        }catch (\Exception $exception){
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 }

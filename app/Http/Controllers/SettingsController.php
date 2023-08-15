@@ -30,4 +30,9 @@ class SettingsController extends Controller
     {
          return $this->services->storeSetting();
     }
+
+    public function backup()
+    {
+        return $this->services->backup();
+    }
 }

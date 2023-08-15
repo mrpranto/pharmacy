@@ -3,7 +3,7 @@
         <div class="email-head-subject">
             <div class="title d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <a class="active" href="#"><span class="icon"><i data-feather="inbox"
+                    <a class="active" href="#"><span class="icon"><i data-feather="globe"
                                                                      class="text-primary-muted"></i></span></a>
                     <span>{{ __t('general_setting') }}</span>
                 </div>

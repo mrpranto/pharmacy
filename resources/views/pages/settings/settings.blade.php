@@ -26,6 +26,11 @@
                                                 <span class="icon"><i data-feather="globe"></i></span> {{ __t('general') }}
                                             </a>
                                         </li>
+                                        <li class="{{ request()->get('type') == 'backup' ? 'active' : '' }}">
+                                            <a href="{{ route('setting') }}?type=backup">
+                                                <span class="icon"><i data-feather="download-cloud"></i></span> {{ __t('backup') }}
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -36,6 +41,8 @@
                             @include('pages.settings._general_setting')
                         @elseif(request()->get('type') == 'app_setting')
                             @include('pages.settings._app_setting')
+                        @elseif(request()->get('type') == 'backup')
+                            @include('pages.settings._backup')
                         @endif
                     </div>
 

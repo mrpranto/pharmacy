@@ -41,6 +41,7 @@ Route::group(['middleware' => 'authenticate'], function (){
    //Settings route.
    Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');
    Route::post('setting', [SettingsController::class, 'storeSetting']);
+   Route::post('setting-backup', [SettingsController::class, 'backup'])->name('setting.backup');
 
    //Roles route.
    Route::resource('roles', RoleController::class);
@@ -67,7 +68,30 @@ Route::group(['middleware' => 'authenticate'], function (){
     });
 
    Route::get('test', function (){
-      return view('vue-test');
+      $files =  \Illuminate\Support\Facades\Storage::allFiles('pharmacy-management/db-backup/');
+
+
+       $file = $files[0];
+       $disk = \Illuminate\Support\Facades\Storage::disk(config('backup.backup.destination.disks')[0]);
+       if ($disk->exists($file)) {
+           $fs = \Illuminate\Support\Facades\Storage::disk(config('backup.backup.destination.disks')[0])->getDriver();
+           $stream = $fs->readStream($file);
+           return \Response::stream(function () use ($stream) {
+               fpassthru($stream);
+           }, 200, [
+               "Content-Type" => $fs->mimeType($file),
+               "Content-Length" => $fs->fileSize($file),
+               "Content-disposition" => "attachment; filename=\"" . basename($file) . "\"",
+           ]);
+       }
+
+//      return view('vue-test',['files' => $files]);
+   });
+
+   Route::get('get-backup', function (){
+      \Illuminate\Support\Facades\Artisan::call('backup:run --only-db');
+
+      return true;
    });
 
 });

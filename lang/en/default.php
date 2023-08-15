@@ -92,5 +92,9 @@ return [
     'unit_create' => 'Unit create successful',
     'edit_unit' => 'Edit unit',
     'unit_edit' => 'Unit update successful',
-    'unit_delete' => 'Unit delete successful'
+    'unit_delete' => 'Unit delete successful',
+
+    'backup' => 'Backup',
+    'download' => 'Download',
+    'please_click_here' => 'Please click here for take a backup',
 ];

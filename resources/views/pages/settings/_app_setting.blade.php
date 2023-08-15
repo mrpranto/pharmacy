@@ -1,9 +1,9 @@
-<div class="col-lg-9 email-content">
+<div class="col-lg-10 email-content">
     <div class="email-head">
         <div class="email-head-subject">
             <div class="title d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <a class="active" href="#"><span class="icon"><i data-feather="inbox"
+                    <a class="active" href="#"><span class="icon"><i data-feather="grid"
                                                                      class="text-primary-muted"></i></span></a>
                     <span>{{ __t('app_setting') }}</span>
                 </div>

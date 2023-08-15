@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Product\Category;
 use App\Models\Product\Company;
+use App\Models\Product\Product;
 use App\Models\Product\Unit;
 use App\Models\Role;
 use App\Models\Setting;
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
         Category::factory(200)->create();
         Company::factory(200)->create();
         Unit::factory(200)->create();
+        Product::factory(1000)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',
