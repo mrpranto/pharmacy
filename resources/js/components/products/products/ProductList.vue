@@ -144,7 +144,10 @@ export default {
                     search: '',
                     status: '',
                     order_by: 'id',
-                    order_dir: 'desc'
+                    order_dir: 'desc',
+                    category: '',
+                    company: '',
+                    unit: '',
                 },
                 exportAble: {},
                 filters: [
@@ -152,6 +155,7 @@ export default {
                         title: 'category',
                         type: "drop-down-filter",
                         key: "category",
+                        filterValue: 'category',
                         option: [],
                         filterOption: this.selectFilterOption
                     },
@@ -159,6 +163,7 @@ export default {
                         title: 'company',
                         type: "drop-down-filter",
                         key: "company",
+                        filterValue: 'company',
                         option: [],
                         filterOption: this.selectFilterOption
                     },
@@ -166,6 +171,7 @@ export default {
                         title: 'unit',
                         type: "drop-down-filter",
                         key: "unit",
+                        filterValue: 'unit',
                         option: [],
                         filterOption: this.selectFilterOption
                     },
@@ -175,11 +181,20 @@ export default {
     },
     created() {
         this.getData()
+        this.getDependency()
     },
     mounted() {
     },
     watch:{
-
+        'options.request.category': function (){
+            this.getData()
+        },
+        'options.request.company': function (){
+            this.getData()
+        },
+        'options.request.unit': function (){
+            this.getData()
+        }
     },
     methods: {
         async getData(url) {
@@ -189,7 +204,6 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
-                    this.getDependency()
                     this.options.loader = false;
                 })
                 .catch(err => {
@@ -226,6 +240,15 @@ export default {
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
+        filterData(filterValue, filterType){
+            if (filterType === 'category'){
+                this.options.request.category = filterValue
+            }else if(filterType === 'company'){
+                this.options.request.company = filterValue
+            }else if(filterType === 'unit'){
+                this.options.request.unit = filterValue
+            }
+        }
         /*showAddForm() {
             this.formState.disabled = true;
             this.formState.formData = {

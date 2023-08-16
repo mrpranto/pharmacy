@@ -51,6 +51,9 @@ class ProductServices extends BaseServices
             ->when(request()->filled('search'), fn($q) => $q->where('products.name', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('products.barcode', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('products.slug', 'like', '%' . request()->get('search') . '%'))
+            ->when(request()->filled('category'), fn($q) => $q->where('category_id', request()->get('category')))
+            ->when(request()->filled('company'), fn($q) => $q->where('company_id', request()->get('company')))
+            ->when(request()->filled('unit'), fn($q) => $q->where('unit_id', request()->get('unit')))
             ->when(request()->filled('status'), fn($q) => $q->where('products.status', request()->get('status')))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
                 if (request()->get('order_by') == 'category') {

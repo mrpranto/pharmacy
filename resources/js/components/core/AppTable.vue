@@ -133,10 +133,11 @@
                         </div>
                     </div>
 
-                    <template v-for="(filter) in options.filters">
+                    <template v-for="(filter, filter_index) in options.filters">
                         <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
                             <div class="dropdown show mr-1">
-                                <a class="btn btn btn-rounded btn-gray mt-2"
+                                <a class="btn btn btn-rounded mt-2"
+                                   :class="filter.filterValue !== filter.key ? 'btn-outline-primary' : 'btn-gray'"
                                    href="javascript:void(0)"
                                    id="dropdownMenuLink"
                                    data-toggle="dropdown"
@@ -145,19 +146,20 @@
                                     {{ __('default.' + filter.title) }}
                                 </a>
                                 <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
-                                     style="padding: 25px">
+                                     style="padding: 15px">
                                     <div class="dropdown-item scroll">
                                         <div class="row pt-2">
                                             <div class="col-12 d-flex justify-content-between">
                                                 <a-form-item :label="__('default.' + filter.title)">
                                                     <a-select
+                                                        v-model:value="filter.filterValue"
                                                         class="filter-select"
                                                         style="width: 200px"
                                                         show-search
                                                         :placeholder="__('default.' + filter.title)"
                                                         :options="filter.option"
                                                         :filter-option="filter.filterOption"
-                                                        @change=""
+                                                        @change="filterList($event, filter.key)"
                                                     ></a-select>
                                                 </a-form-item>
 
@@ -167,7 +169,7 @@
                                     <div class="dropdown-item d-flex justify-content-end">
                                         <span></span>
                                         <button class="btn btn-sm btn-default float-right"
-                                                @click.prevent="clearStatusFilter" type="button"> {{
+                                                @click.prevent="clearFilter(filter_index, filter.key)" type="button"> {{
                                                 __('default.clear')
                                             }}
                                         </button>
@@ -182,6 +184,7 @@
                 <div class="col-sm-2">
                     <a-input v-model:value="options.request.search"
                              style="border-radius: 20px"
+                             autofocus
                              @pressEnter="searchData"
                              :placeholder="__('default.search')+'...'">
                         <template #suffix>
@@ -363,6 +366,7 @@ export default {
             from: '',
             to: '',
             total: '',
+            filterFields:[]
         }
     },
     mounted() {
@@ -372,10 +376,6 @@ export default {
             })
 
             $(".filter-column").click(function (e) {
-                e.stopPropagation();
-            })
-
-            $(".filter-select").click(function (e) {
                 e.stopPropagation();
             })
         })
@@ -458,6 +458,11 @@ export default {
                     this.options.request[key] = ""
                 }
             }
+            let filter_key;
+            for (filter_key = 0; filter_key < this.options.filters.length; filter_key++) {
+                this.options.filters[filter_key].filterValue = this.options.filters[filter_key].key;
+            }
+
             this.page = {
                 value: 1,
                 label: 1
@@ -483,6 +488,14 @@ export default {
             this.options.request.order_by = orderBy;
             this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : '');
             this.$parent.getData();
+        },
+        filterList(event, key){
+            this.$parent.filterData(event, key)
+        },
+        clearFilter(filter_index, key){
+            this.options.filters[filter_index].filterValue = key
+            let value = this.options.filters[filter_index].filterValue
+            this.$parent.filterData('', key)
         }
     }
 }
