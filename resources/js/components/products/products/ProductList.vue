@@ -30,13 +30,17 @@
             </div>
         </div>
 
+        <AddNewProduct :formState="formState"/>
+
     </div>
 </template>
 <script>
 
+import AddNewProduct from "./AddNewProduct.vue";
+
 export default {
     name: "ProductList",
-    components: {},
+    components: {AddNewProduct},
     props: ['permission'],
     data() {
         return {
@@ -47,9 +51,18 @@ export default {
                 current_id: '',
                 formData: {
                     name: '',
-                    pack_size: '',
+                    barcode: '',
+                    category: '',
+                    company: '',
+                    unit: '',
                     description: '',
+                    image: '',
                     status: true,
+                },
+                dependencies:{
+                    categories:[],
+                    companies:[],
+                    units:[],
                 },
                 validation: {},
                 layout: {
@@ -103,7 +116,7 @@ export default {
                         isVisible: true,
                         orderAble: true,
                         modifier: (unit) => {
-                            return unit?.name;
+                            return unit?.name + `(${unit?.pack_size})`;
                         }
                     },
                     {
@@ -210,7 +223,7 @@ export default {
                     console.error(err)
                 })
         },
-        async getDependency() {
+        async getDependency(callFrom) {
             await axios.get('/product/get-dependency')
                 .then(response => {
                     this.options.filters[0].option = response.data.categories.map(item => {
@@ -232,6 +245,17 @@ export default {
                         }
                     });
 
+                    this.formState.dependencies.categories = this.options.filters[0].option;
+                    this.formState.dependencies.companies = this.options.filters[1].option;
+                    this.formState.dependencies.units = this.options.filters[2].option;
+
+                    if (callFrom === 'addCategory'){
+                        this.formState.formData.category = this.options.filters[0].option[0]
+                    }else if(callFrom === 'addCompany'){
+                        this.formState.formData.company = this.options.filters[1].option[0]
+                    }else if(callFrom === 'addUnit'){
+                        this.formState.formData.unit = this.options.filters[2].option[0]
+                    }
                 })
                 .catch(err => {
                     console.error(err)
@@ -248,18 +272,23 @@ export default {
             }else if(filterType === 'unit'){
                 this.options.request.unit = filterValue
             }
-        }
-        /*showAddForm() {
+        },
+        showAddForm() {
             this.formState.disabled = true;
             this.formState.formData = {
                 name: '',
-                pack_size: '',
+                barcode: '',
                 description: '',
+                image: '',
                 status: true,
             }
+            this.generateBarcode()
             this.formState.validation = {};
             this.formState.openCreate = true;
             this.formState.disabled = false;
+        },
+        generateBarcode(){
+            this.formState.formData.barcode = Math.floor(100000000000 + Math.random() * 900000000000)
         },
         onClose() {
             this.formState.openCreate = false;
@@ -309,7 +338,7 @@ export default {
                 .catch(err => {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
-        }*/
+        }
     }
 }
 </script>

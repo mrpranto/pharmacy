@@ -102,4 +102,6 @@ return [
     'company' => 'Company',
     'unit' => 'Unit',
     'barcode' => 'Barcode',
+    'image' => 'Image',
+
 ];

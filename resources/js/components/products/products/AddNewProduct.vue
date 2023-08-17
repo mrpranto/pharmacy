@@ -1,0 +1,453 @@
+<template>
+    <div>
+        <a-drawer
+            :title="__('default.add_new_product')"
+            :width="720"
+            :open="formState.openCreate"
+            :body-style="{ paddingBottom: '80px' }"
+            :footer-style="{ textAlign: 'right' }"
+            @close="$parent.onClose"
+        >
+            <a-form v-bind="formState.layout">
+
+                <a-form-item :label="__('default.name')" required>
+                    <a-input v-model:value="formState.formData.name" required=""
+                             :placeholder="__('default.name')"
+                             :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
+                            formState.validation.name[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.barcode')" required>
+                    <a-input v-model:value="formState.formData.barcode"
+                             required="" :placeholder="__('default.barcode')"
+                             :class="formState.validation.barcode ? 'ant-input ant-input-status-error': ''">
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.barcode">{{
+                                formState.validation.barcode[0]
+                            }}
+                        </div>
+                        <template #suffix>
+                            <a-tooltip title="Generate new barcode" @click="$parent.generateBarcode">
+                                <sync-outlined style="color: rgba(0, 0, 0, 0.45)"/>
+                            </a-tooltip>
+                        </template>
+                    </a-input>
+                </a-form-item>
+
+                <a-form-item :label="__('default.category')" required>
+                    <a-input-group compact>
+                        <a-select
+                            v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
+                            :class="formState.validation.category ? 'ant-input ant-input-status-error': ''"
+                            show-search
+                            :placeholder="__('default.category')"
+                            :options="formState.dependencies.categories"
+                            :filter-option="$parent.selectFilterOption"
+                        ></a-select>
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
+                            {{ formState.validation.category[0] }}
+                        </div>
+                        <a-tooltip :title="__('default.add_new_category')">
+                            <a-button @click="showAddNewCategoryModal">
+                                <i class="mdi mdi-plus"></i>
+                            </a-button>
+                        </a-tooltip>
+                    </a-input-group>
+                </a-form-item>
+
+                <a-form-item :label="__('default.company')" required>
+                    <a-input-group compact>
+                        <a-select
+                            v-model:value="formState.formData.company" style="width: calc(100% - 45px)"
+                            :class="formState.validation.company ? 'ant-input ant-input-status-error': ''"
+                            show-search
+                            :placeholder="__('default.company')"
+                            :options="formState.dependencies.companies"
+                            :filter-option="$parent.selectFilterOption"
+                        ></a-select>
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.company">
+                            {{ formState.validation.company[0] }}
+                        </div>
+                        <a-tooltip :title="__('default.add_new_company')">
+                            <a-button @click="showAddNewCompanyModal">
+                                <i class="mdi mdi-plus"></i>
+                            </a-button>
+                        </a-tooltip>
+                    </a-input-group>
+                </a-form-item>
+
+                <a-form-item :label="__('default.unit')" required>
+                    <a-input-group compact>
+                        <a-select
+                            v-model:value="formState.formData.unit" style="width: calc(100% - 45px)"
+                            :class="formState.validation.unit ? 'ant-input ant-input-status-error': ''"
+                            show-search
+                            :placeholder="__('default.unit')"
+                            :options="formState.dependencies.units"
+                            :filter-option="$parent.selectFilterOption"
+                        ></a-select>
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.unit">
+                            {{ formState.validation.unit[0] }}
+                        </div>
+                        <a-tooltip :title="__('default.add_new_unit')">
+                            <a-button @click="showAddNewUnitModal">
+                                <i class="mdi mdi-plus"></i>
+                            </a-button>
+                        </a-tooltip>
+                    </a-input-group>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="formState.formData.description"
+                                :placeholder="__('default.description')" rows="6"
+                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
+                        {{ formState.validation.description[0] }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.status')">
+                    <a-switch v-model:checked="formState.formData.status"/>
+                </a-form-item>
+
+                <a-form-item :label="__('default.image')">
+                    <div class="form-group">
+                        <input type="file" ref="file"
+                               @change="productImage"
+                               class="file-upload-default"
+                               id="cropperImageUpload">
+                        <div class="input-group col-xs-12">
+                            <input type="text"
+                                   class="form-control file-upload-info border-left-radius"
+                                   :value="imageFileName"
+                                   disabled=""
+                                   placeholder="Upload Image">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-primary border-right-radius"
+                                      @click="$refs.file.click()"
+                                      type="button">
+                                  <i class="mdi mdi-upload"></i> Upload
+                              </button>
+                            </span>
+                        </div>
+                    </div>
+                </a-form-item>
+
+            </a-form>
+            <template #footer>
+                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
+                    <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
+                </a-button>
+                <a-button type="primary" style="margin-right: 8px" @click.prevent="saveProduct">
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                </a-button>
+            </template>
+        </a-drawer>
+
+
+        <a-modal v-model:open="openAddNewCategory" :title="__('default.add_new_category')" @ok="saveCategory">
+            <a-form v-bind="categoryFormData.layout" class="mt-4">
+                <a-form-item :label="__('default.name')" required>
+                    <a-input v-model:value="categoryFormData.formData.name" required=""
+                             :placeholder="__('default.name')"
+                             :class="categoryFormData.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="categoryFormData.validation.name">{{
+                            categoryFormData.validation.name[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="categoryFormData.formData.description"
+                                :placeholder="__('default.description')" rows="6"
+                                :class="categoryFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="categoryFormData.validation.description">
+                        {{ categoryFormData.validation.description[0] }}
+                    </div>
+                </a-form-item>
+            </a-form>
+
+            <template #footer>
+                <a-button key="back" @click="closeAddNewCategory">{{ __('default.close') }}</a-button>
+                <a-button key="submit" type="primary" :loading="loading" @click="saveCategory">
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                </a-button>
+            </template>
+        </a-modal>
+
+
+        <a-modal v-model:open="openAddNewCompany" :title="__('default.add_new_company')" @ok="saveCompany">
+            <a-form v-bind="companyFormData.layout" class="mt-4">
+                <a-form-item :label="__('default.name')" required>
+                    <a-input v-model:value="companyFormData.formData.name" required=""
+                             :placeholder="__('default.name')"
+                             :class="companyFormData.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="companyFormData.validation.name">{{
+                            companyFormData.validation.name[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="companyFormData.formData.description"
+                                :placeholder="__('default.description')" rows="6"
+                                :class="companyFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="companyFormData.validation.description">
+                        {{ companyFormData.validation.description[0] }}
+                    </div>
+                </a-form-item>
+            </a-form>
+
+            <template #footer>
+                <a-button key="back" @click="closeAddNewCompany">{{ __('default.close') }}</a-button>
+                <a-button key="submit" type="primary" :loading="loading" @click="saveCompany">
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                </a-button>
+            </template>
+        </a-modal>
+
+
+        <a-modal v-model:open="openAddNewUnit" :title="__('default.add_new_unit')" @ok="saveUnit">
+            <a-form v-bind="unitFormData.layout" class="mt-4">
+                <a-form-item :label="__('default.name')" required>
+                    <a-input v-model:value="unitFormData.formData.name" required=""
+                             :placeholder="__('default.name')"
+                             :class="unitFormData.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.name">{{
+                            unitFormData.validation.name[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.pack_size')" required>
+                    <a-input v-model:value="unitFormData.formData.pack_size" required=""
+                             :placeholder="__('default.pack_size')"
+                             :class="unitFormData.validation.pack_size ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.pack_size">{{
+                            unitFormData.validation.pack_size[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="unitFormData.formData.description"
+                                :placeholder="__('default.description')" rows="6"
+                                :class="unitFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.description">
+                        {{ unitFormData.validation.description[0] }}
+                    </div>
+                </a-form-item>
+            </a-form>
+
+            <template #footer>
+                <a-button key="back" @click="closeAddNewUnit">{{ __('default.close') }}</a-button>
+                <a-button key="submit" type="primary" :loading="loading" @click="saveUnit">
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                </a-button>
+            </template>
+        </a-modal>
+
+    </div>
+</template>
+<script>
+import {CloseCircleOutlined, SearchOutlined, SyncOutlined} from "@ant-design/icons-vue";
+
+export default {
+    name: "AddNewProduct",
+    components: {CloseCircleOutlined, SearchOutlined, SyncOutlined},
+    props: {
+        formState: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            imageFileName: '',
+            loading: false,
+            openAddNewCategory: false,
+            openAddNewCompany: false,
+            openAddNewUnit: false,
+            categoryFormData: {
+                formData: {
+                    name: '',
+                    description: '',
+                    status: true,
+                },
+                validation: {},
+                layout: {
+                    labelCol: {span: 6},
+                    wrapperCol: {span: 18},
+                }
+            },
+            companyFormData: {
+                formData: {
+                    name: '',
+                    description: '',
+                    status: true,
+                },
+                validation: {},
+                layout: {
+                    labelCol: {span: 6},
+                    wrapperCol: {span: 18},
+                }
+            },
+            unitFormData: {
+                formData: {
+                    name: '',
+                    pack_size: '',
+                    description: '',
+                    status: true,
+                },
+                validation: {},
+                layout: {
+                    labelCol: {span: 6},
+                    wrapperCol: {span: 18},
+                }
+            },
+        }
+    },
+    watch: {},
+    mounted() {
+        this.$nextTick(function () {
+            $('.file-upload-browse').on('click', function (e) {
+                let file = $(this).parent().parent().parent().find('.file-upload-default');
+                file.trigger('click');
+            });
+        })
+    },
+    methods: {
+        async saveProduct() {
+            await axios.post('/product/products', this.formState.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.formState.formData.name = ''
+                        this.formState.formData.description = ''
+                        this.formState.formData.status = true
+                        this.$parent.getData()
+                        this.$parent.onClose()
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.formState.validation = err.response.data.errors
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                    }
+                })
+        },
+        showAddNewCategoryModal() {
+            this.openAddNewCategory = true
+        },
+        closeAddNewCategory() {
+            this.openAddNewCategory = false
+        },
+        async saveCategory() {
+            await axios.post('/product/categories', this.categoryFormData.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.categoryFormData.formData.name = ''
+                        this.categoryFormData.formData.description = ''
+                        this.categoryFormData.formData.status = true
+                        this.closeAddNewCategory()
+                        this.$parent.getDependency('addCategory')
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.categoryFormData.validation = err.response.data.errors
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                    }
+                })
+        },
+
+        showAddNewCompanyModal() {
+            this.openAddNewCompany = true
+        },
+        closeAddNewCompany() {
+            this.openAddNewCompany = false
+        },
+        async saveCompany() {
+            await axios.post('/product/companies', this.companyFormData.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.companyFormData.formData.name = ''
+                        this.companyFormData.formData.description = ''
+                        this.companyFormData.formData.status = true
+                        this.closeAddNewCompany()
+                        this.$parent.getDependency('addCompany')
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.companyFormData.validation = err.response.data.errors
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                    }
+                })
+        },
+
+        showAddNewUnitModal() {
+            this.openAddNewUnit = true
+        },
+        closeAddNewUnit() {
+            this.openAddNewUnit = false
+        },
+        async saveUnit() {
+            await axios.post('/product/units', this.unitFormData.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.unitFormData.formData.name = ''
+                        this.unitFormData.formData.pack_size = ''
+                        this.unitFormData.formData.description = ''
+                        this.unitFormData.formData.status = true
+                        this.closeAddNewUnit()
+                        this.$parent.getDependency('addUnit')
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.unitFormData.validation = err.response.data.errors
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                    }
+                })
+        },
+        productImage(){
+            this.selectedImage = event.target.files[0];
+            this.imageFileName = this.selectedImage.name;
+        }
+    },
+}
+</script>
+
+<style scoped>
+.border-left-radius {
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+.border-right-radius {
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+</style>

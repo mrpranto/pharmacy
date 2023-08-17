@@ -49,7 +49,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        Gate::authorize('app.category.store');
+        Gate::authorize('app.category.create');
 
         return $this->services
             ->validate($request)

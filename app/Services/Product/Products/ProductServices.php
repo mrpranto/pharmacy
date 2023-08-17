@@ -50,7 +50,11 @@ class ProductServices extends BaseServices
             ->join('units', 'products.unit_id', '=', 'units.id')
             ->when(request()->filled('search'), fn($q) => $q->where('products.name', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('products.barcode', 'like', '%' . request()->get('search') . '%')
-                ->orWhere('products.slug', 'like', '%' . request()->get('search') . '%'))
+                ->orWhere('products.slug', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('categories.name', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('companies.name', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('units.name', 'like', '%' . request()->get('search') . '%')
+            )
             ->when(request()->filled('category'), fn($q) => $q->where('category_id', request()->get('category')))
             ->when(request()->filled('company'), fn($q) => $q->where('company_id', request()->get('company')))
             ->when(request()->filled('unit'), fn($q) => $q->where('unit_id', request()->get('unit')))
@@ -75,9 +79,9 @@ class ProductServices extends BaseServices
     public function getDependency(): array
     {
         return [
-          'categories' => Category::query()->active()->get(['id', 'name']),
-          'companies' => Company::query()->active()->get(['id', 'name']),
-          'units' => Unit::query()->active()->get(['id', 'name', 'pack_size']),
+          'categories' => Category::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
+          'companies' => Company::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
+          'units' => Unit::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'pack_size']),
         ];
     }
 }
