@@ -162,4 +162,77 @@ class ProductServices extends BaseServices
         ]);
     }
 
+    /**
+     * @param $request
+     * @param $id
+     * @return $this
+     */
+    public function validateUpdate($request, $id): static
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'barcode' => 'required|unique:products,barcode,'.$id,
+            'category' => 'required|exists:categories,id',
+            'company' => 'required|exists:companies,id',
+            'unit' => 'required|exists:units,id',
+            'description' => 'nullable|string',
+            'status' => 'required|in:true,false',
+            'product_photo' => 'nullable|image|max:2048',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update($request, $id): JsonResponse
+    {
+        try {
+            DB::transaction(function () use ($request, $id){
+
+                $this->model = $this->model->newQuery()
+                    ->where('id', $id)
+                    ->first();
+
+                $this->model->update([
+                    'category_id' => $request->category,
+                    'company_id' => $request->company,
+                    'unit_id' => $request->unit,
+                    'barcode' => $request->barcode,
+                    'name' => $request->name,
+                    'slug' => Str::slug($request->name.'-'.Str::uuid(), '-'),
+                    'description' => $request->description,
+                    'status' => $request->status === 'true' ? true : false,
+                ]);
+
+                if ($request->has('product_photo')){
+                    $this->uploadProductPhoto($request->file('product_photo'), $this->model);
+                }
+            });
+
+            return response()->json(['success' => __t('product_edit')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->delete();
+
+            return response()->json(['success' => __t('product_delete')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
 }

@@ -80,10 +80,12 @@ export default {
                     },
                     {
                         title: 'name',
-                        type: 'text',
+                        type: 'component',
+                        componentName: 'user-name-component',
+                        rowValues: true,
                         key: 'name',
+                        isVisible: true,
                         orderAble: true,
-                        isVisible: true
                     },
                     {
                         title: 'email',
@@ -107,16 +109,6 @@ export default {
                         isVisible: true,
                         modifier: (role) => {
                             return role ? '<span class="badge badge-primary">' + role.name + '</span>' : ''
-                        }
-                    },
-                    {
-                        title: 'profile_picture',
-                        type: 'custom-html',
-                        key: 'profile_picture',
-                        orderAble: false,
-                        isVisible: true,
-                        modifier: (row) => {
-                            return row ? '<img src="' + row.full_url + '" class="img-thumbnail" style="width: 50px;height: 50px" alt="">' : '<img src="/images/avatar.png" class="img-thumbnail" style="width: 50px;height: 50px" alt="">'
                         }
                     },
                     {

@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         Category::factory(200)->create();
         Company::factory(200)->create();
         Unit::factory(200)->create();
-        Product::factory(1000)->create();
+        Product::factory(10000)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',

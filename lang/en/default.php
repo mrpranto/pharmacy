@@ -103,6 +103,10 @@ return [
     'unit' => 'Unit',
     'barcode' => 'Barcode',
     'image' => 'Image',
-    'product_create' => 'Product create successful'
+    'product_create' => 'Product create successful',
+    'role' => 'Role',
+    'edit_product' => 'Edit Product',
+    'product_edit' => 'Product edit successful',
+    'product_delete' => 'Product delete successful',
 
 ];

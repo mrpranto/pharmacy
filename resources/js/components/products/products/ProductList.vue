@@ -31,16 +31,18 @@
         </div>
 
         <AddNewProduct :formState="formState"/>
+        <EditProduct :formState="formState"/>
 
     </div>
 </template>
 <script>
 
 import AddNewProduct from "./AddNewProduct.vue";
+import EditProduct from "./EditProduct.vue";
 
 export default {
     name: "ProductList",
-    components: {AddNewProduct},
+    components: {EditProduct, AddNewProduct},
     props: ['permission'],
     data() {
         return {
@@ -147,7 +149,7 @@ export default {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
-                        componentName: 'unit-action-component',
+                        componentName: 'product-action-component',
                         isVisible: true
                     },
                 ],
@@ -295,9 +297,14 @@ export default {
         getEditData(row) {
             this.formState.formData = {
                 name: row.name,
-                pack_size: row.pack_size,
+                barcode: row.barcode,
                 description: row.description,
+                category: row.category_id,
+                company: row.company_id,
+                unit: row.unit_id,
+                image: row.product_photo?.full_url,
                 status: row.status === 1 ? true : false,
+
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};
@@ -325,7 +332,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/product/units/${id}`)
+            await axios.delete(`/product/products/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

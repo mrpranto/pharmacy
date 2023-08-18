@@ -459,7 +459,7 @@ export default {
                 }
             }
             let filter_key;
-            for (filter_key = 0; filter_key < this.options.filters.length; filter_key++) {
+            for (filter_key = 0; filter_key < this.options?.filters?.length; filter_key++) {
                 this.options.filters[filter_key].filterValue = this.options.filters[filter_key].key;
             }
 

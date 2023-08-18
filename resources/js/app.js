@@ -23,6 +23,8 @@ import UsersListComponent from './components/users/UsersList.vue';
 app.component('user-list-component', UsersListComponent);
 import UserAction from './components/users/Action.vue';
 app.component('user-action-component', UserAction);
+import UserName from './components/users/UserName.vue';
+app.component('user-name-component', UserName);
 
 
 import CategoryListComponent from './components/products/categories/CategoryList.vue';
@@ -45,6 +47,8 @@ import ProductListComponent from './components/products/products/ProductList.vue
 app.component('product-list-component', ProductListComponent);
 import ProductNameComponent from './components/products/products/ProductName.vue';
 app.component('product-name-component', ProductNameComponent);
+import ProductAction from './components/products/products/Action.vue';
+app.component('product-action-component', ProductAction);
 
 
 import AppTable from './components/core/AppTable.vue';

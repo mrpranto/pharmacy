@@ -1,12 +1,12 @@
 <template>
     <div>
         <a-drawer
-            :title="__('default.add_new_product')"
+            :title="__('default.edit_product')"
             :width="720"
-            :open="formState.openCreate"
+            :open="formState.openEdit"
             :body-style="{ paddingBottom: '80px' }"
             :footer-style="{ textAlign: 'right' }"
-            @close="$parent.onClose"
+            @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
 
@@ -140,11 +140,11 @@
 
             </a-form>
             <template #footer>
-                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
+                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="saveProduct">
-                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                <a-button type="primary" style="margin-right: 8px" @click.prevent="updateProduct">
+                    <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
         </a-drawer>
@@ -259,7 +259,7 @@
 import {CloseCircleOutlined, SearchOutlined, SyncOutlined} from "@ant-design/icons-vue";
 
 export default {
-    name: "AddNewProduct",
+    name: "EditProduct",
     components: {CloseCircleOutlined, SearchOutlined, SyncOutlined},
     props: {
         formState: {
@@ -315,7 +315,17 @@ export default {
             formData: new FormData()
         }
     },
-    watch: {},
+    watch: {
+        'formState.formData.image': function (){
+            if (this.formState.formData.image){
+                this.previewURL = this.formState.formData.image
+                this.imageFileName = ''
+            }else {
+                this.previewURL = '/images/medicine.png'
+                this.imageFileName = ''
+            }
+        }
+    },
     mounted() {
 
     },
@@ -323,7 +333,7 @@ export default {
         /*
         * Product Create functions
         * */
-        async saveProduct() {
+        async updateProduct() {
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
             this.formData.append('category', this.formState.formData.category);
@@ -331,7 +341,12 @@ export default {
             this.formData.append('unit', this.formState.formData.unit);
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
-            await axios.post('/product/products', this.formData)
+            this.formData.append("_method", "put");
+            await axios.post('/product/products/'+this.formState.current_id, this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = '';
@@ -343,8 +358,9 @@ export default {
                         this.formState.formData.status = true;
                         this.imageFileName = "";
                         this.previewURL = '/images/medicine.png';
+                        this.formData = new FormData()
                         this.$parent.getData()
-                        this.$parent.onClose()
+                        this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
