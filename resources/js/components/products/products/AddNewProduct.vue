@@ -37,66 +37,63 @@
                 </a-form-item>
 
                 <a-form-item :label="__('default.category')" required>
-                    <a-input-group compact>
+                    <a-input-group compact :class="formState.validation.category ? 'ant-input ant-input-status-error': ''">
                         <a-select
                             v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
-                            :class="formState.validation.category ? 'ant-input ant-input-status-error': ''"
                             show-search
                             :placeholder="__('default.category')"
                             :options="formState.dependencies.categories"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
-                            {{ formState.validation.category[0] }}
-                        </div>
                         <a-tooltip :title="__('default.add_new_category')">
                             <a-button @click="showAddNewCategoryModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
                         </a-tooltip>
                     </a-input-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
+                        {{ formState.validation.category[0] }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.company')" required>
-                    <a-input-group compact>
+                    <a-input-group compact :class="formState.validation.company ? 'ant-input ant-input-status-error': ''">
                         <a-select
                             v-model:value="formState.formData.company" style="width: calc(100% - 45px)"
-                            :class="formState.validation.company ? 'ant-input ant-input-status-error': ''"
                             show-search
                             :placeholder="__('default.company')"
                             :options="formState.dependencies.companies"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.company">
-                            {{ formState.validation.company[0] }}
-                        </div>
                         <a-tooltip :title="__('default.add_new_company')">
                             <a-button @click="showAddNewCompanyModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
                         </a-tooltip>
                     </a-input-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.company">
+                        {{ formState.validation.company[0] }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.unit')" required>
-                    <a-input-group compact>
+                    <a-input-group compact :class="formState.validation.unit ? 'ant-input ant-input-status-error': ''">
                         <a-select
                             v-model:value="formState.formData.unit" style="width: calc(100% - 45px)"
-                            :class="formState.validation.unit ? 'ant-input ant-input-status-error': ''"
                             show-search
                             :placeholder="__('default.unit')"
                             :options="formState.dependencies.units"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.unit">
-                            {{ formState.validation.unit[0] }}
-                        </div>
                         <a-tooltip :title="__('default.add_new_unit')">
                             <a-button @click="showAddNewUnitModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
                         </a-tooltip>
                     </a-input-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.unit">
+                        {{ formState.validation.unit[0] }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :name="['description']" :label="__('default.description')">
@@ -117,6 +114,7 @@
                         <input type="file" ref="file"
                                @change="productImage"
                                class="file-upload-default"
+                               accept="image/*"
                                id="cropperImageUpload">
                         <div class="input-group col-xs-12">
                             <input type="text"
@@ -133,6 +131,9 @@
                             </span>
                         </div>
                     </div>
+
+                    <img v-if="previewURL" :src="previewURL" class="img-thumbnail" alt="Selected Image"
+                         style="width: 300px; height: 150px;">
                 </a-form-item>
 
             </a-form>
@@ -265,6 +266,7 @@ export default {
     },
     data() {
         return {
+            previewURL: '/images/medicine.png',
             imageFileName: '',
             loading: false,
             openAddNewCategory: false,
@@ -307,25 +309,37 @@ export default {
                     wrapperCol: {span: 18},
                 }
             },
+            formData: new FormData()
         }
     },
     watch: {},
     mounted() {
-        this.$nextTick(function () {
-            $('.file-upload-browse').on('click', function (e) {
-                let file = $(this).parent().parent().parent().find('.file-upload-default');
-                file.trigger('click');
-            });
-        })
+
     },
     methods: {
+        /*
+        * Product Create functions
+        * */
         async saveProduct() {
-            await axios.post('/product/products', this.formState.formData)
+            this.formData.append('name', this.formState.formData.name);
+            this.formData.append('barcode', this.formState.formData.barcode);
+            this.formData.append('category', this.formState.formData.category);
+            this.formData.append('company', this.formState.formData.company);
+            this.formData.append('unit', this.formState.formData.unit);
+            this.formData.append('description', this.formState.formData.description);
+            this.formData.append('status', this.formState.formData.status);
+            await axios.post('/product/products', this.formData)
                 .then(response => {
                     if (response.data.success) {
-                        this.formState.formData.name = ''
-                        this.formState.formData.description = ''
-                        this.formState.formData.status = true
+                        this.formState.formData.name = '';
+                        this.formState.formData.barcode = '';
+                        this.formState.formData.category = '';
+                        this.formState.formData.company = '';
+                        this.formState.formData.unit = '';
+                        this.formState.formData.description = '';
+                        this.formState.formData.status = true;
+                        this.imageFileName = "";
+                        this.previewURL = '/images/medicine.png';
                         this.$parent.getData()
                         this.$parent.onClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
@@ -342,6 +356,10 @@ export default {
                     }
                 })
         },
+
+        /*
+        * Category Create functions
+        * */
         showAddNewCategoryModal() {
             this.openAddNewCategory = true
         },
@@ -372,6 +390,9 @@ export default {
                 })
         },
 
+        /*
+        * Company Create functions
+        * */
         showAddNewCompanyModal() {
             this.openAddNewCompany = true
         },
@@ -402,6 +423,9 @@ export default {
                 })
         },
 
+        /*
+        * Unit Create functions
+        * */
         showAddNewUnitModal() {
             this.openAddNewUnit = true
         },
@@ -432,9 +456,24 @@ export default {
                     }
                 })
         },
-        productImage(){
+
+        productImage() {
             this.selectedImage = event.target.files[0];
-            this.imageFileName = this.selectedImage.name;
+            this.imageFileName = this.selectedImage?.name;
+            this.formData.append('product_photo', event.target.files[0])
+
+            // Create a FileReader to read the selected image and generate a preview URL
+            let reader = new FileReader();
+
+            reader.onload = () => {
+                this.previewURL = reader.result; // Set the preview URL
+            };
+
+            if (this.selectedImage) {
+                reader.readAsDataURL(this.selectedImage); // Read the selected image as a data URL
+            } else {
+                this.previewURL = '/images/medicine.png'; // Clear the preview if no image is selected
+            }
         }
     },
 }

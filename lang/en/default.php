@@ -103,5 +103,6 @@ return [
     'unit' => 'Unit',
     'barcode' => 'Barcode',
     'image' => 'Image',
+    'product_create' => 'Product create successful'
 
 ];

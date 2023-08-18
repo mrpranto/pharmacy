@@ -56,7 +56,6 @@ export default {
                     company: '',
                     unit: '',
                     description: '',
-                    image: '',
                     status: true,
                 },
                 dependencies:{
@@ -250,11 +249,11 @@ export default {
                     this.formState.dependencies.units = this.options.filters[2].option;
 
                     if (callFrom === 'addCategory'){
-                        this.formState.formData.category = this.options.filters[0].option[0]
+                        this.formState.formData.category = this.options.filters[0].option[0].value
                     }else if(callFrom === 'addCompany'){
-                        this.formState.formData.company = this.options.filters[1].option[0]
+                        this.formState.formData.company = this.options.filters[1].option[0].value
                     }else if(callFrom === 'addUnit'){
-                        this.formState.formData.unit = this.options.filters[2].option[0]
+                        this.formState.formData.unit = this.options.filters[2].option[0].value
                     }
                 })
                 .catch(err => {

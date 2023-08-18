@@ -4,7 +4,17 @@
             <i data-feather="corner-up-left" id="backToChatList"
                class="icon-lg mr-2 ml-n2 text-muted d-lg-none"></i>
             <figure class="mb-0 mr-2">
-                <img src="/images/medicine.png" class="img-sm img-thumbnail rounded-circle" alt="image">
+                <template v-if="item.product_photo">
+                    <img :src="item.product_photo?.full_url"
+                         class="img-sm rounded-circle"
+                         :alt="item.slug">
+                </template>
+                <template v-else>
+                    <img src="/images/medicine.png"
+                         class="img-sm rounded-circle"
+                         :alt="item.slug">
+                </template>
+
                 <div class="status online" v-if="item.status === 1"></div>
                 <div class="status offline" v-else></div>
             </figure>

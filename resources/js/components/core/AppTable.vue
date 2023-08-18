@@ -486,7 +486,7 @@ export default {
         },
         getOrderBy(orderBy) {
             this.options.request.order_by = orderBy;
-            this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : '');
+            this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : 'asc');
             this.$parent.getData();
         },
         filterList(event, key){

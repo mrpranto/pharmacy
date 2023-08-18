@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Product\Products\ProductServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -47,19 +48,13 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ?JsonResponse
     {
-        //
+        return $this->services
+            ->validateStore($request)
+            ->store($request);
     }
 
     /**
