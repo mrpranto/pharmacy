@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
@@ -31,11 +28,19 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
-    public function setColorMode($mode)
+    public function setColorMode($mode): RedirectResponse
     {
         if (in_array($mode, ['dark', 'white'])) {
             Session::put('color-mode', $mode);
         }
         return redirect()->back();
+    }
+
+    /**
+     * @return View
+     */
+    public function profile(): View
+    {
+        return view('pages.profile.index');
     }
 }

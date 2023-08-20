@@ -27,7 +27,7 @@
                             <option  {{ $setting['date_format'] == 'd.m.Y' ? 'selected' : '' }} value="d.m.Y">DD.MM.YYYY</option>
                             <option  {{ $setting['date_format'] == 'Y.m.d' ? 'selected' : '' }} value="Y.m.d">YYYY.MM.DD</option>
                             <option  {{ $setting['date_format'] == 'm.d.Y' ? 'selected' : '' }} value="m.d.Y">MM.DD.YYYY</option>
-                            <option  {{ $setting['date_format'] == 'm d, Y' ? 'selected' : '' }} value="m d, Y">MM DD, YYYY</option>
+                            <option  {{ $setting['date_format'] == 'F d, Y' ? 'selected' : '' }} value="F d, Y">MM DD, YYYY</option>
                         </select>
                     </div>
                 </div>

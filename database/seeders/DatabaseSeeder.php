@@ -47,12 +47,12 @@ class DatabaseSeeder extends Seeder
         Category::factory(200)->create();
         Company::factory(200)->create();
         Unit::factory(200)->create();
-        Product::factory(10000)->create();
+        Product::factory(1000)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',
             'settings_info' => [
-                "date_format" => "m d, Y",
+                "date_format" => "F d, Y",
                 "time_format" => "H:i:s A",
                 "currency_symbol" => '৳',
                 "currency_symbol_position" => "before_amount",

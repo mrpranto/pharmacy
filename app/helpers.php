@@ -71,3 +71,23 @@ if (! function_exists('pagination')){
         return Cache::get('general_setting') ? Cache::get('general_setting')['pagination'] : 10;
     }
 }
+
+if (! function_exists('format_date')){
+    /**
+     * @return mixed
+     */
+    function format_date(): mixed
+    {
+        return Cache::get('general_setting') ? Cache::get('general_setting')['date_format'] : 'Y-m-d';
+    }
+}
+
+if (! function_exists('format_time')){
+    /**
+     * @return mixed
+     */
+    function format_time(): mixed
+    {
+        return Cache::get('general_setting') ? Cache::get('general_setting')['time_format'] : 'h:i:s a';
+    }
+}

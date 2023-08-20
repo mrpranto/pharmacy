@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="btn-group">
-                        <button type="button" title="Refresh" class="btn btn btn-rounded btn-gray mr-1"
+                        <button type="button" :title="__('default.refresh')" class="btn btn btn-rounded btn-gray mr-1"
                                 @click.prevent="refreshTable">
                             <i class="mdi mdi-reload"></i>
                         </button>
@@ -105,7 +105,7 @@
                                data-toggle="dropdown"
                                aria-haspopup="true"
                                aria-expanded="false">
-                                Status
+                                {{ __('default.status') }}
                             </a>
                             <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
                                  style="padding: 25px">
@@ -190,7 +190,7 @@
                         <template #suffix>
                             <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!options.request.search"/>
                             <a-tooltip title="Clear Search" @click.prevent="clearSearch" v-else>
-                                <close-circle-outlined style="color: rgba(0, 0, 0, 0.45)"/>
+                                <close-circle-filled style="color: rgba(0, 0, 0, 0.45)"/>
                             </a-tooltip>
                         </template>
                     </a-input>
@@ -333,11 +333,11 @@
 
 <script>
 import Loader from "./Loader.vue";
-import {SearchOutlined, CloseCircleOutlined} from '@ant-design/icons-vue';
+import {SearchOutlined, CloseCircleFilled} from '@ant-design/icons-vue';
 
 export default {
     name: "AppTable",
-    components: {Loader, SearchOutlined, CloseCircleOutlined},
+    components: {Loader, SearchOutlined, CloseCircleFilled},
     props: {
         options: {
             type: Object,

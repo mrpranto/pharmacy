@@ -216,11 +216,17 @@
                     </div>
                     <div class="dropdown-body">
                         <ul class="profile-nav p-0 pt-3">
+                            <li class="nav-item">
+                                <a href="{{ route('profile') }}" class="nav-link">
+                                    <i data-feather="user"></i>
+                                    <span>{{ __t('profile') }}</span>
+                                </a>
+                            </li>
                             @if(auth()->user()->can('app.setting'))
                                 <li class="nav-item">
                                     <a href="{{ route('setting') }}?type=app_setting" class="nav-link">
                                         <i data-feather="settings"></i>
-                                        <span>Setting</span>
+                                        <span>{{ __t('setting') }}</span>
                                     </a>
                                 </li>
                             @endif

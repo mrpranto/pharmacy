@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -26,6 +27,8 @@ class UnitController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('app.unit.index');
+
         return view('pages.products.units.index', $this->services->accessPermissions());
     }
 
@@ -36,6 +39,8 @@ class UnitController extends Controller
      */
     public function getUnits(): LengthAwarePaginator
     {
+        Gate::authorize('app.unit.index');
+
         return $this->services->getUnits();
     }
 
@@ -44,6 +49,8 @@ class UnitController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        Gate::authorize('app.unit.create');
+
         return $this->services
             ->validateStore($request)
             ->store($request);
@@ -62,6 +69,8 @@ class UnitController extends Controller
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        Gate::authorize('app.unit.edit');
+
         return $this->services
             ->validateUpdate($request)
             ->update($request, $id);
@@ -72,6 +81,8 @@ class UnitController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
+        Gate::authorize('app.unit.delete');
+
         return $this->services->delete($id);
     }
 }

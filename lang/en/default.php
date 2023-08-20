@@ -108,5 +108,14 @@ return [
     'edit_product' => 'Edit Product',
     'product_edit' => 'Product edit successful',
     'product_delete' => 'Product delete successful',
+    'refresh' => 'Refresh',
+
+    'profile' => 'Profile',
+    'back' => 'Back',
+    'not_added_yet' => 'Not added yet',
+    'created_at' => 'Created At',
+    'personal_info' => 'Personal Info',
+    'password_change' => 'Password Change',
+    'activity_log' => 'Activity Log',
 
 ];

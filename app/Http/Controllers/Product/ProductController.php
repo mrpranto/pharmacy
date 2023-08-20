@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -26,6 +27,8 @@ class ProductController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('app.product.index');
+
         return view('pages.products.products.index', $this->services->accessPermissions());
     }
 
@@ -36,6 +39,8 @@ class ProductController extends Controller
      */
     public function getProducts(): LengthAwarePaginator
     {
+        Gate::authorize('app.product.index');
+
         return $this->services->getProducts();
     }
 
@@ -44,6 +49,8 @@ class ProductController extends Controller
      */
     public function getDependency(): array
     {
+        Gate::authorize('app.product.index');
+
         return $this->services->getDependency();
     }
 
@@ -52,6 +59,8 @@ class ProductController extends Controller
      */
     public function store(Request $request): ?JsonResponse
     {
+        Gate::authorize('app.product.create');
+
         return $this->services
             ->validateStore($request)
             ->store($request);
@@ -71,6 +80,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        Gate::authorize('app.product.edit');
+
         return $this->services
             ->validateUpdate($request, $id)
             ->update($request, $id);
@@ -81,6 +92,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
+        Gate::authorize('app.product.delete');
+
         return $this->services->delete($id);
     }
 }
