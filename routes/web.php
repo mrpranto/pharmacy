@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\People\SupplierController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\CompanyController;
 use App\Http\Controllers\Product\ProductController;
@@ -37,9 +38,13 @@ Route::group(['middleware' => 'authenticate'], function (){
 
    //Profile
     Route::get('profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::post('profile', [DashboardController::class, 'updateProfile']);
 
    //Logout route.
    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+   //Change password
+    Route::post('change-password', [AuthController::class, 'passwordChange'])->name('change-password');
 
    //Settings route.
    Route::get('setting', [SettingsController::class, 'getSetting'])->name('setting');
@@ -71,4 +76,13 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::resource('units', UnitController::class);
         Route::get('get-units', [UnitController::class, 'getUnits']);
     });
+
+    //Peoples route
+    Route::group(['prefix' => 'peoples'], function (){
+
+        Route::resource('suppliers', SupplierController::class);
+
+    });
+
+
 });

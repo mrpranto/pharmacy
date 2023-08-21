@@ -5,7 +5,7 @@
                 <div class="col-sm-10">
                     <div class="btn-group" role="group">
                         <div class="dropdown show mr-1">
-                            <a class="btn btn btn-gray btn-rounded"
+                            <a class="btn btn-gray btn-rounded"
                                href="javascript:void(0)"
                                id="dropdownMenuLink"
                                data-toggle="dropdown"
@@ -62,6 +62,11 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
+
                     <div class="btn-group">
                         <button type="button" :title="__('default.refresh')" class="btn btn btn-rounded btn-gray mr-1"
                                 @click.prevent="refreshTable">
@@ -178,7 +183,6 @@
                             </div>
                         </div>
                     </template>
-
                 </div>
 
                 <div class="col-sm-2">

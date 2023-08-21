@@ -217,7 +217,7 @@
                     <div class="dropdown-body">
                         <ul class="profile-nav p-0 pt-3">
                             <li class="nav-item">
-                                <a href="{{ route('profile') }}" class="nav-link">
+                                <a href="{{ route('profile') }}?type=personal_info" class="nav-link">
                                     <i data-feather="user"></i>
                                     <span>{{ __t('profile') }}</span>
                                 </a>

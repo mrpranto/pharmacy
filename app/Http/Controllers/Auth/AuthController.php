@@ -50,4 +50,13 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Logout Successful');
     }
+
+    public function passwordChange()
+    {
+        $this->services
+            ->validateChangePassword()
+            ->changePassword();
+
+        return redirect()->route('login')->with('success', __t('password_change_successful'));
+    }
 }

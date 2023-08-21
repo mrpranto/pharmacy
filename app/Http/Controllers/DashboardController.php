@@ -2,12 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DashboardServices;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
+    /**
+     * @param DashboardServices $dashboardServices
+     */
+    public function __construct(DashboardServices $dashboardServices)
+    {
+        $this->services = $dashboardServices;
+    }
+
     /**
      * @return View
      */
@@ -42,5 +52,16 @@ class DashboardController extends Controller
     public function profile(): View
     {
         return view('pages.profile.index');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        return $this->services
+            ->validateProfileUpdate($request)
+            ->updateProfile($request);
     }
 }

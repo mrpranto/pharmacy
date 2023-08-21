@@ -25,6 +25,8 @@ class User extends Authenticatable
         'email',
         'phone_number',
         'password',
+        'gender',
+        'address'
     ];
 
     const PROFILE_PICTURE_TYPE = 'profile_picture';

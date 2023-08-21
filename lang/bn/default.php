@@ -116,5 +116,18 @@ return [
     'created_at' => 'তৈরী হয়েছে',
     'personal_info' => 'ব্যক্তিগত তথ্য',
     'password_change' => 'পাসওয়ার্ড পরিবর্তন',
-    'activity_log' => 'কার্য বিবরণ'
+    'activity_log' => 'কার্য বিবরণ',
+    'gender' => 'লিঙ্গ',
+    'male' => 'পুরুষ',
+    'female' => 'মহিলা',
+    'upload' => 'আপলোড',
+    'change_password' => 'পাসওয়ার্ড পরিবর্তন করুন',
+
+    'current_password' => 'বর্তমান পাসওয়ার্ড',
+    'new_password' => 'নতুন পাসওয়ার্ড',
+    'confirm_password' => 'পাসওয়ার্ড নিশ্চিত করুন',
+    'profile_update' => 'প্রোফাইল সম্পাদনা সফল হয়েছে',
+    'password_change_successful' => 'পাসওয়ার্ড পরিবর্তন সফল হয়েছে',
+    'peoples' => 'জনগণ',
+    'suppliers' => 'সরবরাহকারী',
 ];

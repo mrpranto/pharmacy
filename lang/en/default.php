@@ -117,5 +117,18 @@ return [
     'personal_info' => 'Personal Info',
     'password_change' => 'Password Change',
     'activity_log' => 'Activity Log',
+    'gender' => 'Gender',
+    'male' => 'Male',
+    'female' => 'Female',
+    'upload' => 'Upload',
+    'change_password' => 'Change Password',
+
+    'current_password' => 'Current password',
+    'new_password' => 'New password',
+    'confirm_password' => 'Confirm password',
+    'profile_update' => 'Profile update successful',
+    'password_change_successful' => 'Password change successful',
+    'peoples' => 'Peoples',
+    'suppliers' => 'Suppliers',
 
 ];

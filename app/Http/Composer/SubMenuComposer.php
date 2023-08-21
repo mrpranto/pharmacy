@@ -24,6 +24,20 @@ class SubMenuComposer
             ]
         ];
     }
+    /**
+     * @return array[]
+     */
+    public function peoples(): array
+    {
+        return [
+            [
+                'name' => __t('suppliers'),
+                'url' => route('roles.index'),
+                'path' => 'roles',
+                'permission' => auth()->user()->can('app.roles.index')
+            ],
+        ];
+    }
 
     /**
      * @return array[]

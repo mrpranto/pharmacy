@@ -7,6 +7,7 @@ use App\Services\BaseServices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -63,6 +64,39 @@ class AuthServices extends BaseServices
      */
     public function processLogout(): void
     {
+        Auth::logout();
+    }
+
+    /**
+     * @return $this
+     */
+    public function validateChangePassword(): static
+    {
+        request()->validate([
+            'current_password' => ['required', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, auth()->user()->password)) {
+                    $fail('Current password does not match.');
+                }
+            }],
+            'new_password' => 'required|min:8|same:password_confirmation',
+            'password_confirmation' => 'required|min:8',
+        ]);
+
+        return $this;
+    }
+
+
+    /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function changePassword(): void
+    {
+        Auth::user()->update([
+            'password' => bcrypt(request()->get('new_password'))
+        ]);
+
         Auth::logout();
     }
 
