@@ -1,24 +1,37 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-            <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.companies') }} <app-table-counter-component :total="options.total"/></h4>
-            </div>
-            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    {{ __('default.loading') }}
-                </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
-                    <i class="mdi mdi-plus"></i>
-                    {{ __('default.add_new_company') }}
-                </button>
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h5 class="mb-3 mb-md-0">{{ __('default.companies') }}
+                                    <app-table-counter-component :total="options.total"/>
+                                </h5>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
+                                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
+                                        v-if="formState.disabled">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    {{ __('default.loading') }}
+                                </button>
+                                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0"
+                                        @click.prevent="showAddForm" v-else>
+                                    <i class="mdi mdi-plus"></i>
+                                    {{ __('default.add_new_company') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card radius-20">
                     <div class="card-body">
                         <app-table-component :options="options"></app-table-component>
                     </div>
@@ -26,8 +39,8 @@
             </div>
         </div>
 
-        <AddNewCompany :formState="formState" />
-        <EditCompany :formState="formState" />
+        <AddNewCompany :formState="formState"/>
+        <EditCompany :formState="formState"/>
 
     </div>
 </template>
@@ -101,7 +114,7 @@ export default {
                         modifier: (description) => {
                             if (description?.length > 80) {
                                 return description?.substring(0, 80) + ' ...';
-                            }else {
+                            } else {
                                 return description
                             }
                         }
@@ -113,7 +126,7 @@ export default {
                         isVisible: true,
                         orderAble: true,
                         modifier: (status) => {
-                            return  status === 1 ? '<span class="badge badge-primary">Active</span>' :
+                            return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
                         }
                     },
@@ -142,7 +155,7 @@ export default {
     mounted() {
 
     },
-    methods:{
+    methods: {
         async getData(url) {
             this.options.loader = true;
             this.options.responseData = [];
@@ -167,7 +180,7 @@ export default {
             this.formState.validation = {};
             this.formState.openCreate = true;
         },
-        onClose(){
+        onClose() {
             this.formState.openCreate = false;
         },
         getEditData(row) {
@@ -182,7 +195,7 @@ export default {
             this.formState.validation = {};
             this.formState.openEdit = true;
         },
-        onEditClose(){
+        onEditClose() {
             this.formState.openEdit = false;
         },
         showDeleteForm(id) {

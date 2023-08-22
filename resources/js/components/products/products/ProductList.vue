@@ -1,28 +1,38 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-            <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.products') }}
-                    <app-table-counter-component :total="options.total"/>
-                </h4>
-            </div>
-            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
-                        v-if="formState.disabled">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    {{ __('default.loading') }}
-                </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm"
-                        v-else>
-                    <i class="mdi mdi-plus"></i>
-                    {{ __('default.add_new_product') }}
-                </button>
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h5 class="mb-3 mb-md-0">{{ __('default.products') }}
+                                    <app-table-counter-component :total="options.total"/>
+                                </h5>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
+                                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
+                                        v-if="formState.disabled">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    {{ __('default.loading') }}
+                                </button>
+                                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0"
+                                        @click.prevent="showAddForm"
+                                        v-else>
+                                    <i class="mdi mdi-plus"></i>
+                                    {{ __('default.add_new_product') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card radius-20">
                     <div class="card-body">
                         <app-table-component :options="options"></app-table-component>
                     </div>
@@ -60,10 +70,10 @@ export default {
                     description: '',
                     status: true,
                 },
-                dependencies:{
-                    categories:[],
-                    companies:[],
-                    units:[],
+                dependencies: {
+                    categories: [],
+                    companies: [],
+                    units: [],
                 },
                 validation: {},
                 layout: {
@@ -199,14 +209,14 @@ export default {
     },
     mounted() {
     },
-    watch:{
-        'options.request.category': function (){
+    watch: {
+        'options.request.category': function () {
             this.getData()
         },
-        'options.request.company': function (){
+        'options.request.company': function () {
             this.getData()
         },
-        'options.request.unit': function (){
+        'options.request.unit': function () {
             this.getData()
         }
     },
@@ -250,11 +260,11 @@ export default {
                     this.formState.dependencies.companies = this.options.filters[1].option;
                     this.formState.dependencies.units = this.options.filters[2].option;
 
-                    if (callFrom === 'addCategory'){
+                    if (callFrom === 'addCategory') {
                         this.formState.formData.category = this.options.filters[0].option[0].value
-                    }else if(callFrom === 'addCompany'){
+                    } else if (callFrom === 'addCompany') {
                         this.formState.formData.company = this.options.filters[1].option[0].value
-                    }else if(callFrom === 'addUnit'){
+                    } else if (callFrom === 'addUnit') {
                         this.formState.formData.unit = this.options.filters[2].option[0].value
                     }
                 })
@@ -265,12 +275,12 @@ export default {
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
-        filterData(filterValue, filterType){
-            if (filterType === 'category'){
+        filterData(filterValue, filterType) {
+            if (filterType === 'category') {
                 this.options.request.category = filterValue
-            }else if(filterType === 'company'){
+            } else if (filterType === 'company') {
                 this.options.request.company = filterValue
-            }else if(filterType === 'unit'){
+            } else if (filterType === 'unit') {
                 this.options.request.unit = filterValue
             }
         },
@@ -288,7 +298,7 @@ export default {
             this.formState.openCreate = true;
             this.formState.disabled = false;
         },
-        generateBarcode(){
+        generateBarcode() {
             this.formState.formData.barcode = Math.floor(100000000000 + Math.random() * 900000000000)
         },
         onClose() {

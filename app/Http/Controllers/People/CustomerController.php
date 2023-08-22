@@ -5,14 +5,14 @@ namespace App\Http\Controllers\People;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SupplierController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.peoples.suppliers.index');
+        return view('pages.peoples.customers.index');
     }
 
     /**

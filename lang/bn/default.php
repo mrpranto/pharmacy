@@ -130,4 +130,5 @@ return [
     'password_change_successful' => 'পাসওয়ার্ড পরিবর্তন সফল হয়েছে',
     'peoples' => 'জনগণ',
     'suppliers' => 'সরবরাহকারী',
+    'customers' => 'ক্রেতা',
 ];

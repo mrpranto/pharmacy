@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\People\CustomerController;
 use App\Http\Controllers\People\SupplierController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\CompanyController;
@@ -81,6 +82,7 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::group(['prefix' => 'peoples'], function (){
 
         Route::resource('suppliers', SupplierController::class);
+        Route::resource('customers', CustomerController::class);
 
     });
 

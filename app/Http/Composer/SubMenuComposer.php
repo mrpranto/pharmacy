@@ -32,9 +32,15 @@ class SubMenuComposer
         return [
             [
                 'name' => __t('suppliers'),
-                'url' => route('roles.index'),
-                'path' => 'roles',
-                'permission' => auth()->user()->can('app.roles.index')
+                'url' => route('suppliers.index'),
+                'path' => 'peoples/suppliers',
+                'permission' => auth()->user()->can('app.supplier.index')
+            ],
+            [
+                'name' => __t('customers'),
+                'url' => route('customers.index'),
+                'path' => 'peoples/customers',
+                'permission' => auth()->user()->can('app.customer.index')
             ],
         ];
     }

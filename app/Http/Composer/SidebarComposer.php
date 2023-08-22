@@ -53,8 +53,7 @@ class SidebarComposer
                     'name' => __t('peoples'),
                     'icon' => 'users',
                     'permission' => auth()->user()->canany([
-                        'app.category.index', 'app.company.index',
-                        'app.unit.index', 'app.product.index'
+                        'app.supplier.index', 'app.customer.index'
                     ]),
                     'subMenu' => $this->subMenu->peoples(),
                     'id' => 'peoples',

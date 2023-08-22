@@ -1,24 +1,37 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-            <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.categories') }} <app-table-counter-component :total="options.total"/></h4>
-            </div>
-            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled v-if="formState.disabled">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    {{ __('default.loading') }}
-                </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm" v-else>
-                    <i class="mdi mdi-plus"></i>
-                    {{ __('default.add_new_category') }}
-                </button>
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h5>{{ __('default.categories') }}
+                                    <app-table-counter-component :total="options.total"/>
+                                </h5>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
+                                <button class="btn btn-primary btn-icon-text" type="button" disabled
+                                        v-if="formState.disabled">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    {{ __('default.loading') }}
+                                </button>
+                                <button type="button" class="btn btn-primary btn-icon-text"
+                                        @click.prevent="showAddForm" v-else>
+                                    <i class="mdi mdi-plus"></i>
+                                    {{ __('default.add_new_category') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card radius-20">
                     <div class="card-body">
                         <app-table-component :options="options"></app-table-component>
                     </div>
@@ -27,7 +40,7 @@
         </div>
 
         <AddNewCategory :formState="formState"/>
-        <EditCategory :formState="formState" />
+        <EditCategory :formState="formState"/>
 
     </div>
 </template>
@@ -72,18 +85,18 @@ export default {
                         type: 'text',
                         key: 'name',
                         isVisible: true,
-                        orderAble:true
+                        orderAble: true
                     },
                     {
                         title: 'description',
                         type: 'custom-html',
                         key: 'description',
                         isVisible: true,
-                        orderAble:true,
+                        orderAble: true,
                         modifier: (description) => {
                             if (description?.length > 100) {
                                 return description?.substring(0, 100) + ' ...';
-                            }else {
+                            } else {
                                 return description
                             }
                         }
@@ -93,9 +106,9 @@ export default {
                         type: 'custom-html',
                         key: 'status',
                         isVisible: true,
-                        orderAble:true,
+                        orderAble: true,
                         modifier: (status) => {
-                            return  status === 1 ? '<span class="badge badge-primary">Active</span>' :
+                            return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
                         }
                     },
@@ -124,7 +137,7 @@ export default {
     mounted() {
 
     },
-    methods:{
+    methods: {
         async getData(url) {
             this.options.loader = true;
             this.options.responseData = [];
@@ -147,7 +160,7 @@ export default {
             this.formState.validation = {};
             this.formState.openCreate = true;
         },
-        onClose(){
+        onClose() {
             this.formState.openCreate = false;
         },
         getEditData(row) {
@@ -160,7 +173,7 @@ export default {
             this.formState.validation = {};
             this.formState.openEdit = true;
         },
-        onEditClose(){
+        onEditClose() {
             this.formState.openEdit = false;
         },
         showDeleteForm(id) {

@@ -1,10 +1,14 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card radius-20">
+                    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div>
-                <h4 class="mb-3 mb-md-0">{{ __('default.roles') }}
+                <h5 class="mb-3 mb-md-0">{{ __('default.roles') }}
                     <app-table-counter-component :total="options.total"/>
-                </h4>
+                </h5>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
@@ -17,6 +21,10 @@
                     <i class="mdi mdi-plus"></i>
                     {{ __('default.add_role') }}
                 </button>
+            </div>
+        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

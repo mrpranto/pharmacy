@@ -26,3 +26,7 @@ body:focus::-webkit-scrollbar-thumb,
 body:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
+
+.radius-20{
+    border-radius: 20px
+}

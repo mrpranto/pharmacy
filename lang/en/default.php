@@ -130,5 +130,6 @@ return [
     'password_change_successful' => 'Password change successful',
     'peoples' => 'Peoples',
     'suppliers' => 'Suppliers',
+    'customers' => 'Customers',
 
 ];

@@ -208,6 +208,64 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete Product',
                 'slug' => 'app.product.delete'
             ],
+
+            /*
+             * Supplier permission
+             * */
+            [
+                'module_id' => $this->module('Supplier'),
+                'name' => 'Supplier List',
+                'slug' => 'app.supplier.index'
+            ],
+            [
+                'module_id' => $this->module('Supplier'),
+                'name' => 'Add New Supplier',
+                'slug' => 'app.supplier.create'
+            ],
+            [
+                'module_id' => $this->module('Supplier'),
+                'name' => 'Edit Supplier',
+                'slug' => 'app.supplier.edit'
+            ],
+            [
+                'module_id' => $this->module('Supplier'),
+                'name' => 'Show Supplier',
+                'slug' => 'app.supplier.show'
+            ],
+            [
+                'module_id' => $this->module('Supplier'),
+                'name' => 'Delete Supplier',
+                'slug' => 'app.supplier.delete'
+            ],
+
+            /*
+            * Customer permission
+            * */
+            [
+                'module_id' => $this->module('Customer'),
+                'name' => 'Customer List',
+                'slug' => 'app.customer.index'
+            ],
+            [
+                'module_id' => $this->module('Customer'),
+                'name' => 'Add New Customer',
+                'slug' => 'app.customer.create'
+            ],
+            [
+                'module_id' => $this->module('Customer'),
+                'name' => 'Edit Customer',
+                'slug' => 'app.customer.edit'
+            ],
+            [
+                'module_id' => $this->module('Customer'),
+                'name' => 'Show Customer',
+                'slug' => 'app.customer.show'
+            ],
+            [
+                'module_id' => $this->module('Customer'),
+                'name' => 'Delete Customer',
+                'slug' => 'app.customer.delete'
+            ],
         ];
     }
 
