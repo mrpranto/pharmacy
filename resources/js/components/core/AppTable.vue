@@ -256,7 +256,7 @@
                     <div class="col-sm-3 d-flex align-items-center">
                         <div class="btn-group" role="group">
                             <div class="dropdown show mr-1">
-                                <a class="btn btn-gray btn-radius"
+                                <a class="btn btn-gray btn-radius dropdown-toggle"
                                    href="javascript:void(0)"
                                    id="dropdownMenuLink"
                                    data-toggle="dropdown"
@@ -573,10 +573,16 @@ export default {
 
 .filter-button {
     border: 1px #e3e2e2 solid;
-    padding: 3px 8px 0 8px;
+    padding: 8px 15px 7px 14px;
     border-radius: 20px;
     cursor: pointer;
-    margin: 2px
+    margin: 2px;
+    bottom: 9px;
 }
-
+.filter-button:hover {
+    background-color: #ededed;
+}
+.dropdown-menu {
+    margin-top: 8px;
+}
 </style>
