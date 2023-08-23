@@ -46,7 +46,7 @@
                             :options="formState.dependencies.categories"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_category')">
+                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
                             <a-button @click="showAddNewCategoryModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
@@ -67,7 +67,7 @@
                             :options="formState.dependencies.companies"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_company')">
+                        <a-tooltip :title="__('default.add_new_company')" placement="leftBottom">
                             <a-button @click="showAddNewCompanyModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
@@ -87,7 +87,7 @@
                             :options="formState.dependencies.units"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_unit')">
+                        <a-tooltip :title="__('default.add_new_unit')" placement="leftBottom">
                             <a-button @click="showAddNewUnitModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>

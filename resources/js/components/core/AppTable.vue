@@ -3,76 +3,52 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-10">
-                    <div class="btn-group" role="group">
-                        <div class="dropdown show mr-1">
-                            <a class="btn btn-gray btn-rounded"
-                               href="javascript:void(0)"
-                               id="dropdownMenuLink"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">
-                                {{ options.request.per_page }}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="javascript:void(0)"
-                                   v-for="(per_page, per_page_index) in per_pages"
-                                   @click.prevent="changePerPage(per_page)"
-                                   :key="per_page_index">{{ per_page }}</a>
-                            </div>
-                        </div>
-                        <div class="dropdown show mr-1">
-                            <a class="btn btn btn-gray btn-rounded"
-                               href="javascript:void(0)"
-                               id="dropdownMenuLink"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">
-                                <i class="mdi mdi-eye-off"></i>
-                            </a>
-                            <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1"
-                                 style="padding: 25px">
-                                <div class="dropdown-item">
-                                    <p>
-                                        {{ __('default.you_can_show') }}
-                                    </p>
-                                </div>
-                                <hr>
-                                <div class="dropdown-item scroll">
-                                    <div class="row pt-2">
-                                        <template v-for="(column) in options.columns">
-                                            <div class="col-12 d-flex justify-content-between"
-                                                 style="padding-bottom: 0px; padding-top: 3px">
-                                                <p>{{ __('default.' + column.title) }}</p>
-                                                <div class="material-switch pull-right">
-                                                    <a-switch v-model:checked="column.isVisible" size="small"/>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="dropdown-item d-flex justify-content-end">
-                                    <span></span>
-                                    <button class="btn btn-sm btn-default float-right"
-                                            @click.prevent="clearColumnVisibility" type="button"> {{
-                                            __('default.clear')
-                                        }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
 
                     <div class="btn-group">
-                        <button type="button" :title="__('default.refresh')" class="btn btn btn-rounded btn-gray mr-1"
+                        <button type="button" class="btn btn-gray btn-rounded"
+                                id="dropdownMenuLink"
+                                data-toggle="dropdown">
+                            <i class="mdi mdi-eye-off"></i>
+                        </button>
+                        <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1"
+                             style="padding: 25px">
+                            <div class="dropdown-item">
+                                <p>
+                                    {{ __('default.you_can_show') }}
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="dropdown-item scroll">
+                                <div class="row pt-2">
+                                    <template v-for="(column) in options.columns">
+                                        <div class="col-12 d-flex justify-content-between"
+                                             style="padding-bottom: 0px; padding-top: 3px">
+                                            <p>{{ __('default.' + column.title) }}</p>
+                                            <div class="material-switch pull-right">
+                                                <a-switch v-model:checked="column.isVisible" size="small"/>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="dropdown-item d-flex justify-content-end">
+                                <span></span>
+                                <button class="btn btn-sm btn-default float-right"
+                                        @click.prevent="clearColumnVisibility" type="button"> {{
+                                        __('default.clear')
+                                    }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" :title="__('default.refresh')" class="btn btn-rounded btn-gray mr-1"
                                 @click.prevent="refreshTable">
                             <i class="mdi mdi-reload"></i>
                         </button>
                     </div>
+
+
                     <div class="btn-group" role="group" v-if="options.exportAble &&
                     (options.exportAble.csv || options.exportAble.excel || options.exportAble.pdf ||options.exportAble.print)">
                         <div class="dropdown show mr-1">
@@ -103,86 +79,76 @@
 
                     <div class="btn-group">
                         <div class="dropdown show mr-1" v-if="options.request.hasOwnProperty('status')">
-                            <a class="btn btn btn-rounded mt-2"
-                               :class="options.request.status !== '' ? 'btn-outline-primary' : 'btn-gray'"
-                               href="javascript:void(0)"
-                               id="dropdownMenuLink"
-                               data-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false">
-                                {{ __('default.status') }}
-                            </a>
-                            <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
-                                 style="padding: 25px">
-                                <div class="dropdown-item scroll">
-                                    <div class="row pt-2">
-                                        <div class="col-12 d-flex justify-content-between">
-                                            <a-form-item :label="__('default.status')">
-                                                <a-radio-group v-model:value="options.request.status">
-                                                    <a-radio value="1">Active</a-radio>
-                                                    <a-radio value="0">In-active</a-radio>
-                                                </a-radio-group>
-                                            </a-form-item>
-                                        </div>
+                            <span class="filter-button">
+                                <span v-if="options.request.status !== ''" class="mr-1" :class="options.request.status !== '' ? 'text-primary' : ''"
+                                      @click.prevent="clearStatusFilter">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </span>
+                                <span data-toggle="dropdown">
+                                    <span v-if="options.request.status !== ''" :class="options.request.status !== '' ? 'text-primary' : ''">
+                                        {{ __('default.status') }} |
+                                        {{ options.request.status === '1' ? 'Active' : 'In-active' }}
+                                    </span>
+                                    <span v-else>
+                                        <i class="mdi mdi-plus-circle"></i>
+                                        {{ __('default.status') }}
+                                    </span>
+                                </span>
+
+                                <div class="dropdown-menu filter-column">
+                                    <div class="dropdown-item">
+                                        <a-form-item :label="__('default.status')">
+                                            <a-radio-group v-model:value="options.request.status">
+                                                <a-radio value="1">Active</a-radio>
+                                                <a-radio value="0">In-active</a-radio>
+                                            </a-radio-group>
+                                        </a-form-item>
                                     </div>
                                 </div>
-                                <div class="dropdown-item d-flex justify-content-end">
-                                    <span></span>
-                                    <button class="btn btn-sm btn-default float-right"
-                                            @click.prevent="clearStatusFilter" type="button"> {{
-                                            __('default.clear')
-                                        }}
-                                    </button>
-                                </div>
-                            </div>
+                            </span>
                         </div>
                     </div>
 
                     <template v-for="(filter, filter_index) in options.filters">
                         <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
                             <div class="dropdown show mr-1">
-                                <a class="btn btn btn-rounded mt-2"
-                                   :class="filter.filterValue !== filter.key ? 'btn-outline-primary' : 'btn-gray'"
-                                   href="javascript:void(0)"
-                                   id="dropdownMenuLink"
-                                   data-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
-                                    {{ __('default.' + filter.title) }}
-                                </a>
-                                <div class="dropdown-menu filter-column" aria-labelledby="btnGroupDrop1"
-                                     style="padding: 15px">
-                                    <div class="dropdown-item scroll">
-                                        <div class="row pt-2">
-                                            <div class="col-12 d-flex justify-content-between">
-                                                <a-form-item :label="__('default.' + filter.title)">
-                                                    <a-select
-                                                        v-model:value="filter.filterValue"
-                                                        class="filter-select"
-                                                        style="width: 200px"
-                                                        show-search
-                                                        :placeholder="__('default.' + filter.title)"
-                                                        :options="filter.option"
-                                                        :filter-option="filter.filterOption"
-                                                        @change="filterList($event, filter.key)"
-                                                    ></a-select>
-                                                </a-form-item>
+                                <span class="filter-button">
+                                <span v-if="filter.filterValue !== filter.key" class="mr-1" :class="filter.filterValue !== filter.key ? 'text-primary' : ''"
+                                      @click.prevent="clearFilter(filter_index, filter.key)">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </span>
+                                <span data-toggle="dropdown">
+                                    <span v-if="filter.filterValue !== filter.key" :class="filter.filterValue !== filter.key ? 'text-primary' : ''">
+                                        {{ __('default.' + filter.title) }} | {{ filter.option.find(item => item.value === filter.filterValue).label }}
+                                    </span>
+                                    <span v-else>
+                                        <i class="mdi mdi-plus-circle"></i>
+                                        {{ __('default.' + filter.title) }}
+                                    </span>
+                                </span>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item d-flex justify-content-end">
-                                        <span></span>
-                                        <button class="btn btn-sm btn-default float-right"
-                                                @click.prevent="clearFilter(filter_index, filter.key)" type="button"> {{
-                                                __('default.clear')
-                                            }}
-                                        </button>
+                                <div class="dropdown-menu filter-column">
+                                    <div class="dropdown-item">
+                                        <a-form-item :label="__('default.' + filter.title)">
+                                            <a-select
+                                                v-model:value="filter.filterValue"
+                                                class="filter-select"
+                                                style="width: 200px"
+                                                show-search
+                                                :placeholder="__('default.' + filter.title)"
+                                                :options="filter.option"
+                                                :filter-option="filter.filterOption"
+                                                @change="filterList($event, filter.key)"
+                                            ></a-select>
+                                        </a-form-item>
                                     </div>
                                 </div>
+                            </span>
+
                             </div>
                         </div>
                     </template>
+
                 </div>
 
                 <div class="col-sm-2">
@@ -287,13 +253,34 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-sm-2">
-                        {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{ __('default.of') }}
-                        {{ total }} {{ __('default.entries') }}
+                    <div class="col-sm-3 d-flex align-items-center">
+                        <div class="btn-group" role="group">
+                            <div class="dropdown show mr-1">
+                                <a class="btn btn-gray btn-radius"
+                                   href="javascript:void(0)"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    {{ options.request.per_page }} / page
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="javascript:void(0)"
+                                       v-for="(per_page, per_page_index) in per_pages"
+                                       @click.prevent="changePerPage(per_page)"
+                                       :key="per_page_index">{{ per_page }} / page</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {{ __('default.showing') }} {{ from }} {{ __('default.to') }} {{ to }} {{
+                                __('default.of')
+                            }}
+                            {{ total }} {{ __('default.entries') }}
+                        </div>
                     </div>
-                    <div class="col-sm-6 offset-4">
-                        <div class="btn-toolbar mb-3 justify-content-end" role="toolbar"
-                             aria-label="Toolbar with button groups">
+                    <div class="col-sm-6 offset-3">
+                        <div class="btn-toolbar justify-content-end">
                             <div class="input-group mr-3">
                                 <a-select
                                     v-model:value="page"
@@ -303,28 +290,31 @@
                                     :options="pages"
                                     @change="getPaginate"
                                 ></a-select>
-
                             </div>
                             <div class="btn-group">
                                 <a class="btn btn-gray btn btn-icon-text btn-left-radius"
+                                   :title="__('default.first_page')"
                                    :class="options.responseData.current_page === 1 ? 'disabled' : ''"
                                    @click.prevent="getFirstPage">
-                                    <i class="mdi mdi-chevron-double-left"></i> {{ __('default.first_page') }}
+                                    <i class="mdi mdi-chevron-double-left"></i>
                                 </a>
                                 <a class="btn btn-gray btn btn-icon-text"
+                                   :title="__('default.previous_page')"
                                    :class="options.responseData.prev_page_url == null ? 'disabled' : ''"
                                    @click.prevent="getPreviousPage">
-                                    <i class="mdi mdi-chevron-left"></i> {{ __('default.previous_page') }}
+                                    <i class="mdi mdi-chevron-left"></i>
                                 </a>
                                 <a class="btn btn-gray btn btn-icon-text"
+                                   :title="__('default.next_page')"
                                    :class="options.responseData.next_page_url == null ? 'disabled' : ''"
                                    @click.prevent="getNextPage">
-                                    {{ __('default.next_page') }} <i class="mdi mdi-chevron-right"></i>
+                                    <i class="mdi mdi-chevron-right"></i>
                                 </a>
                                 <a class="btn btn-gray btn btn-icon-text btn-right-radius"
+                                   :title="__('default.last_page')"
                                    :class="options.responseData.last_page === options.responseData.current_page ? 'disabled' : ''"
                                    @click.prevent="getLastPage">
-                                    {{ __('default.last_page') }} <i class="mdi mdi-chevron-double-right"></i>
+                                    <i class="mdi mdi-chevron-double-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -370,7 +360,7 @@ export default {
             from: '',
             to: '',
             total: '',
-            filterFields:[]
+            filterFields: []
         }
     },
     mounted() {
@@ -493,10 +483,10 @@ export default {
             this.options.request.order_dir = this.options.request.order_dir === 'desc' ? 'asc' : (this.options.request.order_dir === 'asc' ? 'desc' : 'asc');
             this.$parent.getData();
         },
-        filterList(event, key){
+        filterList(event, key) {
             this.$parent.filterData(event, key)
         },
-        clearFilter(filter_index, key){
+        clearFilter(filter_index, key) {
             this.options.filters[filter_index].filterValue = key
             let value = this.options.filters[filter_index].filterValue
             this.$parent.filterData('', key)
@@ -528,6 +518,10 @@ export default {
 
 .btn-right-radius {
     border-radius: 0 5px 5px 0;
+}
+
+.btn-radius {
+    border-radius: 5px;
 }
 
 /* Add scrollbar to an element */
@@ -576,4 +570,13 @@ export default {
 .text-thin {
     color: #c2bfbf;
 }
+
+.filter-button {
+    border: 1px #e3e2e2 solid;
+    padding: 3px 8px 0 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 2px
+}
+
 </style>

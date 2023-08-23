@@ -5,14 +5,22 @@
                class="icon-lg mr-2 ml-n2 text-muted d-lg-none"></i>
             <figure class="mb-0 mr-2">
                 <template v-if="item.product_photo">
-                    <img :src="item.product_photo?.full_url"
-                         class="img-sm rounded-circle"
-                         :alt="item.slug">
+                    <a-image
+                        :width="35"
+                        :height="35"
+                        :src="item.product_photo?.full_url"
+                        class="img-sm rounded-circle"
+                        :alt="item.slug"
+                    />
                 </template>
                 <template v-else>
-                    <img src="/images/medicine.png"
-                         class="img-sm rounded-circle"
-                         :alt="item.slug">
+                    <a-image
+                        :width="35"
+                        :height="35"
+                        src="/images/medicine.png"
+                        class="img-sm rounded-circle"
+                        :alt="item.slug"
+                    />
                 </template>
 
                 <div class="status online" v-if="item.status === 1"></div>
