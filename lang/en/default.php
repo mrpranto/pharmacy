@@ -128,8 +128,10 @@ return [
     'confirm_password' => 'Confirm password',
     'profile_update' => 'Profile update successful',
     'password_change_successful' => 'Password change successful',
-    'peoples' => 'Peoples',
+    'peoples' => 'People',
     'suppliers' => 'Suppliers',
     'customers' => 'Customers',
+    'unit_pack_size' => 'Unit (Pack Size)',
+    'add_supplier' => 'Add new supplier',
 
 ];

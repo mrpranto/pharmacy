@@ -11,7 +11,7 @@
     </div>
     <div class="sidebar-body">
         <ul class="nav">
-            <li class="nav-item nav-category">Main</li>
+                <li class="nav-item nav-category">Main</li>
             @foreach($sidebar as $key => $menu)
                 @if(array_key_exists('subMenu', $menu) && count($menu['subMenu']))
                     @if($menu['permission'])

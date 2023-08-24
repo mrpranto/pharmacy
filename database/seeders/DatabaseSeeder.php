@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\People\Supplier;
 use App\Models\Permission;
 use App\Models\Product\Category;
 use App\Models\Product\Company;
@@ -48,6 +49,7 @@ class DatabaseSeeder extends Seeder
         Company::factory(200)->create();
         Unit::factory(200)->create();
         Product::factory(1000)->create();
+        Supplier::factory(100)->create();
 
         Setting::query()->updateOrCreate([
             'type' => 'general',

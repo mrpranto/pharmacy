@@ -50,6 +50,14 @@ app.component('product-name-component', ProductNameComponent);
 import ProductAction from './components/products/products/Action.vue';
 app.component('product-action-component', ProductAction);
 
+/*
+* Peoples
+* */
+
+import SupplierListComponent from './components/people/supplier/SupplierList.vue';
+app.component('supplier-list-component', SupplierListComponent);
+import SupplierAction from './components/people/supplier/Action.vue';
+app.component('supplier-action-component', SupplierAction);
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);

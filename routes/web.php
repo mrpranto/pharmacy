@@ -78,10 +78,12 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-units', [UnitController::class, 'getUnits']);
     });
 
-    //Peoples route
+    //People route
     Route::group(['prefix' => 'peoples'], function (){
 
         Route::resource('suppliers', SupplierController::class);
+        Route::get('get-suppliers', [SupplierController::class, 'getSuppliers']);
+
         Route::resource('customers', CustomerController::class);
 
     });

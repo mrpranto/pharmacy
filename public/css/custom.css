@@ -9,7 +9,7 @@ body {
 
 /* Customize scrollbar appearance for WebKit browsers */
 body::-webkit-scrollbar {
-    width: 2px; /* Set the width of the scrollbar */
+    width: 10px; /* Set the width of the scrollbar */
 }
 
 body::-webkit-scrollbar-track {

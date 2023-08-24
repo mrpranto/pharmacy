@@ -121,7 +121,7 @@ export default {
                         }
                     },
                     {
-                        title: 'unit',
+                        title: 'unit_pack_size',
                         type: 'object',
                         key: 'unit',
                         isVisible: true,
