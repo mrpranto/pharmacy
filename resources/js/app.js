@@ -58,6 +58,8 @@ import SupplierListComponent from './components/people/supplier/SupplierList.vue
 app.component('supplier-list-component', SupplierListComponent);
 import SupplierAction from './components/people/supplier/Action.vue';
 app.component('supplier-action-component', SupplierAction);
+import SupplierCompany from './components/people/supplier/SupplierCompany.vue';
+app.component('supplier-company-component', SupplierCompany);
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);

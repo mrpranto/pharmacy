@@ -173,7 +173,12 @@ export default {
                     company: '',
                     unit: '',
                 },
-                exportAble: {},
+                exportAble: {
+                    csv: '',
+                    excel: '',
+                    pdf: '',
+                    print: ''
+                },
                 filters: [
                     {
                         title: 'category',

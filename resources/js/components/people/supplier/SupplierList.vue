@@ -106,6 +106,22 @@ export default {
                         isVisible: true
                     },
                     {
+                        title: 'companies',
+                        type: 'component',
+                        componentName: 'supplier-company-component',
+                        key: 'companies',
+                        orderAble: false,
+                        isVisible: true,
+                        /*modifier: (companies) => {
+                            const companiesData = JSON.parse(companies);
+                            let companyBadge = '<';
+                            for (const key in companiesData){
+                                companyBadge += `<span class="badge badge-pill badge-dark mr-1 mt-1">${companiesData[key].name} ${companiesData.length}</span>${(key * 2) == key ? `<br>` : ''}`;
+                            }
+                            return companyBadge;
+                        }*/
+                    },
+                    {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
