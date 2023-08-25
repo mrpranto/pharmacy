@@ -9,7 +9,8 @@
                                     data-toggle="dropdown">
                                 <i class="mdi mdi-eye-off"></i>
                             </button>
-                            <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1">
+                            <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1"
+                                 style="padding: 20px">
                                 <div class="dropdown-item">
                                     <p>
                                         {{ __('default.you_can_show') }}

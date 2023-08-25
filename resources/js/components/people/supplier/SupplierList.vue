@@ -4,25 +4,27 @@
             <div class="col-lg-12">
                 <div class="card radius-20">
                     <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <h5 class="mb-3 mb-md-0">{{ __('default.suppliers') }}
-                    <app-table-counter-component :total="options.total"/>
-                </h5>
-            </div>
-            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
-                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
-                        v-if="formState.disabled">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    {{ __('default.loading') }}
-                </button>
-                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" @click.prevent="showAddForm"
-                        v-else>
-                    <i class="mdi mdi-plus"></i>
-                    {{ __('default.add_supplier') }}
-                </button>
-            </div>
-        </div>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h5 class="mb-3 mb-md-0">{{ __('default.suppliers') }}
+                                    <app-table-counter-component :total="options.total"/>
+                                </h5>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
+                                <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
+                                        v-if="formState.disabled">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"></span>
+                                    {{ __('default.loading') }}
+                                </button>
+                                <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0"
+                                        @click.prevent="showAddForm"
+                                        v-else>
+                                    <i class="mdi mdi-plus"></i>
+                                    {{ __('default.add_supplier') }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -30,7 +32,7 @@
 
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card radius-20">
                     <div class="card-body">
                         <app-table-component :options="options"></app-table-component>
                     </div>
@@ -38,34 +40,41 @@
             </div>
         </div>
 
+        <AddNewSupplier :formState="formState"/>
+        <EditSupplier :formState="formState"/>
+
     </div>
 </template>
 
 <script>
+import AddNewSupplier from "./AddNewSupplier.vue";
+import EditSupplier from "./EditSupplier.vue";
+
 export default {
     name: 'SupplierList',
-    components: {},
+    components: {EditSupplier, AddNewSupplier},
     props: ['permission'],
     data() {
         return {
             formState: {
-                openCreateRole: false,
-                openEditRole: false,
+                openCreate: false,
+                openEdit: false,
                 disabled: false,
-                responsePermissions: [],
+                responseCompanies: [],
                 current_id: '',
                 selectAll: false,
                 formData: {
                     name: '',
-                    description: '',
-                    isDeleteAble: true,
-                    permissions: [],
-                    module_ids: [],
+                    phone_number: '',
+                    email: '',
+                    address: '',
+                    companies: [],
                 },
                 layout: {
                     labelCol: {span: 4},
                     wrapperCol: {span: 20},
-                }
+                },
+                validation: {}
             },
             options: {
                 loader: false,
@@ -112,14 +121,6 @@ export default {
                         key: 'companies',
                         orderAble: false,
                         isVisible: true,
-                        /*modifier: (companies) => {
-                            const companiesData = JSON.parse(companies);
-                            let companyBadge = '<';
-                            for (const key in companiesData){
-                                companyBadge += `<span class="badge badge-pill badge-dark mr-1 mt-1">${companiesData[key].name} ${companiesData.length}</span>${(key * 2) == key ? `<br>` : ''}`;
-                            }
-                            return companyBadge;
-                        }*/
                     },
                     {
                         title: 'action',
@@ -159,11 +160,11 @@ export default {
                     console.error(err)
                 })
         },
-        async getPermissions() {
+        async getDependency() {
             this.formState.disabled = true
-            await axios.get('/get-permissions')
+            await axios.get('/peoples/get-dependency')
                 .then(response => {
-                    this.formState.responsePermissions = response.data
+                    this.formState.responseCompanies = response.data.companies
                     this.formState.disabled = false
                 })
                 .catch(err => {
@@ -171,35 +172,37 @@ export default {
                 })
         },
         showAddForm() {
-            this.getPermissions()
+            this.getDependency()
             this.formState.formData = {
                 name: '',
-                description: '',
-                isDeleteAble: true,
-                permissions: [],
-                module_ids: [],
+                phone_number: '',
+                email: '',
+                address: '',
+                companies: [],
             }
-            this.formState.selectAll = false;
-            this.formState.openCreateRole = true;
+            this.formState.validation = false;
+            this.formState.openCreate = true;
         },
         onClose() {
-            this.formState.openCreateRole = false;
+            this.formState.openCreate = false;
         },
-        getEditData(role) {
-            this.getPermissions()
-            this.formState.current_id = role.id;
-                this.formState.formData = {
-                    name: role.name,
-                    description: role.description,
-                    isDeleteAble: role.is_delete_able ? true : false,
-                    module_ids: role.permissions.map(item => item.module_id),
-                    permissions: role.permissions.map(item => item.id),
-                }
-            this.formState.selectAll = false;
-            this.formState.openEditRole = true;
+        getEditData(supplier) {
+            this.getDependency()
+            this.formState.current_id = supplier.id;
+            this.formState.formData = {
+                name: supplier.name,
+                phone_number: supplier.phone_number,
+                email: supplier.email,
+                address: supplier.address,
+                companies: JSON.parse(supplier.companies).map(item => {
+                    return item.id
+                }),
+            }
+            this.formState.validation = {};
+            this.formState.openEdit = true;
         },
         onEditClose() {
-            this.formState.openEditRole = false;
+            this.formState.openEdit = false;
         },
         showDeleteForm(id) {
             const swalWithBootstrapButtons = Swal.mixin()
@@ -215,12 +218,12 @@ export default {
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    this.deleteRole(id)
+                    this.delete(id)
                 }
             })
         },
-        async deleteRole(id) {
-            await axios.delete(`/roles/${id}`)
+        async delete(id) {
+            await axios.delete(`/peoples/suppliers/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

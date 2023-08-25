@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\People\Suppliers\SupplierServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -39,11 +40,21 @@ class SupplierController extends Controller
     }
 
     /**
+     * @return array
+     */
+    public function getDependency(): array
+    {
+        return $this->services->getDependency();
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        return $this->services
+            ->validateStore($request)
+            ->store($request);
     }
 
     /**
@@ -57,16 +68,18 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
+        return $this->services
+            ->validateUpdate($request)
+            ->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        return $this->services->delete($id);
     }
 }
