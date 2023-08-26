@@ -138,4 +138,7 @@ return [
     'supplier_edit' => 'Supplier edit successful.',
     'supplier_delete' => 'Supplier delete successful.',
 
+    'add_new_customer' => 'Add new customer',
+
+
 ];

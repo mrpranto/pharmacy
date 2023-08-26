@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\People\Customer;
 use App\Models\People\Supplier;
 use App\Models\Permission;
 use App\Models\Product\Category;
@@ -35,6 +36,8 @@ class DatabaseSeeder extends Seeder
             ->permissions()
             ->sync($permissions);
 
+        $this->command->info('Super admin permission set successful.');
+
         User::query()->updateOrCreate([
             'role_id' => Role::query()->first()->id,
             'name' => 'Pranto',
@@ -43,13 +46,57 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('11223344'),
         ]);
 
+        $this->command->info('Super admin user created successful.');
+
+        Customer::query()->updateOrCreate([
+            'name' => 'Walk-In',
+        ]);
+
+        $this->command->info('Walk in customer created successful.');
+
         Role::factory(100)->create();
+
+        $this->command->info('Role seeder created successful.');
+
         User::factory(100)->create();
+
+        $this->command->info('User seeder created successful.');
+
         Category::factory(200)->create();
+
+        $this->command->info('Category seeder created successful.');
+
         Company::factory(200)->create();
+
+        $this->command->info('Company seeder created successful.');
+
         Unit::factory(200)->create();
+
+        $this->command->info('Unit seeder created successful.');
+
         Product::factory(1000)->create();
+
+        $this->command->info('Product seeder created successful.');
+
         Supplier::factory(100)->create();
+
+        $this->command->info('Supplier seeder created successful.');
+
+        Customer::factory(100)->create();
+
+        $this->command->info('Customer seeder created successful.');
+
+        Setting::query()->updateOrCreate([
+            'type' => 'app_setting',
+            'settings_info' => [
+                "name" => "Chief Drug Agency",
+                "email" => "ferozsarker28@gmail.com",
+                "mobile" => '+88001718143428',
+                "address" => "Thana Road ,Bot tola,Pirgonj,Rangpur",
+            ]
+        ]);
+
+        $this->command->info('App Setting created successful.');
 
         Setting::query()->updateOrCreate([
             'type' => 'general',
@@ -64,15 +111,8 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-        Setting::query()->updateOrCreate([
-            'type' => 'app_setting',
-            'settings_info' => [
-                "name" => "Chief Drug Agency",
-                "email" => "ferozsarker28@gmail.com",
-                "mobile" => '+88001718143428',
-                "address" => "Thana Road ,Bot tola,Pirgonj,Rangpur",
-            ]
-        ]);
+        $this->command->info('General Setting created successful.');
 
+        $this->command->info('Seeder successfully end.');
     }
 }
