@@ -86,6 +86,7 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-dependency', [SupplierController::class, 'getDependency']);
 
         Route::resource('customers', CustomerController::class);
+        Route::get('get-customers', [CustomerController::class, 'getCustomers']);
 
     });
 

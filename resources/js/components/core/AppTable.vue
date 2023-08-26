@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-12 col-md-9 col-lg-9">
                         <div class="btn-group">
                             <button type="button" class="btn btn-gray btn-rounded"
                                     id="dropdownMenuLink"
@@ -147,7 +147,7 @@
                         </template>
                 </div>
 
-                <div class="col-sm-12 col-md-2 col-lg-2">
+                <div class="col-sm-12 col-md-3 col-lg-3">
                     <a-input v-model:value="options.request.search"
                              style="border-radius: 20px;"
                              autofocus
@@ -162,8 +162,7 @@
                     </a-input>
                 </div>
             </div>
-            <Loader v-if="options.loader"/>
-            <div v-else>
+            <div>
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
@@ -193,10 +192,15 @@
                                 </tr>
                                 </thead>
                                 <tbody class="tbody-scroll">
-                                <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
+                                    <tr class="loader-tr" v-if="options.loader">
+                                        <td :colspan="visibleColumn" class="text-center align-middle">
+                                            <a-spin />
+                                        </td>
+                                    </tr>
+                                    <tr class="data-tr" v-else v-for="(row, row_index) in options.responseData.data" :key="row_index">
                                     <template v-for="(column) in options.columns">
                                         <td v-if="column.isVisible" :width="column.width ? column.width +'%' : colWidth +'%'">
-                                            <div class="wd-90p overflow-hidden">
+                                            <div class="wd-95p overflow-hidden">
                                                 <template v-if="column.type === 'sl'">
                                                     {{ (parseInt(row_index) + parseInt(1)) }}
                                                 </template>
@@ -250,7 +254,7 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-sm-12 col-md-12 col-lg-3 mt-2 d-flex align-items-center">
+                    <div class="col-sm-12 col-md-12 col-lg-6 mt-2 d-flex align-items-center">
                         <div class="btn-group" role="group">
                             <div class="dropdown show mr-1">
                                 <a class="btn btn-gray btn-radius dropdown-toggle"
@@ -276,7 +280,7 @@
                             {{ total }} {{ __('default.entries') }}
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-6 offset-lg-3 mt-2">
+                    <div class="col-sm-12 col-md-12 col-lg-6 mt-2">
                         <div class="btn-toolbar justify-content-lg-end">
                             <div class="input-group mr-3">
                                 <a-select
@@ -359,6 +363,7 @@ export default {
             total: '',
             filterFields: [],
             colWidth: '',
+            visibleColumn: ''
         }
     },
     mounted() {
@@ -409,6 +414,7 @@ export default {
                     this.options.columns[0].width = (sum - 100);
                     this.options.columns[1].width = parseInt(this.options.columns[1].width) - (sum - 100);
                 }
+                this.visibleColumn = visibleColumn.length;
             }
         },
         getPages() {
@@ -573,10 +579,12 @@ export default {
 
 /* Add scrollbar to a tbody element */
 .tbody-scroll {
-    max-height: 400px; /* Set the maximum height of the element */
+    min-height: 220px; /* Set the maximum height of the element */
+    max-height: 220px; /* Set the maximum height of the element */
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
     scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
+    cursor: pointer;
 }
 
 /* Customize scrollbar appearance for WebKit browsers */
@@ -656,7 +664,7 @@ export default {
     clear: both;
 }
 
-.table-fixed > tbody > tr > td,
+.table-fixed > tbody > tr.data-tr > td,
 .table-fixed > thead > tr > td {
     float: left;
 }

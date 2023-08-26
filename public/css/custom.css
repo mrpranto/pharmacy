@@ -30,3 +30,12 @@ body:hover::-webkit-scrollbar-thumb {
 .radius-20{
     border-radius: 20px
 }
+
+.main-wrapper .page-wrapper .page-content {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.card .card-body {
+    padding: 0.8rem 0.8rem;
+}

@@ -4,8 +4,8 @@
     </a>
     <div class="navbar-content">
         <form class="search-form">
-            <div class="input-group">
-                <span id="clock" style="font-family: monospace, monospace"></span>
+            <div class="d-flex justify-content-end">
+                @yield('breadcrumb')
             </div>
         </form>
 

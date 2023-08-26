@@ -101,7 +101,7 @@ export default {
                         key: 'phone_number',
                         orderAble: true,
                         isVisible: true,
-                        width: '20',
+                        width: '15',
                     },
                     {
                         title: 'email',
@@ -126,7 +126,7 @@ export default {
                         key: 'companies',
                         orderAble: false,
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                     {
                         title: 'action',

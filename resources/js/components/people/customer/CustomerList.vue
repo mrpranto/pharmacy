@@ -40,19 +40,13 @@
             </div>
         </div>
 
-        <AddNewSupplier :formState="formState"/>
-        <EditSupplier :formState="formState"/>
-
     </div>
 </template>
 
 <script>
-import AddNewSupplier from "./AddNewSupplier.vue";
-import EditSupplier from "./EditSupplier.vue";
-
 export default {
-    name: 'SupplierList',
-    components: {EditSupplier, AddNewSupplier},
+    name: 'CustomerList',
+    components: {},
     props: ['permission'],
     data() {
         return {
@@ -120,19 +114,22 @@ export default {
                         width: '20',
                     },
                     {
-                        title: 'companies',
-                        type: 'component',
-                        componentName: 'supplier-company-component',
-                        key: 'companies',
-                        orderAble: false,
+                        title: 'status',
+                        type: 'custom-html',
+                        key: 'status',
                         isVisible: true,
+                        orderAble: true,
                         width: '10',
+                        modifier: (status) => {
+                            return status === 1 ? '<span class="badge badge-primary">Active</span>' :
+                                '<span class="badge badge-danger">In-active </span>'
+                        }
                     },
                     {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
-                        componentName: 'supplier-action-component',
+                        componentName: 'customer-action-component',
                         isVisible: true,
                         width: '10',
                     },
@@ -157,7 +154,7 @@ export default {
         async getData(url) {
             this.options.loader = true;
             this.options.responseData = [];
-            await axios.get(url ?? '/peoples/get-suppliers', {params: this.options.request})
+            await axios.get(url ?? '/peoples/get-customers', {params: this.options.request})
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
@@ -167,25 +164,12 @@ export default {
                     console.error(err)
                 })
         },
-        async getDependency() {
-            this.formState.disabled = true
-            await axios.get('/peoples/get-dependency')
-                .then(response => {
-                    this.formState.responseCompanies = response.data.companies
-                    this.formState.disabled = false
-                })
-                .catch(err => {
-                    console.error(err)
-                })
-        },
         showAddForm() {
-            this.getDependency()
             this.formState.formData = {
                 name: '',
                 phone_number: '',
                 email: '',
                 address: '',
-                companies: [],
             }
             this.formState.validation = false;
             this.formState.openCreate = true;
@@ -193,17 +177,13 @@ export default {
         onClose() {
             this.formState.openCreate = false;
         },
-        getEditData(supplier) {
-            this.getDependency()
-            this.formState.current_id = supplier.id;
+        getEditData(customer) {
+            this.formState.current_id = customer.id;
             this.formState.formData = {
-                name: supplier.name,
-                phone_number: supplier.phone_number,
-                email: supplier.email,
-                address: supplier.address,
-                companies: JSON.parse(supplier.companies).map(item => {
-                    return item.id
-                }),
+                name: customer.name,
+                phone_number: customer.phone_number,
+                email: customer.email,
+                address: customer.address,
             }
             this.formState.validation = {};
             this.formState.openEdit = true;

@@ -48,6 +48,7 @@ class SupplierServices extends BaseServices
             )
             ->when(request()->filled('order_by') && request()->filled('order_dir'),
                 fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
+            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
     }
 

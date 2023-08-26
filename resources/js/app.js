@@ -61,6 +61,13 @@ app.component('supplier-action-component', SupplierAction);
 import SupplierCompany from './components/people/supplier/SupplierCompany.vue';
 app.component('supplier-company-component', SupplierCompany);
 
+
+import CustomerListComponent from './components/people/customer/CustomerList.vue';
+app.component('customer-list-component', CustomerListComponent);
+import CustomerAction from './components/people/customer/Action.vue';
+app.component('customer-action-component', CustomerAction);
+
+
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
 import Counter from './components/core/Counter.vue';

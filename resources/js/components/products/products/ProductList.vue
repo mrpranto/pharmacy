@@ -108,7 +108,7 @@ export default {
                         key: 'category',
                         isVisible: true,
                         orderAble: true,
-                        width: '10',
+                        width: '15',
                         modifier: (category) => {
                             return category?.name;
                         }
@@ -119,7 +119,7 @@ export default {
                         key: 'company',
                         isVisible: true,
                         orderAble: true,
-                        width: '12',
+                        width: '15',
                         modifier: (company) => {
                             return company?.name;
                         }
@@ -130,24 +130,9 @@ export default {
                         key: 'unit',
                         isVisible: true,
                         orderAble: true,
-                        width: '15',
+                        width: '20',
                         modifier: (unit) => {
                             return unit?.name + `(${unit?.pack_size})`;
-                        }
-                    },
-                    {
-                        title: 'description',
-                        type: 'custom-html',
-                        key: 'description',
-                        isVisible: true,
-                        orderAble: true,
-                        width: '25',
-                        modifier: (description) => {
-                            if (description?.length > 50) {
-                                return description?.substring(0, 50) + ' ...';
-                            } else {
-                                return description
-                            }
                         }
                     },
                     {
@@ -167,7 +152,7 @@ export default {
                         type: 'action',
                         permission: this.permission,
                         componentName: 'product-action-component',
-                        width: '8',
+                        width: '10',
                         isVisible: true
                     },
                 ],
