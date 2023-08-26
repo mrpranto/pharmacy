@@ -89,6 +89,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        width: '5',
                         isVisible: false
                     },
                     {
@@ -98,6 +99,7 @@ export default {
                         rowValues: true,
                         key: 'name',
                         isVisible: true,
+                        width: '15',
                         orderAble: true,
                     },
                     {
@@ -106,6 +108,7 @@ export default {
                         key: 'category',
                         isVisible: true,
                         orderAble: true,
+                        width: '10',
                         modifier: (category) => {
                             return category?.name;
                         }
@@ -116,6 +119,7 @@ export default {
                         key: 'company',
                         isVisible: true,
                         orderAble: true,
+                        width: '12',
                         modifier: (company) => {
                             return company?.name;
                         }
@@ -126,6 +130,7 @@ export default {
                         key: 'unit',
                         isVisible: true,
                         orderAble: true,
+                        width: '15',
                         modifier: (unit) => {
                             return unit?.name + `(${unit?.pack_size})`;
                         }
@@ -136,6 +141,7 @@ export default {
                         key: 'description',
                         isVisible: true,
                         orderAble: true,
+                        width: '25',
                         modifier: (description) => {
                             if (description?.length > 50) {
                                 return description?.substring(0, 50) + ' ...';
@@ -150,6 +156,7 @@ export default {
                         key: 'status',
                         isVisible: true,
                         orderAble: true,
+                        width: '10',
                         modifier: (status) => {
                             return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
@@ -160,6 +167,7 @@ export default {
                         type: 'action',
                         permission: this.permission,
                         componentName: 'product-action-component',
+                        width: '8',
                         isVisible: true
                     },
                 ],

@@ -81,14 +81,16 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
-                        isVisible: false
+                        isVisible: false,
+                        width: '5',
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '20',
                     },
                     {
                         title: 'description',
@@ -96,21 +98,24 @@ export default {
                         componentName: 'role-description-component',
                         key: 'description',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '45',
                     },
                     {
                         title: 'permissions',
                         type: 'component',
                         componentName: 'role-permission-component',
                         key: 'permissions',
-                        isVisible: true
+                        isVisible: true,
+                        width: '25',
                     },
                     {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
                         componentName: 'role-action-component',
-                        isVisible: true
+                        isVisible: true,
+                        width: '10',
                     },
                 ],
                 request: {

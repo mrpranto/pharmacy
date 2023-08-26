@@ -84,35 +84,40 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
-                        isVisible: false
+                        isVisible: false,
+                        width: '5',
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '15',
                     },
                     {
                         title: 'phone_number',
                         type: 'text',
                         key: 'phone_number',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '20',
                     },
                     {
                         title: 'email',
                         type: 'text',
                         key: 'email',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '20',
                     },
                     {
                         title: 'address',
                         type: 'text',
                         key: 'address',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '20',
                     },
                     {
                         title: 'companies',
@@ -121,13 +126,15 @@ export default {
                         key: 'companies',
                         orderAble: false,
                         isVisible: true,
+                        width: '10',
                     },
                     {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
                         componentName: 'supplier-action-component',
-                        isVisible: true
+                        isVisible: true,
+                        width: '10',
                     },
                 ],
                 request: {

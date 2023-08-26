@@ -3,5 +3,6 @@
 @section('content')
     @include('layout.breadcrumb',['paths' => ['peoples', 'customers']])
 
+
 @endsection
 

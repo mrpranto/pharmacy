@@ -135,7 +135,8 @@ export default {
                         type: 'action',
                         permission: this.permission,
                         componentName: 'company-action-component',
-                        isVisible: true
+                        isVisible: true,
+                        width: '10',
                     },
                 ],
                 request: {

@@ -126,7 +126,8 @@ export default {
                         type: 'action',
                         permission: this.permission,
                         componentName: 'unit-action-component',
-                        isVisible: true
+                        isVisible: true,
+                        width: '10',
                     },
                 ],
                 request: {

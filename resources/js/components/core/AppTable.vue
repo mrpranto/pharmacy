@@ -167,15 +167,14 @@
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                            <table class="table table-striped table-fixed border">
                                 <thead>
                                 <tr>
                                     <template v-for="(col) in options.columns">
-                                        <td v-if="col.isVisible">
-                                        <span class="font-bold pull-left">
-                                            {{ __('default.' + col.title) }}
-                                        </span>
-
+                                        <td v-if="col.isVisible" :width="col.width ? col.width+'%' : colWidth+'%'">
+                                            <span class="font-bold pull-left">
+                                                {{ __('default.' + col.title) }}
+                                            </span>
 
                                             <template v-if="col.orderAble && col.type !== 'action'">
                                             <span @click.prevent="getOrderBy(col.key)">
@@ -193,53 +192,55 @@
                                     </template>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="tbody-scroll">
                                 <tr v-for="(row, row_index) in options.responseData.data" :key="row_index">
                                     <template v-for="(column) in options.columns">
-                                        <td v-if="column.isVisible">
-                                            <template v-if="column.type === 'sl'">
-                                                {{ (parseInt(row_index) + parseInt(1)) }}
-                                            </template>
-                                            <template v-else-if="column.type === 'text'">
-                                                {{ row[column.key] }}
-                                            </template>
-                                            <template v-else-if="column.type === 'link'">
-                                                <a :href="column.url">{{ row[column.key] }}</a>
-                                            </template>
-                                            <template v-else-if="column.type === 'object'">
-                                                {{ column.modifier(row[column.key], row) }}
-                                            </template>
-                                            <template v-else-if="column.type === 'component'">
-                                                <template v-if="column.rowValues">
+                                        <td v-if="column.isVisible" :width="column.width ? column.width +'%' : colWidth +'%'">
+                                            <div class="wd-90p overflow-hidden">
+                                                <template v-if="column.type === 'sl'">
+                                                    {{ (parseInt(row_index) + parseInt(1)) }}
+                                                </template>
+                                                <template v-else-if="column.type === 'text'">
+                                                    {{ row[column.key] }}
+                                                </template>
+                                                <template v-else-if="column.type === 'link'">
+                                                    <a :href="column.url">{{ row[column.key] }}</a>
+                                                </template>
+                                                <template v-else-if="column.type === 'object'">
+                                                    {{ column.modifier(row[column.key], row) }}
+                                                </template>
+                                                <template v-else-if="column.type === 'component'">
+                                                    <template v-if="column.rowValues">
+                                                        <component
+                                                            :is="column.componentName"
+                                                            :item="row"
+                                                            :value="row[column.key]"
+                                                        />
+                                                    </template>
+                                                    <template v-else>
+                                                        <component
+                                                            :is="column.componentName"
+                                                            :value="row[column.key]"
+                                                        />
+                                                    </template>
+                                                </template>
+                                                <template v-else-if="column.type === 'action'">
                                                     <component
                                                         :is="column.componentName"
-                                                        :item="row"
+                                                        :row="row"
+                                                        :permission="column.permission"
                                                         :value="row[column.key]"
+                                                        :row_index="row_index"
                                                     />
                                                 </template>
-                                                <template v-else>
-                                                    <component
-                                                        :is="column.componentName"
-                                                        :value="row[column.key]"
-                                                    />
-                                                </template>
-                                            </template>
-                                            <template v-else-if="column.type === 'action'">
-                                                <component
-                                                    :is="column.componentName"
-                                                    :row="row"
-                                                    :permission="column.permission"
-                                                    :value="row[column.key]"
-                                                    :row_index="row_index"
-                                                />
-                                            </template>
-                                            <template v-else-if="column.type === 'custom-html'">
+                                                <template v-else-if="column.type === 'custom-html'">
                                             <span :class="column.className"
                                                   v-html="column.modifier(row[column.key], row)"></span>
-                                            </template>
-                                            <template v-else-if="column.type === 'custom-data'">
-                                                {{ column.modifier(row) }}
-                                            </template>
+                                                </template>
+                                                <template v-else-if="column.type === 'custom-data'">
+                                                    {{ column.modifier(row) }}
+                                                </template>
+                                            </div>
                                         </td>
                                     </template>
                                 </tr>
@@ -356,7 +357,8 @@ export default {
             from: '',
             to: '',
             total: '',
-            filterFields: []
+            filterFields: [],
+            colWidth: '',
         }
     },
     mounted() {
@@ -377,7 +379,8 @@ export default {
             handler() {
                 if (this.options) {
                     this.getPages();
-                    this.getTotalValue()
+                    this.getTotalValue();
+                    this.getColWidth();
                 }
             },
         },
@@ -389,6 +392,25 @@ export default {
         },
     },
     methods: {
+        getColWidth(){
+            const visibleColumn = this.options.columns.filter(item => item.isVisible);
+            if (visibleColumn.length){
+                let width = parseFloat(100 / visibleColumn.length);
+                this.colWidth = width;
+                const sum = visibleColumn.reduce((accumulator, object) => {
+                    if (object?.width){
+                        return accumulator + parseInt(object.width);
+                    }
+                }, 0);
+                if (sum < 100){
+                    let setWidth = (parseInt(visibleColumn[0]?.width) + (100 - sum));
+                    this.options.columns.filter(item => item.isVisible)[0].width = setWidth;
+                }else if (100 < sum){
+                    this.options.columns[0].width = (sum - 100);
+                    this.options.columns[1].width = parseInt(this.options.columns[1].width) - (sum - 100);
+                }
+            }
+        },
         getPages() {
             const last_page = this.options.responseData?.last_page
             this.pages = [];
@@ -548,6 +570,35 @@ export default {
     visibility: visible;
 }
 
+
+/* Add scrollbar to a tbody element */
+.tbody-scroll {
+    max-height: 400px; /* Set the maximum height of the element */
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: thin; /* Set the width of the scrollbar */
+    scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
+}
+
+/* Customize scrollbar appearance for WebKit browsers */
+.tbody-scroll::-webkit-scrollbar {
+    width: 5px; /* Set the width of the scrollbar */
+}
+
+.tbody-scroll::-webkit-scrollbar-track {
+    background-color: #ededed; /* Set the color of the scrollbar track */
+}
+
+.tbody-scroll::-webkit-scrollbar-thumb {
+    background-color: #b4b1b1; /* Set the color of the scrollbar thumb */
+    border-radius: 50px;
+}
+
+.tbody-scroll:active::-webkit-scrollbar-thumb,
+.tbody-scroll:focus::-webkit-scrollbar-thumb,
+.tbody-scroll:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
 .hide-show-column:hover .dropdown-item:hover {
     background-color: #FFFFFF;
     color: #0c1427;
@@ -568,7 +619,7 @@ export default {
 }
 
 .filter-button {
-    border: 1px #e3e2e2 solid;
+    border: 1px #bdbbbb dashed;
     padding: 8px 15px 7px 14px;
     border-radius: 20px;
     cursor: pointer;
@@ -580,5 +631,33 @@ export default {
 }
 .dropdown-menu {
     margin-top: 8px;
+}
+
+/*Table head fixed*/
+
+.table-fixed {
+    width: 100%
+}
+
+.table-fixed > thead,
+.table-fixed > tbody,
+.table-fixed > thead > tr,
+.table-fixed > tbody > tr,
+.table-fixed > thead > tr > th,
+.table-fixed > tbody > tr > td {
+    display: block;
+}
+
+.table-fixed > tbody > tr:after,
+.table-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.table-fixed > tbody > tr > td,
+.table-fixed > thead > tr > td {
+    float: left;
 }
 </style>

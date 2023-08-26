@@ -87,7 +87,8 @@ export default {
                         title: 'sl',
                         type: 'sl',
                         orderAble: false,
-                        isVisible: false
+                        isVisible: false,
+                        width: '5',
                     },
                     {
                         title: 'name',
@@ -97,20 +98,23 @@ export default {
                         key: 'name',
                         isVisible: true,
                         orderAble: true,
+                        width: '25',
                     },
                     {
                         title: 'email',
                         type: 'text',
                         key: 'email',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '25',
                     },
                     {
                         title: 'phone_number',
                         type: 'text',
                         key: 'phone_number',
                         orderAble: true,
-                        isVisible: true
+                        isVisible: true,
+                        width: '20',
                     },
                     {
                         title: 'roles',
@@ -120,14 +124,16 @@ export default {
                         isVisible: true,
                         modifier: (role) => {
                             return role ? '<span class="badge badge-primary">' + role.name + '</span>' : ''
-                        }
+                        },
+                        width: '20',
                     },
                     {
                         title: 'action',
                         type: 'action',
                         permission: this.permission,
                         componentName: 'user-action-component',
-                        isVisible: true
+                        isVisible: true,
+                        width: '10',
                     },
                 ],
                 request: {
