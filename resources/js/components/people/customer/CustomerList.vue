@@ -78,6 +78,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         isVisible: false,
                         width: '5',
                     },
@@ -128,6 +129,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'customer-action-component',
                         isVisible: true,
@@ -222,7 +224,7 @@ export default {
                 .catch(err => {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
-        }
+        },
     }
 }
 </script>

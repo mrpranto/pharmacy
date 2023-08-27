@@ -81,6 +81,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         isVisible: false,
                         orderAble: false
                     },
@@ -133,6 +134,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'company-action-component',
                         isVisible: true,

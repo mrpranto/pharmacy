@@ -3,86 +3,89 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12 col-md-9 col-lg-9">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-gray btn-rounded"
-                                    id="dropdownMenuLink"
-                                    data-toggle="dropdown">
-                                <i class="mdi mdi-eye-off"></i>
-                            </button>
-                            <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1"
-                                 style="padding: 20px">
-                                <div class="dropdown-item">
-                                    <p>
-                                        {{ __('default.you_can_show') }}
-                                    </p>
-                                </div>
-                                <hr>
-                                <div class="dropdown-item scroll">
-                                    <div class="row pt-2">
-                                        <template v-for="(column) in options.columns">
-                                            <div class="col-12 d-flex justify-content-between">
-                                                <p>{{ __('default.' + column.title) }}</p>
-                                                <div class="material-switch pull-right">
-                                                    <a-switch v-model:checked="column.isVisible" size="small"/>
-                                                </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-gray btn-rounded"
+                                id="dropdownMenuLink"
+                                data-toggle="dropdown">
+                            <i class="mdi mdi-eye-off"></i>
+                        </button>
+                        <div class="dropdown-menu hide-show-column" aria-labelledby="btnGroupDrop1"
+                             style="padding: 20px">
+                            <div class="dropdown-item">
+                                <p>
+                                    {{ __('default.you_can_show') }}
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="dropdown-item scroll">
+                                <div class="row pt-2">
+                                    <template v-for="(column) in options.columns">
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <p>{{ __('default.' + column.title) }}</p>
+                                            <div class="material-switch pull-right">
+                                                <a-switch v-model:checked="column.isVisible" size="small"
+                                                          @change="getColWidth"/>
                                             </div>
-                                        </template>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="dropdown-item d-flex justify-content-end">
-                                    <span></span>
-                                    <button class="btn btn-sm btn-default float-right"
-                                            @click.prevent="clearColumnVisibility" type="button"> {{
-                                            __('default.clear')
-                                        }}
-                                    </button>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
-
-                            <button type="button" :title="__('default.refresh')" class="btn btn-rounded btn-gray mr-1"
-                                    @click.prevent="refreshTable">
-                                <i class="mdi mdi-reload"></i>
-                            </button>
+                            <hr>
+                            <div class="dropdown-item d-flex justify-content-end">
+                                <span></span>
+                                <button class="btn btn-sm btn-default float-right"
+                                        @click.prevent="clearColumnVisibility" type="button"> {{
+                                        __('default.clear')
+                                    }}
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="btn-group" role="group" v-if="options.exportAble &&
+                        <button type="button" :title="__('default.refresh')" class="btn btn-rounded btn-gray mr-1"
+                                @click.prevent="refreshTable">
+                            <i class="mdi mdi-reload"></i>
+                        </button>
+                    </div>
+
+                    <div class="btn-group" role="group" v-if="options.exportAble &&
                         (options.exportAble.csv || options.exportAble.excel || options.exportAble.pdf ||options.exportAble.print)">
-                            <div class="dropdown show mr-1">
-                                <a class="btn btn btn-gray btn-rounded"
-                                   href="javascript:void(0)"
-                                   id="dropdownMenuLink"
-                                   data-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
-                                    <i class="mdi mdi-export"></i> Export
+                        <div class="dropdown show mr-1">
+                            <a class="btn btn btn-gray btn-rounded"
+                               href="javascript:void(0)"
+                               id="dropdownMenuLink"
+                               data-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                <i class="mdi mdi-export"></i> Export
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.csv">
+                                    <i class="mdi mdi-file-excel"></i> CSV
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.csv">
-                                        <i class="mdi mdi-file-excel"></i> CSV
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.excel">
-                                        <i class="mdi mdi-file-excel-box"></i> EXCEL
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.pdf">
-                                        <i class="mdi mdi-file-pdf"></i> PDF
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.print">
-                                        <i class="mdi mdi-printer"></i> PRINT
-                                    </a>
-                                </div>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.excel">
+                                    <i class="mdi mdi-file-excel-box"></i> EXCEL
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.pdf">
+                                    <i class="mdi mdi-file-pdf"></i> PDF
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-if="options.exportAble.print">
+                                    <i class="mdi mdi-printer"></i> PRINT
+                                </a>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="btn-group">
-                            <div class="dropdown show mr-1" v-if="options.request.hasOwnProperty('status')">
+                    <div class="btn-group">
+                        <div class="dropdown show mr-1" v-if="options.request.hasOwnProperty('status')">
                             <span class="filter-button">
-                                <span v-if="options.request.status !== ''" class="mr-1" :class="options.request.status !== '' ? 'text-primary' : ''"
+                                <span v-if="options.request.status !== ''" class="mr-1"
+                                      :class="options.request.status !== '' ? 'text-primary' : ''"
                                       @click.prevent="clearStatusFilter">
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
                                 <span data-toggle="dropdown">
-                                    <span v-if="options.request.status !== ''" :class="options.request.status !== '' ? 'text-primary' : ''">
+                                    <span v-if="options.request.status !== ''"
+                                          :class="options.request.status !== '' ? 'text-primary' : ''">
                                         {{ __('default.status') }} |
                                         {{ options.request.status === '1' ? 'Active' : 'In-active' }}
                                     </span>
@@ -103,20 +106,24 @@
                                     </div>
                                 </div>
                             </span>
-                            </div>
                         </div>
+                    </div>
 
-                        <template v-for="(filter, filter_index) in options.filters">
-                            <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
-                                <div class="dropdown show mr-1">
+                    <template v-for="(filter, filter_index) in options.filters">
+                        <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
+                            <div class="dropdown show mr-1">
                                 <span class="filter-button">
-                                <span v-if="filter.filterValue !== filter.key" class="mr-1" :class="filter.filterValue !== filter.key ? 'text-primary' : ''"
+                                <span v-if="filter.filterValue !== filter.key" class="mr-1"
+                                      :class="filter.filterValue !== filter.key ? 'text-primary' : ''"
                                       @click.prevent="clearFilter(filter_index, filter.key)">
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
                                 <span data-toggle="dropdown">
-                                    <span v-if="filter.filterValue !== filter.key" :class="filter.filterValue !== filter.key ? 'text-primary' : ''">
-                                        {{ __('default.' + filter.title) }} | {{ filter.option.find(item => item.value === filter.filterValue).label }}
+                                    <span v-if="filter.filterValue !== filter.key"
+                                          :class="filter.filterValue !== filter.key ? 'text-primary' : ''">
+                                        {{
+                                            __('default.' + filter.title)
+                                        }} | {{ filter.option.find(item => item.value === filter.filterValue).label }}
                                     </span>
                                     <span v-else>
                                         <i class="mdi mdi-plus-circle"></i>
@@ -142,9 +149,9 @@
                                 </div>
                             </span>
 
-                                </div>
                             </div>
-                        </template>
+                        </div>
+                    </template>
                 </div>
 
                 <div class="col-sm-12 col-md-3 col-lg-3">
@@ -191,15 +198,18 @@
                                     </template>
                                 </tr>
                                 </thead>
-                                <tbody class="tbody-scroll">
-                                    <tr class="loader-tr" v-if="options.loader">
-                                        <td :colspan="visibleColumn" class="text-center align-middle">
-                                            <a-spin />
-                                        </td>
-                                    </tr>
-                                    <tr class="data-tr" v-else v-for="(row, row_index) in options.responseData.data" :key="row_index">
+                                <tbody class="tbody-scroll"
+                                       :class="windowHeight > 620 ? 'tbody-scroll-max-min-height-480' : 'tbody-scroll-max-min-height-220'">
+                                <tr class="loader-tr" v-if="options.loader">
+                                    <td :colspan="visibleColumn" class="text-center align-middle">
+                                        <a-spin/>
+                                    </td>
+                                </tr>
+                                <tr class="data-tr" v-else v-for="(row, row_index) in options.responseData.data"
+                                    :key="row_index">
                                     <template v-for="(column) in options.columns">
-                                        <td v-if="column.isVisible" :width="column.width ? column.width +'%' : colWidth +'%'">
+                                        <td v-if="column.isVisible"
+                                            :width="column.width ? column.width +'%' : colWidth +'%'">
                                             <div class="wd-95p overflow-hidden">
                                                 <template v-if="column.type === 'sl'">
                                                     {{ (parseInt(row_index) + parseInt(1)) }}
@@ -345,6 +355,7 @@ export default {
     },
     data() {
         return {
+            windowHeight: window.innerHeight,
             per_pages: [
                 5,
                 10,
@@ -363,8 +374,12 @@ export default {
             total: '',
             filterFields: [],
             colWidth: '',
-            visibleColumn: ''
+            visibleColumn: '',
+            columnHistory: []
         }
+    },
+    created() {
+        this.storeColumnHistory()
     },
     mounted() {
         this.$nextTick(() => {
@@ -376,6 +391,7 @@ export default {
                 e.stopPropagation();
             })
         })
+        this.getColWidth();
     },
     watch: {
         options: {
@@ -385,7 +401,7 @@ export default {
                 if (this.options) {
                     this.getPages();
                     this.getTotalValue();
-                    this.getColWidth();
+                    this.defaultColWidth();
                 }
             },
         },
@@ -397,23 +413,38 @@ export default {
         },
     },
     methods: {
-        getColWidth(){
+        defaultColWidth() {
+            this.columnHistory = this.options.columns;
             const visibleColumn = this.options.columns.filter(item => item.isVisible);
-            if (visibleColumn.length){
-                let width = parseFloat(100 / visibleColumn.length);
-                this.colWidth = width;
+            let width = parseFloat(100 / visibleColumn.length);
+            this.colWidth = width;
+        },
+        getColWidth() {
+            const visibleColumn = this.options.columns.filter(item => item.isVisible);
+            if (visibleColumn.length) {
                 const sum = visibleColumn.reduce((accumulator, object) => {
-                    if (object?.width){
+                    if (object?.width) {
                         return accumulator + parseInt(object.width);
                     }
                 }, 0);
-                if (sum < 100){
-                    let setWidth = (parseInt(visibleColumn[0]?.width) + (100 - sum));
-                    this.options.columns.filter(item => item.isVisible)[0].width = setWidth;
-                }else if (100 < sum){
-                    this.options.columns[0].width = (sum - 100);
-                    this.options.columns[1].width = parseInt(this.options.columns[1].width) - (sum - 100);
+                if (sum <= 100){
+                    const remainingWidth = 100 - sum;
+                    const adjustWidth = (remainingWidth / visibleColumn.length);
+                    visibleColumn.forEach((item, itemIndex) => {
+                        const oldColumnInfo = JSON.parse(localStorage.getItem('columns')).find(col_item => item.key === col_item.key)
+                        if (oldColumnInfo) {
+                            visibleColumn[itemIndex].width = (parseInt(oldColumnInfo.width) + parseFloat(adjustWidth))
+                        }
+                    })
+                }else {
+                    visibleColumn.forEach((item, itemIndex) => {
+                        const oldColumnInfo = JSON.parse(localStorage.getItem('columns')).find(col_item => item.key === col_item.key)
+                        if (oldColumnInfo) {
+                            visibleColumn[itemIndex].width = (parseInt(oldColumnInfo.width))
+                        }
+                    })
                 }
+
                 this.visibleColumn = visibleColumn.length;
             }
         },
@@ -495,6 +526,7 @@ export default {
             for (i = 0; i < this.options.columns.length; i++) {
                 this.options.columns[i].isVisible = true;
             }
+            this.getColWidth();
         },
         clearStatusFilter() {
             if (this.options.request.status) {
@@ -514,6 +546,10 @@ export default {
             this.options.filters[filter_index].filterValue = key
             let value = this.options.filters[filter_index].filterValue
             this.$parent.filterData('', key)
+        },
+        storeColumnHistory() {
+            const columnHistory = this.options.columns;
+            localStorage.setItem('columns', JSON.stringify(columnHistory));
         }
     }
 }
@@ -576,11 +612,18 @@ export default {
     visibility: visible;
 }
 
+.tbody-scroll-max-min-height-220 {
+    min-height: 220px; /* Set the maximum height of the element */
+    max-height: 220px; /* Set the maximum height of the element */
+}
+
+.tbody-scroll-max-min-height-480 {
+    min-height: 480px; /* Set the maximum height of the element */
+    max-height: 480px; /* Set the maximum height of the element */
+}
 
 /* Add scrollbar to a tbody element */
 .tbody-scroll {
-    min-height: 220px; /* Set the maximum height of the element */
-    max-height: 220px; /* Set the maximum height of the element */
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
     scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
@@ -634,9 +677,11 @@ export default {
     margin: 2px;
     bottom: 9px;
 }
+
 .filter-button:hover {
     background-color: #ededed;
 }
+
 .dropdown-menu {
     margin-top: 8px;
 }

@@ -86,6 +86,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         orderAble: false,
                         isVisible: false,
                         width: '5',
@@ -125,11 +126,12 @@ export default {
                         modifier: (role) => {
                             return role ? '<span class="badge badge-primary">' + role.name + '</span>' : ''
                         },
-                        width: '20',
+                        width: '15',
                     },
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'user-action-component',
                         isVisible: true,

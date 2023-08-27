@@ -81,6 +81,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         isVisible: false,
                         width: '5',
                     },
@@ -99,7 +100,7 @@ export default {
                         key: 'description',
                         orderAble: true,
                         isVisible: true,
-                        width: '45',
+                        width: '40',
                     },
                     {
                         title: 'permissions',
@@ -112,6 +113,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'role-action-component',
                         isVisible: true,

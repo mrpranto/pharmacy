@@ -89,6 +89,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         width: '5',
                         isVisible: false
                     },
@@ -108,7 +109,7 @@ export default {
                         key: 'category',
                         isVisible: true,
                         orderAble: true,
-                        width: '15',
+                        width: '20',
                         modifier: (category) => {
                             return category?.name;
                         }
@@ -119,7 +120,7 @@ export default {
                         key: 'company',
                         isVisible: true,
                         orderAble: true,
-                        width: '15',
+                        width: '20',
                         modifier: (company) => {
                             return company?.name;
                         }
@@ -150,6 +151,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'product-action-component',
                         width: '10',

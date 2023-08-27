@@ -78,6 +78,7 @@ export default {
                     {
                         title: 'sl',
                         type: 'sl',
+                        key: 'sl',
                         isVisible: false
                     },
                     {
@@ -115,6 +116,7 @@ export default {
                     {
                         title: 'action',
                         type: 'action',
+                        key: 'action',
                         permission: this.permission,
                         componentName: 'category-action-component',
                         isVisible: true,
