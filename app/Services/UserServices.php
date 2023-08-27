@@ -205,4 +205,23 @@ class UserServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return User|array
+     */
+    public function showDetails($id): User|array
+    {
+        $user = $this->model
+            ->newQuery()
+            ->with(['role', 'createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $user->toArray();
+        $this->model['created_at'] = $user->created_at->format(format_date()).' '.$user->created_at->format(format_time());
+        $this->model['updated_at'] = $user->updated_at->format(format_date()).' '.$user->updated_at->format(format_time());
+
+        return $this->model;
+    }
 }

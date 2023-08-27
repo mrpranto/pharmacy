@@ -148,6 +148,7 @@ return [
     'created_by' => 'Created by',
     'updated_by' => 'Updated by',
     'updated_at' => 'Updated at',
+    'user_details' => 'User details',
 
 
 ];

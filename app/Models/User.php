@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\trait\BootTrait;
+use App\Models\trait\CreatedByRelationship;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -12,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CreatedByRelationship, BootTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +33,7 @@ class User extends Authenticatable
 
     const PROFILE_PICTURE_TYPE = 'profile_picture';
 
-    protected $with = ['profilePicture'];
+    protected $with = ['profilePicture', 'role'];
 
     public function role(): BelongsTo
     {

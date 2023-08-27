@@ -78,6 +78,8 @@ class RoleController extends Controller
      */
     public function show($id): array|Role
     {
+        Gate::authorize('app.roles.show');
+
         return $this->services->showDetails($id);
     }
 

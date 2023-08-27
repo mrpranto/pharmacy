@@ -23,6 +23,8 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->rememberToken();
             $table->softDeletes();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
         });
     }
