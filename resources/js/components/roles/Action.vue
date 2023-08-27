@@ -1,14 +1,14 @@
 <template>
     <div>
         <a-tooltip :title="__('default.show_details')" class="mr-1">
-            <EyeOutlined :style="{fontSize: '20px', marginLeft: '6px'}" @click="showDetails"/>
+            <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}" @click="showDetails"/>
         </a-tooltip>
         <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit && row.is_delete_able === 1">
-            <FormOutlined :style="{fontSize: '20px', marginLeft: '6px'}"
+            <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                           @click.prevent="$parent.$parent.getEditData(row)"/>
         </a-tooltip>
         <a-tooltip :title="__('default.delete')" v-if="permission.delete && row.is_delete_able === 1">
-            <DeleteOutlined :style="{fontSize: '20px', marginLeft: '6px'}"
+            <DeleteOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}"
                             @click.prevent="$parent.$parent.showDeleteForm(row.id)"/>
         </a-tooltip>
         <a-tooltip title="Can't change default permissions." v-if="row.is_delete_able === 0">
@@ -17,6 +17,7 @@
 
         <a-modal v-model:open="open"
                  width="40%"
+                 style="top: 10px"
                  :title="__('default.role_details')"
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: false }">
@@ -41,7 +42,7 @@
                 <dt class="col-sm-3">{{ __('default.users') }}</dt>
                 <dd class="col-sm-9">
 
-                    <a-avatar-group :max-count="20" :max-style="{ color: '#f56a00', backgroundColor: '#fde3cf' }">
+                    <a-avatar-group :max-count="12" :max-style="{ color: '#f56a00', backgroundColor: '#fde3cf' }">
                         <template v-for="(user) in role.users">
                         <a-tooltip v-if="user.profile_picture" :title="user.name" placement="top">
                             <a-avatar :src="user.profile_picture?.full_url"/>

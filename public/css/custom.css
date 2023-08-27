@@ -39,3 +39,13 @@ body:hover::-webkit-scrollbar-thumb {
 .card .card-body {
     padding: 0.8rem 0.8rem;
 }
+
+.color-info:hover{
+    color: #4ed1e8;
+}
+.color-primary:hover{
+    color: #4e72e8;
+}
+.color-danger:hover{
+    color: #e84e65;
+}

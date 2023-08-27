@@ -59,6 +59,8 @@ export default {
                 openEdit: false,
                 disabled: false,
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 formData: {
                     name: '',
                     description: '',
@@ -79,14 +81,16 @@ export default {
                         title: 'sl',
                         type: 'sl',
                         key: 'sl',
-                        isVisible: false
+                        isVisible: false,
+                        width: '5'
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '20'
                     },
                     {
                         title: 'description',
@@ -100,7 +104,8 @@ export default {
                             } else {
                                 return description
                             }
-                        }
+                        },
+                        width: '50'
                     },
                     {
                         title: 'status',
@@ -111,7 +116,8 @@ export default {
                         modifier: (status) => {
                             return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
-                        }
+                        },
+                        width: '10'
                     },
                     {
                         title: 'action',
@@ -120,7 +126,7 @@ export default {
                         permission: this.permission,
                         componentName: 'category-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {
@@ -148,6 +154,8 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
                 })
                 .catch(err => {

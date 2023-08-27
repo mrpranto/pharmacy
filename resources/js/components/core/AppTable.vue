@@ -205,59 +205,67 @@
                                         <a-spin/>
                                     </td>
                                 </tr>
-                                <tr class="data-tr" v-else v-for="(row, row_index) in options.responseData.data"
-                                    :key="row_index">
-                                    <template v-for="(column) in options.columns">
-                                        <td v-if="column.isVisible"
-                                            :width="column.width ? column.width +'%' : colWidth +'%'">
-                                            <div class="wd-95p overflow-hidden">
-                                                <template v-if="column.type === 'sl'">
-                                                    {{ (parseInt(row_index) + parseInt(1)) }}
-                                                </template>
-                                                <template v-else-if="column.type === 'text'">
-                                                    {{ row[column.key] }}
-                                                </template>
-                                                <template v-else-if="column.type === 'link'">
-                                                    <a :href="column.url">{{ row[column.key] }}</a>
-                                                </template>
-                                                <template v-else-if="column.type === 'object'">
-                                                    {{ column.modifier(row[column.key], row) }}
-                                                </template>
-                                                <template v-else-if="column.type === 'component'">
-                                                    <template v-if="column.rowValues">
+                                <template v-else>
+                                    <tr class="data-tr" v-if="options.responseData.data.length > 0" v-for="(row, row_index) in options.responseData.data"
+                                        :key="row_index">
+                                        <template v-for="(column) in options.columns">
+                                            <td v-if="column.isVisible"
+                                                :width="column.width ? column.width +'%' : colWidth +'%'">
+                                                <div class="wd-95p overflow-hidden">
+                                                    <template v-if="column.type === 'sl'">
+                                                        {{ (parseInt(row_index) + parseInt(1)) }}
+                                                    </template>
+                                                    <template v-else-if="column.type === 'text'">
+                                                        {{ row[column.key] }}
+                                                    </template>
+                                                    <template v-else-if="column.type === 'link'">
+                                                        <a :href="column.url">{{ row[column.key] }}</a>
+                                                    </template>
+                                                    <template v-else-if="column.type === 'object'">
+                                                        {{ column.modifier(row[column.key], row) }}
+                                                    </template>
+                                                    <template v-else-if="column.type === 'component'">
+                                                        <template v-if="column.rowValues">
+                                                            <component
+                                                                :is="column.componentName"
+                                                                :item="row"
+                                                                :value="row[column.key]"
+                                                            />
+                                                        </template>
+                                                        <template v-else>
+                                                            <component
+                                                                :is="column.componentName"
+                                                                :value="row[column.key]"
+                                                            />
+                                                        </template>
+                                                    </template>
+                                                    <template v-else-if="column.type === 'action'">
                                                         <component
                                                             :is="column.componentName"
-                                                            :item="row"
+                                                            :row="row"
+                                                            :permission="column.permission"
                                                             :value="row[column.key]"
+                                                            :row_index="row_index"
                                                         />
                                                     </template>
-                                                    <template v-else>
-                                                        <component
-                                                            :is="column.componentName"
-                                                            :value="row[column.key]"
-                                                        />
-                                                    </template>
-                                                </template>
-                                                <template v-else-if="column.type === 'action'">
-                                                    <component
-                                                        :is="column.componentName"
-                                                        :row="row"
-                                                        :permission="column.permission"
-                                                        :value="row[column.key]"
-                                                        :row_index="row_index"
-                                                    />
-                                                </template>
-                                                <template v-else-if="column.type === 'custom-html'">
+                                                    <template v-else-if="column.type === 'custom-html'">
                                             <span :class="column.className"
                                                   v-html="column.modifier(row[column.key], row)"></span>
-                                                </template>
-                                                <template v-else-if="column.type === 'custom-data'">
-                                                    {{ column.modifier(row) }}
-                                                </template>
-                                            </div>
+                                                    </template>
+                                                    <template v-else-if="column.type === 'custom-data'">
+                                                        {{ column.modifier(row) }}
+                                                    </template>
+                                                </div>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                    <tr class="loader-tr" v-else>
+                                        <td :colspan="visibleColumn" class="text-center align-middle">
+                                            <h3><InboxOutlined /></h3>
+                                            No Data found.
                                         </td>
-                                    </template>
-                                </tr>
+                                    </tr>
+                                </template>
                                 </tbody>
                             </table>
                         </div>
@@ -338,11 +346,11 @@
 
 <script>
 import Loader from "./Loader.vue";
-import {SearchOutlined, CloseCircleFilled} from '@ant-design/icons-vue';
+import {SearchOutlined, CloseCircleFilled, InboxOutlined} from '@ant-design/icons-vue';
 
 export default {
     name: "AppTable",
-    components: {Loader, SearchOutlined, CloseCircleFilled},
+    components: {Loader, SearchOutlined, CloseCircleFilled, InboxOutlined},
     props: {
         options: {
             type: Object,
@@ -409,6 +417,10 @@ export default {
             this.$parent.getData()
         },
         'options.request.status': function () {
+            this.page = {
+                value: 1,
+                label: 1
+            }
             this.$parent.getData()
         },
     },
@@ -540,6 +552,10 @@ export default {
             this.$parent.getData();
         },
         filterList(event, key) {
+            this.page = {
+                value: 1,
+                label: 1
+            }
             this.$parent.filterData(event, key)
         },
         clearFilter(filter_index, key) {

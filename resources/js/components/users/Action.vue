@@ -2,19 +2,20 @@
 <template>
     <div>
         <a-tooltip :title="__('default.show_details')" class="mr-1">
-            <EyeOutlined :style="{fontSize: '20px', marginLeft: '6px'}" @click="showDetails"/>
+            <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}" @click="showDetails"/>
         </a-tooltip>
         <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit">
-            <FormOutlined :style="{fontSize: '20px', marginLeft: '6px'}"
+            <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                           @click.prevent="$parent.$parent.getEditData(row)"/>
         </a-tooltip>
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete" >
-            <DeleteOutlined :style="{fontSize: '20px', marginLeft: '6px'}"
+            <DeleteOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}"
                             @click.prevent="$parent.$parent.showDeleteForm(row.id)"/>
         </a-tooltip>
 
         <a-modal v-model:open="open"
                  width="40%"
+                 style="top: 10px"
                  :title="__('default.user_details')"
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: false }">
@@ -183,10 +184,5 @@ export default {
 }
 </script>
 <style scoped>
-.dropdown-toggle {
-    cursor: pointer;
-}
-.dropdown-toggle::after {
-    content: none;
-}
+
 </style>
