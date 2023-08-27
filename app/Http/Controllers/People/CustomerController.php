@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\People\Customers\CustomerServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -42,9 +43,11 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        return $this->services
+            ->validateStore($request)
+            ->store($request);
     }
 
     /**
@@ -58,9 +61,11 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
+        return $this->services
+            ->validateUpdate($request, $id)
+            ->update($request, $id);
     }
 
     /**
@@ -68,6 +73,6 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->services->delete($id);
     }
 }

@@ -40,13 +40,19 @@
             </div>
         </div>
 
+        <AddNewCustomer :formState="formState"/>
+        <EditCustomer :formState="formState"/>
+
     </div>
 </template>
 
 <script>
+import AddNewCustomer from "./AddNewCustomer.vue";
+import EditCustomer from "./EditCustomer.vue";
+
 export default {
     name: 'CustomerList',
-    components: {},
+    components: {EditCustomer, AddNewCustomer},
     props: ['permission'],
     data() {
         return {
@@ -54,7 +60,6 @@ export default {
                 openCreate: false,
                 openEdit: false,
                 disabled: false,
-                responseCompanies: [],
                 current_id: '',
                 selectAll: false,
                 formData: {
@@ -62,7 +67,7 @@ export default {
                     phone_number: '',
                     email: '',
                     address: '',
-                    companies: [],
+                    status: true
                 },
                 layout: {
                     labelCol: {span: 4},
@@ -140,6 +145,7 @@ export default {
                     per_page: this.$general_setting.pagination,
                     search: '',
                     order_by: 'id',
+                    status: '',
                     order_dir: 'desc'
                 },
                 exportAble: {}
@@ -172,6 +178,7 @@ export default {
                 phone_number: '',
                 email: '',
                 address: '',
+                status: true
             }
             this.formState.validation = false;
             this.formState.openCreate = true;
@@ -186,6 +193,7 @@ export default {
                 phone_number: customer.phone_number,
                 email: customer.email,
                 address: customer.address,
+                status: customer.status === 1 ? true : false,
             }
             this.formState.validation = {};
             this.formState.openEdit = true;
@@ -212,7 +220,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/peoples/suppliers/${id}`)
+            await axios.delete(`/peoples/customers/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

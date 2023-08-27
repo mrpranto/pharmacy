@@ -173,7 +173,7 @@
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-striped table-fixed border">
+                            <table class="table table-striped table-hover table-fixed border">
                                 <thead>
                                 <tr>
                                     <template v-for="(col) in options.columns">

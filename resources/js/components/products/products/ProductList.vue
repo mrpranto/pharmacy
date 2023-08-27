@@ -100,7 +100,7 @@ export default {
                         rowValues: true,
                         key: 'name',
                         isVisible: true,
-                        width: '15',
+                        width: '25',
                         orderAble: true,
                     },
                     {
@@ -109,7 +109,7 @@ export default {
                         key: 'category',
                         isVisible: true,
                         orderAble: true,
-                        width: '20',
+                        width: '10',
                         modifier: (category) => {
                             return category?.name;
                         }

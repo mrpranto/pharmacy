@@ -139,4 +139,8 @@ return [
     'supplier_delete' => 'সরবরাহকারী মুছে ফেলা সফল হয়েছে',
 
     'add_new_customer' => 'নতুন ক্রেতা তৈরি করুন',
+    'edit_customer' => 'ক্রেতা সম্পাদনা করুন',
+    'customer_create' => 'ক্রেতা তৈরি সফল হয়েছে',
+    'customer_edit' => 'ক্রেতা সম্পাদনা সফল হয়েছে',
+    'customer_delete' => 'ক্রেতা মুছে ফেলা সফল হয়েছে',
 ];
