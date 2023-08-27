@@ -32,7 +32,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <app-table-component :options="options"></app-table-component>
+                        <app-table-component :options="options" ref="appTable"></app-table-component>
                     </div>
                 </div>
             </div>
@@ -60,6 +60,8 @@ export default {
                 disabled: false,
                 responsePermissions: [],
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 selectAll: false,
                 formData: {
                     name: '',
@@ -144,6 +146,8 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
                 })
                 .catch(err => {

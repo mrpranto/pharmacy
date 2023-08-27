@@ -128,7 +128,8 @@ export default {
                         this.formState.formData.name = ''
                         this.formState.formData.description = ''
                         this.formState.formData.permissions = []
-                        this.$parent.getData()
+                        let current_path = this.formState.list_path+'?page=' + this.formState.current_list_url
+                        this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
