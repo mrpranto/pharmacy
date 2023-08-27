@@ -108,7 +108,7 @@ export default {
                         componentName: 'role-permission-component',
                         key: 'permissions',
                         isVisible: true,
-                        width: '25',
+                        width: '20',
                     },
                     {
                         title: 'action',
@@ -117,7 +117,7 @@ export default {
                         permission: this.permission,
                         componentName: 'role-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {

@@ -6,7 +6,9 @@ use App\Models\Module;
 use App\Models\Role;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
@@ -98,6 +100,27 @@ class RoleServices extends BaseServices
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * @param $id
+     * @return array|Role
+     */
+    public function showDetails($id): array|Role
+    {
+        $role = $this->model
+            ->newQuery()
+            ->with([
+                'permissions', 'users', 'createdBy.role', 'updatedBy.role'
+            ])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $role->toArray();
+        $this->model['created_at'] = $role->created_at->format(format_date()).' '.$role->created_at->format(format_time());
+        $this->model['updated_at'] = $role->updated_at->format(format_date()).' '.$role->updated_at->format(format_time());
+
+        return $this->model;
     }
 
     /**

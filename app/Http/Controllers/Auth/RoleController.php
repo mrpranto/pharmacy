@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Services\Roles\RoleServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -58,7 +61,6 @@ class RoleController extends Controller
 
         return $this->services->permissions();
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -67,6 +69,16 @@ class RoleController extends Controller
         Gate::authorize('app.roles.create');
 
         return $this->services->validateStore()->store($request);
+    }
+
+
+    /**
+     * @param $id
+     * @return array|Role
+     */
+    public function show($id): array|Role
+    {
+        return $this->services->showDetails($id);
     }
 
     /**
