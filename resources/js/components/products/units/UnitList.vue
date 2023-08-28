@@ -10,6 +10,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h4>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
                                         v-if="formState.disabled">
@@ -41,6 +44,7 @@
 
         <AddNewUnit :formState="formState"/>
         <EditUnit :formState="formState"/>
+        <UnitDetails :show="show"/>
 
     </div>
 </template>
@@ -48,13 +52,15 @@
 
 import AddNewUnit from "./AddNewUnit.vue";
 import EditUnit from "./EditUnit.vue";
+import UnitDetails from "./UnitDetails.vue";
 
 export default {
     name: "UnitList",
-    components: {EditUnit, AddNewUnit},
+    components: {UnitDetails, EditUnit, AddNewUnit},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
@@ -81,21 +87,24 @@ export default {
                         title: 'sl',
                         type: 'sl',
                         key: 'sl',
-                        isVisible: false
+                        isVisible: false,
+                        width: '5'
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '15'
                     },
                     {
                         title: 'pack_size',
                         type: 'text',
                         key: 'pack_size',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '15'
                     },
                     {
                         title: 'description',
@@ -109,7 +118,8 @@ export default {
                             } else {
                                 return description
                             }
-                        }
+                        },
+                        width: '35'
                     },
                     {
                         title: 'status',
@@ -120,7 +130,8 @@ export default {
                         modifier: (status) => {
                             return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
-                        }
+                        },
+                        width: '15'
                     },
                     {
                         title: 'action',
@@ -129,7 +140,7 @@ export default {
                         permission: this.permission,
                         componentName: 'unit-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {
@@ -140,6 +151,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                unit:{},
+                open:false
             }
         }
     },
@@ -158,6 +173,18 @@ export default {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
                     this.options.loader = false;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/product/units/' + id)
+                .then(response => {
+                    this.show.unit = response.data
+                    this.show.open = true
+                    this.loader = false
                 })
                 .catch(err => {
                     console.error(err)

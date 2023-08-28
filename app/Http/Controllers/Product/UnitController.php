@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product\Unit;
 use App\Services\Product\Units\UnitServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -59,9 +60,11 @@ class UnitController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): Unit|array
     {
-        //
+        Gate::authorize('app.unit.show');
+
+        return $this->services->showDetails($id);
     }
 
     /**

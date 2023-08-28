@@ -146,4 +146,23 @@ class CompaniesServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return array|Company
+     */
+    public function showDetails($id): array|Company
+    {
+        $company = $this->model
+            ->newQuery()
+            ->with(['createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $company->toArray();
+        $this->model['created_at'] = $company->created_at->format(format_date()).' '.$company->created_at->format(format_time());
+        $this->model['updated_at'] = $company->updated_at->format(format_date()).' '.$company->updated_at->format(format_time());
+
+        return $this->model;
+    }
 }

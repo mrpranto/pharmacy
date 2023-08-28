@@ -10,6 +10,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h5>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
                                         v-if="formState.disabled">
@@ -41,6 +44,7 @@
 
         <AddNewCompany :formState="formState"/>
         <EditCompany :formState="formState"/>
+        <CompanyDetails :show="show"/>
 
     </div>
 </template>
@@ -48,13 +52,15 @@
 
 import AddNewCompany from "./AddNewCompany.vue";
 import EditCompany from "./EditCompany.vue";
+import CompanyDetails from "./CompanyDetails.vue";
 
 export default {
     name: "CompanyList",
-    components: {EditCompany, AddNewCompany},
+    components: {CompanyDetails, EditCompany, AddNewCompany},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
@@ -83,28 +89,32 @@ export default {
                         type: 'sl',
                         key: 'sl',
                         isVisible: false,
-                        orderAble: false
+                        orderAble: false,
+                        width: '5'
                     },
                     {
                         title: 'name',
                         type: 'text',
                         key: 'name',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '15',
                     },
                     {
                         title: 'email',
                         type: 'text',
                         key: 'email',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '15',
                     },
                     {
                         title: 'phone_number',
                         type: 'text',
                         key: 'phone_number',
                         isVisible: true,
-                        orderAble: true
+                        orderAble: true,
+                        width: '15',
                     },
                     {
                         title: 'description',
@@ -118,7 +128,8 @@ export default {
                             } else {
                                 return description
                             }
-                        }
+                        },
+                        width: '25',
                     },
                     {
                         title: 'status',
@@ -129,7 +140,8 @@ export default {
                         modifier: (status) => {
                             return status === 1 ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
-                        }
+                        },
+                        width: '10',
                     },
                     {
                         title: 'action',
@@ -138,7 +150,7 @@ export default {
                         permission: this.permission,
                         componentName: 'company-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {
@@ -149,6 +161,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                company:{},
+                open:false
             }
         }
     },
@@ -167,6 +183,18 @@ export default {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
                     this.options.loader = false;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/product/companies/' + id)
+                .then(response => {
+                    this.show.company = response.data
+                    this.show.open = true
+                    this.loader = false
                 })
                 .catch(err => {
                     console.error(err)

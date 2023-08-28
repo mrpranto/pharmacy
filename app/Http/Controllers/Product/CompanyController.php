@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product\Company;
 use App\Services\Product\Companies\CompaniesServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -57,9 +58,11 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): array|Company
     {
-        //
+        Gate::authorize('app.company.show');
+
+        return $this->services->showDetails($id);
     }
 
     /**

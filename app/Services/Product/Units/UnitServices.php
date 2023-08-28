@@ -144,4 +144,23 @@ class UnitServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return Unit|array
+     */
+    public function showDetails($id): Unit|array
+    {
+        $unit = $this->model
+            ->newQuery()
+            ->with(['createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $unit->toArray();
+        $this->model['created_at'] = $unit->created_at->format(format_date()).' '.$unit->created_at->format(format_time());
+        $this->model['updated_at'] = $unit->updated_at->format(format_date()).' '.$unit->updated_at->format(format_time());
+
+        return $this->model;
+    }
 }

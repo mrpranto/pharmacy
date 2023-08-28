@@ -150,6 +150,8 @@ return [
     'updated_at' => 'Updated at',
     'user_details' => 'User details',
     'category_details' => 'Category details',
-
+    'company_details' => 'Company details',
+    'unit_details' => 'Unit details',
+    'product_details' => 'Product Details',
 
 ];

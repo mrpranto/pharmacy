@@ -221,7 +221,11 @@ class ProductServices extends BaseServices
         }
     }
 
-    public function delete($id)
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
     {
         try {
             $this->model
@@ -234,6 +238,25 @@ class ProductServices extends BaseServices
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * @param $id
+     * @return Product|array
+     */
+    public function showDetails($id): Product|array
+    {
+        $product = $this->model
+            ->newQuery()
+            ->with(['createdBy', 'updatedBy', 'category', 'company', 'unit',])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $product->toArray();
+        $this->model['created_at'] = $product->created_at->format(format_date()).' '.$product->created_at->format(format_time());
+        $this->model['updated_at'] = $product->updated_at->format(format_date()).' '.$product->updated_at->format(format_time());
+
+        return $this->model;
     }
 
 }

@@ -150,4 +150,7 @@ return [
     'updated_at' => 'সম্পাদনা হয়েছে',
     'user_details' => 'ব্যাবহারকারী বিস্তারিত',
     'category_details' => 'ক্যাটেগোরি বিস্তারিত',
+    'company_details' => 'কোম্পানি বিস্তারিত',
+    'unit_details' => 'ইউনিট বিস্তারিত',
+    'product_details' => 'প্রোডাক্ট বিস্তারিত',
 ];
