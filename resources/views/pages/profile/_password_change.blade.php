@@ -1,4 +1,4 @@
-<div class="col-lg-10">
+<div class="col-sm-12 col-md-12 col-lg-9">
     <div class="card w-100 h-100 d-inline-block">
         <div class="card-body">
             <h6 class="card-title">

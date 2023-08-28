@@ -11,6 +11,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h5>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
                                         v-if="formState.disabled">
@@ -43,21 +46,23 @@
 
         <AddNewUser :formState="formState"/>
         <EditUser :formState="formState"/>
+        <UserDetails :show="show"/>
     </div>
 </template>
 
 <script>
 
-import {notification} from "ant-design-vue";
 import AddNewUser from "./AddNewUser.vue";
 import EditUser from "./EditUser.vue";
+import UserDetails from "./UserDetails.vue";
 
 export default {
     name: 'UsersList',
-    components: {EditUser, AddNewUser},
+    components: {UserDetails, EditUser, AddNewUser},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
@@ -147,6 +152,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                open: false,
+                user: {}
             }
         }
     },
@@ -172,7 +181,20 @@ export default {
                     console.error(err)
                 })
         },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/users/' + id)
+                .then(response => {
+                    this.show.user = response.data
+                    this.show.open = true
+                    this.loader = false
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
         showAddForm() {
+            this.loader = true
             this.formState.formData = {
                 name: '',
                 email: null,
@@ -182,6 +204,7 @@ export default {
             this.getRoles();
             this.formState.validation = {};
             this.formState.openCreate = true;
+            this.loader = false
         },
         async getRoles() {
             await axios.get('/get-roles-for-users')
@@ -196,6 +219,7 @@ export default {
             this.formState.openCreate = false;
         },
         getEditData(user) {
+            this.loader = true
             this.getRoles()
             this.formState.current_id = user.id;
             this.formState.formData = {
@@ -208,6 +232,7 @@ export default {
             }
             this.formState.validation = {};
             this.formState.openEdit = true;
+            this.loader = false
         },
         onEditClose() {
             this.formState.openEdit = false;

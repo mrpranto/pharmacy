@@ -125,7 +125,7 @@
         </div>
 
         <div class="row inbox-wrapper mt-3">
-            <div class="col-lg-2">
+            <div class="col-sm-12 col-md-12 col-lg-3">
                 <div class="card w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="row">

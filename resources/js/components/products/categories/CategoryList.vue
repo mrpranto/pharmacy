@@ -10,6 +10,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h5>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text" type="button" disabled
                                         v-if="formState.disabled">
@@ -41,19 +44,22 @@
 
         <AddNewCategory :formState="formState"/>
         <EditCategory :formState="formState"/>
+        <CategoryDetails :show="show"/>
 
     </div>
 </template>
 <script>
 import AddNewCategory from "./AddNewCategory.vue";
 import EditCategory from "./EditCategory.vue";
+import CategoryDetails from "./CategoryDetails.vue";
 
 export default {
     name: "CategoryList",
-    components: {EditCategory, AddNewCategory},
+    components: {CategoryDetails, EditCategory, AddNewCategory},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
@@ -137,6 +143,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                open: false,
+                category: {}
             }
         }
     },
@@ -157,6 +167,18 @@ export default {
                     this.formState.list_path = response.data.path
                     this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/product/categories/' + id)
+                .then(response => {
+                    this.show.category = response.data
+                    this.show.open = true
+                    this.loader = false
                 })
                 .catch(err => {
                     console.error(err)

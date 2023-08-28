@@ -6,9 +6,13 @@
                     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div>
-                <h5 class="mb-3 mb-md-0">{{ __('default.roles') }}
+                <h5 class="mb-3 mb-md-0">
+                    {{ __('default.roles') }}
                     <app-table-counter-component :total="options.total"/>
                 </h5>
+            </div>
+            <div>
+                <a-spin v-if="loader"/>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
@@ -40,20 +44,22 @@
 
         <AddNewRole :formState="formState"/>
         <EditRole :formState="formState"/>
+        <RoleDetails :show="show" />
     </div>
 </template>
 
 <script>
 import AddNewRole from "./AddNewRole.vue";
 import EditRole from "./EditRole.vue";
-import {notification} from "ant-design-vue";
+import RoleDetails from "./RoleDetails.vue";
 
 export default {
     name: 'RoleList',
-    components: {EditRole, AddNewRole},
+    components: {RoleDetails, EditRole, AddNewRole},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreateRole: false,
                 openEditRole: false,
@@ -129,6 +135,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                role: {},
+                open: false
             }
         }
     },
@@ -154,6 +164,18 @@ export default {
                     console.error(err)
                 })
         },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/roles/' + id)
+                .then(response => {
+                    this.show.role = response.data
+                    this.show.open = true
+                    this.loader = false
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
         async getPermissions() {
             this.formState.disabled = true
             await axios.get('/get-permissions')
@@ -166,6 +188,7 @@ export default {
                 })
         },
         showAddForm() {
+            this.loader = true
             this.getPermissions()
             this.formState.formData = {
                 name: '',
@@ -176,11 +199,13 @@ export default {
             }
             this.formState.selectAll = false;
             this.formState.openCreateRole = true;
+            this.loader = false
         },
         onClose() {
             this.formState.openCreateRole = false;
         },
         getEditData(role) {
+            this.loader = true
             this.getPermissions()
             this.formState.current_id = role.id;
                 this.formState.formData = {
@@ -192,6 +217,7 @@ export default {
                 }
             this.formState.selectAll = false;
             this.formState.openEditRole = true;
+            this.loader = false
         },
         onEditClose() {
             this.formState.openEditRole = false;

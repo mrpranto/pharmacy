@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product\Category;
 use App\Services\Product\Categories\CategoryServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -59,9 +60,11 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): array|Category
     {
-        return 's';
+        Gate::authorize('app.category.show');
+
+        return $this->services->showDetails($id);
     }
 
     /**
