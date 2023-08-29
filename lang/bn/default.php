@@ -153,4 +153,6 @@ return [
     'company_details' => 'কোম্পানি বিস্তারিত',
     'unit_details' => 'ইউনিট বিস্তারিত',
     'product_details' => 'প্রোডাক্ট বিস্তারিত',
+    'supplier_details' => 'সরবরাহকারী বিস্তারিত',
+    'customer_details' => 'ক্রেতা বিস্তারিত',
 ];

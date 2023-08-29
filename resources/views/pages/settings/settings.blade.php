@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-2 email-aside border-lg-right">
+                        <div class="col-sm-12 col-md-12 col-lg-3 email-aside border-lg-right">
                             <div class="aside-content">
                                 <div class="aside-header">
                                     <span class="title text-center">

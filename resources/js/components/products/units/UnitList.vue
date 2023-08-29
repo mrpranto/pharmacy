@@ -66,6 +66,8 @@ export default {
                 openEdit: false,
                 disabled: false,
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 formData: {
                     name: '',
                     pack_size: '',
@@ -172,6 +174,8 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
                 })
                 .catch(err => {

@@ -64,6 +64,8 @@ export default {
                 openEdit: false,
                 disabled: false,
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 formData: {
                     name: '',
                     barcode: '',
@@ -103,7 +105,7 @@ export default {
                         rowValues: true,
                         key: 'name',
                         isVisible: true,
-                        width: '25',
+                        width: '23',
                         orderAble: true,
                     },
                     {
@@ -157,7 +159,7 @@ export default {
                         key: 'action',
                         permission: this.permission,
                         componentName: 'product-action-component',
-                        width: '10',
+                        width: '12',
                         isVisible: true
                     },
                 ],
@@ -235,6 +237,8 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
                 })
                 .catch(err => {

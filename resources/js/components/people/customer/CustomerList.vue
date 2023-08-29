@@ -42,6 +42,7 @@
 
         <AddNewCustomer :formState="formState"/>
         <EditCustomer :formState="formState"/>
+        <CustomerDetails :show="show"/>
 
     </div>
 </template>
@@ -49,18 +50,22 @@
 <script>
 import AddNewCustomer from "./AddNewCustomer.vue";
 import EditCustomer from "./EditCustomer.vue";
+import CustomerDetails from "./CustomerDetails.vue";
 
 export default {
     name: 'CustomerList',
-    components: {EditCustomer, AddNewCustomer},
+    components: {CustomerDetails, EditCustomer, AddNewCustomer},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
                 disabled: false,
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 selectAll: false,
                 formData: {
                     name: '',
@@ -101,7 +106,7 @@ export default {
                         key: 'phone_number',
                         orderAble: true,
                         isVisible: true,
-                        width: '20',
+                        width: '15',
                     },
                     {
                         title: 'email',
@@ -138,7 +143,7 @@ export default {
                         permission: this.permission,
                         componentName: 'customer-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {
@@ -149,6 +154,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                customer:{},
+                open:false
             }
         }
     },
@@ -166,7 +175,21 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/peoples/customers/' + id)
+                .then(response => {
+                    this.show.customer = response.data
+                    this.show.open = true
+                    this.loader = false
                 })
                 .catch(err => {
                     console.error(err)

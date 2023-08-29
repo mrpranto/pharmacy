@@ -10,6 +10,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h5>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
                                         v-if="formState.disabled">
@@ -42,6 +45,7 @@
 
         <AddNewSupplier :formState="formState"/>
         <EditSupplier :formState="formState"/>
+        <SupplierDetails :show="show"/>
 
     </div>
 </template>
@@ -49,19 +53,23 @@
 <script>
 import AddNewSupplier from "./AddNewSupplier.vue";
 import EditSupplier from "./EditSupplier.vue";
+import SupplierDetails from "./SupplierDetails.vue";
 
 export default {
     name: 'SupplierList',
-    components: {EditSupplier, AddNewSupplier},
+    components: {SupplierDetails, EditSupplier, AddNewSupplier},
     props: ['permission'],
     data() {
         return {
+            loader: false,
             formState: {
                 openCreate: false,
                 openEdit: false,
                 disabled: false,
                 responseCompanies: [],
                 current_id: '',
+                list_path: '',
+                current_list_url: '',
                 selectAll: false,
                 formData: {
                     name: '',
@@ -127,7 +135,7 @@ export default {
                         key: 'companies',
                         orderAble: false,
                         isVisible: true,
-                        width: '15',
+                        width: '10',
                     },
                     {
                         title: 'action',
@@ -136,7 +144,7 @@ export default {
                         permission: this.permission,
                         componentName: 'supplier-action-component',
                         isVisible: true,
-                        width: '10',
+                        width: '15',
                     },
                 ],
                 request: {
@@ -146,6 +154,10 @@ export default {
                     order_dir: 'desc'
                 },
                 exportAble: {}
+            },
+            show:{
+                supplier:{},
+                open:false
             }
         }
     },
@@ -163,7 +175,21 @@ export default {
                 .then(response => {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
+                    this.formState.list_path = response.data.path
+                    this.formState.current_list_url = response.data.current_page
                     this.options.loader = false;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showDetails(id) {
+            this.loader = true
+            await axios.get('/peoples/suppliers/' + id)
+                .then(response => {
+                    this.show.supplier = response.data
+                    this.show.open = true
+                    this.loader = false
                 })
                 .catch(err => {
                     console.error(err)

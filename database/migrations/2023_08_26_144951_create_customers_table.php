@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->nullable()->unique();
-            $table->string('phone_number')->nullable()->unique();
+            $table->string('name')->index();
+            $table->string('email')->nullable()->unique()->index();
+            $table->string('phone_number')->nullable()->unique()->index();
             $table->text('address')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('created_by');

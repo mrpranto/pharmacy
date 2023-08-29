@@ -146,4 +146,23 @@ class CustomerServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return Customer|array
+     */
+    public function showDetails($id): Customer|array
+    {
+        $customer = $this->model
+            ->newQuery()
+            ->with(['createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $customer->toArray();
+        $this->model['created_at'] = $customer->created_at->format(format_date()).' '.$customer->created_at->format(format_time());
+        $this->model['updated_at'] = $customer->updated_at->format(format_date()).' '.$customer->updated_at->format(format_time());
+
+        return $this->model;
+    }
 }

@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained('categories', 'id');
             $table->foreignId('company_id')->constrained('companies', 'id');
             $table->foreignId('unit_id')->constrained('units', 'id');
-            $table->string('barcode', 50)->unique();
-            $table->string('name');
-            $table->string('slug', 191)->unique();
+            $table->string('barcode', 50)->unique()->index();
+            $table->string('name')->index();
+            $table->string('slug', 191)->unique()->index();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();

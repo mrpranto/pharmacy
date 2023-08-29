@@ -162,6 +162,25 @@ class SupplierServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return array|Supplier
+     */
+    public function showDetails($id): array|Supplier
+    {
+        $supplier = $this->model
+            ->newQuery()
+            ->with(['createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $supplier->toArray();
+        $this->model['created_at'] = $supplier->created_at->format(format_date()).' '.$supplier->created_at->format(format_time());
+        $this->model['updated_at'] = $supplier->updated_at->format(format_date()).' '.$supplier->updated_at->format(format_time());
+
+        return $this->model;
+    }
 }
 
 

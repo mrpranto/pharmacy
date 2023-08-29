@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\People;
 
 use App\Http\Controllers\Controller;
+use App\Models\People\Supplier;
 use App\Services\People\Suppliers\SupplierServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -60,9 +61,9 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): array|Supplier
     {
-        //
+        return $this->services->showDetails($id);
     }
 
     /**

@@ -1,4 +1,4 @@
-<div class="col-lg-10 email-content">
+<div class="col-lg-9 email-content">
     <div class="email-head">
         <div class="email-head-subject">
             <div class="title d-flex align-items-center justify-content-between">
@@ -15,8 +15,8 @@
             <form action="{{ route('setting') }}" method="post">
                 @csrf
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('date_format') }}</label>
-                    <div class="col-sm-10">
+                    <label for="date_format" class="col-sm-3 col-form-label text-right">{{ __t('date_format') }}</label>
+                    <div class="col-sm-9">
                         <select class="form-control" name="setting[general][date_format]">
                             <option {{ $setting['date_format'] == 'd-m-Y' ? 'selected' : '' }} value="d-m-Y">DD-MM-YYYY</option>
                             <option  {{ $setting['date_format'] == 'Y-m-d' ? 'selected' : '' }} value="Y-m-d">YYYY-MM-DD</option>
@@ -33,8 +33,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('time_format') }}</label>
-                    <div class="col-sm-10">
+                    <label for="date_format" class="col-sm-3 col-form-label text-right">{{ __t('time_format') }}</label>
+                    <div class="col-sm-9">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
@@ -55,8 +55,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('currency_symbol') }}</label>
-                    <div class="col-sm-10">
+                    <label for="date_format" class="col-sm-3 col-form-label text-right">{{ __t('currency_symbol') }}</label>
+                    <div class="col-sm-9">
                         <select class="form-control" name="setting[general][currency_symbol]">
                             <option {{ $setting['currency_symbol'] == 'BDT' ? 'selected' : '' }} value="BDT">BDT</option>
                             <option {{ $setting['currency_symbol'] == '৳' ? 'selected' : '' }} value="৳">৳</option>
@@ -66,8 +66,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('currency_symbol_position') }}</label>
-                    <div class="col-sm-10">
+                    <label for="date_format" class="col-sm-3 col-form-label text-right">{{ __t('currency_symbol_position') }}</label>
+                    <div class="col-sm-9">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
@@ -113,8 +113,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="date_format" class="col-sm-2 col-form-label text-right">{{ __t('pagination') }}</label>
-                    <div class="col-sm-10">
+                    <label for="date_format" class="col-sm-3 col-form-label text-right">{{ __t('pagination') }}</label>
+                    <div class="col-sm-9">
                         <select class="form-control" name="setting[general][pagination]">
                             <option {{ $setting['pagination'] == '5' ? 'selected' : '' }} value="5">5</option>
                             <option {{ $setting['pagination'] == '10' ? 'selected' : '' }} value="10">10</option>
@@ -127,8 +127,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="notification_sound" class="col-sm-2 col-form-label text-right">{{ __t('notification_sound') }}</label>
-                    <div class="col-sm-10">
+                    <label for="notification_sound" class="col-sm-3 col-form-label text-right">{{ __t('notification_sound') }}</label>
+                    <div class="col-sm-9">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">
@@ -154,8 +154,8 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="notification_show_position" class="col-sm-2 col-form-label text-right">{{ __t('notification_show_position') }}</label>
-                    <div class="col-sm-10">
+                    <label for="notification_show_position" class="col-sm-3 col-form-label text-right">{{ __t('notification_show_position') }}</label>
+                    <div class="col-sm-9">
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label">

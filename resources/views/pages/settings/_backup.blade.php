@@ -1,4 +1,4 @@
-<div class="col-lg-10 email-content">
+<div class="col-lg-9 email-content">
     <div class="email-head">
         <div class="email-head-subject">
             <div class="title d-flex align-items-center justify-content-between">

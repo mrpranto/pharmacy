@@ -153,5 +153,7 @@ return [
     'company_details' => 'Company details',
     'unit_details' => 'Unit details',
     'product_details' => 'Product Details',
+    'supplier_details' => 'Supplier Details',
+    'customer_details' => 'Customer Details',
 
 ];

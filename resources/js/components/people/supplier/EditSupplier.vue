@@ -123,7 +123,8 @@ export default {
                         this.formState.formData.email = ''
                         this.formState.formData.address = ''
                         this.formState.formData.companies = []
-                        this.$parent.getData()
+                        let current_path = this.formState.list_path+'?page=' + this.formState.current_list_url
+                        this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
