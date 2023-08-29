@@ -10,6 +10,9 @@
                                     <app-table-counter-component :total="options.total"/>
                                 </h5>
                             </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap" v-if="permission.create">
                                 <button class="btn btn-primary btn-icon-text mb-2 mb-md-0" type="button" disabled
                                         v-if="formState.disabled">

@@ -5,7 +5,7 @@
         <a-modal v-model:open="show.open"
                  width="40%"
                  style="top: 10px"
-                 :title="__('default.supplier_details')"
+                 :title="__('default.customer_details')"
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: false }">
 
