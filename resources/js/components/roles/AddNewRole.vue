@@ -147,14 +147,18 @@ export default {
         },
         selectAllPermission() {
             const permissions = [];
-            if (this.formState.selectAll) {
+            const module_ids = [];
+            if (this.formState.selectAll === true) {
                 this.formState.responsePermissions.forEach(item => {
                     item.permission.forEach(subItem => {
                         permissions.push(subItem.id)
                     })
+                    module_ids.push(item.id)
                 })
                 this.formState.formData.permissions = permissions
-            } else {
+                this.formState.formData.module_ids = module_ids
+            }else {
+                this.formState.formData.module_ids = []
                 this.formState.formData.permissions = []
             }
         },

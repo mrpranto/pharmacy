@@ -25,7 +25,7 @@
                     </div>
                 </a-form-item>
                 <a-form-item :label="__('default.is_delete_able')">
-                    <a-switch v-model:checked="formState.formData.isDeleteAble" />
+                    <a-switch v-model:checked="formState.formData.isDeleteAble"/>
                 </a-form-item>
                 <a-form-item :name="['permissions']" :label="__('default.permissions')">
                     <div class="row">
@@ -117,7 +117,7 @@ export default {
             this.selectAllPermission()
         },
         'formState.formData.module_ids': function () {
-            this.selectEditGroupPermission()
+            // this.selectEditGroupPermission()
         }
     },
     methods: {
@@ -128,7 +128,7 @@ export default {
                         this.formState.formData.name = ''
                         this.formState.formData.description = ''
                         this.formState.formData.permissions = []
-                        let current_path = this.formState.list_path+'?page=' + this.formState.current_list_url
+                        let current_path = this.formState.list_path + '?page=' + this.formState.current_list_url
                         this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
@@ -147,29 +147,31 @@ export default {
         },
         selectAllPermission() {
             const permissions = [];
-            if (this.formState.selectAll) {
+            const module_ids = [];
+            if (this.formState.selectAll === true) {
                 this.formState.responsePermissions.forEach(item => {
                     item.permission.forEach(subItem => {
                         permissions.push(subItem.id)
                     })
+                    module_ids.push(item.id)
                 })
                 this.formState.formData.permissions = permissions
+                this.formState.formData.module_ids = module_ids
             }else {
+                this.formState.formData.module_ids = []
                 this.formState.formData.permissions = []
             }
         },
         selectEditGroupPermission() {
             const permissions = [];
-            if (this.formState.formData.module_ids.length > 0){
-                this.formState.responsePermissions.forEach(item => {
-                    if (this.formState.formData.module_ids.includes(item.id)) {
-                        item.permission.forEach(subItem => {
-                            permissions.push(subItem.id)
-                        })
-                    }
-                })
-                this.formState.formData.permissions = permissions
-            }
+            this.formState.responsePermissions.forEach(item => {
+                if (this.formState.formData.module_ids.includes(item.id)) {
+                    item.permission.forEach(subItem => {
+                        permissions.push(subItem.id)
+                    })
+                }
+            })
+            this.formState.formData.permissions = permissions
         }
     },
 }

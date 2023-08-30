@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <a-tooltip :title="__('default.show_details')" class="mr-1">
+        <a-tooltip :title="__('default.show_details')" class="mr-1"  v-if="permission.show">
             <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
                          @click="$parent.$parent.showDetails(row.id)"/>
         </a-tooltip>

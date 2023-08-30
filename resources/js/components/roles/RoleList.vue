@@ -205,19 +205,20 @@ export default {
             this.formState.openCreateRole = false;
         },
         getEditData(role) {
+            const role_permissions = role.permissions
             this.loader = true
             this.getPermissions()
             this.formState.current_id = role.id;
-                this.formState.formData = {
-                    name: role.name,
-                    description: role.description,
-                    isDeleteAble: role.is_delete_able ? true : false,
-                    module_ids: role.permissions.map(item => item.module_id),
-                    permissions: role.permissions.map(item => item.id),
-                }
+            this.formState.formData.name = role.name;
+            this.formState.formData.description = role.description;
+            this.formState.formData.isDeleteAble = role.is_delete_able ? true : false;
+            this.formState.formData.permissions = role_permissions.map(item => item.id);
+            const module_ids = role_permissions.map(item => item.module_id);
+            const unique_module_ids = [...new Set(module_ids)];
+            this.formState.formData.module_ids = unique_module_ids;
             this.formState.selectAll = false;
             this.formState.openEditRole = true;
-            this.loader = false
+            this.loader = false;
         },
         onEditClose() {
             this.formState.openEditRole = false;
