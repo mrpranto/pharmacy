@@ -161,4 +161,7 @@ return [
     'add_purchase' => 'নতুন ক্রয় করুন',
     'remove' => 'বাতিল করুন',
     'sku' => 'SKU',
+    'supplier' => 'সরবরাহকারী',
+    'date' => 'তারিখ',
+    'search_product' => 'Search product EX:(name,barcode...)'
 ];

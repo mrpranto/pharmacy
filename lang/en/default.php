@@ -161,5 +161,8 @@ return [
     'add_purchase' => 'Add new purchase',
     'remove' => 'Remove',
     'sku' => 'SKU',
+    'supplier' => 'Supplier',
+    'date' => 'Date',
+    'search_product' => 'Search product EX:(name,barcode...)'
 
 ];

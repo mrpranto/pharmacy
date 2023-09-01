@@ -1,4 +1,4 @@
-
+import moment from "moment";
 import { createApp } from 'vue';
 
 
@@ -91,6 +91,7 @@ app.config.globalProperties.$time_format = window._general_setting?.time_format;
 app.config.globalProperties.$currency_symbol = window._general_setting?.currency_symbol;
 app.config.globalProperties.$currency_symbol_position = window._general_setting?.currency_symbol_position;
 app.config.globalProperties.$showCurrency = showCurrency;
+app.config.globalProperties.$today = moment().format("YYYY-MM-DD");
 
 const trans = {
     methods: {

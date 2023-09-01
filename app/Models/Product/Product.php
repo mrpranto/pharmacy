@@ -3,6 +3,7 @@
 namespace App\Models\Product;
 
 use App\Models\File;
+use App\Models\trait\ActiveScope;
 use App\Models\trait\BootTrait;
 use App\Models\trait\CreatedByRelationship;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes, CreatedByRelationship, BootTrait;
+    use HasFactory, SoftDeletes, CreatedByRelationship, BootTrait, ActiveScope;
 
     protected $fillable = [
         'category_id', 'company_id', 'unit_id', 'barcode', 'name',

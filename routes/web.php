@@ -93,6 +93,7 @@ Route::group(['middleware' => 'authenticate'], function (){
 
     //Purchase route
     Route::resource('purchases', PurchaseController::class);
+    Route::get('/get-purchases-products', [PurchaseController::class, 'getProducts']);
 
 
 

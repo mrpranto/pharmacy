@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Purchase;
 
 use App\Http\Controllers\Controller;
+use App\Services\Purchase\PurchaseServices;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
+    public function __construct(PurchaseServices $purchaseServices)
+    {
+        $this->services = $purchaseServices;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -21,6 +27,11 @@ class PurchaseController extends Controller
     public function create()
     {
         return view('pages.purchase.create');
+    }
+
+    public function getProducts()
+    {
+        return $this->services->getProducts();
     }
 
     /**
