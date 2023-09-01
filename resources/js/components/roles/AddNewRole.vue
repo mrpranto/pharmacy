@@ -59,6 +59,7 @@
                                                 <input type="checkbox"
                                                        class="form-check-input"
                                                        :value="module.id"
+                                                       @change="selectGroupPermission"
                                                        v-model="formState.formData.module_ids">
                                                 {{ module.name }}
                                                 <i class="input-frame"></i></label>
@@ -116,9 +117,6 @@ export default {
     watch: {
         'formState.selectAll': function () {
             this.selectAllPermission()
-        },
-        'formState.formData.module_ids': function () {
-            this.selectGroupPermission()
         }
     },
     methods: {

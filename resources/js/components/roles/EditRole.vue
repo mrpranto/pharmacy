@@ -58,7 +58,8 @@
                                                 <input type="checkbox"
                                                        class="form-check-input"
                                                        :value="module.id"
-                                                       v-model="formState.formData.module_ids">
+                                                       v-model="formState.formData.module_ids"
+                                                       @change="selectEditGroupPermission(module.id)">
                                                 {{ module.name }}
                                                 <i class="input-frame"></i></label>
                                         </div>
@@ -115,9 +116,6 @@ export default {
     watch: {
         'formState.selectAll': function () {
             this.selectAllPermission()
-        },
-        'formState.formData.module_ids': function () {
-            // this.selectEditGroupPermission()
         }
     },
     methods: {
@@ -162,16 +160,18 @@ export default {
                 this.formState.formData.permissions = []
             }
         },
-        selectEditGroupPermission() {
-            const permissions = [];
+        selectEditGroupPermission(moduleId) {
             this.formState.responsePermissions.forEach(item => {
-                if (this.formState.formData.module_ids.includes(item.id)) {
+                if (event.target.checked === true && item.id === moduleId) {
                     item.permission.forEach(subItem => {
-                        permissions.push(subItem.id)
+                        this.formState.formData.permissions.push(subItem.id)
+                    })
+                }else if (event.target.checked === false && item.id === moduleId) {
+                    item.permission.forEach(subItem => {
+                        this.formState.formData.permissions = this.formState.formData.permissions.filter(item => item !== subItem.id)
                     })
                 }
             })
-            this.formState.formData.permissions = permissions
         }
     },
 }

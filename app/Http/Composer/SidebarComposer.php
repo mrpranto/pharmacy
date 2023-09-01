@@ -58,6 +58,15 @@ class SidebarComposer
                     'subMenu' => $this->subMenu->peoples(),
                     'id' => 'peoples',
                 ],
+                [
+                    'name' => __t('purchase'),
+                    'icon' => 'shopping-cart',
+                    'permission' => auth()->user()->canany([
+                        'app.supplier.index', 'app.customer.index'
+                    ]),
+                    'subMenu' => $this->subMenu->purchases(),
+                    'id' => 'purchase',
+                ],
             ]
         ]);
     }

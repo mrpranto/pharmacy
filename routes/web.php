@@ -10,6 +10,7 @@ use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\CompanyController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\UnitController;
+use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +90,10 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-customers', [CustomerController::class, 'getCustomers']);
 
     });
+
+    //Purchase route
+    Route::resource('purchases', PurchaseController::class);
+
 
 
 });

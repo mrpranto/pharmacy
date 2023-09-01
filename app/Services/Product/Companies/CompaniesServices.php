@@ -28,6 +28,7 @@ class CompaniesServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.company.create'),
                 'edit' => auth()->user()->can('app.company.edit'),
+                'show' => auth()->user()->can('app.company.show'),
                 'delete' => auth()->user()->can('app.company.delete')
             ]
         ];

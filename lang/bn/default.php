@@ -155,4 +155,8 @@ return [
     'product_details' => 'প্রোডাক্ট বিস্তারিত',
     'supplier_details' => 'সরবরাহকারী বিস্তারিত',
     'customer_details' => 'ক্রেতা বিস্তারিত',
+
+    'purchase' => 'ক্রয়',
+    'purchase_list' => 'ক্রয় তালিকা',
+    'add_purchase' => 'নতুন ক্রয় করুন',
 ];

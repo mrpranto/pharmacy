@@ -44,6 +44,26 @@ class SubMenuComposer
             ],
         ];
     }
+    /**
+     * @return array[]
+     */
+    public function purchases(): array
+    {
+        return [
+            [
+                'name' => __t('add_purchase'),
+                'url' => route('purchases.create'),
+                'path' => 'purchases/create',
+                'permission' => auth()->user()->can('app.customer.index')
+            ],
+            [
+                'name' => __t('purchase_list'),
+                'url' => route('purchases.index'),
+                'path' => 'purchases',
+                'permission' => auth()->user()->can('app.supplier.index')
+            ],
+        ];
+    }
 
     /**
      * @return array[]

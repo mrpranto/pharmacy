@@ -28,6 +28,7 @@ class CategoryServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.category.create'),
                 'edit' => auth()->user()->can('app.category.edit'),
+                'show' => auth()->user()->can('app.category.show'),
                 'delete' => auth()->user()->can('app.category.delete')
             ]
         ];

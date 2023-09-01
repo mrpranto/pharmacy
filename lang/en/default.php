@@ -156,4 +156,8 @@ return [
     'supplier_details' => 'Supplier Details',
     'customer_details' => 'Customer Details',
 
+    'purchase' => 'Purchase',
+    'purchase_list' => 'Purchase List',
+    'add_purchase' => 'Add new purchase',
+
 ];

@@ -28,6 +28,7 @@ class UnitServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.unit.create'),
                 'edit' => auth()->user()->can('app.unit.edit'),
+                'show' => auth()->user()->can('app.unit.show'),
                 'delete' => auth()->user()->can('app.unit.delete')
             ]
         ];

@@ -33,6 +33,7 @@ class RoleServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.roles.create'),
                 'edit' => auth()->user()->can('app.roles.edit'),
+                'show' => auth()->user()->can('app.roles.show'),
                 'delete' => auth()->user()->can('app.roles.delete')
             ]
         ];

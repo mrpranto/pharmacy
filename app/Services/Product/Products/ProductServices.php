@@ -36,6 +36,7 @@ class ProductServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.product.create'),
                 'edit' => auth()->user()->can('app.product.edit'),
+                'show' => auth()->user()->can('app.product.show'),
                 'delete' => auth()->user()->can('app.product.delete')
             ]
         ];

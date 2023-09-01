@@ -29,6 +29,7 @@ class SupplierServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.supplier.create'),
                 'edit' => auth()->user()->can('app.supplier.edit'),
+                'show' => auth()->user()->can('app.supplier.show'),
                 'delete' => auth()->user()->can('app.supplier.delete')
             ]
         ];

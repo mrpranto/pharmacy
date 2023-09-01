@@ -28,6 +28,7 @@ class CustomerServices extends BaseServices
             'permission' => [
                 'create' => auth()->user()->can('app.customer.create'),
                 'edit' => auth()->user()->can('app.customer.edit'),
+                'show' => auth()->user()->can('app.customer.show'),
                 'delete' => auth()->user()->can('app.customer.delete')
             ]
         ];
