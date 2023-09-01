@@ -25,4 +25,19 @@ export const showErrorMessage = (message,  placement, sound) => {
     }
 }
 
+export const showCurrency = (amount) => {
+    const currency_symbol = window._general_setting?.currency_symbol;
+    const currency_symbol_position = window._general_setting?.currency_symbol_position;
+
+    if (currency_symbol_position === 'before_amount'){
+       return currency_symbol + amount;
+    }else if (currency_symbol_position === 'before_with_space_amount'){
+        return currency_symbol +' '+ amount;
+    }else if (currency_symbol_position === 'after_amount'){
+        return amount + currency_symbol;
+    }else if (currency_symbol_position === 'after_with_space_amount'){
+        return amount +' '+ currency_symbol;
+    }
+}
+
 export default {showSuccessMessage, showErrorMessage};

@@ -67,6 +67,13 @@ app.component('customer-list-component', CustomerListComponent);
 import CustomerAction from './components/people/customer/Action.vue';
 app.component('customer-action-component', CustomerAction);
 
+/*
+* Purchase components
+*/
+import AddNewPurchaseComponent from './components/purchases/AddNewPurchase.vue';
+app.component('add-new-purchase-component', AddNewPurchaseComponent);
+
+
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
@@ -74,14 +81,16 @@ import Counter from './components/core/Counter.vue';
 app.component('app-table-counter-component', Counter);
 
 app.config.globalProperties.$general_setting = window._general_setting;
-import {showErrorMessage, showSuccessMessage} from './helper.js';
+import {showCurrency, showErrorMessage, showSuccessMessage} from './helper.js';
 app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
 app.config.globalProperties.$showErrorMessage = showErrorMessage;
 app.config.globalProperties.$notification_position = window._general_setting?.notification_show_position;
 app.config.globalProperties.$notification_sound = window._general_setting?.notification_sound;
 app.config.globalProperties.$date_format = window._general_setting?.date_format;
 app.config.globalProperties.$time_format = window._general_setting?.time_format;
-
+app.config.globalProperties.$currency_symbol = window._general_setting?.currency_symbol;
+app.config.globalProperties.$currency_symbol_position = window._general_setting?.currency_symbol_position;
+app.config.globalProperties.$showCurrency = showCurrency;
 
 const trans = {
     methods: {

@@ -159,4 +159,6 @@ return [
     'purchase' => 'ক্রয়',
     'purchase_list' => 'ক্রয় তালিকা',
     'add_purchase' => 'নতুন ক্রয় করুন',
+    'remove' => 'বাতিল করুন',
+    'sku' => 'SKU',
 ];

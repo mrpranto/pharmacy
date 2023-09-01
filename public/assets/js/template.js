@@ -40,7 +40,7 @@
     }
 
 
-    // Applying perfect-scrollbar 
+    // Applying perfect-scrollbar
     if ($('.sidebar .sidebar-body').length) {
       const sidebarBodyScroll = new PerfectScrollbar('.sidebar-body');
     }
@@ -75,7 +75,7 @@
 
 
     // sidebar-folded on large devices
-    function iconSidebar(e) {
+    /*function iconSidebar(e) {
       if (e.matches) {
         body.addClass('sidebar-folded');
       } else {
@@ -84,7 +84,7 @@
     }
     var desktopMedium = window.matchMedia('(min-width:992px) and (max-width: 1199px)');
     desktopMedium.addListener(iconSidebar);
-    iconSidebar(desktopMedium);
+    iconSidebar(desktopMedium);*/
 
 
     //  open sidebar-folded when hover
@@ -100,7 +100,7 @@
       }
     });
 
-  // close sidebar when click outside on mobile/table    
+  // close sidebar when click outside on mobile/table
     $(document).on('click touchstart', function(e){
       e.stopPropagation();
 

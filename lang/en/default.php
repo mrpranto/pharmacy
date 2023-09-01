@@ -159,5 +159,7 @@ return [
     'purchase' => 'Purchase',
     'purchase_list' => 'Purchase List',
     'add_purchase' => 'Add new purchase',
+    'remove' => 'Remove',
+    'sku' => 'SKU',
 
 ];

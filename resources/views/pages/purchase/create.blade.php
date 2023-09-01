@@ -4,6 +4,6 @@
     @include('layout.breadcrumb',['paths' => ['purchase', 'add_purchase']])
 @endsection
 @section('content')
-
+    <add-new-purchase-component></add-new-purchase-component>
 @endsection
 
