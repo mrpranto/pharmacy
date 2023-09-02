@@ -182,14 +182,14 @@
                                                         </figure>
                                                         <div>
                                                             <p class="font-weight-bolder text-capital">
-                                                                {{ product.product.name }}</p>
+                                                                {{ product.product.name }} <small class="text-muted" :title="__('default.unit')">{{ product.product.unit }}</small>
+                                                            </p>
                                                             <p class="text-muted tx-13">
                                                                 <b>{{ __('default.barcode') }}: </b>{{ product.product.barcode }}
                                                             </p>
                                                             <p class="text-muted tx-13">
                                                                 <span :title="__('default.company')">{{ product.product.company }}</span>,
-                                                                <span :title="__('default.category')">{{ product.product.category }}</span>,
-                                                                <span :title="__('default.unit')">{{ product.product.unit }}</span>
+                                                                <span :title="__('default.category')">{{ product.product.category }}</span>
                                                             </p>
                                                         </div>
                                                     </div>
