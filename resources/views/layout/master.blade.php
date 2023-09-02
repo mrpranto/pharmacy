@@ -36,6 +36,7 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+{{--class="{{ request()->is('purchases/create') ? 'sidebar-folded' : '' }}"--}}
 <body data-base-url="{{url('/')}}">
 
 <script src="{{ asset('assets/js/spinner.js') }}"></script>

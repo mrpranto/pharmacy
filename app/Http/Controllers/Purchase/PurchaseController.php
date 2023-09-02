@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Purchase;
 
 use App\Http\Controllers\Controller;
 use App\Services\Purchase\PurchaseServices;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class PurchaseController extends Controller
 {
@@ -29,9 +32,22 @@ class PurchaseController extends Controller
         return view('pages.purchase.create');
     }
 
-    public function getProducts()
+    /**
+     * @return mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getProducts(): mixed
     {
         return $this->services->getProducts();
+    }
+
+    /**
+     * @return Collection|array
+     */
+    public function getSuppliers(): Collection|array
+    {
+        return $this->services->getSuppliers();
     }
 
     /**

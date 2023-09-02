@@ -56,7 +56,7 @@ class CategoryServices extends BaseServices
     public function validate($request): static
     {
         $request->validate([
-            'name' => 'required|string|unique:categories,id',
+            'name' => 'required|string|unique:categories,name',
             'description' => 'nullable|string',
             'status' => 'required|boolean'
         ]);

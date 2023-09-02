@@ -163,5 +163,25 @@ return [
     'sku' => 'SKU',
     'supplier' => 'সরবরাহকারী',
     'date' => 'তারিখ',
-    'search_product' => 'Search product EX:(name,barcode...)'
+    'search_product' => 'Search product EX:(name,barcode...)',
+    'purchase_reference' => 'ক্রয় রেফারেন্স',
+    'other_cost' => 'অন্যান্য খরচ',
+    'discount' => 'ডিসকাউন্ট',
+    'note' => 'মন্তব্য',
+    'subtotal' => 'সাবটোটাল',
+    'reset' => 'রিসেট',
+    'total_items' => 'মোট আইটেম',
+    'total_unit' => 'মোট ইউনিট',
+    'total_price' => 'মোট দাম',
+
+    'product' => 'প্রোডাক্ট',
+    'unit_price' => 'একক দাম',
+    'sale_price' => 'বিক্রয় মূল্য',
+    'quantity' => 'পরিমাণ',
+    'sub_total' => 'সাবটোটাল',
+
+    'received' => 'গৃহীত',
+    'pending' => 'অসম্পন্ন',
+    'canceled' => 'বাতিল',
+    'payment_summary' => 'পারিশ্রমিক সারসংক্ষেপ',
 ];

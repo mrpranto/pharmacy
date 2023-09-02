@@ -163,6 +163,26 @@ return [
     'sku' => 'SKU',
     'supplier' => 'Supplier',
     'date' => 'Date',
-    'search_product' => 'Search product EX:(name,barcode...)'
+    'search_product' => 'Search product EX:(name, barcode, company name, category name, unit name, unit pack size...)',
+    'purchase_reference' => 'Reference No',
+    'other_cost' => 'Other cost',
+    'discount' => 'Discount',
+    'note' => 'Note',
+    'subtotal' => 'Subtotal',
+    'reset' => 'Reset',
+    'total_items' => 'Total items',
+    'total_unit' => 'Total unit',
+    'total_price' => 'Total price',
+
+    'product' => 'Product',
+    'unit_price' => 'Unit Price',
+    'sale_price' => 'Sale Price',
+    'quantity' => 'Quantity',
+    'sub_total' => 'Sub total',
+
+    'received' => 'Received',
+    'pending' => 'Pending',
+    'canceled' => 'Canceled',
+    'payment_summary' => 'Payment Summary',
 
 ];
