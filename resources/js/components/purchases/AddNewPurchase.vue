@@ -79,9 +79,15 @@
                                                    :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
                                         <a-radio-group v-model:value="formState.formData.status" button-style="solid"
                                                        style="width: 100%">
-                                            <a-radio-button value="Received">{{ __('default.received') }}</a-radio-button>
+                                            <a-radio-button value="Received">{{
+                                                    __('default.received')
+                                                }}
+                                            </a-radio-button>
                                             <a-radio-button value="Pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="Canceled">{{ __('default.canceled') }}</a-radio-button>
+                                            <a-radio-button value="Canceled">{{
+                                                    __('default.canceled')
+                                                }}
+                                            </a-radio-button>
                                         </a-radio-group>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style=""
@@ -104,7 +110,8 @@
                                             @search="getProducts"
                                             @change="selectProduct"
                                         >
-                                            <template #option="{ value: val, label, icon, company, category, unit, barcode }">
+                                            <template
+                                                #option="{ value: val, label, icon, company, category, unit, barcode }">
                                                 <a-image
                                                     :width="35"
                                                     :height="35"
@@ -146,17 +153,26 @@
                                             <tr>
                                                 <th width="5%">#</th>
                                                 <th width="20%">{{ __('default.product') }}</th>
-                                                <th width="15%" class="text-center">{{ __('default.unit_price') }} ({{ $currency_symbol }})</th>
-                                                <th width="15%" class="text-center">{{ __('default.sale_price') }} ({{ $currency_symbol }})</th>
+                                                <th width="15%" class="text-center">{{ __('default.unit_price') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
+                                                <th width="15%" class="text-center">{{ __('default.sale_price') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
                                                 <th width="10%" class="text-center">{{ __('default.quantity') }}</th>
-                                                <th width="15%" class="text-center">{{ __('default.discount') }} ({{ $currency_symbol }})</th>
-                                                <th width="15%" class="text-right">{{ __('default.sub_total') }} ({{ $currency_symbol }})</th>
+                                                <th width="15%" class="text-center">(-) {{ __('default.discount') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
+                                                <th width="15%" class="text-right">{{ __('default.sub_total') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
                                                 <th width="5%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="(product, product_index) in formState.formData.products" :key="product_index">
-                                                <td width="5%">{{ (product_index+1) }}</td>
+                                            <tr v-for="(product, product_index) in formState.formData.products"
+                                                :key="product_index">
+                                                <td width="5%">{{ (product_index + 1) }}</td>
                                                 <td width="20%">
                                                     <div class="d-flex align-items-center">
                                                         <i data-feather="corner-up-left" id="backToChatList"
@@ -165,57 +181,92 @@
                                                             <a-image
                                                                 :width="35"
                                                                 :height="35"
-                                                                :src="product.photo"
+                                                                :src="product.product.photo"
                                                                 class="img-sm rounded-circle"
-                                                                :alt="product.name"
+                                                                :alt="product.product.name"
                                                             />
                                                             <div class="status online"></div>
                                                         </figure>
                                                         <div>
-                                                            <p class="font-weight-bolder text-capital">{{ product.name }}</p>
+                                                            <p class="font-weight-bolder text-capital">
+                                                                {{ product.product.name }}</p>
                                                             <p class="text-muted tx-13">
-                                                                <b>{{ __('default.barcode') }}: </b>{{ product.barcode }}
+                                                                <b>{{
+                                                                        __('default.barcode')
+                                                                    }}: </b>{{ product.product.barcode }}
                                                             </p>
                                                             <p class="text-muted tx-13">
-                                                                {{ product.company }},
-                                                                {{ product.category }},
-                                                                {{ product.unit }}
+                                                                {{ product.product.company }},
+                                                                {{ product.product.category }},
+                                                                {{ product.product.unit }}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td width="15%">
-                                                    <a-input-number v-model:value="product_price" :prefix="$currency_symbol"
+                                                    <a-input-number v-model:value="product.unit_price"
+                                                                    :prefix="$currency_symbol"
+                                                                    min="0"
+                                                                    @keyup="calculatePrices(product_index)"
+                                                                    @change="calculatePrices(product_index)"
                                                                     style="width: 100%"/>
                                                 </td>
                                                 <td width="15%">
-                                                    <a-input-number v-model:value="product_price" :prefix="$currency_symbol"
+                                                    <a-input-number v-model:value="product.sale_price"
+                                                                    :prefix="$currency_symbol"
+                                                                    min="0"
+                                                                    @keyup="calculatePrices(product_index)"
+                                                                    @change="calculatePrices(product_index)"
                                                                     style="width: 100%"/>
                                                 </td>
                                                 <td width="10%">
-                                                    <a-input-number v-model:value="product_price" style="width: 100%"/>
+                                                    <a-input-number v-model:value="product.quantity"
+                                                                    min="1"
+                                                                    @keyup="calculatePrices(product_index)"
+                                                                    @change="calculatePrices(product_index)"
+                                                                    style="width: 100%"/>
                                                 </td>
                                                 <td width="15%" class="text-center">
-                                                    <a-space style="width: 130%">
-                                                        <a-input-number v-model:value="product_price"
-                                                                        :prefix="$currency_symbol" style="width: 100%"/>
+
+                                                    <FormOutlined class="color-primary cursor-pointer"
+                                                                  :style="{fontSize: '20px', marginLeft: '6px'}"
+                                                                  @click.prevent="changeDiscountAllowed(product_index)"
+                                                                  v-if="product.discountAllow === false"/>
+
+                                                    <a-space style="width: 130%" v-else>
+                                                        <a-input-number v-model:value="product.discount"
+                                                                        min="0"
+                                                                        @keyup="calculatePrices(product_index)"
+                                                                        @change="calculatePrices(product_index)"
+                                                                        :prefix="product.discount_type === '%'
+                                                                        ? '%' : $currency_symbol"
+                                                                        style="width: 100%"/>
 
                                                         <a-input-group compact style="width: 100%">
-                                                            <a-button>{{ $currency_symbol }}</a-button>
-                                                            <a-button type="primary">%</a-button>
+                                                            <a-button
+                                                                @click.prevent="changeDiscountType(product_index, '$')"
+                                                                :type="product.discount_type !== '%' ? 'primary' : 'default'">
+                                                                {{ $currency_symbol }}
+                                                            </a-button>
+
+                                                            <a-button
+                                                                @click.prevent="changeDiscountType(product_index, '%')"
+                                                                :type="product.discount_type === '%' ? 'primary' : 'default'">
+                                                                %
+                                                            </a-button>
                                                         </a-input-group>
                                                     </a-space>
 
                                                 </td>
                                                 <td width="15%" class="text-right">
-                                                    {{ $showCurrency(122000.00) }}
+                                                    <b>{{ $showCurrency(product.subTotal) }} </b>
                                                 </td>
                                                 <td width="5%" class="text-center">
                                                     <a-popconfirm placement="left"
                                                                   title="Are you sure ?"
                                                                   ok-text="Yes"
                                                                   cancel-text="No"
-                                                                  @confirm="confirm">
+                                                                  @confirm="removeProduct(product_index)">
                                                         <template #icon>
 
                                                         </template>
@@ -237,13 +288,13 @@
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row mt-4">
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_items') }}:</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_items') }} : {{ formState.totalItems }}</h4>
                                         </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_unit') }}:</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_unit') }} : {{ formState.totalUnits }}</h4>
                                         </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_price') }}:</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_price') }} : {{ $showCurrency(formState.totalPrice) }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -278,12 +329,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="__('default.other_cost')" :label-col="{span: 6}">
-                                    <a-input-group compact :wrapper-col="{span: 18}"
-                                                   :class="formState.validation.other_cost ? 'ant-input ant-input-status-error': ''">
-                                        <a-input v-model:value="formState.formData.other_cost"
-                                                 :placeholder="__('default.other_cost')" style="width: 100%"></a-input>
-                                    </a-input-group>
+                                <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`" :label-col="{span: 6}">
+                                    <a-input-number v-model:value="formState.formData.otherCost"
+                                                    :prefix="$currency_symbol"
+                                                    @keyup="calculateTotal"
+                                                    @change="calculateTotal"
+                                                    style="width: 100%"/>
                                     <div class="ant-form-item-explain-error" style=""
                                          v-if="formState.validation.other_cost">
                                         {{ formState.validation.other_cost[0] }}
@@ -292,12 +343,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="__('default.discount')" :label-col="{span: 8}">
-                                    <a-input-group :wrapper-col="{span: 16}" compact
-                                                   :class="formState.validation.discount ? 'ant-input ant-input-status-error': ''">
-                                        <a-input v-model:value="formState.formData.discount"
-                                                 :placeholder="__('default.discount')" style="width: 100%"></a-input>
-                                    </a-input-group>
+                                <a-form-item :label="'(-) '+__('default.discount')+` (${$currency_symbol})`" :label-col="{span: 8}">
+                                    <a-input-number v-model:value="formState.formData.discount"
+                                                    :prefix="$currency_symbol"
+                                                    @keyup="calculateTotal"
+                                                    @change="calculateTotal"
+                                                    style="width: 100%"/>
                                     <div class="ant-form-item-explain-error" style=""
                                          v-if="formState.validation.discount">
                                         {{ formState.validation.discount[0] }}
@@ -341,27 +392,26 @@
                                 <hr>
                             </dt>
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.subtotal') }}:</dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">1222</dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.subtotal) }}</dd>
 
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.other_cost') }}:</dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">1222</dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.otherCost) }}</dd>
 
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right">(-) {{ __('default.discount') }}:</dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">1222</dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.discount) }}</dd>
 
                             <dt class="col-sm-12 text-center text-muted">
                                 <hr>
                             </dt>
 
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right"><h4>{{ __('default.total') }}:</h4></dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>1222</h4></dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ $showCurrency(formState.formData.total) }}</h4></dd>
 
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
-
 
 
         <AddNewSupplier :formState="supplierFormState"/>
@@ -378,17 +428,25 @@ import AddNewProduct from "../products/products/AddNewProduct.vue";
 
 export default {
     name: "AddNewPurchase",
-    components: {AddNewProduct, AddNewSupplier, DeleteOutlined, CloseCircleOutlined, QuestionCircleFilled, FormOutlined},
+    components: {
+        AddNewProduct,
+        AddNewSupplier,
+        DeleteOutlined,
+        CloseCircleOutlined,
+        QuestionCircleFilled,
+        FormOutlined
+    },
     props: ['permission'],
     data() {
         return {
             loader: false,
             product_price: 100,
             searchProduct: null,
-            supplierFormState:{
+
+            supplierFormState: {
                 responseCompanies: [],
                 openCreate: false,
-                formData:{
+                formData: {
                     name: '',
                     phone_number: '',
                     email: '',
@@ -401,8 +459,8 @@ export default {
                 },
                 validation: {},
             },
-            productFormState:{
-                formData :{
+            productFormState: {
+                formData: {
                     name: '',
                     barcode: '',
                     description: '',
@@ -415,13 +473,18 @@ export default {
                     units: [],
                 },
                 openCreate: false,
-                validation : {},
+                validation: {},
                 layout: {
                     labelCol: {span: 4},
                     wrapperCol: {span: 20},
                 }
             },
+
+
             formState: {
+                totalItems: 0,
+                totalUnits: 0,
+                totalPrice: 0,
                 dependencies: {
                     suppliers: [],
                     products: []
@@ -430,7 +493,11 @@ export default {
                     supplier: null,
                     date: dayjs(this.$today, 'YYYY-MM-DD'),
                     status: 'Received',
-                    products: []
+                    products: [],
+                    subtotal: 0,
+                    otherCost:0,
+                    discount:0,
+                    total:0
                 },
                 validation: {}
             },
@@ -444,9 +511,6 @@ export default {
 
     },
     methods: {
-        confirm() {
-            alert('hello')
-        },
         async getProducts(value = '') {
             await axios.get('/get-purchases-products', {params: {search: value}})
                 .then(response => {
@@ -469,7 +533,7 @@ export default {
         },
         selectProduct() {
             const selectedProduct = this.formState.dependencies.products.find(item => item.value === this.searchProduct)
-            this.formState.formData.products.push({
+            const productInfo = {
                 id: selectedProduct.value,
                 name: selectedProduct.label,
                 barcode: selectedProduct.barcode,
@@ -477,19 +541,34 @@ export default {
                 category: selectedProduct.category,
                 unit: selectedProduct.unit,
                 photo: selectedProduct.icon,
+            };
+
+            this.formState.formData.products.push({
+                product: productInfo,
+                unit_price: 0,
+                sale_price: 0,
+                quantity: 1,
+                discountAllow: false,
+                discount: 0,
+                discount_type: '%',
+                subTotal: 0
             })
+            this.calculateTotal();
             this.searchProduct = null
         },
-        async getSuppliers(callFrom = ''){
+        removeProduct(key) {
+            this.formState.formData.products.splice(key, 1);
+        },
+        async getSuppliers(callFrom = '') {
             await axios.get('/get-purchases-suppliers')
                 .then(response => {
                     this.formState.dependencies.suppliers = response.data.map(item => {
                         return {
-                            label : item.name +` (${item.phone_number})`,
+                            label: item.name + ` (${item.phone_number})`,
                             value: item.id
                         }
                     })
-                    if (callFrom === 'addNew'){
+                    if (callFrom === 'addNew') {
                         this.formState.formData.supplier = this.formState.dependencies.suppliers[0].value
                     }
                 })
@@ -500,8 +579,52 @@ export default {
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
+        changeDiscountType(key, type) {
+            this.formState.formData.products[key].discount_type = (type === '%' ? '%' : this.$currency_symbol)
+            this.calculatePrices(key)
+        },
+        changeDiscountAllowed(key) {
+            this.formState.formData.products[key].discountAllow = true
+        },
+        calculatePrices(key) {
+            const unitPrice = this.formState.formData.products[key].unit_price;
+            const quantity = this.formState.formData.products[key].quantity;
+            const discount = this.formState.formData.products[key].discount;
+            const discount_type = this.formState.formData.products[key].discount_type;
+            const discountAllow = this.formState.formData.products[key].discountAllow;
+            let subtotal;
 
-        getData(){
+            if (discountAllow === true) {
+                if (discount_type === '%') {
+                    const multiply = (quantity * unitPrice)
+                    subtotal = multiply - ((multiply * discount) / 100)
+                } else {
+                    const multiply = (quantity * unitPrice)
+                    subtotal = multiply - discount
+                }
+            } else {
+                subtotal = (quantity * unitPrice)
+            }
+
+            this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
+            this.calculateTotal();
+        },
+        calculateTotal(){
+            const selectedProducts = this.formState.formData.products
+            this.formState.totalItems = selectedProducts.length;
+            this.formState.totalUnits = selectedProducts.reduce((accumulator, currentitem) => {
+                return parseFloat(accumulator) + parseFloat(currentitem.quantity ?? 0)
+            },0);
+            this.formState.totalPrice = selectedProducts.reduce((accumulator, currentitem) => {
+                return parseFloat(accumulator) + parseFloat(currentitem.subTotal ?? 0)
+            },0).toFixed(2);
+            this.formState.formData.subtotal = this.formState.totalPrice;
+            const otherCost = this.formState.formData.otherCost;
+            const discount = this.formState.formData.discount;
+            this.formState.formData.total = parseFloat((parseFloat(otherCost) + parseFloat(this.formState.totalPrice)) - parseFloat(discount)).toFixed(2)
+        },
+
+        getData() {
             this.getSuppliers('addNew')
             this.getProducts()
         },
@@ -510,18 +633,18 @@ export default {
         * Supplier add section
         */
         showAddNewSupplierModal() {
-                this.getSupplierDependency()
-                this.supplierFormState.formData = {
-                    name: '',
-                    phone_number: '',
-                    email: '',
-                    address: '',
-                    companies: [],
-                };
-                this.supplierFormState.validation = false;
-                this.supplierFormState.openCreate = true;
+            this.getSupplierDependency()
+            this.supplierFormState.formData = {
+                name: '',
+                phone_number: '',
+                email: '',
+                address: '',
+                companies: [],
+            };
+            this.supplierFormState.validation = false;
+            this.supplierFormState.openCreate = true;
         },
-        onClose(){
+        onClose() {
             this.supplierFormState.openCreate = false;
             this.productFormState.openCreate = false;
         },
@@ -538,7 +661,7 @@ export default {
         /*
         * Product add section start.
         */
-        showAddNewProductModal(){
+        showAddNewProductModal() {
             this.loader = true;
             this.productFormState.formData = {
                 name: '',
