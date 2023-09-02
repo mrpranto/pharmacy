@@ -77,17 +77,10 @@
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact
                                                    :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
-                                        <a-radio-group v-model:value="formState.formData.status" button-style="solid"
-                                                       style="width: 100%">
-                                            <a-radio-button value="Received">{{
-                                                    __('default.received')
-                                                }}
-                                            </a-radio-button>
+                                        <a-radio-group v-model:value="formState.formData.status" button-style="solid" style="width: 100%">
+                                            <a-radio-button value="Received">{{ __('default.received') }}</a-radio-button>
                                             <a-radio-button value="Pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="Canceled">{{
-                                                    __('default.canceled')
-                                                }}
-                                            </a-radio-button>
+                                            <a-radio-button value="Canceled">{{ __('default.canceled') }}</a-radio-button>
                                         </a-radio-group>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style=""
@@ -191,14 +184,12 @@
                                                             <p class="font-weight-bolder text-capital">
                                                                 {{ product.product.name }}</p>
                                                             <p class="text-muted tx-13">
-                                                                <b>{{
-                                                                        __('default.barcode')
-                                                                    }}: </b>{{ product.product.barcode }}
+                                                                <b>{{ __('default.barcode') }}: </b>{{ product.product.barcode }}
                                                             </p>
                                                             <p class="text-muted tx-13">
-                                                                {{ product.product.company }},
-                                                                {{ product.product.category }},
-                                                                {{ product.product.unit }}
+                                                                <span :title="__('default.company')">{{ product.product.company }}</span>,
+                                                                <span :title="__('default.category')">{{ product.product.category }}</span>,
+                                                                <span :title="__('default.unit')">{{ product.product.unit }}</span>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -332,6 +323,7 @@
                                 <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`" :label-col="{span: 6}">
                                     <a-input-number v-model:value="formState.formData.otherCost"
                                                     :prefix="$currency_symbol"
+                                                    min="0"
                                                     @keyup="calculateTotal"
                                                     @change="calculateTotal"
                                                     style="width: 100%"/>
@@ -346,6 +338,7 @@
                                 <a-form-item :label="'(-) '+__('default.discount')+` (${$currency_symbol})`" :label-col="{span: 8}">
                                     <a-input-number v-model:value="formState.formData.discount"
                                                     :prefix="$currency_symbol"
+                                                    min="0"
                                                     @keyup="calculateTotal"
                                                     @change="calculateTotal"
                                                     style="width: 100%"/>
@@ -422,6 +415,7 @@
 <script>
 
 import {DeleteOutlined, CloseCircleOutlined, QuestionCircleFilled, FormOutlined} from "@ant-design/icons-vue";
+import { message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import AddNewSupplier from "../people/supplier/AddNewSupplier.vue";
 import AddNewProduct from "../products/products/AddNewProduct.vue";
@@ -531,6 +525,20 @@ export default {
                     console.error(err)
                 })
         },
+        async getSuppliers() {
+            await axios.get('/get-purchases-suppliers')
+                .then(response => {
+                    this.formState.dependencies.suppliers = response.data.map(item => {
+                        return {
+                            label: item.name + ` (${item.phone_number})`,
+                            value: item.id
+                        }
+                    })
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
         selectProduct() {
             const selectedProduct = this.formState.dependencies.products.find(item => item.value === this.searchProduct)
             const productInfo = {
@@ -543,38 +551,36 @@ export default {
                 photo: selectedProduct.icon,
             };
 
-            this.formState.formData.products.push({
-                product: productInfo,
-                unit_price: 0,
-                sale_price: 0,
-                quantity: 1,
-                discountAllow: false,
-                discount: 0,
-                discount_type: '%',
-                subTotal: 0
-            })
+            const isExistProduct = this.formState.formData.products.find(item => item.product.id === productInfo.id);
+            if (isExistProduct){
+                this.formState.formData.products = this.formState.formData.products.map(item => {
+                    if (item.product.id === isExistProduct.product.id){
+                        item.quantity = item.quantity + 1
+                        return item;
+                    }else {
+                        return item;
+                    }
+                })
+                message.success(isExistProduct.product.name +' already added in list.');
+            }else {
+                this.formState.formData.products.push({
+                    product: productInfo,
+                    unit_price: 0,
+                    sale_price: 0,
+                    quantity: 1,
+                    discountAllow: false,
+                    discount: 0,
+                    discount_type: '%',
+                    subTotal: 0
+                })
+            }
             this.calculateTotal();
             this.searchProduct = null
         },
         removeProduct(key) {
+            const removeProductName = this.formState.formData.products[key].product.name;
+            message.warning(removeProductName +' remove from this list.');
             this.formState.formData.products.splice(key, 1);
-        },
-        async getSuppliers(callFrom = '') {
-            await axios.get('/get-purchases-suppliers')
-                .then(response => {
-                    this.formState.dependencies.suppliers = response.data.map(item => {
-                        return {
-                            label: item.name + ` (${item.phone_number})`,
-                            value: item.id
-                        }
-                    })
-                    if (callFrom === 'addNew') {
-                        this.formState.formData.supplier = this.formState.dependencies.suppliers[0].value
-                    }
-                })
-                .catch(err => {
-                    console.error(err)
-                })
         },
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -625,7 +631,7 @@ export default {
         },
 
         getData() {
-            this.getSuppliers('addNew')
+            this.getSuppliers()
             this.getProducts()
         },
 
