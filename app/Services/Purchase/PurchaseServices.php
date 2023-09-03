@@ -4,23 +4,27 @@ namespace App\Services\Purchase;
 
 use App\Models\People\Supplier;
 use App\Models\Product\Product;
+use App\Models\Purchase\Purchase;
 use App\Services\BaseServices;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class PurchaseServices extends BaseServices
 {
+    public Supplier $supplier;
     public Product $product;
 
-    public  Supplier $supplier;
-
     /**
+     * @param Purchase $purchase
      * @param Product $product
      * @param Supplier $supplier
      */
-    public function __construct(Product $product, Supplier $supplier)
+    public function __construct(Purchase $purchase, Product $product, Supplier $supplier)
     {
+        $this->model = $purchase;
         $this->product = $product;
         $this->supplier = $supplier;
     }
@@ -36,19 +40,19 @@ class PurchaseServices extends BaseServices
             ->newQuery()
             ->active()
             ->with(['category:id,name', 'company:id,name', 'unit:id,name,pack_size'])
-            ->when(request()->filled('search'), function ($q){
-                $q->where('barcode', 'like', "%".request()->get('search')."%")
-                    ->orWhere('name', 'like', "%".request()->get('search')."%")
-                    ->orWhere('slug', 'like', "%".request()->get('search')."%")
-                    ->orWhereHas('category', function ($q){
-                        $q->where('name', 'like', "%".request()->get('search')."%");
+            ->when(request()->filled('search'), function ($q) {
+                $q->where('barcode', 'like', "%" . request()->get('search') . "%")
+                    ->orWhere('name', 'like', "%" . request()->get('search') . "%")
+                    ->orWhere('slug', 'like', "%" . request()->get('search') . "%")
+                    ->orWhereHas('category', function ($q) {
+                        $q->where('name', 'like', "%" . request()->get('search') . "%");
                     })
-                    ->orWhereHas('company', function ($q){
-                        $q->where('name', 'like', "%".request()->get('search')."%");
+                    ->orWhereHas('company', function ($q) {
+                        $q->where('name', 'like', "%" . request()->get('search') . "%");
                     })
-                    ->orWhereHas('unit', function ($q){
-                        $q->where('name', 'like', "%".request()->get('search')."%")
-                            ->orWhere('pack_size', 'like', "%".request()->get('search')."%");
+                    ->orWhereHas('unit', function ($q) {
+                        $q->where('name', 'like', "%" . request()->get('search') . "%")
+                            ->orWhere('pack_size', 'like', "%" . request()->get('search') . "%");
                     });
             })
             ->orderBy('id', 'desc')
@@ -65,5 +69,85 @@ class PurchaseServices extends BaseServices
             ->newQuery()
             ->orderBy('id', 'desc')
             ->get(['id', 'name', 'phone_number']);
+    }
+
+    /**
+     * @param $request
+     * @return $this
+     */
+    public function validateStore($request): static
+    {
+        $request->validate([
+            'supplier' => 'required|exists:suppliers,id',
+            'date' => 'required',
+            'status' => 'required|in:' . implode(',', Purchase::getConstantsByPrefix('STATUS_')),
+            'reference' => 'required|unique:purchases,reference',
+            'subtotal' => 'required|numeric',
+            'total' => 'required|numeric',
+            'products' => 'required|array',
+            'products.*.product.id' => 'required|numeric|exists:products,id',
+            'products.*.unit_price' => 'required|numeric|min:1',
+            'products.*.sale_price' => 'required|numeric|min:1',
+            'products.*.quantity' => 'required|numeric|min:1',
+            'products.*.discountAllow' => 'required|boolean',
+            'products.*.discount' => 'nullable|numeric',
+            'products.*.discount_type' => 'nullable|string',
+            'products.*.subTotal' => 'nullable|numeric',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param $request
+     * @return JsonResponse
+     */
+    public function store($request): JsonResponse
+    {
+        try {
+
+            DB::transaction(function () use ($request) {
+
+                $this->model = $this->model
+                    ->newQuery()
+                    ->create([
+                        'supplier_id' => $request->supplier,
+                        'date' => date('Y-m-d', strtotime($request->date)),
+                        'status' => $request->status,
+                        'reference' => $request->reference,
+                        'subtotal' => $request->subtotal,
+                        'otherCost' => $request->otherCost,
+                        'discount' => $request->discount,
+                        'total' => $request->total,
+                        'purchase_details' => json_encode($request->all()),
+                        'note' => $request->note,
+                    ]);
+
+                $purchaseProducts = [];
+                foreach ($request->products as $purchaseProduct){
+                    $purchaseProducts[] = [
+                        'purchase_id' => $this->model->id,
+                        'product_id' => $purchaseProduct['product']['id'],
+                        'unit_price' => $purchaseProduct['unit_price'],
+                        'sale_price' => $purchaseProduct['sale_price'],
+                        'quantity' => $purchaseProduct['quantity'],
+                        'discountAllow' => $purchaseProduct['discountAllow'],
+                        'discount' => $purchaseProduct['discount'],
+                        'discount_type' => $purchaseProduct['discount_type'],
+                        'subTotal' => $purchaseProduct['subTotal'],
+                        'product_details' => json_encode($purchaseProduct['product']),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                $this->model->purchaseProducts()->insert($purchaseProducts);
+            });
+
+            return response()->json(['success' => __t('purchase_create')]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 }

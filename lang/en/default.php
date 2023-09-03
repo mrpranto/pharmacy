@@ -184,5 +184,6 @@ return [
     'pending' => 'Pending',
     'canceled' => 'Canceled',
     'payment_summary' => 'Payment Summary',
+    'purchase_create' => 'Purchase created successful.'
 
 ];

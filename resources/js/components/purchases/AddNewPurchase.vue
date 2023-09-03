@@ -67,9 +67,9 @@
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
                                         <a-radio-group v-model:value="formState.formData.status" button-style="solid" style="width: 100%">
-                                            <a-radio-button value="Received">{{ __('default.received') }}</a-radio-button>
-                                            <a-radio-button value="Pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="Canceled">{{ __('default.canceled') }}</a-radio-button>
+                                            <a-radio-button value="received">{{ __('default.received') }}</a-radio-button>
+                                            <a-radio-button value="pending">{{ __('default.pending') }}</a-radio-button>
+                                            <a-radio-button value="canceled">{{ __('default.canceled') }}</a-radio-button>
                                         </a-radio-group>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.status">
@@ -157,6 +157,9 @@
                                                         @change="calculatePrices(product_index)"
                                                         style="width: 100%"
                                                     />
+                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.unit_price']">
+                                                        {{ formState.validation['products.'+product_index+'.unit_price'][0] }}
+                                                    </div>
                                                 </td>
                                                 <td width="15%">
                                                     <a-input-number
@@ -167,9 +170,19 @@
                                                         @change="calculatePrices(product_index)"
                                                         style="width: 100%"
                                                     />
+                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.sale_price']">
+                                                        {{ formState.validation['products.'+product_index+'.sale_price'][0] }}
+                                                    </div>
                                                 </td>
                                                 <td width="10%">
-                                                    <a-input-number v-model:value="product.quantity" min="1" @keyup="calculatePrices(product_index)" @change="calculatePrices(product_index)" style="width: 100%" />
+                                                    <a-input-number
+                                                        v-model:value="product.quantity"
+                                                        min="1"
+                                                        @keyup="calculatePrices(product_index)"
+                                                        @change="calculatePrices(product_index)" style="width: 100%" />
+                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.quantity']">
+                                                        {{ formState.validation['products.'+product_index+'.quantity'][0] }}
+                                                    </div>
                                                 </td>
                                                 <td width="15%" class="text-center">
                                                     <FormOutlined
@@ -200,9 +213,16 @@
                                                             </a-button>
                                                         </a-input-group>
                                                     </a-space>
+
+                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.discount']">
+                                                        {{ formState.validation['products.'+product_index+'.discount'][0] }}
+                                                    </div>
                                                 </td>
                                                 <td width="15%" class="text-right">
                                                     <b>{{ $showCurrency(product.subTotal) }} </b>
+                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.subTotal']">
+                                                        {{ formState.validation['products.'+product_index+'.subTotal'][0] }}
+                                                    </div>
                                                 </td>
                                                 <td width="5%" class="text-center">
                                                     <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes" cancel-text="No" @confirm="removeProduct(product_index)">
@@ -246,11 +266,17 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <a-form-item :label="__('default.purchase_reference')" :label-col="{span: 8}">
-                                    <a-input-group compact :wrapper-col="{span: 16}" :class="formState.validation.purchase_reference ? 'ant-input ant-input-status-error': ''">
-                                        <a-input v-model:value="formState.formData.purchase_reference" :placeholder="__('default.purchase_reference')" style="width: 100%"></a-input>
+                                    <a-input-group compact :wrapper-col="{span: 16}" :class="formState.validation.reference ? 'ant-input ant-input-status-error': ''">
+                                        <a-input v-model:value="formState.formData.reference" :placeholder="__('default.purchase_reference')" style="width: 100%">
+                                            <template #suffix>
+                                                <a-tooltip title="Generate new reference" @click="generateReference">
+                                                    <sync-outlined style="color: rgba(0, 0, 0, 0.45)"/>
+                                                </a-tooltip>
+                                            </template>
+                                        </a-input>
                                     </a-input-group>
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.purchase_reference">
-                                        {{ formState.validation.purchase_reference[0] }}
+                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.reference">
+                                        {{ formState.validation.reference[0] }}
                                     </div>
                                 </a-form-item>
                             </div>
@@ -285,8 +311,8 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <button class="btn btn-primary float-right"><i class="mdi mdi-content-save"></i> {{ __('default.save') }}</button>
-                                <button class="btn btn-warning float-right mr-2"><i class="mdi mdi-restore"></i> {{ __('default.reset') }}</button>
+                                <button class="btn btn-primary float-right" @click.prevent="save"><i class="mdi mdi-content-save"></i> {{ __('default.save') }}</button>
+                                <button class="btn btn-warning float-right mr-2" @click.prevent="reset"><i class="mdi mdi-restore"></i> {{ __('default.reset') }}</button>
                             </div>
                         </div>
                     </div>
@@ -301,13 +327,13 @@
                                 <h4>{{ __('default.payment_summary') }}</h4>
                                 <hr />
                             </dt>
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.subtotal') }}:</dt>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.subtotal') }} : </dt>
                             <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.subtotal) }}</dd>
 
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.other_cost') }}:</dt>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.other_cost') }} : </dt>
                             <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.otherCost) }}</dd>
 
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">(-) {{ __('default.discount') }}:</dt>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">(-) {{ __('default.discount') }} : </dt>
                             <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.discount) }}</dd>
 
                             <dt class="col-sm-12 text-center text-muted">
@@ -328,7 +354,13 @@
 </template>
 <script>
 
-import {DeleteOutlined, CloseCircleOutlined, QuestionCircleFilled, FormOutlined} from "@ant-design/icons-vue";
+import {
+    DeleteOutlined,
+    CloseCircleOutlined,
+    QuestionCircleFilled,
+    FormOutlined,
+    SyncOutlined
+} from "@ant-design/icons-vue";
 import { message } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import AddNewSupplier from "../people/supplier/AddNewSupplier.vue";
@@ -337,6 +369,7 @@ import AddNewProduct from "../products/products/AddNewProduct.vue";
 export default {
     name: "AddNewPurchase",
     components: {
+        SyncOutlined,
         AddNewProduct,
         AddNewSupplier,
         DeleteOutlined,
@@ -344,7 +377,6 @@ export default {
         QuestionCircleFilled,
         FormOutlined
     },
-    props: ['permission'],
     data() {
         return {
             loader: false,
@@ -400,12 +432,14 @@ export default {
                 formData: {
                     supplier: null,
                     date: dayjs(this.$today, 'YYYY-MM-DD'),
-                    status: 'Received',
+                    status: null,
                     products: [],
+                    reference: null,
                     subtotal: 0,
                     otherCost:0,
                     discount:0,
-                    total:0
+                    total:0,
+                    note:null
                 },
                 validation: {}
             },
@@ -414,11 +448,46 @@ export default {
     created() {
         this.getProducts()
         this.getSuppliers()
+        this.generateReference()
     },
     mounted() {
 
     },
     methods: {
+        async save(){
+          await axios.post('/purchases', this.formState.formData)
+              .then(response => {
+                  if (response.data.success) {
+                      this.reset();
+                      this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                  } else {
+                      this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                  }
+              })
+              .catch(err => {
+                  if (err.response.status === 422) {
+                      this.formState.validation = err.response.data.errors
+                  } else {
+                      this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                      console.error(err)
+                  }
+              })
+        },
+        reset(){
+            this.formState.formData = {
+                supplier: null,
+                date: dayjs(this.$today, 'YYYY-MM-DD'),
+                status: null,
+                products: [],
+                reference: null,
+                subtotal: 0,
+                otherCost: 0,
+                discount: 0,
+                total: 0,
+                note: null,
+            }
+            this.generateReference()
+        },
         async getProducts(value = '') {
             await axios.get('/get-purchases-products', {params: {search: value}})
                 .then(response => {
@@ -544,7 +613,9 @@ export default {
             const discount = this.formState.formData.discount;
             this.formState.formData.total = parseFloat((parseFloat(otherCost) + parseFloat(this.formState.totalPrice)) - parseFloat(discount)).toFixed(2)
         },
-
+        generateReference() {
+            this.formState.formData.reference = Math.floor(10000000000000 + Math.random() * 90000000000000)
+        },
         getData() {
             this.getSuppliers()
             this.getProducts()

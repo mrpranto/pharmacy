@@ -184,4 +184,5 @@ return [
     'pending' => 'অসম্পন্ন',
     'canceled' => 'বাতিল',
     'payment_summary' => 'পারিশ্রমিক সারসংক্ষেপ',
+    'purchase_create' => 'ক্রয় সফল হয়েছে',
 ];
