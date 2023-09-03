@@ -137,7 +137,7 @@
                                             <a-select
                                                 v-model:value="filter.filterValue"
                                                 class="filter-select"
-                                                style="width: 200px"
+                                                style="min-width: 200px; max-width: 100%"
                                                 show-search
                                                 :placeholder="__('default.' + filter.title)"
                                                 :options="filter.option"
@@ -145,6 +145,46 @@
                                                 @change="filterList($event, filter.key)"
                                             ></a-select>
                                         </a-form-item>
+                                    </div>
+                                </div>
+                            </span>
+
+                            </div>
+                        </div>
+                        <div class="btn-group" v-if="filter.type === 'button-checkbox'">
+                            <div class="dropdown show mr-1">
+                                <span class="filter-button">
+                                <span v-if="filter.filterValue !== ''" class="mr-1"
+                                      :class="filter.filterValue !== '' ? 'text-primary' : ''"
+                                      @click.prevent="clearFilter(filter_index, filter.key)">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </span>
+                                <span data-toggle="dropdown">
+                                    <span v-if="filter.filterValue !== ''" :class="filter.filterValue !== '' ? 'text-primary' : ''">
+                                        {{ __('default.' + filter.title) }}
+                                        | {{ filter.filterValue.toUpperCase() }}
+                                    </span>
+                                    <span v-else>
+                                        <i class="mdi mdi-plus-circle"></i>
+                                        {{ __('default.' + filter.title) }}
+                                    </span>
+                                </span>
+
+                                <div class="dropdown-menu filter-column">
+                                    <div class="dropdown-item">
+                                <a-form-item :label="__('default.' + filter.title)" required>
+                                        <a-radio-group v-model:value="filter.filterValue" button-style="solid"
+                                                       @change="filterList(filter.filterValue, filter.key)"
+                                                       style="width: 100%">
+                                            <a-radio-button value="received">{{
+                                                    __('default.received')
+                                                }}</a-radio-button>
+                                            <a-radio-button value="pending">{{ __('default.pending') }}</a-radio-button>
+                                            <a-radio-button value="canceled">{{
+                                                    __('default.canceled')
+                                                }}</a-radio-button>
+                                        </a-radio-group>
+                                </a-form-item>
                                     </div>
                                 </div>
                             </span>
@@ -162,7 +202,7 @@
                              :placeholder="__('default.search')+'...'">
                         <template #suffix>
                             <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!options.request.search"/>
-                            <a-tooltip title="Clear Search" @click.prevent="clearSearch" v-else>
+                            <a-tooltip title="Clear Search" placement="left" @click.prevent="clearSearch" v-else>
                                 <close-circle-filled style="color: rgba(0, 0, 0, 0.45)"/>
                             </a-tooltip>
                         </template>
@@ -531,6 +571,10 @@ export default {
             await this.$parent.getData()
         },
         changePerPage(page) {
+            this.page = {
+                value: 1,
+                label: 1
+            }
             this.options.request.per_page = page
         },
         clearColumnVisibility() {
@@ -559,9 +603,17 @@ export default {
             this.$parent.filterData(event, key)
         },
         clearFilter(filter_index, key) {
-            this.options.filters[filter_index].filterValue = key
-            let value = this.options.filters[filter_index].filterValue
-            this.$parent.filterData('', key)
+            if (this.options.filters[filter_index].type === 'drop-down-filter')
+            {
+                this.options.filters[filter_index].filterValue = key
+                let value = this.options.filters[filter_index].filterValue
+                this.$parent.filterData('', key)
+            }
+            else if (this.options.filters[filter_index].type === 'button-checkbox')
+            {
+                this.options.filters[filter_index].filterValue = ''
+                this.$parent.filterData('', key)
+            }
         },
         storeColumnHistory() {
             const columnHistory = this.options.columns;

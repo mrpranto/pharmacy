@@ -9,6 +9,8 @@ use App\Models\Product\Category;
 use App\Models\Product\Company;
 use App\Models\Product\Product;
 use App\Models\Product\Unit;
+use App\Models\Purchase\Purchase;
+use App\Models\Purchase\PurchaseProduct;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
@@ -85,6 +87,11 @@ class DatabaseSeeder extends Seeder
         Customer::factory(100)->create();
 
         $this->command->info('Customer seeder created successful.');
+
+        Purchase::factory(400)->create();
+        PurchaseProduct::factory(1200)->create();
+
+        $this->command->info('Purchase seeder created successful.');
 
         Setting::query()->updateOrCreate([
             'type' => 'app_setting',

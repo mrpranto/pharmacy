@@ -14,7 +14,7 @@
                                         <a-spin v-if="loader" />
                                     </div>
                                     <div class="d-flex align-items-center flex-wrap text-nowrap">
-                                        <a href="" :title="__('default.purchase_list')" class="btn btn-primary btn-icon-text"> <i class="mdi mdi-format-list-bulleted"></i> {{ __('default.purchase_list') }} </a>
+                                        <a href="/purchases" :title="__('default.purchase_list')" class="btn btn-primary btn-icon-text"> <i class="mdi mdi-format-list-bulleted"></i> {{ __('default.purchase_list') }} </a>
                                     </div>
                                 </div>
                             </div>

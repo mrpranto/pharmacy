@@ -6,6 +6,7 @@ use App\Models\People\Supplier;
 use App\Models\Product\Product;
 use App\Models\Purchase\Purchase;
 use App\Services\BaseServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,39 @@ class PurchaseServices extends BaseServices
         $this->model = $purchase;
         $this->product = $product;
         $this->supplier = $supplier;
+    }
+
+
+    /**
+     * @return array[]
+     */
+    public function accessPermissions(): array
+    {
+        return [
+            'permission' => [
+                'create' => auth()->user()->can('app.purchase.create'),
+                'edit' => auth()->user()->can('app.purchase.edit'),
+                'show' => auth()->user()->can('app.purchase.show'),
+                'delete' => auth()->user()->can('app.purchase.delete')
+            ]
+        ];
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getPurchaseList(): LengthAwarePaginator
+    {
+        return $this->model->newQuery()
+            ->with(['supplier', 'purchaseProducts'])
+            ->when(request()->filled('supplier'), fn($q) => $q->where('supplier_id', request()->get('supplier')))
+            ->when(request()->filled('purchase_status'), fn($q) => $q->where('status', request()->get('purchase_status')))
+            ->when(request()->filled('search'), fn($q) => $q->where('reference', 'like', '%' . request()->get('search') . '%'))
+            ->when(request()->filled('order_by') && request()->filled('order_dir'), fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
+            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
+            ->paginate(request()->get('per_page') ?? pagination());
     }
 
     /**

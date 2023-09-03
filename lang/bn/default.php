@@ -185,4 +185,5 @@ return [
     'canceled' => 'বাতিল',
     'payment_summary' => 'পারিশ্রমিক সারসংক্ষেপ',
     'purchase_create' => 'ক্রয় সফল হয়েছে',
+    'purchase_status' => 'ক্রয় স্ট্যাটাস'
 ];

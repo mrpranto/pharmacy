@@ -41,5 +41,59 @@ export const showCurrency = (amount) => {
     }
 }
 
+export const date_format = (date) => {
+    const format = window._general_setting?.date_format;
+    /*d-m-Y
+    Y-m-d
+    m-d-Y
+    d/m/Y
+    Y/m/d
+    m/d/Y
+    d.m.Y
+    Y.m.d
+    m.d.Y
+    F d, Y*/
+    if (format === 'F d, Y')
+    {
+       return  moment(date).format('MMMM Do YYYY')
+    }
+    else if (format === 'd-m-Y')
+    {
+        return  moment(date).format('DD-MM-YYYY')
+    }
+    else if (format === 'Y-m-d')
+    {
+        return  moment(date).format('YYYY-MM-DD')
+    }
+    else if (format === 'm-d-Y')
+    {
+        return  moment(date).format('MM-DD-YYYY')
+    }
+    else if (format === 'd/m/Y')
+    {
+        return  moment(date).format('DD/MM/YYYY')
+    }
+    else if (format === ' Y/m/d')
+    {
+        return  moment(date).format('YYYY/MM/DD')
+    }
+    else if (format === 'm/d/Y')
+    {
+        return  moment(date).format('MM/DD/YYYY')
+    }
+    else if (format === 'd.m.Y')
+    {
+        return  moment(date).format('DD.MM.YYYY')
+    }
+    else if (format === 'Y.m.d')
+    {
+        return  moment(date).format('YYYY.MM.DD')
+    }
+    else if (format === 'm.d.Y')
+    {
+        return  moment(date).format('MM.DD.YYYY')
+    }
+}
+
 
 export default {showSuccessMessage, showErrorMessage};

@@ -266,6 +266,36 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete Customer',
                 'slug' => 'app.customer.delete'
             ],
+
+
+            /*
+            * Purchase permission
+            * */
+            [
+                'module_id' => $this->module('Purchase'),
+                'name' => 'Purchase List',
+                'slug' => 'app.purchase.index'
+            ],
+            [
+                'module_id' => $this->module('Purchase'),
+                'name' => 'Add New Purchase',
+                'slug' => 'app.purchase.create'
+            ],
+            [
+                'module_id' => $this->module('Purchase'),
+                'name' => 'Edit Purchase',
+                'slug' => 'app.purchase.edit'
+            ],
+            [
+                'module_id' => $this->module('Purchase'),
+                'name' => 'Show Purchase',
+                'slug' => 'app.purchase.show'
+            ],
+            [
+                'module_id' => $this->module('Purchase'),
+                'name' => 'Delete Purchase',
+                'slug' => 'app.purchase.delete'
+            ],
         ];
     }
 
