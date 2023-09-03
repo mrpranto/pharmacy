@@ -178,11 +178,20 @@ export default {
                         filterOption: this.selectFilterOption
                     },
                     {
+                        title: 'date',
+                        type: "date",
+                        key: "date",
+                        filterValue: '',
+                        option: [],
+                    },
+                    {
                         title: 'purchase_status',
                         type: "button-checkbox",
                         key: "purchase_status",
                         filterValue: '',
-                        option: [],
+                        option: [
+                            'received', 'pending', 'canceled'
+                        ],
                     },
                 ],
             },

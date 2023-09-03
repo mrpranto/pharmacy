@@ -176,15 +176,43 @@
                                         <a-radio-group v-model:value="filter.filterValue" button-style="solid"
                                                        @change="filterList(filter.filterValue, filter.key)"
                                                        style="width: 100%">
-                                            <a-radio-button value="received">{{
-                                                    __('default.received')
-                                                }}</a-radio-button>
-                                            <a-radio-button value="pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="canceled">{{
-                                                    __('default.canceled')
-                                                }}</a-radio-button>
+                                            <a-radio-button v-for="(option, option_index) in filter.option"
+                                                            :key="option_index"
+                                                            :value="option">
+                                                {{ __('default.'+ option) }}
+                                            </a-radio-button>
                                         </a-radio-group>
                                 </a-form-item>
+                                    </div>
+                                </div>
+                            </span>
+
+                            </div>
+                        </div>
+                        <div class="btn-group" v-if="filter.type === 'date'">
+                            <div class="dropdown show mr-1">
+                                <span class="filter-button">
+                                <span v-if="filter.filterValue !== ''" class="mr-1"
+                                      :class="filter.filterValue !== '' ? 'text-primary' : ''"
+                                      @click.prevent="clearFilter(filter_index, filter.key)">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </span>
+                                <span data-toggle="dropdown">
+                                    <span v-if="filter.filterValue !== ''" :class="filter.filterValue !== '' ? 'text-primary' : ''">
+                                        {{ __('default.' + filter.title) }}
+                                        | {{ filter.filterValue ? filter.filterValue.format('YYYY-MM-DD') : '' }}
+                                    </span>
+                                    <span v-else>
+                                        <i class="mdi mdi-plus-circle"></i>
+                                        {{ __('default.' + filter.title) }}
+                                    </span>
+                                </span>
+
+                                <div class="dropdown-menu filter-column">
+                                    <div class="dropdown-item">
+                                        <a-form-item :label="__('default.date')" required>
+                                                <a-date-picker v-model:value="filter.filterValue" style="min-width: 200px; max-width: 100%" />
+                                        </a-form-item>
                                     </div>
                                 </div>
                             </span>
