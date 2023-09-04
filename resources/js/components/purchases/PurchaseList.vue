@@ -40,7 +40,7 @@
 <script>
 
 import moment from "moment";
-
+import dayjs from 'dayjs';
 export default {
     name: "PurchaseList",
     components: {},
@@ -181,8 +181,7 @@ export default {
                         title: 'date',
                         type: "date",
                         key: "date",
-                        filterValue: '',
-                        option: [],
+                        filterValue: null,
                     },
                     {
                         title: 'purchase_status',
@@ -212,6 +211,9 @@ export default {
             this.getData()
         },
         'options.request.purchase_status': function (){
+            this.getData()
+        },
+        'options.request.date': function (){
             this.getData()
         }
     },
@@ -249,6 +251,9 @@ export default {
             }
             if (filterType === 'purchase_status') {
                 this.options.request.purchase_status = filterValue
+            }
+            if (filterType === 'date') {
+                this.options.request.date = filterValue
             }
         },
         selectFilterOption(input, option) {

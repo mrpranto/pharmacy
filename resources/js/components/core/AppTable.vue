@@ -192,15 +192,15 @@
                         <div class="btn-group" v-if="filter.type === 'date'">
                             <div class="dropdown show mr-1">
                                 <span class="filter-button">
-                                <span v-if="filter.filterValue !== ''" class="mr-1"
-                                      :class="filter.filterValue !== '' ? 'text-primary' : ''"
+                                <span v-if="filter.filterValue !== null" class="mr-1"
+                                      :class="filter.filterValue !== null ? 'text-primary' : ''"
                                       @click.prevent="clearFilter(filter_index, filter.key)">
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
                                 <span data-toggle="dropdown">
-                                    <span v-if="filter.filterValue !== ''" :class="filter.filterValue !== '' ? 'text-primary' : ''">
+                                    <span v-if="filter.filterValue !== null" :class="filter.filterValue !== null ? 'text-primary' : ''">
                                         {{ __('default.' + filter.title) }}
-                                        | {{ filter.filterValue ? filter.filterValue.format('YYYY-MM-DD') : '' }}
+                                        | {{ filter.filterValue ? filter.filterValue[0].format('YYYY-MM-DD') +' to '+ filter.filterValue[1].format('YYYY-MM-DD') : '' }}
                                     </span>
                                     <span v-else>
                                         <i class="mdi mdi-plus-circle"></i>
@@ -211,7 +211,11 @@
                                 <div class="dropdown-menu filter-column">
                                     <div class="dropdown-item">
                                         <a-form-item :label="__('default.date')" required>
-                                                <a-date-picker v-model:value="filter.filterValue" style="min-width: 200px; max-width: 100%" />
+                                            <a-range-picker
+                                                v-model:value="filter.filterValue"
+                                                :presets="rangePresets"
+                                                style="min-width: 300px; max-width: 130%"
+                                                @change="getDateFilter" />
                                         </a-form-item>
                                     </div>
                                 </div>
@@ -413,6 +417,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import Loader from "./Loader.vue";
 import {SearchOutlined, CloseCircleFilled, InboxOutlined} from '@ant-design/icons-vue';
 
@@ -451,7 +456,25 @@ export default {
             filterFields: [],
             colWidth: '',
             visibleColumn: '',
-            columnHistory: []
+            columnHistory: [],
+            rangePresets :[
+                {
+                    label: 'Last 7 Days',
+                    value: [dayjs().add(-7, 'd'), dayjs()],
+                },
+                {
+                    label: 'Last 14 Days',
+                    value: [dayjs().add(-14, 'd'), dayjs()],
+                },
+                {
+                    label: 'Last 30 Days',
+                    value: [dayjs().add(-30, 'd'), dayjs()],
+                },
+                {
+                    label: 'Last 90 Days',
+                    value: [dayjs().add(-90, 'd'), dayjs()],
+                },
+            ],
         }
     },
     created() {
@@ -612,6 +635,17 @@ export default {
             }
             this.getColWidth();
         },
+        getDateFilter(date){
+            const dates = this.options.filters.find(item => item.key === 'date');
+            if (date){
+                const startDate = dates.filterValue[0].format('YYYY-MM-DD');
+                const endDate = dates.filterValue[1].format('YYYY-MM-DD');
+                this.options.request.date = startDate +' to '+ endDate;
+                this.$parent.getData();
+            }else {
+                this.clearFilter(this.options.filters.indexOf(dates), 'date')
+            }
+        },
         clearStatusFilter() {
             if (this.options.request.status) {
                 this.options.request.status = '';
@@ -641,6 +675,11 @@ export default {
             {
                 this.options.filters[filter_index].filterValue = ''
                 this.$parent.filterData('', key)
+            }
+            else if (this.options.filters[filter_index].type === 'date')
+            {
+                this.options.filters[filter_index].filterValue = null
+                this.$parent.filterData(null, key)
             }
         },
         storeColumnHistory() {
