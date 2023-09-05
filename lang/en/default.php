@@ -159,6 +159,7 @@ return [
     'purchase' => 'Purchase',
     'purchase_list' => 'Purchase List',
     'add_purchase' => 'Add new purchase',
+    'edit_purchase' => 'Edit purchase',
     'remove' => 'Remove',
     'sku' => 'SKU',
     'supplier' => 'Supplier',
@@ -185,6 +186,7 @@ return [
     'canceled' => 'Canceled',
     'payment_summary' => 'Payment Summary',
     'purchase_create' => 'Purchase created successful.',
-    'purchase_status' => 'Purchase status'
+    'purchase_status' => 'Purchase status',
+    'purchase_delete' => 'Purchase delete successful.',
 
 ];

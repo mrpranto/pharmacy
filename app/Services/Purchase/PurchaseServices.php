@@ -196,4 +196,47 @@ class PurchaseServices extends BaseServices
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
+
+    /**
+     * @param $id
+     * @return Purchase|array
+     */
+    public function showDetails($id): Purchase|array
+    {
+        $purchase = $this->model
+            ->newQuery()
+            ->with(['supplier:id,name', 'purchaseProducts.product', 'createdBy', 'updatedBy'])
+            ->where('id', $id)
+            ->first();
+
+        $this->model = $purchase->toArray();
+        $this->model['created_at'] = $purchase->created_at->format(format_date()).' '.$purchase->created_at->format(format_time());
+        $this->model['updated_at'] = $purchase->updated_at->format(format_date()).' '.$purchase->updated_at->format(format_time());
+
+        return $this->model;
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function delete($id): JsonResponse
+    {
+        try {
+
+            $this->model = $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->first();
+
+            $this->model->purchaseProducts()->delete();
+
+            $this->model->delete();
+
+            return response()->json(['success' => __t('purchase_delete')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
 }

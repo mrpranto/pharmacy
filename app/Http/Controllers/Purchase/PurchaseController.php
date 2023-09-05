@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Purchase;
 
 use App\Http\Controllers\Controller;
+use App\Models\Purchase\Purchase;
 use App\Services\Purchase\PurchaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -79,17 +80,17 @@ class PurchaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): Purchase|array
     {
-        //
+        return $this->services->showDetails($id);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): View
     {
-        //
+        return view('pages.purchase.edit', ['id' => $id]);
     }
 
     /**
@@ -103,8 +104,8 @@ class PurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        return $this->services->delete($id);
     }
 }

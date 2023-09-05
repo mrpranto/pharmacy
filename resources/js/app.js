@@ -72,8 +72,12 @@ app.component('customer-action-component', CustomerAction);
 */
 import AddNewPurchaseComponent from './components/purchases/AddNewPurchase.vue';
 app.component('add-new-purchase-component', AddNewPurchaseComponent);
+import EditPurchaseComponent from './components/purchases/EditPurchase.vue';
+app.component('edit-purchase-component', EditPurchaseComponent);
 import PurchaseListComponent from './components/purchases/PurchaseList.vue';
 app.component('purchase-list-component', PurchaseListComponent);
+import PurchaseActionComponent from './components/purchases/Action.vue';
+app.component('purchase-action-component', PurchaseActionComponent);
 
 
 import AppTable from './components/core/AppTable.vue';

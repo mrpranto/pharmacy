@@ -26,7 +26,7 @@ class Product extends Model
     /**
      * @var string[]
      */
-    protected $with = ['productPhoto'];
+    protected $with = ['productPhoto', 'category:id,name', 'company:id,name', 'unit:id,name,pack_size'];
 
     /**
      * @return BelongsTo

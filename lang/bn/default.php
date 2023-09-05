@@ -159,6 +159,7 @@ return [
     'purchase' => 'ক্রয়',
     'purchase_list' => 'ক্রয় তালিকা',
     'add_purchase' => 'নতুন ক্রয় করুন',
+    'edit_purchase' => 'ক্রয় সম্পাদনা করুন',
     'remove' => 'বাতিল করুন',
     'sku' => 'SKU',
     'supplier' => 'সরবরাহকারী',
@@ -185,5 +186,6 @@ return [
     'canceled' => 'বাতিল',
     'payment_summary' => 'পারিশ্রমিক সারসংক্ষেপ',
     'purchase_create' => 'ক্রয় সফল হয়েছে',
-    'purchase_status' => 'ক্রয় স্ট্যাটাস'
+    'purchase_status' => 'ক্রয় স্ট্যাটাস',
+    'purchase_delete' => 'ক্রয় মুছে ফেলা সফল হয়েছে.',
 ];

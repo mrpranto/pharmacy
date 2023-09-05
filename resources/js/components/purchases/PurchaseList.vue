@@ -148,7 +148,7 @@ export default {
                         type: 'action',
                         key: 'action',
                         permission: this.permission,
-                        componentName: 'product-action-component',
+                        componentName: 'purchase-action-component',
                         width: '12',
                         isVisible: true
                     },
@@ -290,7 +290,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/product/products/${id}`)
+            await axios.delete(`/purchases/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()
