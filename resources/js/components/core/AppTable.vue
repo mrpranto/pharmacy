@@ -806,7 +806,7 @@ export default {
 
 .filter-button {
     border: 1px #bdbbbb dashed;
-    padding: 8px 15px 7px 14px;
+    padding: 7px 7px;
     border-radius: 20px;
     cursor: pointer;
     margin: 2px;

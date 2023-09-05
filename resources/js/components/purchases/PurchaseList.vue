@@ -170,18 +170,18 @@ export default {
                 },
                 filters: [
                     {
+                        title: 'date',
+                        type: "date",
+                        key: "date",
+                        filterValue: null,
+                    },
+                    {
                         title: 'supplier',
                         type: "drop-down-filter",
                         key: "supplier",
                         filterValue: 'supplier',
                         option: [],
                         filterOption: this.selectFilterOption
-                    },
-                    {
-                        title: 'date',
-                        type: "date",
-                        key: "date",
-                        filterValue: null,
                     },
                     {
                         title: 'purchase_status',
@@ -234,9 +234,9 @@ export default {
         async getSuppliers() {
             await axios.get('/get-purchases-suppliers')
                 .then(response => {
-                    this.options.filters[0].option = response.data.map(item => {
+                    this.options.filters.find(item => item.key === 'supplier').option = response.data.map(item => {
                         return {
-                            label: item.name + ` (${item.phone_number})`,
+                            label: item.name,
                             value: item.id
                         }
                     });
