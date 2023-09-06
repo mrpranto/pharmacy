@@ -98,7 +98,9 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return $this->services
+            ->validateUpdate($request, $id)
+            ->update($request, $id);
     }
 
     /**

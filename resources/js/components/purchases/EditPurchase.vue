@@ -399,8 +399,8 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <button class="btn btn-primary float-right" @click.prevent="save"><i
-                                    class="mdi mdi-content-save"></i> {{ __('default.save') }}
+                                <button class="btn btn-primary float-right" @click.prevent="update"><i
+                                    class="mdi mdi-check-all"></i> {{ __('default.update') }}
                                 </button>
                                 <button class="btn btn-warning float-right mr-2" @click.prevent="reset"><i
                                     class="mdi mdi-restore"></i> {{ __('default.reset') }}
@@ -559,7 +559,6 @@ export default {
             this.loader = true
             axios.get(`/purchases/${this.id}`)
                 .then(response => {
-                    console.log(response.data)
                     const responseData = response.data;
                     this.formState.formData.supplier = responseData.supplier_id
                     this.formState.formData.date = dayjs(responseData.date, 'YYYY-MM-DD')
@@ -590,16 +589,23 @@ export default {
                     unit: item.product.unit.name + `(${item.product.unit.pack_size})`,
                     photo: `${item.product.product_photo ? item.product.product_photo?.full_url : '/images/medicine.png'}`
                 }
+                item.purchase_product_id = item.id
                 item.product = product;
+                item.discountAllow = item.discountAllow === 1 ? true : false;
                 return item
             })
         },
-        async save() {
-            await axios.post('/purchases', this.formState.formData)
+        async update() {
+            await axios.put('/purchases/'+this.id, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
-                        this.reset();
+
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+
+                        setTimeout(function (){
+                            window.location.href = '/purchases'
+                        }, 1000)
+
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }
@@ -735,7 +741,6 @@ export default {
             } else {
                 subtotal = (quantity * unitPrice)
             }
-
             this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
             this.calculateTotal();
         },

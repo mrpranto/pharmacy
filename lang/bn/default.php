@@ -188,4 +188,5 @@ return [
     'purchase_create' => 'ক্রয় সফল হয়েছে',
     'purchase_status' => 'ক্রয় স্ট্যাটাস',
     'purchase_delete' => 'ক্রয় মুছে ফেলা সফল হয়েছে.',
+    'purchase_update' => 'ক্রয় সম্পাদনা সফল হয়েছে.',
 ];

@@ -9,6 +9,7 @@ use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -57,7 +58,7 @@ class PurchaseServices extends BaseServices
             ->select(['purchases.*', 'suppliers.name as supplier_name'])
             ->with(['supplier', 'purchaseProducts'])
             ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
-            ->when(request()->get('date'), function ($q){
+            ->when(request()->get('date'), function ($q) {
                 $dates = explode(' to ', request()->get('date'));
                 $q->whereBetween('date', [$dates[0], $dates[1]]);
             })
@@ -170,7 +171,7 @@ class PurchaseServices extends BaseServices
                     ]);
 
                 $purchaseProducts = [];
-                foreach ($request->products as $purchaseProduct){
+                foreach ($request->products as $purchaseProduct) {
                     $purchaseProducts[] = [
                         'purchase_id' => $this->model->id,
                         'product_id' => $purchaseProduct['product']['id'],
@@ -210,10 +211,104 @@ class PurchaseServices extends BaseServices
             ->first();
 
         $this->model = $purchase->toArray();
-        $this->model['created_at'] = $purchase->created_at->format(format_date()).' '.$purchase->created_at->format(format_time());
-        $this->model['updated_at'] = $purchase->updated_at->format(format_date()).' '.$purchase->updated_at->format(format_time());
+        $this->model['created_at'] = $purchase->created_at->format(format_date()) . ' ' . $purchase->created_at->format(format_time());
+        $this->model['updated_at'] = $purchase->updated_at->format(format_date()) . ' ' . $purchase->updated_at->format(format_time());
 
         return $this->model;
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @return $this
+     */
+    public function validateUpdate($request, $id): static
+    {
+        $request->validate([
+            'supplier' => 'required|exists:suppliers,id',
+            'date' => 'required',
+            'status' => 'required|in:' . implode(',', Purchase::getConstantsByPrefix('STATUS_')),
+            'reference' => 'required|unique:purchases,reference,' . $id,
+            'subtotal' => 'required|numeric',
+            'total' => 'required|numeric',
+            'products' => 'required|array',
+            'products.*.product.id' => 'required|numeric|exists:products,id',
+            'products.*.unit_price' => 'required|numeric|min:1',
+            'products.*.sale_price' => 'required|numeric|min:1',
+            'products.*.quantity' => 'required|numeric|min:1',
+            'products.*.discountAllow' => 'required|boolean',
+            'products.*.discount' => 'nullable|numeric',
+            'products.*.discount_type' => 'nullable|string',
+            'products.*.subTotal' => 'nullable|numeric',
+        ]);
+
+        return $this;
+    }
+
+    public function update($request, $id)
+    {
+        try {
+            DB::transaction(function () use ($request, $id) {
+
+                $this->model = $this->model
+                    ->newQuery()
+                    ->with(['purchaseProducts'])
+                    ->where('id', $id)
+                    ->first();
+
+                $request_purchase_product_ids = Arr::pluck($request->products, 'id');
+
+                $purchase_product_ids = $this->model
+                    ->purchaseProducts
+                    ->pluck('id')
+                    ->toArray();
+
+                $deleteAblePurchaseProduct = array_diff($purchase_product_ids, $request_purchase_product_ids);
+
+                $this->model->update([
+                    'supplier_id' => $request->supplier,
+                    'date' => date('Y-m-d', strtotime($request->date)),
+                    'status' => $request->status,
+                    'reference' => $request->reference,
+                    'subtotal' => $request->subtotal,
+                    'otherCost' => $request->otherCost,
+                    'discount' => $request->discount,
+                    'total' => $request->total,
+                    'purchase_details' => json_encode($request->all()),
+                    'note' => $request->note,
+                ]);
+
+                foreach ($request->products as $purchaseProduct) {
+                    $this->model
+                        ->purchaseProducts()
+                        ->where('id', $purchaseProduct['id'])
+                        ->update([
+                            'purchase_id' => $this->model->id,
+                            'product_id' => $purchaseProduct['product']['id'],
+                            'unit_price' => $purchaseProduct['unit_price'],
+                            'sale_price' => $purchaseProduct['sale_price'],
+                            'quantity' => $purchaseProduct['quantity'],
+                            'discountAllow' => $purchaseProduct['discountAllow'],
+                            'discount' => $purchaseProduct['discount'],
+                            'discount_type' => $purchaseProduct['discount_type'],
+                            'subTotal' => $purchaseProduct['subTotal'],
+                            'product_details' => json_encode($purchaseProduct['product']),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                }
+
+                $this->model
+                    ->purchaseProducts()
+                    ->whereIn('id', $deleteAblePurchaseProduct)
+                    ->delete();
+            });
+
+            return response()->json(['success' => __t('purchase_update')]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 
     /**
@@ -235,7 +330,7 @@ class PurchaseServices extends BaseServices
 
             return response()->json(['success' => __t('purchase_delete')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }

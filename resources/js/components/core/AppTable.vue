@@ -160,7 +160,8 @@
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
                                 <span data-toggle="dropdown">
-                                    <span v-if="filter.filterValue !== ''" :class="filter.filterValue !== '' ? 'text-primary' : ''">
+                                    <span v-if="filter.filterValue !== ''"
+                                          :class="filter.filterValue !== '' ? 'text-primary' : ''">
                                         {{ __('default.' + filter.title) }}
                                         | {{ filter.filterValue.toUpperCase() }}
                                     </span>
@@ -179,7 +180,7 @@
                                             <a-radio-button v-for="(option, option_index) in filter.option"
                                                             :key="option_index"
                                                             :value="option">
-                                                {{ __('default.'+ option) }}
+                                                {{ __('default.' + option) }}
                                             </a-radio-button>
                                         </a-radio-group>
                                 </a-form-item>
@@ -198,9 +199,12 @@
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
                                 <span data-toggle="dropdown">
-                                    <span v-if="filter.filterValue !== null" :class="filter.filterValue !== null ? 'text-primary' : ''">
+                                    <span v-if="filter.filterValue !== null"
+                                          :class="filter.filterValue !== null ? 'text-primary' : ''">
                                         {{ __('default.' + filter.title) }}
-                                        | {{ filter.filterValue ? filter.filterValue[0].format('YYYY-MM-DD') +' to '+ filter.filterValue[1].format('YYYY-MM-DD') : '' }}
+                                        | {{
+                                            filter.filterValue ? filter.filterValue[0].format('YYYY-MM-DD') + ' to ' + filter.filterValue[1].format('YYYY-MM-DD') : ''
+                                        }}
                                     </span>
                                     <span v-else>
                                         <i class="mdi mdi-plus-circle"></i>
@@ -215,7 +219,7 @@
                                                 v-model:value="filter.filterValue"
                                                 :presets="rangePresets"
                                                 style="min-width: 300px; max-width: 130%"
-                                                @change="getDateFilter" />
+                                                @change="getDateFilter"/>
                                         </a-form-item>
                                     </div>
                                 </div>
@@ -278,7 +282,8 @@
                                     </td>
                                 </tr>
                                 <template v-else>
-                                    <tr class="data-tr" v-if="options.responseData.data.length > 0" v-for="(row, row_index) in options.responseData.data"
+                                    <tr class="data-tr" v-if="options.responseData.data.length > 0"
+                                        v-for="(row, row_index) in options.responseData.data"
                                         :key="row_index">
                                         <template v-for="(column) in options.columns">
                                             <td v-if="column.isVisible"
@@ -333,7 +338,9 @@
                                     </tr>
                                     <tr class="loader-tr" v-else>
                                         <td :colspan="visibleColumn" class="text-center align-middle">
-                                            <h3><InboxOutlined /></h3>
+                                            <h3>
+                                                <InboxOutlined/>
+                                            </h3>
                                             No Data found.
                                         </td>
                                     </tr>
@@ -457,7 +464,7 @@ export default {
             colWidth: '',
             visibleColumn: '',
             columnHistory: [],
-            rangePresets :[
+            rangePresets: [
                 {
                     label: 'Last 7 Days',
                     value: [dayjs().add(-7, 'd'), dayjs()],
@@ -530,7 +537,7 @@ export default {
                         return accumulator + parseInt(object.width);
                     }
                 }, 0);
-                if (sum <= 100){
+                if (sum <= 100) {
                     const remainingWidth = 100 - sum;
                     const adjustWidth = (remainingWidth / visibleColumn.length);
                     visibleColumn.forEach((item, itemIndex) => {
@@ -539,7 +546,7 @@ export default {
                             visibleColumn[itemIndex].width = (parseInt(oldColumnInfo.width) + parseFloat(adjustWidth))
                         }
                     })
-                }else {
+                } else {
                     visibleColumn.forEach((item, itemIndex) => {
                         const oldColumnInfo = JSON.parse(localStorage.getItem('columns')).find(col_item => item.key === col_item.key)
                         if (oldColumnInfo) {
@@ -610,9 +617,17 @@ export default {
                     this.options.request[key] = ""
                 }
             }
+
             let filter_key;
+
             for (filter_key = 0; filter_key < this.options?.filters?.length; filter_key++) {
-                this.options.filters[filter_key].filterValue = this.options.filters[filter_key].key;
+                if (this.options.filters[filter_key].type === 'drop-down-filter') {
+                    this.options.filters[filter_key].filterValue = this.options.filters[filter_key].key;
+                } else if (this.options.filters[filter_key].type === 'button-checkbox') {
+                    this.options.filters[filter_key].filterValue = ''
+                } else if (this.options.filters[filter_key].type === 'date') {
+                    this.options.filters[filter_key].filterValue = null
+                }
             }
 
             this.page = {
@@ -635,14 +650,14 @@ export default {
             }
             this.getColWidth();
         },
-        getDateFilter(date){
+        getDateFilter(date) {
             const dates = this.options.filters.find(item => item.key === 'date');
-            if (date){
+            if (date) {
                 const startDate = dates.filterValue[0].format('YYYY-MM-DD');
                 const endDate = dates.filterValue[1].format('YYYY-MM-DD');
-                this.options.request.date = startDate +' to '+ endDate;
+                this.options.request.date = startDate + ' to ' + endDate;
                 this.$parent.getData();
-            }else {
+            } else {
                 this.clearFilter(this.options.filters.indexOf(dates), 'date')
             }
         },
@@ -665,19 +680,14 @@ export default {
             this.$parent.filterData(event, key)
         },
         clearFilter(filter_index, key) {
-            if (this.options.filters[filter_index].type === 'drop-down-filter')
-            {
+            if (this.options.filters[filter_index].type === 'drop-down-filter') {
                 this.options.filters[filter_index].filterValue = key
                 let value = this.options.filters[filter_index].filterValue
                 this.$parent.filterData('', key)
-            }
-            else if (this.options.filters[filter_index].type === 'button-checkbox')
-            {
+            } else if (this.options.filters[filter_index].type === 'button-checkbox') {
                 this.options.filters[filter_index].filterValue = ''
                 this.$parent.filterData('', key)
-            }
-            else if (this.options.filters[filter_index].type === 'date')
-            {
+            } else if (this.options.filters[filter_index].type === 'date') {
                 this.options.filters[filter_index].filterValue = null
                 this.$parent.filterData(null, key)
             }

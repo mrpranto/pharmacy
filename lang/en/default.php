@@ -188,5 +188,6 @@ return [
     'purchase_create' => 'Purchase created successful.',
     'purchase_status' => 'Purchase status',
     'purchase_delete' => 'Purchase delete successful.',
+    'purchase_update' => 'Purchase update successful.'
 
 ];
