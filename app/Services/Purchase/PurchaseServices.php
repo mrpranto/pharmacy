@@ -206,7 +206,7 @@ class PurchaseServices extends BaseServices
     {
         $purchase = $this->model
             ->newQuery()
-            ->with(['supplier:id,name', 'purchaseProducts.product', 'createdBy', 'updatedBy'])
+            ->with(['supplier', 'purchaseProducts.product', 'createdBy', 'updatedBy'])
             ->where('id', $id)
             ->first();
 
@@ -245,7 +245,12 @@ class PurchaseServices extends BaseServices
         return $this;
     }
 
-    public function update($request, $id)
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update($request, $id): JsonResponse
     {
         try {
             DB::transaction(function () use ($request, $id) {

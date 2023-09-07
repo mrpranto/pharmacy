@@ -35,15 +35,17 @@
             </div>
         </div>
 
+        <PurchaseDetails :show="show"/>
+
     </div>
 </template>
 <script>
 
-import moment from "moment";
-import dayjs from 'dayjs';
+import PurchaseDetails from "./PurchaseDetails.vue";
+
 export default {
     name: "PurchaseList",
-    components: {},
+    components: {PurchaseDetails},
     props: ['permission'],
     data() {
         return {
@@ -261,9 +263,9 @@ export default {
         },
         async showDetails(id) {
             this.loader = true
-            await axios.get('/product/products/' + id)
+            await axios.get('/purchases/' + id)
                 .then(response => {
-                    this.show.product = response.data
+                    this.show.purchase = response.data
                     this.show.open = true
                     this.loader = false
                 })
