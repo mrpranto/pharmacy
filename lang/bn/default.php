@@ -190,4 +190,5 @@ return [
     'purchase_delete' => 'ক্রয় মুছে ফেলা সফল হয়েছে.',
     'purchase_update' => 'ক্রয় সম্পাদনা সফল হয়েছে.',
     'purchase_details' => 'ক্রয় বিস্তারিত',
+    'print' => 'প্রিন্ট',
 ];

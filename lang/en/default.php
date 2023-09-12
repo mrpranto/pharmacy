@@ -128,7 +128,7 @@ return [
     'confirm_password' => 'Confirm password',
     'profile_update' => 'Profile update successful',
     'password_change_successful' => 'Password change successful',
-    'peoples' => 'People',
+    'peoples' => 'Peoples',
     'suppliers' => 'Suppliers',
     'customers' => 'Customers',
     'unit_pack_size' => 'Unit (Pack Size)',
@@ -190,5 +190,6 @@ return [
     'purchase_delete' => 'Purchase delete successful.',
     'purchase_update' => 'Purchase update successful.',
     'purchase_details' => 'Purchase details',
+    'print' => 'Print',
 
 ];

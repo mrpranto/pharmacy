@@ -86,6 +86,15 @@ class PurchaseController extends Controller
     }
 
     /**
+     * @param string $id
+     * @return View
+     */
+    public function printPurchase(string $id): View
+    {
+        return view('pages.purchase.print-purchase',['purchase' => (object) $this->services->showDetails($id)]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id): View

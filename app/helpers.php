@@ -91,3 +91,27 @@ if (! function_exists('format_time')){
         return Cache::get('general_setting') ? Cache::get('general_setting')['time_format'] : 'h:i:s a';
     }
 }
+
+if (! function_exists('show_currency')){
+
+    /**
+     * @param $amount
+     * @return string|void
+     */
+    function show_currency($amount)
+    {
+        $general_setting = Cache::get('general_setting');
+        $currency_position = $general_setting ? $general_setting['currency_symbol_position'] : 'before_with_space_amount';
+        $currency_symbol = $general_setting ? $general_setting['currency_symbol'] : '\u09f3';
+
+        if ($currency_position === 'before_amount'){
+            return $currency_symbol . $amount;
+        }else if ($currency_position === 'before_with_space_amount'){
+            return $currency_symbol .' '. $amount;
+        }else if ($currency_position === 'after_amount'){
+            return $amount . $currency_symbol;
+        }else if ($currency_position === 'after_with_space_amount'){
+            return $amount .' '. $currency_symbol;
+        }
+    }
+}
