@@ -28,7 +28,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <div class="card radius-20">
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row pt-4">
                             <div class="col-sm-12 col-md-5 col-lg-5">
                                 <a-form-item :label="__('default.supplier')" :label-col="{span: 5}" required>
                                     <a-input-group compact :wrapper-col="{span: 19}" :class="formState.validation.supplier ? 'ant-input ant-input-status-error': ''">

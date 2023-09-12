@@ -62,7 +62,7 @@ class SidebarComposer
                     'name' => __t('purchase'),
                     'icon' => 'shopping-cart',
                     'permission' => auth()->user()->canany([
-                        'app.supplier.index', 'app.customer.index'
+                        'app.purchase.index', 'app.purchase.create'
                     ]),
                     'subMenu' => $this->subMenu->purchases(),
                     'id' => 'purchase',

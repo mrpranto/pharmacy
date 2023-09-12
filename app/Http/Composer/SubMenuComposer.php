@@ -54,13 +54,13 @@ class SubMenuComposer
                 'name' => __t('add_purchase'),
                 'url' => route('purchases.create'),
                 'path' => 'purchases/create',
-                'permission' => auth()->user()->can('app.customer.index')
+                'permission' => auth()->user()->can('app.purchase.create')
             ],
             [
                 'name' => __t('purchase_list'),
                 'url' => route('purchases.index'),
                 'path' => ['purchases', 'purchases/*/edit', 'purchase-print'],
-                'permission' => auth()->user()->can('app.supplier.index')
+                'permission' => auth()->user()->can('app.purchase.index')
             ],
         ];
     }
