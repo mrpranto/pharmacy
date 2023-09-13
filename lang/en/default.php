@@ -191,5 +191,6 @@ return [
     'purchase_update' => 'Purchase update successful.',
     'purchase_details' => 'Purchase details',
     'print' => 'Print',
+    'unit_qty' => 'Unit/Qty'
 
 ];

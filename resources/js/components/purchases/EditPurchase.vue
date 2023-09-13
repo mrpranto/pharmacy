@@ -71,20 +71,12 @@
 
                             <div class="col-sm-12 col-md-4 col-lg-4">
                                 <a-form-item :label="__('default.status')" required>
-                                    <a-input-group compact
-                                                   :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
-                                        <a-radio-group v-model:value="formState.formData.status" button-style="solid"
-                                                       style="width: 100%">
-                                            <a-radio-button value="received">{{
-                                                    __('default.received')
-                                                }}
-                                            </a-radio-button>
-                                            <a-radio-button value="pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="canceled">{{
-                                                    __('default.canceled')
-                                                }}
-                                            </a-radio-button>
-                                        </a-radio-group>
+                                    <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
+                                        <a-select v-model:value="formState.formData.status" style="width: 100%">
+                                            <a-select-option value="received">{{ __('default.received') }}</a-select-option>
+                                            <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
+                                            <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
+                                        </a-select>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style=""
                                          v-if="formState.validation.status">

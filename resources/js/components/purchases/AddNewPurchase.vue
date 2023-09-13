@@ -11,10 +11,13 @@
                                         <h5>{{ __('default.add_purchase') }}</h5>
                                     </div>
                                     <div>
-                                        <a-spin v-if="loader" />
+                                        <a-spin v-if="loader"/>
                                     </div>
                                     <div class="d-flex align-items-center flex-wrap text-nowrap">
-                                        <a href="/purchases" :title="__('default.purchase_list')" class="btn btn-primary btn-icon-text"> <i class="mdi mdi-format-list-bulleted"></i> {{ __('default.purchase_list') }} </a>
+                                        <a href="/purchases" :title="__('default.purchase_list')"
+                                           class="btn btn-primary btn-icon-text"> <i
+                                            class="mdi mdi-format-list-bulleted"></i> {{ __('default.purchase_list') }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -31,7 +34,8 @@
                         <div class="row pt-4">
                             <div class="col-sm-12 col-md-5 col-lg-5">
                                 <a-form-item :label="__('default.supplier')" :label-col="{span: 5}" required>
-                                    <a-input-group compact :wrapper-col="{span: 19}" :class="formState.validation.supplier ? 'ant-input ant-input-status-error': ''">
+                                    <a-input-group compact :wrapper-col="{span: 19}"
+                                                   :class="formState.validation.supplier ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="formState.formData.supplier"
                                             style="width: calc(100% - 45px)"
@@ -46,7 +50,8 @@
                                             </a-button>
                                         </a-tooltip>
                                     </a-input-group>
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.supplier">
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.supplier">
                                         {{ formState.validation.supplier[0] }}
                                     </div>
                                 </a-form-item>
@@ -54,8 +59,9 @@
 
                             <div class="col-sm-12 col-md-3 col-lg-3">
                                 <a-form-item :label="__('default.date')" required>
-                                    <a-input-group compact :class="formState.validation.date ? 'ant-input ant-input-status-error': ''">
-                                        <a-date-picker v-model:value="formState.formData.date" style="width: 100%" />
+                                    <a-input-group compact
+                                                   :class="formState.validation.date ? 'ant-input ant-input-status-error': ''">
+                                        <a-date-picker v-model:value="formState.formData.date" style="width: 100%"/>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.date">
                                         {{ formState.validation.date[0] }}
@@ -66,13 +72,14 @@
                             <div class="col-sm-12 col-md-4 col-lg-4">
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
-                                        <a-radio-group v-model:value="formState.formData.status" button-style="solid" style="width: 100%">
-                                            <a-radio-button value="received">{{ __('default.received') }}</a-radio-button>
-                                            <a-radio-button value="pending">{{ __('default.pending') }}</a-radio-button>
-                                            <a-radio-button value="canceled">{{ __('default.canceled') }}</a-radio-button>
-                                        </a-radio-group>
+                                        <a-select v-model:value="formState.formData.status" style="width: 100%">
+                                            <a-select-option value="received">{{ __('default.received') }}</a-select-option>
+                                            <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
+                                            <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
+                                        </a-select>
                                     </a-input-group>
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.status">
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.status">
                                         {{ formState.validation.status[0] }}
                                     </div>
                                 </a-form-item>
@@ -80,7 +87,8 @@
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
                                 <a-form-item :label="__('default.products')" :label-col="{span: 2}" required>
-                                    <a-input-group compact :wrapper-col="{span: 22}" :class="formState.validation.products ? 'ant-input ant-input-status-error': ''">
+                                    <a-input-group compact :wrapper-col="{span: 22}"
+                                                   :class="formState.validation.products ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="searchProduct"
                                             style="width: calc(100% - 45px)"
@@ -91,12 +99,21 @@
                                             @search="getProducts"
                                             @change="selectProduct"
                                         >
-                                            <template #option="{ value: val, label, icon, company, category, unit, barcode }">
-                                                <a-image :width="35" :height="35" :src="icon" class="img-sm rounded-circle" :aria-label="val" />
+                                            <template
+                                                #option="{ value: val, label, icon, company, category, unit, barcode }">
+                                                <a-image :width="35" :height="35" :src="icon"
+                                                         class="img-sm rounded-circle" :aria-label="val"/>
                                                 &nbsp;&nbsp;
                                                 <span>
-													<b>{{ label }} ({{ barcode }})</b>, <b>{{ __('default.company') }}:</b> <span class="text-muted">{{ company }}</span>, <b>{{ __('default.category') }}:</b>
-													<span class="text-muted">{{ category }}</span>, <b>{{ __('default.unit') }}:</b> <span class="text-muted">{{ unit }}</span>
+													<b>{{ label }} ({{ barcode }})</b>, <b>{{
+                                                        __('default.company')
+                                                    }}:</b> <span class="text-muted">{{
+                                                        company
+                                                    }}</span>, <b>{{ __('default.category') }}:</b>
+													<span class="text-muted">{{
+                                                            category
+                                                        }}</span>, <b>{{ __('default.unit') }}:</b> <span
+                                                    class="text-muted">{{ unit }}</span>
 												</span>
                                             </template>
                                         </a-select>
@@ -106,7 +123,8 @@
                                             </a-button>
                                         </a-tooltip>
                                     </a-input-group>
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.products">
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.products">
                                         {{ formState.validation.products[0] }}
                                     </div>
                                 </a-form-item>
@@ -120,30 +138,53 @@
                                             <tr>
                                                 <th width="5%">#</th>
                                                 <th width="20%">{{ __('default.product') }}</th>
-                                                <th width="15%" class="text-center">{{ __('default.unit_price') }} ({{ $currency_symbol }})</th>
-                                                <th width="15%" class="text-center">{{ __('default.sale_price') }} ({{ $currency_symbol }})</th>
+                                                <th width="15%" class="text-center">{{ __('default.unit_price') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
+                                                <th width="15%" class="text-center">{{ __('default.sale_price') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
                                                 <th width="10%" class="text-center">{{ __('default.quantity') }}</th>
-                                                <th width="15%" class="text-center">(-) {{ __('default.discount') }} ({{ $currency_symbol }})</th>
-                                                <th width="15%" class="text-right">{{ __('default.sub_total') }} ({{ $currency_symbol }})</th>
+                                                <th width="15%" class="text-center">(-) {{ __('default.discount') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
+                                                <th width="15%" class="text-right">{{ __('default.sub_total') }}
+                                                    ({{ $currency_symbol }})
+                                                </th>
                                                 <th width="5%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="(product, product_index) in formState.formData.products" :key="product_index">
+                                            <tr v-for="(product, product_index) in formState.formData.products"
+                                                :key="product_index">
                                                 <td width="5%">{{ (product_index + 1) }}</td>
                                                 <td width="20%">
                                                     <div class="d-flex align-items-center">
-                                                        <i data-feather="corner-up-left" id="backToChatList" class="icon-lg mr-2 ml-n2 text-muted d-lg-none"></i>
+                                                        <i data-feather="corner-up-left" id="backToChatList"
+                                                           class="icon-lg mr-2 ml-n2 text-muted d-lg-none"></i>
                                                         <figure class="mb-0 mr-2">
-                                                            <a-image :width="35" :height="35" :src="product.product.photo" class="img-sm rounded-circle" :alt="product.product.name" />
+                                                            <a-image :width="35" :height="35"
+                                                                     :src="product.product.photo"
+                                                                     class="img-sm rounded-circle"
+                                                                     :alt="product.product.name"/>
                                                             <div class="status online"></div>
                                                         </figure>
                                                         <div>
-                                                            <p class="font-weight-bolder text-capital">{{ product.product.name }} <small class="text-muted" :title="__('default.unit')">{{ product.product.unit }}</small></p>
-                                                            <p class="text-muted tx-13"><b>{{ __('default.barcode') }}: </b>{{ product.product.barcode }}</p>
+                                                            <p class="font-weight-bolder text-capital">
+                                                                {{ product.product.name }} <small class="text-muted"
+                                                                                                  :title="__('default.unit')">{{
+                                                                    product.product.unit
+                                                                }}</small></p>
+                                                            <p class="text-muted tx-13"><b>{{
+                                                                    __('default.barcode')
+                                                                }}: </b>{{ product.product.barcode }}</p>
                                                             <p class="text-muted tx-13">
-                                                                <span :title="__('default.company')">{{ product.product.company }}</span>,
-                                                                <span :title="__('default.category')">{{ product.product.category }}</span>
+                                                                <span :title="__('default.company')">{{
+                                                                        product.product.company
+                                                                    }}</span>,
+                                                                <span :title="__('default.category')">{{
+                                                                        product.product.category
+                                                                    }}</span>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -157,8 +198,11 @@
                                                         @change="calculatePrices(product_index)"
                                                         style="width: 100%"
                                                     />
-                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.unit_price']">
-                                                        {{ formState.validation['products.'+product_index+'.unit_price'][0] }}
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.unit_price']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.unit_price'][0]
+                                                        }}
                                                     </div>
                                                 </td>
                                                 <td width="15%">
@@ -170,8 +214,11 @@
                                                         @change="calculatePrices(product_index)"
                                                         style="width: 100%"
                                                     />
-                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.sale_price']">
-                                                        {{ formState.validation['products.'+product_index+'.sale_price'][0] }}
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.sale_price']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.sale_price'][0]
+                                                        }}
                                                     </div>
                                                 </td>
                                                 <td width="10%">
@@ -179,9 +226,12 @@
                                                         v-model:value="product.quantity"
                                                         min="1"
                                                         @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)" style="width: 100%" />
-                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.quantity']">
-                                                        {{ formState.validation['products.'+product_index+'.quantity'][0] }}
+                                                        @change="calculatePrices(product_index)" style="width: 100%"/>
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.quantity']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.quantity'][0]
+                                                        }}
                                                     </div>
                                                 </td>
                                                 <td width="15%" class="text-center">
@@ -204,32 +254,45 @@
                                                         />
 
                                                         <a-input-group compact style="width: 100%">
-                                                            <a-button @click.prevent="changeDiscountType(product_index, '$')" :type="product.discount_type !== '%' ? 'primary' : 'default'">
+                                                            <a-button
+                                                                @click.prevent="changeDiscountType(product_index, '$')"
+                                                                :type="product.discount_type !== '%' ? 'primary' : 'default'">
                                                                 {{ $currency_symbol }}
                                                             </a-button>
 
-                                                            <a-button @click.prevent="changeDiscountType(product_index, '%')" :type="product.discount_type === '%' ? 'primary' : 'default'">
+                                                            <a-button
+                                                                @click.prevent="changeDiscountType(product_index, '%')"
+                                                                :type="product.discount_type === '%' ? 'primary' : 'default'">
                                                                 %
                                                             </a-button>
                                                         </a-input-group>
                                                     </a-space>
 
-                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.discount']">
-                                                        {{ formState.validation['products.'+product_index+'.discount'][0] }}
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.discount']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.discount'][0]
+                                                        }}
                                                     </div>
                                                 </td>
                                                 <td width="15%" class="text-right">
                                                     <b>{{ $showCurrency(product.subTotal) }} </b>
-                                                    <div class="ant-form-item-explain-error text-danger" v-if="formState.validation['products.'+product_index+'.subTotal']">
-                                                        {{ formState.validation['products.'+product_index+'.subTotal'][0] }}
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.subTotal']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.subTotal'][0]
+                                                        }}
                                                     </div>
                                                 </td>
                                                 <td width="5%" class="text-center">
-                                                    <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes" cancel-text="No" @confirm="removeProduct(product_index)">
-                                                        <template #icon> </template>
+                                                    <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
+                                                                  cancel-text="No"
+                                                                  @confirm="removeProduct(product_index)">
+                                                        <template #icon></template>
 
                                                         <a-tooltip :title="__('default.remove')">
-                                                            <CloseCircleOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}" />
+                                                            <CloseCircleOutlined class="color-danger"
+                                                                                 :style="{fontSize: '20px', marginLeft: '6px'}"/>
                                                         </a-tooltip>
                                                     </a-popconfirm>
                                                 </td>
@@ -242,13 +305,16 @@
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row mt-4">
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_items') }} : {{ formState.totalItems }}</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_items') }} :
+                                                {{ formState.totalItems }}</h4>
                                         </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_unit') }} : {{ formState.totalUnits }}</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_unit') }} :
+                                                {{ formState.totalUnits }}</h4>
                                         </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4">
-                                            <h4 class="text-center text-muted">{{ __('default.total_price') }} : {{ $showCurrency(formState.totalPrice) }}</h4>
+                                            <h4 class="text-center text-muted">{{ __('default.total_price') }} :
+                                                {{ $showCurrency(formState.totalPrice) }}</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -266,8 +332,10 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <a-form-item :label="__('default.purchase_reference')" :label-col="{span: 8}">
-                                    <a-input-group compact :wrapper-col="{span: 16}" :class="formState.validation.reference ? 'ant-input ant-input-status-error': ''">
-                                        <a-input v-model:value="formState.formData.reference" :placeholder="__('default.purchase_reference')" style="width: 100%">
+                                    <a-input-group compact :wrapper-col="{span: 16}"
+                                                   :class="formState.validation.reference ? 'ant-input ant-input-status-error': ''">
+                                        <a-input v-model:value="formState.formData.reference"
+                                                 :placeholder="__('default.purchase_reference')" style="width: 100%">
                                             <template #suffix>
                                                 <a-tooltip title="Generate new reference" @click="generateReference">
                                                     <sync-outlined style="color: rgba(0, 0, 0, 0.45)"/>
@@ -275,25 +343,34 @@
                                             </template>
                                         </a-input>
                                     </a-input-group>
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.reference">
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.reference">
                                         {{ formState.validation.reference[0] }}
                                     </div>
                                 </a-form-item>
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`" :label-col="{span: 6}">
-                                    <a-input-number v-model:value="formState.formData.otherCost" :prefix="$currency_symbol" min="0" @keyup="calculateTotal" @change="calculateTotal" style="width: 100%" />
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.other_cost">
+                                <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`"
+                                             :label-col="{span: 6}">
+                                    <a-input-number v-model:value="formState.formData.otherCost"
+                                                    :prefix="$currency_symbol" min="0" @keyup="calculateTotal"
+                                                    @change="calculateTotal" style="width: 100%"/>
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.other_cost">
                                         {{ formState.validation.other_cost[0] }}
                                     </div>
                                 </a-form-item>
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="'(-) '+__('default.discount')+` (${$currency_symbol})`" :label-col="{span: 8}">
-                                    <a-input-number v-model:value="formState.formData.discount" :prefix="$currency_symbol" min="0" @keyup="calculateTotal" @change="calculateTotal" style="width: 100%" />
-                                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.discount">
+                                <a-form-item :label="'(-) '+__('default.discount')+` (${$currency_symbol})`"
+                                             :label-col="{span: 8}">
+                                    <a-input-number v-model:value="formState.formData.discount"
+                                                    :prefix="$currency_symbol" min="0" @keyup="calculateTotal"
+                                                    @change="calculateTotal" style="width: 100%"/>
+                                    <div class="ant-form-item-explain-error" style=""
+                                         v-if="formState.validation.discount">
                                         {{ formState.validation.discount[0] }}
                                     </div>
                                 </a-form-item>
@@ -301,8 +378,10 @@
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <a-form-item :label="__('default.note')" :label-col="{span: 6}">
-                                    <a-input-group :wrapper-col="{span: 18}" compact :class="formState.validation.note ? 'ant-input ant-input-status-error': ''">
-                                        <a-textarea v-model:value="formState.formData.note" :placeholder="__('default.note')" style="width: 100%"></a-textarea>
+                                    <a-input-group :wrapper-col="{span: 18}" compact
+                                                   :class="formState.validation.note ? 'ant-input ant-input-status-error': ''">
+                                        <a-textarea v-model:value="formState.formData.note"
+                                                    :placeholder="__('default.note')" style="width: 100%"></a-textarea>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.note">
                                         {{ formState.validation.note[0] }}
@@ -311,8 +390,12 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <button class="btn btn-primary float-right" @click.prevent="save"><i class="mdi mdi-content-save"></i> {{ __('default.save') }}</button>
-                                <button class="btn btn-warning float-right mr-2" @click.prevent="reset"><i class="mdi mdi-restore"></i> {{ __('default.reset') }}</button>
+                                <button class="btn btn-primary float-right" @click.prevent="save"><i
+                                    class="mdi mdi-content-save"></i> {{ __('default.save') }}
+                                </button>
+                                <button class="btn btn-warning float-right mr-2" @click.prevent="reset"><i
+                                    class="mdi mdi-restore"></i> {{ __('default.reset') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -325,31 +408,38 @@
                         <dl class="row">
                             <dt class="col-sm-12 text-center text-muted">
                                 <h4>{{ __('default.payment_summary') }}</h4>
-                                <hr />
+                                <hr/>
                             </dt>
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.subtotal') }} : </dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.subtotal) }}</dd>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.subtotal') }} :</dt>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">
+                                {{ $showCurrency(this.formState.formData.subtotal) }}
+                            </dd>
 
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.other_cost') }} : </dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.otherCost) }}</dd>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">{{ __('default.other_cost') }} :</dt>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">
+                                {{ $showCurrency(this.formState.formData.otherCost) }}
+                            </dd>
 
-                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">(-) {{ __('default.discount') }} : </dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">{{ $showCurrency(this.formState.formData.discount) }}</dd>
+                            <dt class="col-sm-12 col-md-6 col-lg-6 text-right">(-) {{ __('default.discount') }} :</dt>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right">
+                                {{ $showCurrency(this.formState.formData.discount) }}
+                            </dd>
 
                             <dt class="col-sm-12 text-center text-muted">
-                                <hr />
+                                <hr/>
                             </dt>
 
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right"><h4>{{ __('default.total') }}:</h4></dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ $showCurrency(formState.formData.total) }}</h4></dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>
+                                {{ $showCurrency(formState.formData.total) }}</h4></dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <AddNewSupplier :formState="supplierFormState" />
-        <AddNewProduct :formState="productFormState" />
+        <AddNewSupplier :formState="supplierFormState"/>
+        <AddNewProduct :formState="productFormState"/>
     </div>
 </template>
 <script>
@@ -361,7 +451,7 @@ import {
     FormOutlined,
     SyncOutlined
 } from "@ant-design/icons-vue";
-import { message } from 'ant-design-vue';
+import {message} from 'ant-design-vue';
 import dayjs from 'dayjs';
 import AddNewSupplier from "../people/supplier/AddNewSupplier.vue";
 import AddNewProduct from "../products/products/AddNewProduct.vue";
@@ -432,14 +522,14 @@ export default {
                 formData: {
                     supplier: null,
                     date: dayjs(this.$today, 'YYYY-MM-DD'),
-                    status: null,
+                    status: 'received',
                     products: [],
                     reference: null,
                     subtotal: 0,
-                    otherCost:0,
-                    discount:0,
-                    total:0,
-                    note:null
+                    otherCost: 0,
+                    discount: 0,
+                    total: 0,
+                    note: null
                 },
                 validation: {}
             },
@@ -454,26 +544,26 @@ export default {
 
     },
     methods: {
-        async save(){
-          await axios.post('/purchases', this.formState.formData)
-              .then(response => {
-                  if (response.data.success) {
-                      this.reset();
-                      this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
-                  } else {
-                      this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
-                  }
-              })
-              .catch(err => {
-                  if (err.response.status === 422) {
-                      this.formState.validation = err.response.data.errors
-                  } else {
-                      this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
-                      console.error(err)
-                  }
-              })
+        async save() {
+            await axios.post('/purchases', this.formState.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.reset();
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.formState.validation = err.response.data.errors
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                    }
+                })
         },
-        reset(){
+        reset() {
             this.formState.formData = {
                 supplier: null,
                 date: dayjs(this.$today, 'YYYY-MM-DD'),
@@ -535,17 +625,17 @@ export default {
             };
 
             const isExistProduct = this.formState.formData.products.find(item => item.product.id === productInfo.id);
-            if (isExistProduct){
+            if (isExistProduct) {
                 this.formState.formData.products = this.formState.formData.products.map(item => {
-                    if (item.product.id === isExistProduct.product.id){
+                    if (item.product.id === isExistProduct.product.id) {
                         item.quantity = item.quantity + 1
                         return item;
-                    }else {
+                    } else {
                         return item;
                     }
                 })
-                message.success(isExistProduct.product.name +' already added in list.');
-            }else {
+                message.success(isExistProduct.product.name + ' already added in list.');
+            } else {
                 this.formState.formData.products.push({
                     product: productInfo,
                     unit_price: 0,
@@ -562,7 +652,7 @@ export default {
         },
         removeProduct(key) {
             const removeProductName = this.formState.formData.products[key].product.name;
-            message.warning(removeProductName +' remove from this list.');
+            message.warning(removeProductName + ' remove from this list.');
             this.formState.formData.products.splice(key, 1);
             this.calculateTotal()
         },
@@ -599,15 +689,15 @@ export default {
             this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
             this.calculateTotal();
         },
-        calculateTotal(){
+        calculateTotal() {
             const selectedProducts = this.formState.formData.products
             this.formState.totalItems = selectedProducts.length;
             this.formState.totalUnits = selectedProducts.reduce((accumulator, currentitem) => {
                 return parseFloat(accumulator) + parseFloat(currentitem.quantity ?? 0)
-            },0);
+            }, 0);
             this.formState.totalPrice = selectedProducts.reduce((accumulator, currentitem) => {
                 return parseFloat(accumulator) + parseFloat(currentitem.subTotal ?? 0)
-            },0).toFixed(2);
+            }, 0).toFixed(2);
             this.formState.formData.subtotal = this.formState.totalPrice;
             const otherCost = this.formState.formData.otherCost;
             const discount = this.formState.formData.discount;

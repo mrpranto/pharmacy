@@ -107,14 +107,17 @@ export default {
                         }
                     },
                     {
-                        title: 'discount',
+                        title: 'unit_qty',
                         type: 'custom-html',
-                        key: 'discount',
+                        key: 'purchase_products',
                         width: '10',
-                        orderAble: true,
+                        orderAble: false,
                         isVisible: true ,
-                        modifier: (discount) => {
-                            return this.$showCurrency(discount);
+                        modifier: (purchase_products) => {
+                            const qty = purchase_products.reduce((accumulator, object) => {
+                                return accumulator + object.quantity;
+                            }, 0);
+                            return `<span>Unit : <b>${purchase_products.length}</b></span><br><span>Qty : <b>${qty}</b></span>`;
                         }
                     },
                     {

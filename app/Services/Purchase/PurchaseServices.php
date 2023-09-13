@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -284,23 +285,42 @@ class PurchaseServices extends BaseServices
                 ]);
 
                 foreach ($request->products as $purchaseProduct) {
-                    $this->model
-                        ->purchaseProducts()
-                        ->where('id', $purchaseProduct['id'])
-                        ->update([
-                            'purchase_id' => $this->model->id,
-                            'product_id' => $purchaseProduct['product']['id'],
-                            'unit_price' => $purchaseProduct['unit_price'],
-                            'sale_price' => $purchaseProduct['sale_price'],
-                            'quantity' => $purchaseProduct['quantity'],
-                            'discountAllow' => $purchaseProduct['discountAllow'],
-                            'discount' => $purchaseProduct['discount'],
-                            'discount_type' => $purchaseProduct['discount_type'],
-                            'subTotal' => $purchaseProduct['subTotal'],
-                            'product_details' => json_encode($purchaseProduct['product']),
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
+                    if (isset($purchaseProduct['id'])){
+                        $this->model
+                            ->purchaseProducts()
+                            ->where('id', $purchaseProduct['id'])
+                            ->update([
+                                'purchase_id' => $this->model->id,
+                                'product_id' => $purchaseProduct['product']['id'],
+                                'unit_price' => $purchaseProduct['unit_price'],
+                                'sale_price' => $purchaseProduct['sale_price'],
+                                'quantity' => $purchaseProduct['quantity'],
+                                'discountAllow' => $purchaseProduct['discountAllow'],
+                                'discount' => $purchaseProduct['discount'],
+                                'discount_type' => $purchaseProduct['discount_type'],
+                                'subTotal' => $purchaseProduct['subTotal'],
+                                'product_details' => json_encode($purchaseProduct['product']),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                    }else{
+                        $this->model
+                            ->purchaseProducts()
+                            ->create([
+                                'purchase_id' => $this->model->id,
+                                'product_id' => $purchaseProduct['product']['id'],
+                                'unit_price' => $purchaseProduct['unit_price'],
+                                'sale_price' => $purchaseProduct['sale_price'],
+                                'quantity' => $purchaseProduct['quantity'],
+                                'discountAllow' => $purchaseProduct['discountAllow'],
+                                'discount' => $purchaseProduct['discount'],
+                                'discount_type' => $purchaseProduct['discount_type'],
+                                'subTotal' => $purchaseProduct['subTotal'],
+                                'product_details' => json_encode($purchaseProduct['product']),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                    }
                 }
 
                 $this->model
@@ -312,6 +332,7 @@ class PurchaseServices extends BaseServices
             return response()->json(['success' => __t('purchase_update')]);
 
         } catch (\Exception $exception) {
+            Log::info($exception);
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
