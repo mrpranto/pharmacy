@@ -87,21 +87,10 @@ class PurchaseServices extends BaseServices
         return $this->product
             ->newQuery()
             ->active()
-            ->with(['category:id,name', 'company:id,name', 'unit:id,name,pack_size'])
+            ->with(['category:id,name', 'company:id,name', 'unit:id,name,pack_size', 'stocks'])
             ->when(request()->filled('search'), function ($q) {
                 $q->where('barcode', 'like', "%" . request()->get('search') . "%")
-                    ->orWhere('name', 'like', "%" . request()->get('search') . "%")
-                    ->orWhere('slug', 'like', "%" . request()->get('search') . "%")
-                    ->orWhereHas('category', function ($q) {
-                        $q->where('name', 'like', "%" . request()->get('search') . "%");
-                    })
-                    ->orWhereHas('company', function ($q) {
-                        $q->where('name', 'like', "%" . request()->get('search') . "%");
-                    })
-                    ->orWhereHas('unit', function ($q) {
-                        $q->where('name', 'like', "%" . request()->get('search') . "%")
-                            ->orWhere('pack_size', 'like', "%" . request()->get('search') . "%");
-                    });
+                    ->orWhere('name', 'like', "%" . request()->get('search') . "%");
             })
             ->orderBy('id', 'desc')
             ->take(10)

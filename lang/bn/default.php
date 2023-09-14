@@ -192,4 +192,9 @@ return [
     'purchase_details' => 'ক্রয় বিস্তারিত',
     'print' => 'প্রিন্ট',
     'unit_qty' => 'ইউনিট/পরিমাণ',
+    'stock_details' => 'স্টক বিবরণ',
+    'add_new_price' => 'নতুন দামের সাথে নতুন স্টক যোগ করুন',
+    'purchase_quantity' => 'ক্রয় পরিমাণ',
+    'sale_quantity' => 'বিক্রয় পরিমাণ',
+    'available_quantity' => 'উপলব্ধ পরিমাণ',
 ];

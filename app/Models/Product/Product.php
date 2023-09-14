@@ -3,12 +3,14 @@
 namespace App\Models\Product;
 
 use App\Models\File;
+use App\Models\Stock\Stock;
 use App\Models\trait\ActiveScope;
 use App\Models\trait\BootTrait;
 use App\Models\trait\CreatedByRelationship;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -59,5 +61,13 @@ class Product extends Model
     {
         return $this->morphOne(File::class, 'fileable')
             ->where('type', self::PRODUCT_PHOTO_TYPE);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class, 'product_id', 'id');
     }
 }

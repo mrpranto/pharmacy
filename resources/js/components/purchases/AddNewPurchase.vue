@@ -32,9 +32,9 @@
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="row pt-4">
-                            <div class="col-sm-12 col-md-5 col-lg-5">
-                                <a-form-item :label="__('default.supplier')" :label-col="{span: 5}" required>
-                                    <a-input-group compact :wrapper-col="{span: 19}"
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <a-form-item :label="__('default.supplier')" required>
+                                    <a-input-group compact
                                                    :class="formState.validation.supplier ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="formState.formData.supplier"
@@ -69,7 +69,7 @@
                                 </a-form-item>
                             </div>
 
-                            <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3">
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
                                         <a-select v-model:value="formState.formData.status" style="width: 100%">
@@ -86,8 +86,8 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <a-form-item :label="__('default.products')" :label-col="{span: 2}" required>
-                                    <a-input-group compact :wrapper-col="{span: 22}"
+                                <a-form-item :label="__('default.products')" required>
+                                    <a-input-group compact
                                                    :class="formState.validation.products ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="searchProduct"
@@ -440,6 +440,72 @@
 
         <AddNewSupplier :formState="supplierFormState"/>
         <AddNewProduct :formState="productFormState"/>
+
+
+        <a-modal v-model:open="formState.openStock"
+                 width="1000px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.stock_details')">
+            <hr>
+            <div class="row">
+                <div class="col-sm-6 mx-auto">
+                    <div class="media d-block d-sm-flex">
+                        <div class="d-flex align-items-center">
+                            <figure class="mb-0 mr-3">
+                                <a-image :width="80"
+                                         :src="formState.selectedProduct.photo"
+                                         class="img-sm img-thumbnail rounded-circle"
+                                         :alt="formState.selectedProduct.name"/>
+                            </figure>
+                        </div>
+
+                        <div class="media-body">
+                            <h4 class="mt-0 mb-1">{{ formState.selectedProduct.name }}</h4>
+                            <p>
+                                <span class="font-weight-bolder">{{ __('default.barcode') }} : </span>{{ formState.selectedProduct.barcode }} <br>
+                                <span class="font-weight-bolder">{{ __('default.company') }} : </span>{{ formState.selectedProduct.company }} <br>
+                                <span class="font-weight-bolder">{{ __('default.category') }} : </span>{{ formState.selectedProduct.category }} <br>
+                                <span class="font-weight-bolder">{{ __('default.unit') }} : </span>{{ formState.selectedProduct.unit }} <br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 pt-4">
+                    <div class="row ">
+                        <div class="col-sm-12 col-md-4 col-lg-4" v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
+                            <a>
+                                <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
+                                    <p>
+                                        <span>{{ __('default.unit_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.unit_price) }}</span> <br>
+                                        <span>{{ __('default.sale_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.sale_price) }}</span> <br>
+                                        <span>{{ __('default.purchase_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.purchase_quantity }}</span> <br>
+                                        <span>{{ __('default.sale_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.sale_quantity }}</span> <br>
+                                        <span>{{ __('default.available_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.available_quantity }}</span> <br>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <a>
+                                <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
+                                    <h1 class="text-center">
+                                        <i class="mdi mdi-plus"></i>
+                                    </h1>
+                                    <h5 class="text-center">
+                                        {{ __('default.add_new_price') }}
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a-modal>
+
     </div>
 </template>
 <script>
@@ -519,6 +585,8 @@ export default {
                     suppliers: [],
                     products: []
                 },
+                openStock: false,
+                selectedProduct:{},
                 formData: {
                     supplier: null,
                     date: dayjs(this.$today, 'YYYY-MM-DD'),
@@ -542,6 +610,13 @@ export default {
     },
     mounted() {
 
+    },
+    watch:{
+        'formState.openStock': function (){
+            if (this.formState.openStock === false){
+                this.searchProduct = null
+            }
+        }
     },
     methods: {
         async save() {
@@ -589,7 +664,8 @@ export default {
                             icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
                             company: item.company.name,
                             category: item.category.name,
-                            unit: item.unit.name + `(${item.unit.pack_size})`
+                            unit: item.unit.name + `(${item.unit.pack_size})`,
+                            stocks: item.stocks
                         }
                     })
                     this.formState.dependencies.products = searchProduct
@@ -622,33 +698,42 @@ export default {
                 category: selectedProduct.category,
                 unit: selectedProduct.unit,
                 photo: selectedProduct.icon,
+                stocks: selectedProduct.stocks
             };
 
-            const isExistProduct = this.formState.formData.products.find(item => item.product.id === productInfo.id);
-            if (isExistProduct) {
-                this.formState.formData.products = this.formState.formData.products.map(item => {
-                    if (item.product.id === isExistProduct.product.id) {
-                        item.quantity = item.quantity + 1
-                        return item;
-                    } else {
-                        return item;
-                    }
-                })
-                message.success(isExistProduct.product.name + ' already added in list.');
-            } else {
-                this.formState.formData.products.push({
-                    product: productInfo,
-                    unit_price: 0,
-                    sale_price: 0,
-                    quantity: 1,
-                    discountAllow: false,
-                    discount: 0,
-                    discount_type: '%',
-                    subTotal: 0
-                })
+            if (productInfo.stocks.length > 0){
+
+                this.formState.selectedProduct = productInfo;
+                this.formState.openStock = true;
+
+            }else {
+
+                const isExistProduct = this.formState.formData.products.find(item => item.product.id === productInfo.id);
+                if (isExistProduct) {
+                    this.formState.formData.products = this.formState.formData.products.map(item => {
+                        if (item.product.id === isExistProduct.product.id) {
+                            item.quantity = item.quantity + 1
+                            return item;
+                        } else {
+                            return item;
+                        }
+                    })
+                    message.success(isExistProduct.product.name + ' already added in list.');
+                } else {
+                    this.formState.formData.products.push({
+                        product: productInfo,
+                        unit_price: 0,
+                        sale_price: 0,
+                        quantity: 1,
+                        discountAllow: false,
+                        discount: 0,
+                        discount_type: '%',
+                        subTotal: 0
+                    })
+                }
+                this.calculateTotal();
+                this.searchProduct = null
             }
-            this.calculateTotal();
-            this.searchProduct = null
         },
         removeProduct(key) {
             const removeProductName = this.formState.formData.products[key].product.name;
@@ -813,5 +898,10 @@ export default {
 
 .table {
     border: 1px solid #ededed;
+}
+
+.stock-card:hover{
+    box-shadow:
+        0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
 }
 </style>

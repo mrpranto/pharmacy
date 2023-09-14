@@ -32,9 +32,9 @@
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="row pt-4">
-                            <div class="col-sm-12 col-md-5 col-lg-5">
-                                <a-form-item :label="__('default.supplier')" :label-col="{span: 5}" required>
-                                    <a-input-group compact :wrapper-col="{span: 19}"
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <a-form-item :label="__('default.supplier')" required>
+                                    <a-input-group compact
                                                    :class="formState.validation.supplier ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="formState.formData.supplier"
@@ -69,7 +69,7 @@
                                 </a-form-item>
                             </div>
 
-                            <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3">
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
                                         <a-select v-model:value="formState.formData.status" style="width: 100%">
@@ -86,8 +86,8 @@
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <a-form-item :label="__('default.products')" :label-col="{span: 2}" required>
-                                    <a-input-group compact :wrapper-col="{span: 22}"
+                                <a-form-item :label="__('default.products')" required>
+                                    <a-input-group compact
                                                    :class="formState.validation.products ? 'ant-input ant-input-status-error': ''">
                                         <a-select
                                             v-model:value="searchProduct"

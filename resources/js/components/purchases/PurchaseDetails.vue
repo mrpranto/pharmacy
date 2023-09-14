@@ -139,6 +139,10 @@
                             <i class="mdi mdi-backspace"></i> {{ __('default.close') }}
                         </button>
 
+                        <button class="btn btn-success float-right mr-2" @click.prevent="edit">
+                            <i class="mdi mdi-pencil-box"></i> {{ __('default.edit') }}
+                        </button>
+
                         <button class="btn btn-primary float-right mr-2" @click.prevent="print">
                             <i class="mdi mdi-printer"></i> {{ __('default.print') }}
                         </button>
@@ -159,6 +163,9 @@ export default {
     methods: {
         print() {
             window.open('/purchase-print/'+this.show.purchase.id, '_blank');
+        },
+        edit() {
+            window.location.href = `/purchases/${this.show.purchase.id}/edit`;
         }
     }
 }

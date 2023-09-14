@@ -191,6 +191,11 @@ return [
     'purchase_update' => 'Purchase update successful.',
     'purchase_details' => 'Purchase details',
     'print' => 'Print',
-    'unit_qty' => 'Unit/Qty'
+    'unit_qty' => 'Unit/Qty',
+    'stock_details' => 'Stock details',
+    'add_new_price' => 'Add new stock with new price',
+    'purchase_quantity' => 'Purchase quantity',
+    'sale_quantity' => 'Sale quantity',
+    'available_quantity' => 'Available quantity',
 
 ];
