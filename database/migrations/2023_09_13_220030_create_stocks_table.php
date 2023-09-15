@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('purchase_quantity')->default(0);
             $table->integer('sale_quantity')->default(0);
             $table->integer('available_quantity')->default(0);
+            $table->boolean('discountAllow')->default(false);
+            $table->double('discount')->default(0);
+            $table->string('discount_type', 5);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->softDeletes();

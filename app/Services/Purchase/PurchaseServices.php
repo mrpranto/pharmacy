@@ -5,6 +5,8 @@ namespace App\Services\Purchase;
 use App\Models\People\Supplier;
 use App\Models\Product\Product;
 use App\Models\Purchase\Purchase;
+use App\Models\Stock\Stock;
+use App\Models\Stock\StockLog;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,17 +21,24 @@ class PurchaseServices extends BaseServices
 {
     public Supplier $supplier;
     public Product $product;
+    public Stock $stock;
+    public StockLog $stockLog;
+
 
     /**
      * @param Purchase $purchase
      * @param Product $product
      * @param Supplier $supplier
+     * @param Stock $stock
+     * @param StockLog $stockLog
      */
-    public function __construct(Purchase $purchase, Product $product, Supplier $supplier)
+    public function __construct(Purchase $purchase, Product $product, Supplier $supplier, Stock $stock, StockLog $stockLog)
     {
         $this->model = $purchase;
         $this->product = $product;
         $this->supplier = $supplier;
+        $this->stock = $stock;
+        $this->stockLog = $stockLog;
     }
 
 
@@ -176,6 +185,8 @@ class PurchaseServices extends BaseServices
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+
+                    $this->storeStock($purchaseProduct);
                 }
 
                 $this->model->purchaseProducts()->insert($purchaseProducts);
@@ -186,6 +197,85 @@ class PurchaseServices extends BaseServices
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * @param $purchaseProduct
+     * @return JsonResponse|void
+     */
+    public function storeStock($purchaseProduct)
+    {
+        try {
+
+            $existStock = $this->stock
+                ->newQuery()
+                ->where('id', $purchaseProduct['stock_id'])
+                ->first();
+
+            if ($existStock){
+
+                $existStock->update([
+                    'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
+                    'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                ]);
+
+                $this->storeStockLog([
+                    'stock_id' => $existStock->id,
+                    'product_id' => $existStock->product_id,
+                    'unit_price' => $existStock->unit_price,
+                    'sale_price' => $existStock->sale_price,
+                    'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
+                    'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                    'type' => StockLog::TYPE_PURCHASE
+                ]);
+
+            }else{
+
+                $stock = $this->stock
+                    ->newQuery()
+                    ->create([
+                        'product_id' => $purchaseProduct['product']['id'],
+                        'unit_price' => $purchaseProduct['unit_price'],
+                        'sale_price' => $purchaseProduct['sale_price'],
+                        'purchase_quantity' => $purchaseProduct['quantity'],
+                        'available_quantity' => $purchaseProduct['quantity'],
+                        'discountAllow' => $purchaseProduct['discountAllow'],
+                        'discount' => $purchaseProduct['discount'],
+                        'discount_type' => $purchaseProduct['discount_type'],
+                    ]);
+
+                $this->storeStockLog([
+                    'stock_id' => $stock->id,
+                    'product_id' => $purchaseProduct['product']['id'],
+                    'unit_price' => $purchaseProduct['unit_price'],
+                    'sale_price' => $purchaseProduct['sale_price'],
+                    'purchase_quantity' => $purchaseProduct['quantity'],
+                    'available_quantity' => $purchaseProduct['quantity'],
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                    'type' => StockLog::TYPE_PURCHASE
+                ]);
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    public function storeStockLog(array $data): void
+    {
+        $this->stockLog->newQuery()->create($data);
     }
 
     /**
@@ -274,7 +364,7 @@ class PurchaseServices extends BaseServices
                 ]);
 
                 foreach ($request->products as $purchaseProduct) {
-                    if (isset($purchaseProduct['id'])){
+                    if (isset($purchaseProduct['id'])) {
                         $this->model
                             ->purchaseProducts()
                             ->where('id', $purchaseProduct['id'])
@@ -292,7 +382,7 @@ class PurchaseServices extends BaseServices
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ]);
-                    }else{
+                    } else {
                         $this->model
                             ->purchaseProducts()
                             ->create([

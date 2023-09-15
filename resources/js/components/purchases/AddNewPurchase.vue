@@ -191,6 +191,7 @@
                                                 </td>
                                                 <td width="15%">
                                                     <a-input-number
+                                                        :class="product.stock_id ? 'readonly' : ''"
                                                         v-model:value="product.unit_price"
                                                         :prefix="$currency_symbol"
                                                         min="0"
@@ -207,6 +208,7 @@
                                                 </td>
                                                 <td width="15%">
                                                     <a-input-number
+                                                        :class="product.stock_id ? 'readonly' : ''"
                                                         v-model:value="product.sale_price"
                                                         :prefix="$currency_symbol"
                                                         min="0"
@@ -475,8 +477,8 @@
             <div class="row">
                 <div class="col-sm-12 pt-4">
                     <div class="row ">
-                        <div class="col-sm-12 col-md-4 col-lg-4" v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
-                            <a>
+                        <div class="col-sm-12 col-md-4 col-lg-4 mb-4" v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
+                            <a @click.prevent="selectStockProduct(stock, formState.selectedProduct.id)">
                                 <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
                                     <p>
                                         <span>{{ __('default.unit_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.unit_price) }}</span> <br>
@@ -484,13 +486,22 @@
                                         <span>{{ __('default.purchase_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.purchase_quantity }}</span> <br>
                                         <span>{{ __('default.sale_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.sale_quantity }}</span> <br>
                                         <span>{{ __('default.available_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.available_quantity }}</span> <br>
+
+                                        <template v-if="stock.discountAllow">
+                                            <span class="text-danger">
+                                                {{ __('default.discount') }} :
+                                            </span>
+                                            <span class="text-danger font-weight-bolder">
+                                                {{ stock.discount }} {{ stock.discount_type }}
+                                            </span> <br>
+                                        </template>
                                     </p>
                                 </div>
                             </a>
                         </div>
 
-                        <div class="col-sm-12 col-md-4 col-lg-4">
-                            <a>
+                        <div class="col-sm-12 col-md-4 col-lg-4 mb-4">
+                            <a @click.prevent="selectStockProduct(null, null)">
                                 <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
                                     <h1 class="text-center">
                                         <i class="mdi mdi-plus"></i>
@@ -625,6 +636,7 @@ export default {
                     if (response.data.success) {
                         this.reset();
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.getProducts()
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }
@@ -642,7 +654,7 @@ export default {
             this.formState.formData = {
                 supplier: null,
                 date: dayjs(this.$today, 'YYYY-MM-DD'),
-                status: null,
+                status: 'received',
                 products: [],
                 reference: null,
                 subtotal: 0,
@@ -722,6 +734,7 @@ export default {
                 } else {
                     this.formState.formData.products.push({
                         product: productInfo,
+                        stock_id: null,
                         unit_price: 0,
                         sale_price: 0,
                         quantity: 1,
@@ -734,6 +747,63 @@ export default {
                 this.calculateTotal();
                 this.searchProduct = null
             }
+        },
+        selectStockProduct(stock, product_id){
+            if (stock){
+                const isExistProduct = this.formState.formData.products.find(item => item.product.id === product_id && item.stock_id === stock.id);
+                if (isExistProduct) {
+                    this.formState.formData.products = this.formState.formData.products.map(item => {
+                        if (item.product.id === isExistProduct.product.id && item.stock_id === isExistProduct.stock_id) {
+                            item.quantity = item.quantity + 1
+                            return item;
+                        } else {
+                            return item;
+                        }
+                    })
+                    message.success(`${isExistProduct.product.name} with Unit Price: ${isExistProduct.unit_price} already added in list.`);
+                } else {
+                    this.formState.formData.products.push({
+                        product: this.formState.selectedProduct,
+                        stock_id: stock.id,
+                        unit_price: stock.unit_price,
+                        sale_price: stock.sale_price,
+                        quantity: 1,
+                        discountAllow: stock.discountAllow === 1 ? true : false,
+                        discount: stock.discountAllow === 1 ? stock.discount : 0,
+                        discount_type: stock.discountAllow === 1 ? stock.discount_type : '%',
+                        subTotal: (stock.unit_price * 1)
+                    })
+                }
+            }else {
+
+                const isExistProduct = this.formState.formData.products.find(item => item.product.id === this.formState.selectedProduct.id && item.stock_id === null);
+                if (isExistProduct) {
+                    this.formState.formData.products = this.formState.formData.products.map(item => {
+                        if (item.product.id === isExistProduct.product.id && item.stock_id === isExistProduct.stock_id) {
+                            item.quantity = item.quantity + 1
+                            return item;
+                        } else {
+                            return item;
+                        }
+                    })
+                    message.success(isExistProduct.product.name + ' already added in list.');
+                } else {
+                    this.formState.formData.products.push({
+                        product: this.formState.selectedProduct,
+                        stock_id: null,
+                        unit_price: 0,
+                        sale_price: 0,
+                        quantity: 1,
+                        discountAllow: false,
+                        discount: 0,
+                        discount_type: '%',
+                        subTotal: 0
+                    })
+                }
+            }
+            this.formState.openStock = false;
+            this.calculateTotal();
+            this.searchProduct = null;
         },
         removeProduct(key) {
             const removeProductName = this.formState.formData.products[key].product.name;
@@ -903,5 +973,8 @@ export default {
 .stock-card:hover{
     box-shadow:
         0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+}
+.readonly{
+    pointer-events: none;
 }
 </style>

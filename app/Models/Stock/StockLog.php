@@ -12,11 +12,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StockLog extends Model
 {
+    const TYPE_PURCHASE = 'purchase';
+    const TYPE_SALE = 'sale';
+
     use HasFactory, SoftDeletes, BootTrait, CreatedByRelationship, ProductRelationship;
 
     protected $fillable = [
-        'stock_id', 'product_id', 'unit_price', 'sale_price', 'purchase_quantity',
-        'sale_quantity', 'available_quantity', 'created_by', 'updated_by',
+        'stock_id', 'product_id', 'unit_price', 'sale_price', 'purchase_quantity', 'sale_quantity',
+        'available_quantity', 'discountAllow', 'discount', 'discount_type', 'created_by', 'updated_by', 'type'
     ];
 
     /**
