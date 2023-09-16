@@ -67,6 +67,13 @@ class SidebarComposer
                     'subMenu' => $this->subMenu->purchases(),
                     'id' => 'purchase',
                 ],
+                [
+                    'name' => __t('stock_list'),
+                    'icon' => 'database',
+                    'url' => route('stocks'),
+                    'path' => 'stocks',
+                    'permission' => auth()->user()->can('app.dashboard')
+                ],
             ]
         ]);
     }

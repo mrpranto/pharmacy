@@ -79,6 +79,12 @@ app.component('purchase-list-component', PurchaseListComponent);
 import PurchaseActionComponent from './components/purchases/Action.vue';
 app.component('purchase-action-component', PurchaseActionComponent);
 
+/*
+* Stock component
+*/
+import StockComponent from './components/stocks/StockList.vue';
+app.component('stock-component', StockComponent);
+
 
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);

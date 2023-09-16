@@ -198,4 +198,7 @@ return [
     'sale_quantity' => 'Sale quantity',
     'available_quantity' => 'Available quantity',
 
+    'stock_list' => 'Stock List',
+    'total_available_qty' => 'Total available Quantity',
+
 ];

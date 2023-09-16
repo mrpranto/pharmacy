@@ -12,6 +12,7 @@ use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\UnitController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Stock\StockController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -98,6 +99,9 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::get('/get-purchases-products', [PurchaseController::class, 'getProducts']);
     Route::get('/get-purchases-suppliers', [PurchaseController::class, 'getSuppliers']);
 
+    //Stock route
+    Route::get('/stocks', [StockController::class, 'stockPage'])->name('stocks');
+    Route::get('/get-stocks', [StockController::class, 'getStocks']);
 
 
 });

@@ -36,7 +36,7 @@
 
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card radius-20">
                     <div class="card-body">
                         <app-table-component :options="options"></app-table-component>
                     </div>

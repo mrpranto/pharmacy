@@ -296,6 +296,15 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete Purchase',
                 'slug' => 'app.purchase.delete'
             ],
+
+            /*
+             * Stock Permission
+             */
+            [
+                'module_id' => $this->module('Stock'),
+                'name' => 'Stock List',
+                'slug' => 'app.stock.index'
+            ],
         ];
     }
 
