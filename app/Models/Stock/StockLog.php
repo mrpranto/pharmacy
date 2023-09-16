@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StockLog extends Model
 {
     const TYPE_PURCHASE = 'purchase';
+    const TYPE_PURCHASE_UPDATE = 'purchase_update';
     const TYPE_SALE = 'sale';
 
     use HasFactory, SoftDeletes, BootTrait, CreatedByRelationship, ProductRelationship;

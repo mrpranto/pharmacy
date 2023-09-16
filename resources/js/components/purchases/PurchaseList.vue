@@ -201,6 +201,7 @@ export default {
             },
             show:{
                 purchase:{},
+                permission: this.permission,
                 open:false
             }
         }

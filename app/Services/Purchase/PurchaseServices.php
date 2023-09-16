@@ -186,7 +186,9 @@ class PurchaseServices extends BaseServices
                         'updated_at' => now(),
                     ];
 
-                    $this->storeStock($purchaseProduct);
+                    if ($request->status == Purchase::STATUS_RECEIVED){
+                        $this->storeStock($purchaseProduct);
+                    }
                 }
 
                 $this->model->purchaseProducts()->insert($purchaseProducts);
@@ -400,6 +402,9 @@ class PurchaseServices extends BaseServices
                                 'updated_at' => now(),
                             ]);
                     }
+                    if ($request->status === Purchase::STATUS_RECEIVED){
+                        $this->updateStock($purchaseProduct);
+                    }
                 }
 
                 $this->model
@@ -412,6 +417,78 @@ class PurchaseServices extends BaseServices
 
         } catch (\Exception $exception) {
             Log::info($exception);
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $purchaseProduct
+     * @return JsonResponse|void
+     */
+    public function updateStock($purchaseProduct)
+    {
+        try {
+
+            $existStock = $this->stock
+                ->newQuery()
+                ->where('product_id', $purchaseProduct['product']['id'])
+                ->where('unit_price', $purchaseProduct['unit_price'])
+                ->where('sale_price', $purchaseProduct['sale_price'])
+                ->first();
+
+            if ($existStock){
+
+                $existStock->update([
+                    'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
+                    'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                ]);
+
+                $this->storeStockLog([
+                    'stock_id' => $existStock->id,
+                    'product_id' => $existStock->product_id,
+                    'unit_price' => $existStock->unit_price,
+                    'sale_price' => $existStock->sale_price,
+                    'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
+                    'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                    'type' => StockLog::TYPE_PURCHASE_UPDATE
+                ]);
+
+            }else{
+
+                $stock = $this->stock
+                    ->newQuery()
+                    ->create([
+                        'product_id' => $purchaseProduct['product']['id'],
+                        'unit_price' => $purchaseProduct['unit_price'],
+                        'sale_price' => $purchaseProduct['sale_price'],
+                        'purchase_quantity' => $purchaseProduct['quantity'],
+                        'available_quantity' => $purchaseProduct['quantity'],
+                        'discountAllow' => $purchaseProduct['discountAllow'],
+                        'discount' => $purchaseProduct['discount'],
+                        'discount_type' => $purchaseProduct['discount_type'],
+                    ]);
+
+                $this->storeStockLog([
+                    'stock_id' => $stock->id,
+                    'product_id' => $purchaseProduct['product']['id'],
+                    'unit_price' => $purchaseProduct['unit_price'],
+                    'sale_price' => $purchaseProduct['sale_price'],
+                    'purchase_quantity' => $purchaseProduct['quantity'],
+                    'available_quantity' => $purchaseProduct['quantity'],
+                    'discountAllow' => $purchaseProduct['discountAllow'],
+                    'discount' => $purchaseProduct['discount'],
+                    'discount_type' => $purchaseProduct['discount_type'],
+                    'type' => StockLog::TYPE_PURCHASE_UPDATE
+                ]);
+            }
+
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }

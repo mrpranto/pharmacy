@@ -139,7 +139,7 @@
                             <i class="mdi mdi-backspace"></i> {{ __('default.close') }}
                         </button>
 
-                        <button class="btn btn-success float-right mr-2" @click.prevent="edit">
+                        <button class="btn btn-success float-right mr-2" v-if="show.permission.edit && show.purchase.status !== 'received'" @click.prevent="edit">
                             <i class="mdi mdi-pencil-box"></i> {{ __('default.edit') }}
                         </button>
 

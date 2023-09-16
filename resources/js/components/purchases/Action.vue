@@ -5,10 +5,12 @@
             <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
                          @click="$parent.$parent.showDetails(row.id)"/>
         </a-tooltip>
-        <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit">
+
+        <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit && row.status !== 'received'">
                 <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                               @click.prevent="goEditPage(row.id)"/>
         </a-tooltip>
+
         <a-tooltip :title="__('default.delete')"  v-if="permission.delete">
             <DeleteOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}"
                             @click.prevent="$parent.$parent.showDeleteForm(row.id)"/>

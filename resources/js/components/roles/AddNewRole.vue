@@ -136,6 +136,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.validation = err.response.data.errors
                     } else {
                         console.error(err)

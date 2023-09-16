@@ -352,6 +352,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.formState.validation = err.response.data.errors
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
@@ -389,6 +390,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage('Category : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.categoryFormData.validation = err.response.data.errors
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
@@ -426,6 +428,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage('Company : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.companyFormData.validation = err.response.data.errors
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
@@ -465,6 +468,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage('Unit : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.unitFormData.validation = err.response.data.errors
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)

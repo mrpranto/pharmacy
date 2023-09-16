@@ -601,7 +601,7 @@ export default {
                 formData: {
                     supplier: null,
                     date: dayjs(this.$today, 'YYYY-MM-DD'),
-                    status: 'received',
+                    status: null,
                     products: [],
                     reference: null,
                     subtotal: 0,
@@ -643,6 +643,7 @@ export default {
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.formState.validation = err.response.data.errors
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
@@ -654,7 +655,7 @@ export default {
             this.formState.formData = {
                 supplier: null,
                 date: dayjs(this.$today, 'YYYY-MM-DD'),
-                status: 'received',
+                status: null,
                 products: [],
                 reference: null,
                 subtotal: 0,
