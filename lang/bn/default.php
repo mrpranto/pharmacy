@@ -199,5 +199,7 @@ return [
     'available_quantity' => 'উপলব্ধ পরিমাণ',
 
     'stock_list' => 'স্টক তালিকা',
-    'total_available_qty' => 'মোট উপলব্ধ পরিমাণ'
+    'total_available_qty' => 'মোট উপলব্ধ পরিমাণ',
+    'total_purchase_qty' => 'মোট ক্রয় পরিমাণ',
+    'total_sale_qty' => 'মোট বিক্রয় পরিমাণ',
 ];

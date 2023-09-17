@@ -37,6 +37,56 @@
                                                 <i class="mdi mdi-reload"></i>
                                             </button>
                                         </div>
+
+
+
+
+                                        <template v-for="(filter, filter_index) in options.filters">
+                                            <div class="btn-group" v-if="filter.type === 'drop-down-filter'">
+                                                <div class="dropdown show mr-1">
+                                                    <span class="filter-button">
+                                                        <span v-if="filter.filterValue !== filter.key" class="mr-1"
+                                                              :class="filter.filterValue !== filter.key ? 'text-primary' : ''"
+                                                              @click.prevent="clearFilter(filter_index, filter.key)">
+                                                            <i class="mdi mdi-close-circle"></i>
+                                                        </span>
+                                                        <span data-toggle="dropdown">
+                                                            <span v-if="filter.filterValue !== filter.key"
+                                                                  :class="filter.filterValue !== filter.key ? 'text-primary' : ''">
+                                                                {{
+                                                                    __('default.' + filter.title)
+                                                                }} | {{ filter.option.find(item => item.value === filter.filterValue).label }}
+                                                            </span>
+                                                            <span v-else>
+                                                                <i class="mdi mdi-plus-circle"></i>
+                                                                {{ __('default.' + filter.title) }}
+                                                            </span>
+                                                        </span>
+
+                                                        <div class="dropdown-menu filter-column">
+                                                            <div class="dropdown-item">
+                                                                <a-form-item :label="__('default.' + filter.title)">
+                                                                    <a-select
+                                                                        v-model:value="filter.filterValue"
+                                                                        class="filter-select"
+                                                                        style="min-width: 200px; max-width: 100%"
+                                                                        show-search
+                                                                        :placeholder="__('default.' + filter.title)"
+                                                                        :options="filter.option"
+                                                                        :filter-option="filter.filterOption"
+                                                                        @change="filterList($event, filter.key)"
+                                                                    ></a-select>
+                                                                </a-form-item>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+
+
+
                                     </div>
                                     <div class="col-sm-12 col-md-2 col-lg-2">
                                         <a-input v-model:value="options.request.search"
@@ -68,14 +118,14 @@
                                                 {{ __('default.product') }}
                                                  </span>
                                             </td>
-                                            <td width="20%">
-                                                 <span class="font-bold pull-left">
-                                                {{ __('default.company') }}
-                                                 </span>
-                                            </td>
                                             <td width="15%">
                                                  <span class="font-bold pull-left">
                                                 {{ __('default.category') }}
+                                                 </span>
+                                            </td>
+                                            <td width="20%">
+                                                 <span class="font-bold pull-left">
+                                                {{ __('default.company') }}
                                                  </span>
                                             </td>
                                             <td width="15%">
@@ -123,18 +173,18 @@
                                                                     <div class="status offline" v-else></div>
                                                                 </figure>
                                                                 <div>
-                                                                    <p class="font-weight-bolder text-capital">{{ product.name }}</p>
+                                                                    <p class="font-weight-bolder text-capital">{{ product.name.toUpperCase() }}</p>
                                                                     <p class="text-muted tx-13"><b>{{ __('default.barcode') }}:</b> {{ product?.barcode }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td width="20%">{{ product.company.name }}</td>
                                                     <td width="15%">{{ product.category.name }}</td>
+                                                    <td width="20%">{{ product.company.name }}</td>
                                                     <td width="15%">{{ product.unit.name }} ({{ product.unit.pack_size }})</td>
                                                     <td width="12%" class="text-center">
                                                         <span class="font-bold">
-                                                        1220
+                                                            {{ totalQty(product.stocks, 'available_quantity') }}
                                                         </span>
                                                     </td>
                                                     <td width="8%" class="text-center">
@@ -185,11 +235,13 @@
 
 
                                                                                     <div class="ml-3">
-                                                                                        <p style="font-size: 18px">Product have 4 different types of stock </p>
+                                                                                        <p style="font-size: 18px">
+                                                                                            <b>{{ product.name.toUpperCase() }}</b> have {{ product.stocks.length }} different types of stock.
+                                                                                        </p>
                                                                                         <p class="tx-14 text-muted">
-                                                                                            <span class="mr-3"><b>Total Purchase Quantity : </b> 100,</span>
-                                                                                            <span class="mr-3"><b>Total Sale quantity : </b> 200,</span>
-                                                                                            <span class="mr-3"><b>Total Available Quantity : </b> 400</span>
+                                                                                            <span class="mr-3"><b>{{ __('default.total_purchase_qty') }} : </b> {{ totalQty(product.stocks, 'purchase_quantity') }},</span>
+                                                                                            <span class="mr-3"><b>{{ __('default.total_sale_qty') }} : </b> {{ totalQty(product.stocks, 'sale_quantity') }},</span>
+                                                                                            <span class="mr-3"><b>{{ __('default.total_available_qty') }} : </b> {{ totalQty(product.stocks, 'available_quantity') }}</span>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
@@ -201,53 +253,25 @@
                                                                             <div class="table-responsive">
                                                                                 <table class="table table-striped border">
                                                                                     <tr>
-                                                                                        <th>#</th>
-                                                                                        <th>{{ __('default.unit_price') }}</th>
-                                                                                        <th>{{ __('default.sale_price') }}</th>
-                                                                                        <th>{{ __('default.purchase_quantity') }}</th>
-                                                                                        <th>{{ __('default.sale_quantity') }}</th>
-                                                                                        <th>{{ __('default.available_quantity') }}</th>
+                                                                                        <th class="text-center">#</th>
+                                                                                        <th class="text-center">{{ __('default.unit_price') }}</th>
+                                                                                        <th class="text-center">{{ __('default.sale_price') }}</th>
+                                                                                        <th class="text-center">{{ __('default.discount') }}</th>
+                                                                                        <th class="text-center">{{ __('default.purchase_quantity') }}</th>
+                                                                                        <th class="text-center">{{ __('default.sale_quantity') }}</th>
+                                                                                        <th class="text-center">{{ __('default.available_quantity') }}</th>
                                                                                     </tr>
-                                                                                    <tr>
-                                                                                        <th>1</th>
-                                                                                        <td>Mark</td>
-                                                                                        <td>Otto</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
+
+                                                                                    <tr v-for="(stock, stock_index) in product.stocks" :key="stock_index"  :class="isEven(stock_index) ? 'row-color' : ''">
+                                                                                        <th class="text-center">{{ (stock_index+1) }}</th>
+                                                                                        <td class="text-center">{{ $showCurrency(stock.unit_price) }}</td>
+                                                                                        <td class="text-center">{{ $showCurrency(stock.sale_price) }}</td>
+                                                                                        <td class="text-center">{{ stock.discount }} {{ stock.discount_type }}</td>
+                                                                                        <td class="text-center">{{ stock.purchase_quantity }}</td>
+                                                                                        <td class="text-center">{{ stock.sale_quantity }}</td>
+                                                                                        <td class="text-center">{{ stock.available_quantity }}</td>
                                                                                     </tr>
-                                                                                    <tr>
-                                                                                        <th>2</th>
-                                                                                        <td>Mark</td>
-                                                                                        <td>Otto</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th>3</th>
-                                                                                        <td>Mark</td>
-                                                                                        <td>Otto</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th>4</th>
-                                                                                        <td>Mark</td>
-                                                                                        <td>Otto</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th>5</th>
-                                                                                        <td>Mark</td>
-                                                                                        <td>Otto</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                        <td>@mdo</td>
-                                                                                    </tr>
+
                                                                                 </table>
                                                                             </div>
                                                                         </div>
@@ -364,6 +388,7 @@ export default {
             pages: [],
             from: '',
             to: '',
+            total: '',
             dataArray:[],
 
             options: {
@@ -374,17 +399,62 @@ export default {
                     per_page: this.$general_setting.pagination,
                     search: '',
                     order_by: 'id',
-                    order_dir: 'desc'
+                    order_dir: 'desc',
+                    category: '',
+                    company: '',
+                    unit: '',
                 },
-                exportAble: {}
+                exportAble: {},
+                filters: [
+                    {
+                        title: 'category',
+                        type: "drop-down-filter",
+                        key: "category",
+                        filterValue: 'category',
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                    {
+                        title: 'company',
+                        type: "drop-down-filter",
+                        key: "company",
+                        filterValue: 'company',
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                    {
+                        title: 'unit',
+                        type: "drop-down-filter",
+                        key: "unit",
+                        filterValue: 'unit',
+                        option: [],
+                        filterOption: this.selectFilterOption
+                    },
+                ],
             },
         }
     },
     created() {
         this.getData()
+        this.getDependency()
     },
     mounted() {
-
+        this.$nextTick(() => {
+            $(".filter-column").click(function (e) {
+                e.stopPropagation();
+            })
+        })
+    },
+    watch:{
+        'options.request.category': function () {
+            this.getData()
+        },
+        'options.request.company': function () {
+            this.getData()
+        },
+        'options.request.unit': function () {
+            this.getData()
+        }
     },
     methods: {
         isEven(n) {
@@ -402,18 +472,89 @@ export default {
                     this.options.responseData = response.data;
                     this.options.total = response.data.total;
                     this.options.loader = false;
-
+                    this.getTotalValue()
+                    this.getPages()
                     console.log(this.options.responseData)
                 })
                 .catch(err => {
                     console.error(err)
                 })
         },
+        async getDependency() {
+            await axios.get('/product/get-dependency')
+                .then(response => {
+                    this.options.filters[0].option = response.data.categories.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    });
+                    this.options.filters[1].option = response.data.companies.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    });
+                    this.options.filters[2].option = response.data.units.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name + ` (${item.pack_size})`
+                        }
+                    });
 
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        selectFilterOption(input, option) {
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        },
+        async searchData(){
+            await this.getData()
+        },
+        async clearSearch() {
+            this.options.request.search = '';
+            await this.getData()
+        },
+        totalQty(stocks, column){
+            return stocks.reduce((accumulator, object) => {
+                return accumulator + object[column];
+            }, 0);
+        },
+        filterList(event, key) {
+            this.page = {
+                value: 1,
+                label: 1
+            }
+            this.filterData(event, key)
+        },
+        clearFilter(filter_index, key) {
+            if (this.options.filters[filter_index].type === 'drop-down-filter') {
+                this.options.filters[filter_index].filterValue = key
+                let value = this.options.filters[filter_index].filterValue
+                this.filterData('', key)
+            }
+        },
+        filterData(filterValue, filterType) {
+            if (filterType === 'category') {
+                this.options.request.category = filterValue
+            } else if (filterType === 'company') {
+                this.options.request.company = filterValue
+            } else if (filterType === 'unit') {
+                this.options.request.unit = filterValue
+            }
+        },
 
         /*
         * Pagination function
         */
+        getTotalValue() {
+            const data = this.options.responseData;
+            this.from = data?.from;
+            this.to = data?.to;
+            this.total = data?.total;
+        },
         changePerPage(page) {
             this.page = {
                 value: 1,
@@ -421,10 +562,23 @@ export default {
             }
             this.options.request.per_page = page
         },
+        reAssignPage(page) {
+            this.page = this.pages.find(item => parseInt(item.value) === parseInt(page))
+        },
         async getPaginate(value) {
             const page = value
             const requestUrl = this.options.responseData?.path + '?page=' + page;
             await this.getData(requestUrl)
+        },
+        getPages() {
+            const last_page = this.options.responseData?.last_page
+            this.pages = [];
+            for (let page = 1; page <= last_page; page++) {
+                this.pages.push({
+                    value: page,
+                    label: page
+                })
+            }
         },
         async getPreviousPage() {
             const requestUrl = this.options.responseData?.prev_page_url;
