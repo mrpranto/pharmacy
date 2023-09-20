@@ -133,7 +133,7 @@ class PurchaseServices extends BaseServices
             'products' => 'required|array',
             'products.*.product.id' => 'required|numeric|exists:products,id',
             'products.*.unit_price' => 'required|numeric|min:1',
-            'products.*.sale_price' => 'required|numeric|min:1',
+            'products.*.sale_price' => 'required|numeric|min:1|gt:products.*.unit_price',
             'products.*.quantity' => 'required|numeric|min:1',
             'products.*.discountAllow' => 'required|boolean',
             'products.*.discount' => 'nullable|numeric',

@@ -11,7 +11,7 @@
                                 </h5>
                             </div>
                             <div>
-                                <a-spin v-if="loader"/>
+                                <a-spin v-if="options.loader"/>
                             </div>
                             <div class="d-flex align-items-center flex-wrap text-nowrap"></div>
                         </div>
@@ -141,7 +141,8 @@
                                             <td width="8%"></td>
                                         </tr>
                                         </thead>
-                                        <tbody class="tbody-scroll">
+                                        <tbody class="tbody-scroll"
+                                               :class="windowHeight > 620 ? 'tbody-scroll-max-min-height-480' : 'tbody-scroll-max-min-height-220'">
                                             <template v-for="(product, product_index) in options.responseData.data">
                                                 <tr class="data-tr" :class="isEven(product_index) ? 'row-color' : ''">
                                                     <td width="30%">
@@ -251,7 +252,7 @@
                                                                     <div class="row">
                                                                         <div class="col-sm-12">
                                                                             <div class="table-responsive">
-                                                                                <table class="table table-striped border">
+                                                                                <table class="table table-striped table-bordered border">
                                                                                     <tr>
                                                                                         <th class="text-center">#</th>
                                                                                         <th class="text-center">{{ __('default.unit_price') }}</th>
@@ -372,6 +373,7 @@ export default {
     components: {SearchOutlined, CloseCircleFilled, EnterOutlined},
     data() {
         return {
+            windowHeight: window.innerHeight,
             loader: false,
             per_pages: [
                 5,
@@ -454,6 +456,9 @@ export default {
         },
         'options.request.unit': function () {
             this.getData()
+        },
+        'options.request.per_page': function () {
+            this.getData()
         }
     },
     methods: {
@@ -474,7 +479,6 @@ export default {
                     this.options.loader = false;
                     this.getTotalValue()
                     this.getPages()
-                    console.log(this.options.responseData)
                 })
                 .catch(err => {
                     console.error(err)
@@ -549,6 +553,27 @@ export default {
         /*
         * Pagination function
         */
+        async refreshTable() {
+            for (const key in this.options.request) {
+                if (key !== 'per_page') {
+                    this.options.request[key] = ""
+                }
+            }
+
+            let filter_key;
+
+            for (filter_key = 0; filter_key < this.options?.filters?.length; filter_key++) {
+                if (this.options.filters[filter_key].type === 'drop-down-filter') {
+                    this.options.filters[filter_key].filterValue = this.options.filters[filter_key].key;
+                }
+            }
+
+            this.page = {
+                value: 1,
+                label: 1
+            }
+            await this.getData()
+        },
         getTotalValue() {
             const data = this.options.responseData;
             this.from = data?.from;

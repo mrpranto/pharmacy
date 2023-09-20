@@ -7,7 +7,7 @@
          style="background-image: url(http://127.0.0.1:8000/images/login-background.jpg);background-size: cover;">
 
         <div class="row w-100 mx-0 auth-page">
-            <div class="col-md-6 col-xl-3 mx-auto">
+            <div class="col-md-6 col-xl-4 mx-auto">
                 <div class="card">
                     <div class="row">
                         <div class="col-md-12 pl-md-0">

@@ -34,7 +34,7 @@
                 </div>
             </li>
 
-            <li class="nav-item dropdown">
+<!--            <li class="nav-item dropdown">
                 @if(session()->get('color-mode') == 'white')
                     <a class="nav-link" href="{{ route('set-color-mode', 'dark') }}">
                         <i data-feather="moon"></i>
@@ -48,9 +48,7 @@
                         <i data-feather="moon"></i>
                     </a>
                 @endif
-            </li>
-
-
+            </li>-->
             <li class="nav-item dropdown nav-messages">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">

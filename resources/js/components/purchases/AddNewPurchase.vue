@@ -43,6 +43,7 @@
                                             :placeholder="__('default.supplier')"
                                             :options="formState.dependencies.suppliers"
                                             :filter-option="selectFilterOption"
+                                            @change="checkValueIsSet('supplier')"
                                         ></a-select>
                                         <a-tooltip :title="__('default.add_supplier')" placement="top">
                                             <a-button @click="showAddNewSupplierModal">
@@ -61,7 +62,7 @@
                                 <a-form-item :label="__('default.date')" required>
                                     <a-input-group compact
                                                    :class="formState.validation.date ? 'ant-input ant-input-status-error': ''">
-                                        <a-date-picker v-model:value="formState.formData.date" style="width: 100%"/>
+                                        <a-date-picker v-model:value="formState.formData.date" @change="checkValueIsSet('date')" style="width: 100%"/>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.date">
                                         {{ formState.validation.date[0] }}
@@ -72,7 +73,7 @@
                             <div class="col-sm-12 col-md-3 col-lg-3">
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
-                                        <a-select v-model:value="formState.formData.status" style="width: 100%">
+                                        <a-select v-model:value="formState.formData.status" @change="checkValueIsSet('status')" style="width: 100%">
                                             <a-select-option value="received">{{ __('default.received') }}</a-select-option>
                                             <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
                                             <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
@@ -195,8 +196,8 @@
                                                         v-model:value="product.unit_price"
                                                         :prefix="$currency_symbol"
                                                         min="0"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)"
+                                                        @keyup="calculatePrices(product_index, 'unit_price')"
+                                                        @change="calculatePrices(product_index, 'unit_price')"
                                                         style="width: 100%"
                                                     />
                                                     <div class="ant-form-item-explain-error text-danger"
@@ -212,8 +213,8 @@
                                                         v-model:value="product.sale_price"
                                                         :prefix="$currency_symbol"
                                                         min="0"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)"
+                                                        @keyup="calculatePrices(product_index, 'sale_price')"
+                                                        @change="calculatePrices(product_index, 'sale_price')"
                                                         style="width: 100%"
                                                     />
                                                     <div class="ant-form-item-explain-error text-danger"
@@ -227,8 +228,8 @@
                                                     <a-input-number
                                                         v-model:value="product.quantity"
                                                         min="1"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)" style="width: 100%"/>
+                                                        @keyup="calculatePrices(product_index, 'quantity')"
+                                                        @change="calculatePrices(product_index, 'quantity')" style="width: 100%"/>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.quantity']">
                                                         {{
@@ -248,8 +249,8 @@
                                                         <a-input-number
                                                             v-model:value="product.discount"
                                                             min="0"
-                                                            @keyup="calculatePrices(product_index)"
-                                                            @change="calculatePrices(product_index)"
+                                                            @keyup="calculatePrices(product_index, 'discount')"
+                                                            @change="calculatePrices(product_index, 'discount')"
                                                             :prefix="product.discount_type === '%'
                                                                         ? '%' : $currency_symbol"
                                                             style="width: 100%"
@@ -822,7 +823,11 @@ export default {
         changeDiscountAllowed(key) {
             this.formState.formData.products[key].discountAllow = true
         },
-        calculatePrices(key) {
+        calculatePrices(key, column = null) {
+            if (this.formState.validation[`products.${key}.${column}`]){
+                this.formState.validation[`products.${key}.${column}`] = ''
+            }
+
             const unitPrice = this.formState.formData.products[key].unit_price;
             const quantity = this.formState.formData.products[key].quantity;
             const discount = this.formState.formData.products[key].discount;
@@ -865,6 +870,11 @@ export default {
         getData() {
             this.getSuppliers()
             this.getProducts()
+        },
+        checkValueIsSet(filed){
+            if (this.formState.formData[filed]){
+                this.formState.validation[filed] = ''
+            }
         },
 
         /*
@@ -954,11 +964,10 @@ export default {
                 .catch(err => {
                     console.error(err)
                 })
-        }
+        },
         /*
         * Product add section end.
         */
-
     }
 }
 </script>
