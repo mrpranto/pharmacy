@@ -113,7 +113,7 @@
                                     <table class="table table-fixed border">
                                         <thead>
                                         <tr>
-                                            <td width="30%">
+                                            <td width="20%">
                                                  <span class="font-bold pull-left">
                                                 {{ __('default.product') }}
                                                  </span>
@@ -133,6 +133,11 @@
                                                 {{ __('default.unit') }}
                                                  </span>
                                             </td>
+                                            <td width="10%" class="text-center">
+                                                 <span class="font-bold">
+                                                {{ __('default.total_different_qty') }}
+                                                 </span>
+                                            </td>
                                             <td width="12%" class="text-center">
                                                  <span class="font-bold">
                                                 {{ __('default.total_available_qty') }}
@@ -145,7 +150,7 @@
                                                :class="windowHeight > 620 ? 'tbody-scroll-max-min-height-480' : 'tbody-scroll-max-min-height-220'">
                                             <template v-for="(product, product_index) in options.responseData.data">
                                                 <tr class="data-tr" :class="isEven(product_index) ? 'row-color' : ''">
-                                                    <td width="30%">
+                                                    <td width="20%">
                                                         <div class="d-flex justify-content-between accordion-toggle" data-toggle="collapse"
                                                              :data-target="'#stock'+product_index">
                                                             <div class="d-flex align-items-center">
@@ -183,6 +188,11 @@
                                                     <td width="15%">{{ product.category.name }}</td>
                                                     <td width="20%">{{ product.company.name }}</td>
                                                     <td width="15%">{{ product.unit.name }} ({{ product.unit.pack_size }})</td>
+                                                    <td width="10%" class="text-center">
+                                                        <span class="font-bold">
+                                                            {{ product.stocks.length }}
+                                                        </span>
+                                                    </td>
                                                     <td width="12%" class="text-center">
                                                         <span class="font-bold">
                                                             {{ totalQty(product.stocks, 'available_quantity') }}

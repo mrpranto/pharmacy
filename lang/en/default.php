@@ -199,7 +199,7 @@ return [
     'available_quantity' => 'Available quantity',
 
     'stock_list' => 'Stock List',
-    'total_available_qty' => 'Total available Quantity',
+    'total_available_qty' => 'Available Quantity',
     'total_purchase_qty' => 'Total Purchase Quantity',
     'total_sale_qty' => 'Total Sale quantity',
 
@@ -212,5 +212,6 @@ return [
     'total_purchase' => 'Total Purchase',
     'total_stock' => 'Total Stock',
     'total_sale' => 'Total Sale',
+    'total_different_qty' => 'Different type',
 
 ];

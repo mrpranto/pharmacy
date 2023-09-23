@@ -48,6 +48,14 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('11223344'),
         ]);
 
+        User::query()->updateOrCreate([
+            'role_id' => Role::query()->first()->id,
+            'name' => 'Feroz Sarkar',
+            'email' => 'ferozsarker28@gmail.com',
+            'phone_number' => '01718143428',
+            'password' => bcrypt('feroz@112233'),
+        ]);
+
         $this->command->info('Super admin user created successful.');
 
         Customer::query()->updateOrCreate([
@@ -88,10 +96,11 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Customer seeder created successful.');
 
-        /*Purchase::factory(400)->create();
+        Purchase::factory(400)->create();
+
         PurchaseProduct::factory(1200)->create();
 
-        $this->command->info('Purchase seeder created successful.');*/
+        $this->command->info('Purchase seeder created successful.');
 
         Setting::query()->updateOrCreate([
             'type' => 'app_setting',

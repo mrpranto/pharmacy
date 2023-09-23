@@ -103,7 +103,7 @@ class DashboardServices extends BaseServices
             'total_company' => Company::query()->count(),
             'total_category' => Category::query()->count(),
             'total_purchase' => Purchase::query()->count(),
-            'total_stock' => Stock::query()->count(),
+            'total_stock' => Stock::query()->distinct('product_id')->count(),
             'total_sale' => 0,
         ];
     }
