@@ -114,10 +114,11 @@ export default {
                         orderAble: false,
                         isVisible: true ,
                         modifier: (purchase_products) => {
-                            const qty = purchase_products.reduce((accumulator, object) => {
-                                return accumulator + object.quantity;
-                            }, 0);
-                            return `<span>Unit : <b>${purchase_products.length}</b></span><br><span>Qty : <b>${qty}</b></span>`;
+                            let totalQty = 0;
+                            purchase_products.forEach(item => {
+                                totalQty += item.quantity
+                            })
+                            return `<span>Unit : <b>${purchase_products.length}</b></span><br><span>Qty : <b>${totalQty}</b></span>`;
                         }
                     },
                     {
