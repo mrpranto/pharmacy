@@ -200,7 +200,7 @@ export default {
             this.formState.formData = {
                 name: row.name,
                 description: row.description,
-                status: row.status === 1 ? true : false,
+                status: row.status == '1' ? true : false,
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};

@@ -224,7 +224,7 @@ export default {
                 email: row.email,
                 phone_number: row.phone_number,
                 description: row.description,
-                status: row.status === 1 ? true : false,
+                status: row.status == '1' ? true : false,
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};

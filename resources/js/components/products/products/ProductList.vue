@@ -339,7 +339,7 @@ export default {
                 company: row.company_id,
                 unit: row.unit_id,
                 image: row.product_photo?.full_url,
-                status: row.status === 1 ? true : false,
+                status: row.status == '1' ? true : false,
 
             }
             this.formState.current_id = row.id;

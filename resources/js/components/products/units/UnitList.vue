@@ -214,7 +214,7 @@ export default {
                 name: row.name,
                 pack_size: row.pack_size,
                 description: row.description,
-                status: row.status === 1 ? true : false,
+                status: row.status == '1' ? true : false,
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};

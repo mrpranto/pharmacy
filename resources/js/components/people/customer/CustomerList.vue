@@ -219,7 +219,7 @@ export default {
                 phone_number: customer.phone_number,
                 email: customer.email,
                 address: customer.address,
-                status: customer.status === 1 ? true : false,
+                status: customer.status == '1' ? true : false,
             }
             this.formState.validation = {};
             this.formState.openEdit = true;

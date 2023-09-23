@@ -7,11 +7,11 @@
             <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                           @click.prevent="$parent.$parent.getEditData(row)"/>
         </a-tooltip>
-        <a-tooltip :title="__('default.delete')" v-if="permission.delete && row.is_delete_able === 1">
+        <a-tooltip :title="__('default.delete')" v-if="permission.delete && row.is_delete_able == '1'">
             <DeleteOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}"
                             @click.prevent="$parent.$parent.showDeleteForm(row.id)"/>
         </a-tooltip>
-        <a-tooltip title="Can't change default permissions." v-if="row.is_delete_able === 0">
+        <a-tooltip title="Can't change default permissions." v-if="row.is_delete_able == '0'">
             <i class="mdi mdi-information cursor-pointer"></i>
         </a-tooltip>
 

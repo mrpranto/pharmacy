@@ -211,7 +211,7 @@ export default {
             this.formState.current_id = role.id;
             this.formState.formData.name = role.name;
             this.formState.formData.description = role.description;
-            this.formState.formData.isDeleteAble = role.is_delete_able ? true : false;
+            this.formState.formData.isDeleteAble = role.is_delete_able == '1' ? true : false;
             this.formState.formData.permissions = role_permissions.map(item => item.id);
             const module_ids = role_permissions.map(item => item.module_id);
             const unique_module_ids = [...new Set(module_ids)];

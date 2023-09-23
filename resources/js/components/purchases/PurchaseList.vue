@@ -116,7 +116,7 @@ export default {
                         modifier: (purchase_products) => {
                             let totalQty = 0;
                             purchase_products.forEach(item => {
-                                totalQty += item.quantity
+                                totalQty += parseFloat(item.quantity)
                             })
                             return `<span>Unit : <b>${purchase_products.length}</b></span><br><span>Qty : <b>${totalQty}</b></span>`;
                         }
