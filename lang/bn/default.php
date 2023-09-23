@@ -214,4 +214,5 @@ return [
     'total_stock' => 'মোট স্টক',
     'total_sale' => 'মোট বিক্রয়',
     'total_different_qty' => 'মোট ভিন্ন টাইপ',
+    'mrp' => 'এম.আর.পি '
 ];

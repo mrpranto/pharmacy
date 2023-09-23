@@ -134,31 +134,32 @@
                             <template v-if="formState.formData.products.length > 0">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped">
+                                        <table class="table table-striped table-bordered">
                                             <thead>
                                             <tr>
-                                                <th width="5%">#</th>
+                                                <th width="2%">#</th>
                                                 <th width="20%">{{ __('default.product') }}</th>
-                                                <th width="15%" class="text-center">{{ __('default.unit_price') }}
+                                                <th width="8%" class="text-center">{{ __('default.mrp') }}
                                                     ({{ $currency_symbol }})
                                                 </th>
-                                                <th width="15%" class="text-center">{{ __('default.sale_price') }}
-                                                    ({{ $currency_symbol }})
+                                                <th width="24%" class="text-center">{{ __('default.unit_price') }}
+                                                    ({{ $currency_symbol }}/%)
+                                                </th>
+                                                <th width="24%" class="text-center">{{ __('default.sale_price') }}
+                                                    ({{ $currency_symbol }}/%)
                                                 </th>
                                                 <th width="10%" class="text-center">{{ __('default.quantity') }}</th>
-                                                <th width="15%" class="text-center">(-) {{ __('default.discount') }}
+
+                                                <th width="10%" class="text-right">{{ __('default.sub_total') }}
                                                     ({{ $currency_symbol }})
                                                 </th>
-                                                <th width="15%" class="text-right">{{ __('default.sub_total') }}
-                                                    ({{ $currency_symbol }})
-                                                </th>
-                                                <th width="5%"></th>
+                                                <th width="2%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr v-for="(product, product_index) in formState.formData.products"
                                                 :key="product_index">
-                                                <td width="5%">{{ (product_index + 1) }}</td>
+                                                <td width="2%" class="pl-2">{{ (product_index + 1) }}</td>
                                                 <td width="20%">
                                                     <div class="d-flex align-items-center">
                                                         <i data-feather="corner-up-left" id="backToChatList"
@@ -172,8 +173,7 @@
                                                         </figure>
                                                         <div>
                                                             <p class="font-weight-bolder text-capital">
-                                                                {{ product.product.name }} <small class="text-muted"
-                                                                                                  :title="__('default.unit')">{{
+                                                                {{ product.product.name }} <small class="text-muted" :title="__('default.unit')">{{
                                                                     product.product.unit
                                                                 }}</small></p>
                                                             <p class="text-muted tx-13"><b>{{
@@ -183,6 +183,7 @@
                                                                 <span :title="__('default.company')">{{
                                                                         product.product.company
                                                                     }}</span>,
+                                                                <br>
                                                                 <span :title="__('default.category')">{{
                                                                         product.product.category
                                                                     }}</span>
@@ -190,16 +191,47 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td width="15%">
+                                                <td width="8%">
                                                     <a-input-number
                                                         :class="product.stock_id ? 'readonly' : ''"
-                                                        v-model:value="product.unit_price"
+                                                        v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
                                                         min="0"
-                                                        @keyup="calculatePrices(product_index, 'unit_price')"
-                                                        @change="calculatePrices(product_index, 'unit_price')"
+                                                        @keyup="calculatePrices(product_index, 'mrp')"
+                                                        @change="calculatePrices(product_index, 'mrp')"
                                                         style="width: 100%"
                                                     />
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.mrp']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.mrp'][0]
+                                                        }}
+                                                    </div>
+                                                </td>
+                                                <td width="24%">
+                                                    <div>
+                                                        <a-input-number
+                                                            label="Top coders"
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.unit_price"
+                                                            :prefix="$currency_symbol"
+                                                            min="0"
+                                                            @keyup="calculateUnitPricePercentage(product_index, 'unit_price')"
+                                                            @change="calculateUnitPricePercentage(product_index, 'unit_price')"
+                                                            style="width: 55%"
+                                                        />
+
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.unit_percentage"
+                                                            :prefix="'%'"
+                                                            min="0"
+                                                            @keyup="calculateUnitPrice(product_index, 'unit_percentage')"
+                                                            @change="calculateUnitPrice(product_index, 'unit_percentage')"
+                                                            style="width: 45%"
+                                                        />
+                                                    </div>
+
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.unit_price']">
                                                         {{
@@ -207,16 +239,28 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="15%">
-                                                    <a-input-number
-                                                        :class="product.stock_id ? 'readonly' : ''"
-                                                        v-model:value="product.sale_price"
-                                                        :prefix="$currency_symbol"
-                                                        min="0"
-                                                        @keyup="calculatePrices(product_index, 'sale_price')"
-                                                        @change="calculatePrices(product_index, 'sale_price')"
-                                                        style="width: 100%"
-                                                    />
+                                                <td width="24%">
+                                                    <div>
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.sale_price"
+                                                            :prefix="$currency_symbol"
+                                                            min="0"
+                                                            @keyup="calculatePrices(product_index, 'sale_price')"
+                                                            @change="calculatePrices(product_index, 'sale_price')"
+                                                            style="width: 55%"
+                                                        />
+
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.sale_percentage"
+                                                            :prefix="'%'"
+                                                            min="0"
+                                                            @keyup="calculatePrices(product_index, 'sale_percentage')"
+                                                            @change="calculatePrices(product_index, 'sale_percentage')"
+                                                            style="width: 45%"
+                                                        />
+                                                    </div>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.sale_price']">
                                                         {{
@@ -237,48 +281,7 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="15%" class="text-center">
-                                                    <FormOutlined
-                                                        class="color-primary cursor-pointer"
-                                                        :style="{fontSize: '20px', marginLeft: '6px'}"
-                                                        @click.prevent="changeDiscountAllowed(product_index)"
-                                                        v-if="product.discountAllow === false"
-                                                    />
-
-                                                    <a-space style="width: 130%" v-else>
-                                                        <a-input-number
-                                                            v-model:value="product.discount"
-                                                            min="0"
-                                                            @keyup="calculatePrices(product_index, 'discount')"
-                                                            @change="calculatePrices(product_index, 'discount')"
-                                                            :prefix="product.discount_type === '%'
-                                                                        ? '%' : $currency_symbol"
-                                                            style="width: 100%"
-                                                        />
-
-                                                        <a-input-group compact style="width: 100%">
-                                                            <a-button
-                                                                @click.prevent="changeDiscountType(product_index, '$')"
-                                                                :type="product.discount_type !== '%' ? 'primary' : 'default'">
-                                                                {{ $currency_symbol }}
-                                                            </a-button>
-
-                                                            <a-button
-                                                                @click.prevent="changeDiscountType(product_index, '%')"
-                                                                :type="product.discount_type === '%' ? 'primary' : 'default'">
-                                                                %
-                                                            </a-button>
-                                                        </a-input-group>
-                                                    </a-space>
-
-                                                    <div class="ant-form-item-explain-error text-danger"
-                                                         v-if="formState.validation['products.'+product_index+'.discount']">
-                                                        {{
-                                                            formState.validation['products.' + product_index + '.discount'][0]
-                                                        }}
-                                                    </div>
-                                                </td>
-                                                <td width="15%" class="text-right">
+                                                <td width="10%" class="text-center">
                                                     <b>{{ $showCurrency(product.subTotal) }} </b>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.subTotal']">
@@ -287,7 +290,7 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="5%" class="text-center">
+                                                <td width="2%" class="text-center">
                                                     <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
                                                                   cancel-text="No"
                                                                   @confirm="removeProduct(product_index)">
@@ -737,12 +740,12 @@ export default {
                     this.formState.formData.products.push({
                         product: productInfo,
                         stock_id: null,
-                        unit_price: 0,
-                        sale_price: 0,
+                        mrp: null,
+                        unit_price: null,
+                        unit_percentage: null,
+                        sale_price: null,
+                        sale_percentage: null,
                         quantity: 1,
-                        discountAllow: false,
-                        discount: 0,
-                        discount_type: '%',
                         subTotal: 0
                     })
                 }
@@ -770,9 +773,6 @@ export default {
                         unit_price: stock.unit_price,
                         sale_price: stock.sale_price,
                         quantity: 1,
-                        discountAllow: stock.discountAllow === 1 ? true : false,
-                        discount: stock.discountAllow === 1 ? stock.discount : 0,
-                        discount_type: stock.discountAllow === 1 ? stock.discount_type : '%',
                         subTotal: (stock.unit_price * 1)
                     })
                 }
@@ -793,12 +793,12 @@ export default {
                     this.formState.formData.products.push({
                         product: this.formState.selectedProduct,
                         stock_id: null,
-                        unit_price: 0,
-                        sale_price: 0,
+                        mrp: null,
+                        unit_price: null,
+                        unit_percentage: null,
+                        sale_price: null,
+                        sale_percentage: null,
                         quantity: 1,
-                        discountAllow: false,
-                        discount: 0,
-                        discount_type: '%',
                         subTotal: 0
                     })
                 }
@@ -828,27 +828,30 @@ export default {
                 this.formState.validation[`products.${key}.${column}`] = ''
             }
 
+            const mrp = this.formState.formData.products[key].mrp;
             const unitPrice = this.formState.formData.products[key].unit_price;
+            const unit_percentage = this.formState.formData.products[key].unit_percentage;
+            const sale_price = this.formState.formData.products[key].sale_price;
+            const sale_percentage = this.formState.formData.products[key].sale_percentage;
             const quantity = this.formState.formData.products[key].quantity;
-            const discount = this.formState.formData.products[key].discount;
-            const discount_type = this.formState.formData.products[key].discount_type;
-            const discountAllow = this.formState.formData.products[key].discountAllow;
-            let subtotal;
 
-            if (discountAllow === true) {
-                if (discount_type === '%') {
-                    const multiply = (quantity * unitPrice)
-                    subtotal = multiply - ((multiply * discount) / 100)
-                } else {
-                    const multiply = (quantity * unitPrice)
-                    subtotal = multiply - discount
-                }
-            } else {
-                subtotal = (quantity * unitPrice)
-            }
-
+            const subtotal = parseFloat(quantity * unitPrice)
             this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
             this.calculateTotal();
+        },
+        calculateUnitPricePercentage(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp;
+            const unitPrice = this.formState.formData.products[key].unit_price;
+            let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100)
+            this.formState.formData.products[key].unit_percentage = parseFloat(cal_unit_percentage).toFixed(2);
+            this.calculatePrices(key, column)
+        },
+        calculateUnitPrice(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp;
+            const unit_percentage = this.formState.formData.products[key].unit_percentage;
+            let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100))
+            this.formState.formData.products[key].unit_price = parseFloat(cal_unit_price).toFixed(2);
+            this.calculatePrices(key, column)
         },
         calculateTotal() {
             const selectedProducts = this.formState.formData.products
@@ -973,7 +976,7 @@ export default {
 </script>
 <style scoped>
 .table td {
-    padding: 0.2rem 0.6rem;
+    padding: 0.1rem 2.5px;
 }
 
 .table {
