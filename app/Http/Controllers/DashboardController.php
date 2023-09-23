@@ -23,7 +23,7 @@ class DashboardController extends Controller
      */
     public function home(): View
     {
-        return view('dashboard');
+        return view('dashboard', $this->services->dashboard());
     }
 
     /**

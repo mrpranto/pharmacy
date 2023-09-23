@@ -203,4 +203,14 @@ return [
     'total_purchase_qty' => 'Total Purchase Quantity',
     'total_sale_qty' => 'Total Sale quantity',
 
+    'total_customer' => 'Total Customer',
+    'total_supplier' => 'Total Supplier',
+    'total_user' => 'Total User',
+    'total_product' => 'Total Product',
+    'total_company' => 'Total Company',
+    'total_category' => 'Total Category',
+    'total_purchase' => 'Total Purchase',
+    'total_stock' => 'Total Stock',
+    'total_sale' => 'Total Sale',
+
 ];

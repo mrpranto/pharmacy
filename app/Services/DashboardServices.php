@@ -2,6 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\People\Customer;
+use App\Models\People\Supplier;
+use App\Models\Product\Category;
+use App\Models\Product\Company;
+use App\Models\Product\Product;
+use App\Models\Purchase\Purchase;
+use App\Models\Stock\Stock;
 use App\Models\trait\FileHandler;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -79,5 +86,25 @@ class DashboardServices extends BaseServices
         ], [
             'path' => $file_path
         ]);
+    }
+
+    /**
+     * Dashboard counter.
+     *
+     * @return array
+     */
+    public function dashboard(): array
+    {
+        return [
+            'total_customer' => Customer::query()->count(),
+            'total_supplier' => Supplier::query()->count(),
+            'total_user' => User::query()->where('id', '!=', 1)->count(),
+            'total_product' => Product::query()->count(),
+            'total_company' => Company::query()->count(),
+            'total_category' => Category::query()->count(),
+            'total_purchase' => Purchase::query()->count(),
+            'total_stock' => Stock::query()->count(),
+            'total_sale' => 0,
+        ];
     }
 }

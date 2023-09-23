@@ -202,4 +202,15 @@ return [
     'total_available_qty' => 'মোট উপলব্ধ পরিমাণ',
     'total_purchase_qty' => 'মোট ক্রয় পরিমাণ',
     'total_sale_qty' => 'মোট বিক্রয় পরিমাণ',
+
+
+    'total_customer' => 'মোট ক্রেতা',
+    'total_supplier' => 'মোট সরবরাহকারী',
+    'total_user' => 'মোট ব্যবহারকারী',
+    'total_product' => 'মোট প্রোডাক্ট',
+    'total_company' => 'মোট কোম্পানি',
+    'total_category' => 'মোট ক্যাটেগোরি',
+    'total_purchase' => 'মোট ক্রয়',
+    'total_stock' => 'মোট স্টক',
+    'total_sale' => 'মোট বিক্রয়',
 ];

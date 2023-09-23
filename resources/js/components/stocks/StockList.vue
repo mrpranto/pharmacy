@@ -146,10 +146,10 @@
                                             <template v-for="(product, product_index) in options.responseData.data">
                                                 <tr class="data-tr" :class="isEven(product_index) ? 'row-color' : ''">
                                                     <td width="30%">
-                                                        <div class="d-flex justify-content-between">
+                                                        <div class="d-flex justify-content-between accordion-toggle" data-toggle="collapse"
+                                                             :data-target="'#stock'+product_index">
                                                             <div class="d-flex align-items-center">
-                                                                <i data-feather="corner-up-left" id="backToChatList"
-                                                                   class="icon-lg mr-2 ml-n2 text-muted d-lg-none"></i>
+
                                                                 <figure class="mb-0 mr-2">
                                                                     <template v-if="product.product_photo">
                                                                         <a-image
