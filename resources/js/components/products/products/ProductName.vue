@@ -23,7 +23,7 @@
                     />
                 </template>
 
-                <div class="status online" v-if="item.status === 1"></div>
+                <div class="status online" v-if="item.status == '1'"></div>
                 <div class="status offline" v-else></div>
             </figure>
             <div>

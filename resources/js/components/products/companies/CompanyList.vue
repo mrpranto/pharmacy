@@ -140,7 +140,7 @@ export default {
                         isVisible: true,
                         orderAble: true,
                         modifier: (status) => {
-                            return status === 1 ? '<span class="badge badge-primary">Active</span>' :
+                            return status == '1' ? '<span class="badge badge-primary">Active</span>' :
                                 '<span class="badge badge-danger">In-active </span>'
                         },
                         width: '10',

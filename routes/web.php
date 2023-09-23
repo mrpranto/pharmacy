@@ -30,6 +30,13 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/cache-clear', function () {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    dd('ok');
+});
+
 Route::get('login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('login', [AuthController::class, 'processLogin']);
 

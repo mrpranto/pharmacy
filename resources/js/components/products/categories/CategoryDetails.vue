@@ -20,7 +20,7 @@
 
                 <dt class="col-sm-3">{{ __('default.status') }}</dt>
                 <dd class="col-sm-9">
-                    <span v-if="show.category.status" class="badge badge-primary">Active</span>
+                    <span v-if="show.category.status == '1'" class="badge badge-primary">Active</span>
                     <span v-else class="badge badge-danger">In-active </span>
                 </dd>
 
