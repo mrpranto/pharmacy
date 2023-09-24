@@ -17,12 +17,12 @@ return new class extends Migration {
 
             $table->foreignId('product_id')
                 ->constrained('products', 'id');
+            $table->double('mrp')->default(0);
             $table->double('unit_price');
+            $table->double('unit_percentage');
             $table->double('sale_price');
+            $table->double('sale_percentage');
             $table->float('quantity');
-            $table->boolean('discountAllow');
-            $table->float('discount');
-            $table->string('discount_type', 5);
             $table->double('subTotal');
             $table->mediumText('product_details')->nullable();
             $table->softDeletes();

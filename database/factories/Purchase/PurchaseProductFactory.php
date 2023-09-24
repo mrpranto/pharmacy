@@ -19,25 +19,34 @@ class PurchaseProductFactory extends Factory
      */
     public function definition(): array
     {
-        $purchases = Purchase::query()->where('status', Purchase::STATUS_RECEIVED)->pluck('id')->toArray();
+        $purchases = Purchase::query()
+            ->where('status', Purchase::STATUS_RECEIVED)
+            ->pluck('id')
+            ->toArray();
+
         $purchase = array_rand($purchases);
 
-        $products = Product::query()->active()->pluck('id')->toArray();
+        $products = Product::query()
+            ->active()
+            ->pluck('id')
+            ->toArray();
+
         $product = array_rand($products);
 
-        $a = [true, false];
-        $k = array_rand($a);
+        $mrp = fake()->randomNumber(4);
+        $unitPercentage = rand(1, 50);
+        $salePercentage = ($unitPercentage - 5) > 0 ? ($unitPercentage - 5) : 0;
 
         $purchaseInformation = [
             'purchase_id' => $purchases[$purchase],
             'product_id' => $products[$product],
-            'unit_price' => fake()->randomNumber(4),
-            'sale_price' => fake()->randomNumber(4),
+            'mrp' => $mrp,
+            'unit_price' => ($mrp - (($mrp * $unitPercentage) / 100)),
+            'unit_percentage' => $unitPercentage,
+            'sale_price' => ($mrp - (($mrp * $salePercentage) / 100)),
+            'sale_percentage' => $salePercentage,
             'quantity' => fake()->randomNumber(3),
-            'discountAllow' => $a[$k],
-            'discount' => fake()->randomNumber(4),
-            'discount_type' => '%',
-            'subTotal' => fake()->randomNumber(4),
+            'subTotal' => ($mrp - (($mrp - $unitPercentage) / 100)) * fake()->randomNumber(3),
         ];
 
         $this->storeStock($purchaseInformation);
@@ -55,27 +64,26 @@ class PurchaseProductFactory extends Factory
             ->where('product_id', $purchaseInformation['product_id'])
             ->where('unit_price', $purchaseInformation['unit_price'])
             ->where('sale_price', $purchaseInformation['sale_price'])
+            ->where('unit_percentage', $purchaseInformation['unit_percentage'])
+            ->where('sale_percentage', $purchaseInformation['sale_percentage'])
             ->first();
 
         if ($checkExistStock){
             $checkExistStock->update([
                 'purchase_quantity' => $checkExistStock->purchase_quantity + $purchaseInformation['quantity'],
                 'available_quantity' => $checkExistStock->available_quantity + $purchaseInformation['quantity'],
-                'discountAllow' => $purchaseInformation['discountAllow'],
-                'discount' => $purchaseInformation['discount'],
-                'discount_type' => $purchaseInformation['discount_type'],
             ]);
         }else{
             Stock::query()->create([
                 'product_id' => $purchaseInformation['product_id'],
+                'mrp' => $purchaseInformation['mrp'],
                 'unit_price' => $purchaseInformation['unit_price'],
+                'unit_percentage' => $purchaseInformation['unit_percentage'],
                 'sale_price' => $purchaseInformation['sale_price'],
+                'sale_percentage' => $purchaseInformation['sale_percentage'],
                 'purchase_quantity' => $purchaseInformation['quantity'],
                 'sale_quantity' => 0,
                 'available_quantity' => $purchaseInformation['quantity'],
-                'discountAllow' => $purchaseInformation['discountAllow'],
-                'discount' => $purchaseInformation['discount'],
-                'discount_type' => $purchaseInformation['discount_type'],
             ]);
         }
     }

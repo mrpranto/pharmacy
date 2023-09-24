@@ -214,5 +214,7 @@ return [
     'total_stock' => 'মোট স্টক',
     'total_sale' => 'মোট বিক্রয়',
     'total_different_qty' => 'মোট ভিন্ন টাইপ',
-    'mrp' => 'এম.আর.পি '
+    'mrp' => 'এম.আর.পি ',
+    'unit_percentage' => 'ইউনিট পার্সেন্টেজে',
+    'sale_percentage' => 'বিক্রয় পার্সেন্টেজে',
 ];

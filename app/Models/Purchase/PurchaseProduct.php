@@ -13,8 +13,8 @@ class PurchaseProduct extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'purchase_id', 'product_id', 'unit_price', 'sale_price', 'quantity',
-        'discountAllow', 'discount', 'discount_type', 'subTotal', 'product_details'
+        'purchase_id', 'product_id', 'mrp', 'unit_price', 'unit_percentage',
+        'sale_price', 'sale_percentage', 'quantity', 'subTotal', 'product_details'
     ];
 
     /**

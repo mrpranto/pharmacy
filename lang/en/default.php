@@ -214,5 +214,7 @@ return [
     'total_sale' => 'Total Sale',
     'total_different_qty' => 'Different type',
     'mrp' => 'M.R.P',
+    'unit_percentage' => 'Unit percentage',
+    'sale_percentage' => 'Sale percentage',
 
 ];

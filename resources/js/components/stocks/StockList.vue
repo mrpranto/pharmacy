@@ -185,9 +185,21 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td width="15%">{{ product.category.name }}</td>
-                                                    <td width="20%">{{ product.company.name }}</td>
-                                                    <td width="15%">{{ product.unit.name }} ({{ product.unit.pack_size }})</td>
+                                                    <td width="15%">
+                                                        <div class="overflow-hidden">
+                                                            {{ product.category.name }}
+                                                        </div>
+                                                    </td>
+                                                    <td width="20%">
+                                                        <div class="overflow-hidden">
+                                                            {{ product.company.name }}
+                                                        </div>
+                                                    </td>
+                                                    <td width="15%">
+                                                        <div class="overflow-hidden">
+                                                            {{ product.unit.name }} ({{ product.unit.pack_size }})
+                                                        </div>
+                                                    </td>
                                                     <td width="10%" class="text-center">
                                                         <span class="font-bold">
                                                             {{ product.stocks.length }}

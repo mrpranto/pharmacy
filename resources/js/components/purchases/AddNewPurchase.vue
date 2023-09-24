@@ -196,6 +196,7 @@
                                                         :class="product.stock_id ? 'readonly' : ''"
                                                         v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
+                                                        type="number"
                                                         min="0"
                                                         @keyup="calculatePrices(product_index, 'mrp')"
                                                         @change="calculatePrices(product_index, 'mrp')"
@@ -211,10 +212,10 @@
                                                 <td width="24%">
                                                     <div>
                                                         <a-input-number
-                                                            label="Top coders"
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.unit_price"
                                                             :prefix="$currency_symbol"
+                                                            type="number"
                                                             min="0"
                                                             @keyup="calculateUnitPricePercentage(product_index, 'unit_price')"
                                                             @change="calculateUnitPricePercentage(product_index, 'unit_price')"
@@ -225,6 +226,7 @@
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.unit_percentage"
                                                             :prefix="'%'"
+                                                            type="number"
                                                             min="0"
                                                             @keyup="calculateUnitPrice(product_index, 'unit_percentage')"
                                                             @change="calculateUnitPrice(product_index, 'unit_percentage')"
@@ -246,8 +248,8 @@
                                                             v-model:value="product.sale_price"
                                                             :prefix="$currency_symbol"
                                                             min="0"
-                                                            @keyup="calculatePrices(product_index, 'sale_price')"
-                                                            @change="calculatePrices(product_index, 'sale_price')"
+                                                            @keyup="calculateSalePercentage(product_index, 'sale_price')"
+                                                            @change="calculateSalePercentage(product_index, 'sale_price')"
                                                             style="width: 55%"
                                                         />
 
@@ -256,8 +258,8 @@
                                                             v-model:value="product.sale_percentage"
                                                             :prefix="'%'"
                                                             min="0"
-                                                            @keyup="calculatePrices(product_index, 'sale_percentage')"
-                                                            @change="calculatePrices(product_index, 'sale_percentage')"
+                                                            @keyup="calculateSalePrice(product_index, 'sale_percentage')"
+                                                            @change="calculateSalePrice(product_index, 'sale_percentage')"
                                                             style="width: 45%"
                                                         />
                                                     </div>
@@ -358,7 +360,7 @@
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`"
-                                             :label-col="{span: 6}">
+                                             :label-col="{span: 8}">
                                     <a-input-number v-model:value="formState.formData.otherCost"
                                                     :prefix="$currency_symbol" min="0" @keyup="calculateTotal"
                                                     @change="calculateTotal" style="width: 100%"/>
@@ -383,7 +385,7 @@
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="__('default.note')" :label-col="{span: 6}">
+                                <a-form-item :label="__('default.note')" :label-col="{span: 8}">
                                     <a-input-group :wrapper-col="{span: 18}" compact
                                                    :class="formState.validation.note ? 'ant-input ant-input-status-error': ''">
                                         <a-textarea v-model:value="formState.formData.note"
@@ -436,8 +438,8 @@
                             </dt>
 
                             <dt class="col-sm-12 col-md-6 col-lg-6 text-right"><h4>{{ __('default.total') }}:</h4></dt>
-                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>
-                                {{ $showCurrency(formState.formData.total) }}</h4></dd>
+                            <dd class="col-sm-12 col-md-4 col-lg-4 text-right"><h5>
+                                {{ $showCurrency(formState.formData.total) }}</h5></dd>
                         </dl>
                     </div>
                 </div>
@@ -483,36 +485,48 @@
                     <div class="row ">
                         <div class="col-sm-12 col-md-4 col-lg-4 mb-4" v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
                             <a @click.prevent="selectStockProduct(stock, formState.selectedProduct.id)">
-                                <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
-                                    <p>
-                                        <span>{{ __('default.unit_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.unit_price) }}</span> <br>
-                                        <span>{{ __('default.sale_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.sale_price) }}</span> <br>
-                                        <span>{{ __('default.purchase_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.purchase_quantity }}</span> <br>
-                                        <span>{{ __('default.sale_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.sale_quantity }}</span> <br>
-                                        <span>{{ __('default.available_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.available_quantity }}</span> <br>
-
-                                        <template v-if="stock.discountAllow">
-                                            <span class="text-danger">
-                                                {{ __('default.discount') }} :
-                                            </span>
-                                            <span class="text-danger font-weight-bolder">
-                                                {{ stock.discount }} {{ stock.discount_type }}
-                                            </span> <br>
-                                        </template>
-                                    </p>
+                                <div class="card border p-2 w-100 h-100 d-inline-block stock-card">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.mrp') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.mrp) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.unit_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.unit_price) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.unit_percentage') }} : </span> <span class="font-weight-bolder">{{ stock.unit_percentage }}%</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.sale_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.sale_price) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.sale_percentage') }} : </span> <span class="font-weight-bolder">{{ stock.sale_percentage }}%</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.purchase_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.purchase_quantity }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.sale_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.sale_quantity }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>{{ __('default.available_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.available_quantity }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </a>
                         </div>
 
                         <div class="col-sm-12 col-md-4 col-lg-4 mb-4">
                             <a @click.prevent="selectStockProduct(null, null)">
-                                <div class="card border p-4 w-100 h-100 d-inline-block stock-card">
-                                    <h1 class="text-center">
-                                        <i class="mdi mdi-plus"></i>
-                                    </h1>
-                                    <h5 class="text-center">
-                                        {{ __('default.add_new_price') }}
-                                    </h5>
+                                <div class="card border p-2 w-100 h-100 d-inline-block d-flex align-items-center stock-card">
+                                    <div>
+                                        <h1 class="text-center">
+                                            <i class="mdi mdi-plus"></i>
+                                        </h1>
+                                        <h5 class="text-center">
+                                            {{ __('default.add_new_price') }}
+                                        </h5>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -770,8 +784,11 @@ export default {
                     this.formState.formData.products.push({
                         product: this.formState.selectedProduct,
                         stock_id: stock.id,
+                        mrp: stock.mrp,
                         unit_price: stock.unit_price,
+                        unit_percentage: stock.unit_percentage,
                         sale_price: stock.sale_price,
+                        sale_percentage: stock.sale_percentage,
                         quantity: 1,
                         subTotal: (stock.unit_price * 1)
                     })
@@ -835,24 +852,57 @@ export default {
             const sale_percentage = this.formState.formData.products[key].sale_percentage;
             const quantity = this.formState.formData.products[key].quantity;
 
+            if (mrp && unitPrice){
+                let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100);
+                this.formState.formData.products[key].unit_percentage = parseFloat(cal_unit_percentage).toFixed(2);
+            }
+
+            if (mrp && sale_price){
+                let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                this.formState.formData.products[key].sale_percentage = parseFloat(cal_sale_percentage).toFixed(2);
+            }
+
             const subtotal = parseFloat(quantity * unitPrice)
             this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
             this.calculateTotal();
         },
         calculateUnitPricePercentage(key, column = null){
-            const mrp = this.formState.formData.products[key].mrp;
-            const unitPrice = this.formState.formData.products[key].unit_price;
-            let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100)
-            this.formState.formData.products[key].unit_percentage = parseFloat(cal_unit_percentage).toFixed(2);
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const unitPrice = this.formState.formData.products[key].unit_price ?? 0;
+            if (mrp > 0){
+                let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100);
+                this.formState.formData.products[key].unit_percentage = parseInt(unitPrice) > 0 ? parseFloat(cal_unit_percentage).toFixed(2) : null;
+            }
             this.calculatePrices(key, column)
         },
         calculateUnitPrice(key, column = null){
-            const mrp = this.formState.formData.products[key].mrp;
-            const unit_percentage = this.formState.formData.products[key].unit_percentage;
-            let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100))
-            this.formState.formData.products[key].unit_price = parseFloat(cal_unit_price).toFixed(2);
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const unit_percentage = this.formState.formData.products[key].unit_percentage ?? 0;
+            if (mrp > 0){
+              let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100));
+              this.formState.formData.products[key].unit_price = parseInt(unit_percentage) > 0 ? parseFloat(cal_unit_price).toFixed(2) : null;
+            }
             this.calculatePrices(key, column)
         },
+        calculateSalePercentage(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const sale_price = this.formState.formData.products[key].sale_price ?? 0;
+            if (mrp > 0){
+                let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                this.formState.formData.products[key].sale_percentage = parseInt(sale_price) > 0 ? parseFloat(cal_sale_percentage).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+        calculateSalePrice(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const sale_percentage = this.formState.formData.products[key].sale_percentage ?? 0;
+            if (mrp > 0){
+                let cal_sale_price = (mrp - ((mrp * sale_percentage) / 100));
+                this.formState.formData.products[key].sale_price = parseInt(sale_percentage) > 0 ? parseFloat(cal_sale_price).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+
         calculateTotal() {
             const selectedProducts = this.formState.formData.products
             this.formState.totalItems = selectedProducts.length;
@@ -989,5 +1039,9 @@ export default {
 }
 .readonly{
     pointer-events: none;
+}
+.list-group-item {
+    padding: 0.2rem 0.2rem;
+    border: 0;
 }
 </style>
