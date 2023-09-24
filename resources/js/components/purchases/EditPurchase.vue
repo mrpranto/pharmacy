@@ -133,31 +133,32 @@
                             <template v-if="formState.formData.products.length > 0">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped">
+                                        <table class="table table-striped table-bordered">
                                             <thead>
                                             <tr>
-                                                <th width="5%">#</th>
+                                                <th width="2%">#</th>
                                                 <th width="20%">{{ __('default.product') }}</th>
-                                                <th width="15%" class="text-center">{{ __('default.unit_price') }}
+                                                <th width="8%" class="text-center">{{ __('default.mrp') }}
                                                     ({{ $currency_symbol }})
                                                 </th>
-                                                <th width="15%" class="text-center">{{ __('default.sale_price') }}
-                                                    ({{ $currency_symbol }})
+                                                <th width="24%" class="text-center">{{ __('default.unit_price') }}
+                                                    ({{ $currency_symbol }}/%)
+                                                </th>
+                                                <th width="24%" class="text-center">{{ __('default.sale_price') }}
+                                                    ({{ $currency_symbol }}/%)
                                                 </th>
                                                 <th width="10%" class="text-center">{{ __('default.quantity') }}</th>
-                                                <th width="15%" class="text-center">(-) {{ __('default.discount') }}
+
+                                                <th width="10%" class="text-right">{{ __('default.sub_total') }}
                                                     ({{ $currency_symbol }})
                                                 </th>
-                                                <th width="15%" class="text-right">{{ __('default.sub_total') }}
-                                                    ({{ $currency_symbol }})
-                                                </th>
-                                                <th width="5%"></th>
+                                                <th width="2%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr v-for="(product, product_index) in formState.formData.products"
                                                 :key="product_index">
-                                                <td width="5%">{{ (product_index + 1) }}</td>
+                                                <td width="2%" class="pl-2">{{ (product_index + 1) }}</td>
                                                 <td width="20%">
                                                     <div class="d-flex align-items-center">
                                                         <i data-feather="corner-up-left" id="backToChatList"
@@ -171,8 +172,7 @@
                                                         </figure>
                                                         <div>
                                                             <p class="font-weight-bolder text-capital">
-                                                                {{ product.product.name }} <small class="text-muted"
-                                                                                                  :title="__('default.unit')">{{
+                                                                {{ product.product.name }} <small class="text-muted" :title="__('default.unit')">{{
                                                                     product.product.unit
                                                                 }}</small></p>
                                                             <p class="text-muted tx-13"><b>{{
@@ -182,6 +182,7 @@
                                                                 <span :title="__('default.company')">{{
                                                                         product.product.company
                                                                     }}</span>,
+                                                                <br>
                                                                 <span :title="__('default.category')">{{
                                                                         product.product.category
                                                                     }}</span>
@@ -189,15 +190,49 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td width="15%">
+                                                <td width="8%">
                                                     <a-input-number
-                                                        v-model:value="product.unit_price"
+                                                        :class="product.stock_id ? 'readonly' : ''"
+                                                        v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
+                                                        type="number"
                                                         min="0"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)"
+                                                        @keyup="calculatePrices(product_index, 'mrp')"
+                                                        @change="calculatePrices(product_index, 'mrp')"
                                                         style="width: 100%"
                                                     />
+                                                    <div class="ant-form-item-explain-error text-danger"
+                                                         v-if="formState.validation['products.'+product_index+'.mrp']">
+                                                        {{
+                                                            formState.validation['products.' + product_index + '.mrp'][0]
+                                                        }}
+                                                    </div>
+                                                </td>
+                                                <td width="24%">
+                                                    <div>
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.unit_price"
+                                                            :prefix="$currency_symbol"
+                                                            type="number"
+                                                            min="0"
+                                                            @keyup="calculateUnitPricePercentage(product_index, 'unit_price')"
+                                                            @change="calculateUnitPricePercentage(product_index, 'unit_price')"
+                                                            style="width: 55%"
+                                                        />
+
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.unit_percentage"
+                                                            :prefix="'%'"
+                                                            type="number"
+                                                            min="0"
+                                                            @keyup="calculateUnitPrice(product_index, 'unit_percentage')"
+                                                            @change="calculateUnitPrice(product_index, 'unit_percentage')"
+                                                            style="width: 45%"
+                                                        />
+                                                    </div>
+
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.unit_price']">
                                                         {{
@@ -205,15 +240,28 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="15%">
-                                                    <a-input-number
-                                                        v-model:value="product.sale_price"
-                                                        :prefix="$currency_symbol"
-                                                        min="0"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)"
-                                                        style="width: 100%"
-                                                    />
+                                                <td width="24%">
+                                                    <div>
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.sale_price"
+                                                            :prefix="$currency_symbol"
+                                                            min="0"
+                                                            @keyup="calculateSalePercentage(product_index, 'sale_price')"
+                                                            @change="calculateSalePercentage(product_index, 'sale_price')"
+                                                            style="width: 55%"
+                                                        />
+
+                                                        <a-input-number
+                                                            :class="product.stock_id ? 'readonly' : ''"
+                                                            v-model:value="product.sale_percentage"
+                                                            :prefix="'%'"
+                                                            min="0"
+                                                            @keyup="calculateSalePrice(product_index, 'sale_percentage')"
+                                                            @change="calculateSalePrice(product_index, 'sale_percentage')"
+                                                            style="width: 45%"
+                                                        />
+                                                    </div>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.sale_price']">
                                                         {{
@@ -225,8 +273,8 @@
                                                     <a-input-number
                                                         v-model:value="product.quantity"
                                                         min="1"
-                                                        @keyup="calculatePrices(product_index)"
-                                                        @change="calculatePrices(product_index)" style="width: 100%"/>
+                                                        @keyup="calculatePrices(product_index, 'quantity')"
+                                                        @change="calculatePrices(product_index, 'quantity')" style="width: 100%"/>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.quantity']">
                                                         {{
@@ -234,48 +282,7 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="15%" class="text-center">
-                                                    <FormOutlined
-                                                        class="color-primary cursor-pointer"
-                                                        :style="{fontSize: '20px', marginLeft: '6px'}"
-                                                        @click.prevent="changeDiscountAllowed(product_index)"
-                                                        v-if="product.discountAllow === false"
-                                                    />
-
-                                                    <a-space style="width: 130%" v-else>
-                                                        <a-input-number
-                                                            v-model:value="product.discount"
-                                                            min="0"
-                                                            @keyup="calculatePrices(product_index)"
-                                                            @change="calculatePrices(product_index)"
-                                                            :prefix="product.discount_type === '%'
-                                                                        ? '%' : $currency_symbol"
-                                                            style="width: 100%"
-                                                        />
-
-                                                        <a-input-group compact style="width: 100%">
-                                                            <a-button
-                                                                @click.prevent="changeDiscountType(product_index, '$')"
-                                                                :type="product.discount_type !== '%' ? 'primary' : 'default'">
-                                                                {{ $currency_symbol }}
-                                                            </a-button>
-
-                                                            <a-button
-                                                                @click.prevent="changeDiscountType(product_index, '%')"
-                                                                :type="product.discount_type === '%' ? 'primary' : 'default'">
-                                                                %
-                                                            </a-button>
-                                                        </a-input-group>
-                                                    </a-space>
-
-                                                    <div class="ant-form-item-explain-error text-danger"
-                                                         v-if="formState.validation['products.'+product_index+'.discount']">
-                                                        {{
-                                                            formState.validation['products.' + product_index + '.discount'][0]
-                                                        }}
-                                                    </div>
-                                                </td>
-                                                <td width="15%" class="text-right">
+                                                <td width="10%" class="text-center">
                                                     <b>{{ $showCurrency(product.subTotal) }} </b>
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.subTotal']">
@@ -284,7 +291,7 @@
                                                         }}
                                                     </div>
                                                 </td>
-                                                <td width="5%" class="text-center">
+                                                <td width="2%" class="text-center">
                                                     <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
                                                                   cancel-text="No"
                                                                   @confirm="removeProduct(product_index)">
@@ -352,7 +359,7 @@
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
                                 <a-form-item :label="__('default.other_cost')+` (${$currency_symbol})`"
-                                             :label-col="{span: 6}">
+                                             :label-col="{span: 8}">
                                     <a-input-number v-model:value="formState.formData.otherCost"
                                                     :prefix="$currency_symbol" min="0" @keyup="calculateTotal"
                                                     @change="calculateTotal" style="width: 100%"/>
@@ -377,8 +384,8 @@
                             </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <a-form-item :label="__('default.note')" :label-col="{span: 6}">
-                                    <a-input-group :wrapper-col="{span: 18}" compact
+                                <a-form-item :label="__('default.note')" :label-col="{span: 8}">
+                                    <a-input-group :wrapper-col="{span: 16}" compact
                                                    :class="formState.validation.note ? 'ant-input ant-input-status-error': ''">
                                         <a-textarea v-model:value="formState.formData.note"
                                                     rows="6"
@@ -687,12 +694,12 @@ export default {
             } else {
                 this.formState.formData.products.push({
                     product: productInfo,
-                    unit_price: 0,
-                    sale_price: 0,
+                    mrp: null,
+                    unit_price: null,
+                    unit_percentage: null,
+                    sale_price: null,
+                    sale_percentage: null,
                     quantity: 1,
-                    discountAllow: false,
-                    discount: 0,
-                    discount_type: '%',
                     subTotal: 0
                 })
             }
