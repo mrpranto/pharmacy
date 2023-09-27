@@ -30,6 +30,16 @@
                 <dt class="col-sm-3">{{ __('default.description') }}</dt>
                 <dd class="col-sm-9"> {{ show.product.description }}</dd>
 
+                <dt class="col-sm-3">{{ __('default.purchase_type') }}</dt>
+                <dd class="col-sm-9">
+                    <template v-if="show.product.purchase_type == '%'">
+                        <span class="badge badge-info">%</span> Percentage
+                    </template>
+                    <template v-else>
+                        <span class="badge badge-success">{{ $currency_symbol }}</span> Direct Price
+                    </template>
+                </dd>
+
                 <dt class="col-sm-3">{{ __('default.status') }}</dt>
                 <dd class="col-sm-9">
                     <span v-if="show.product.status == '1'" class="badge badge-primary">Active</span>

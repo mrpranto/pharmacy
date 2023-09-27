@@ -217,4 +217,5 @@ return [
     'mrp' => 'এম.আর.পি ',
     'unit_percentage' => 'ইউনিট পার্সেন্টেজে',
     'sale_percentage' => 'বিক্রয় পার্সেন্টেজে',
+    'purchase_type' => 'ক্রয় ধরণ',
 ];

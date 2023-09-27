@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->constrained('suppliers', 'id');
+            $table->foreignId('supplier_id')
+                ->constrained('suppliers', 'id');
             $table->date('date');
-            $table->string('status');
+            $table->string('status')->index();
             $table->string('reference')->unique()->index();
             $table->double('subtotal');
             $table->double('otherCost')->default(0);

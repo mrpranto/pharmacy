@@ -76,6 +76,7 @@ export default {
                     company: '',
                     unit: '',
                     description: '',
+                    purchase_type: null,
                     status: true,
                 },
                 dependencies: {
@@ -128,7 +129,7 @@ export default {
                         key: 'company',
                         isVisible: true,
                         orderAble: true,
-                        width: '20',
+                        width: '15',
                         modifier: (company) => {
                             return company?.name;
                         }
@@ -139,9 +140,21 @@ export default {
                         key: 'unit',
                         isVisible: true,
                         orderAble: true,
-                        width: '20',
+                        width: '15',
                         modifier: (unit) => {
                             return unit?.name + `(${unit?.pack_size})`;
+                        }
+                    },
+                    {
+                        title: 'purchase_type',
+                        type: 'custom-html',
+                        key: 'purchase_type',
+                        isVisible: true,
+                        orderAble: false,
+                        width: '10',
+                        modifier: (purchase_type) => {
+                            return purchase_type === '%' ? `<span class="badge badge-info">(${purchase_type}) Percentage</span>` :
+                                `<span class="badge badge-success">(${this.$currency_symbol}) Direct Price</span>`
                         }
                     },
                     {

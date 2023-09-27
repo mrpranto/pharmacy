@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('unit_id')->constrained('units', 'id');
             $table->string('barcode', 50)->unique()->index();
             $table->string('name')->index();
+            $table->string('purchase_type', 5);
             $table->string('slug', 191)->unique()->index();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);

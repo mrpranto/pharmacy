@@ -216,5 +216,6 @@ return [
     'mrp' => 'M.R.P',
     'unit_percentage' => 'Unit percentage',
     'sale_percentage' => 'Sale percentage',
+    'purchase_type' => 'Purchase type',
 
 ];

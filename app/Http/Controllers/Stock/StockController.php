@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Stock;
 
 use App\Http\Controllers\Controller;
 use App\Services\Stock\StockServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 
 class StockController extends Controller
@@ -18,7 +19,10 @@ class StockController extends Controller
         return view('pages.stocks.index');
     }
 
-    public function getStocks()
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function getStocks(): LengthAwarePaginator
     {
         return $this->services->getStocks();
     }

@@ -31,6 +31,9 @@ class ProductFactory extends Factory
         $units = Unit::query()->active()->pluck('id')->toArray();
         $unit = array_rand($units);
 
+        $purchase_types = ['$', '%'];
+        $purchase_type = array_rand($purchase_types);
+
         return [
             'category_id' => $categories[$category],
             'company_id' => $companies[$company],
@@ -40,6 +43,7 @@ class ProductFactory extends Factory
             'slug' => fake()->slug,
             'description' => fake()->realText,
             'status' => $booleans[$status],
+            'purchase_type' => $purchase_types[$purchase_type],
         ];
     }
 }

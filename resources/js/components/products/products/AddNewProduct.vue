@@ -107,6 +107,13 @@
                     </div>
                 </a-form-item>
 
+                <a-form-item :label="__('default.purchase_type')">
+                    <a-radio-group v-model:value="formState.formData.purchase_type">
+                        <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
+                        <a-radio value="%"> Percentage (%)</a-radio>
+                    </a-radio-group>
+                </a-form-item>
+
                 <a-form-item :label="__('default.status')">
                     <a-switch v-model:checked="formState.formData.status"/>
                 </a-form-item>

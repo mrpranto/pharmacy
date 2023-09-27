@@ -23,6 +23,9 @@ class Product extends Model
         'slug', 'description', 'status', 'created_by', 'updated_by'
     ];
 
+    const PURCHASE_TYPE_DIRECT_PRICE = '$';
+    const PURCHASE_TYPE_PERCENTAGE = '%';
+
     const PRODUCT_PHOTO_TYPE = 'product_photo';
 
     /**
@@ -68,6 +71,7 @@ class Product extends Model
      */
     public function stocks(): HasMany
     {
-        return $this->hasMany(Stock::class, 'product_id', 'id');
+        return $this->hasMany(Stock::class, 'product_id', 'id')
+            ->where('available_quantity', '>', 0);
     }
 }

@@ -20,7 +20,6 @@ class PurchaseProductFactory extends Factory
     public function definition(): array
     {
         $purchases = Purchase::query()
-            ->where('status', Purchase::STATUS_RECEIVED)
             ->pluck('id')
             ->toArray();
 
