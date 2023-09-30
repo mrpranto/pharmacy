@@ -107,6 +107,17 @@
                     </div>
                 </a-form-item>
 
+                <a-form-item :label="__('default.purchase_type')">
+                    <a-radio-group v-model:value="formState.formData.purchase_type"
+                                   :class="formState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
+                        <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
+                        <a-radio value="%"> Percentage (%)</a-radio>
+                    </a-radio-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.purchase_type">
+                        {{ formState.validation.purchase_type[0] }}
+                    </div>
+                </a-form-item>
+
                 <a-form-item :label="__('default.status')">
                     <a-switch v-model:checked="formState.formData.status"/>
                 </a-form-item>
@@ -341,6 +352,7 @@ export default {
             this.formData.append('unit', this.formState.formData.unit);
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
+            this.formData.append('purchase_type', this.formState.formData.purchase_type);
             this.formData.append("_method", "put");
             await axios.post('/product/products/'+this.formState.current_id, this.formData, {
                 headers: {
@@ -356,6 +368,7 @@ export default {
                         this.formState.formData.unit = '';
                         this.formState.formData.description = '';
                         this.formState.formData.status = true;
+                        this.formState.formData.purchase_type = '';
                         this.imageFileName = "";
                         this.previewURL = '/images/medicine.png';
                         this.formData = new FormData()

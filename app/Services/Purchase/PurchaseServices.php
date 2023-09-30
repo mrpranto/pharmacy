@@ -103,7 +103,7 @@ class PurchaseServices extends BaseServices
             })
             ->orderBy('id', 'desc')
             ->take(10)
-            ->get(['id', 'name', 'category_id', 'company_id', 'unit_id', 'barcode', 'status']);
+            ->get(['id', 'name', 'category_id', 'company_id', 'unit_id', 'barcode', 'status', 'purchase_type']);
     }
 
     /**
@@ -174,11 +174,11 @@ class PurchaseServices extends BaseServices
                     $purchaseProducts[] = [
                         'purchase_id' => $this->model->id,
                         'product_id' => $purchaseProduct['product']['id'],
-                        'mrp' => $purchaseProduct['mrp'],
+                        'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],
-                        'unit_percentage' => $purchaseProduct['unit_percentage'],
+                        'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                         'sale_price' => $purchaseProduct['sale_price'],
-                        'sale_percentage' => $purchaseProduct['sale_percentage'],
+                        'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                         'quantity' => $purchaseProduct['quantity'],
                         'subTotal' => $purchaseProduct['subTotal'],
                         'product_details' => json_encode($purchaseProduct['product']),
@@ -224,11 +224,11 @@ class PurchaseServices extends BaseServices
                 $this->storeStockLog([
                     'stock_id' => $existStock->id,
                     'product_id' => $existStock->product_id,
-                    'mrp' => $existStock->mrp,
+                    'mrp' => $existStock->mrp ?? 0,
                     'unit_price' => $existStock->unit_price,
-                    'unit_percentage' => $existStock->unit_percentage,
+                    'unit_percentage' => $existStock->unit_percentage ?? 0,
                     'sale_price' => $existStock->sale_price,
-                    'sale_percentage' => $existStock->sale_percentage,
+                    'sale_percentage' => $existStock->sale_percentage ?? 0,
                     'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
                     'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
                     'type' => StockLog::TYPE_PURCHASE
@@ -240,11 +240,11 @@ class PurchaseServices extends BaseServices
                     ->newQuery()
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
-                        'mrp' => $purchaseProduct['mrp'],
+                        'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],
-                        'unit_percentage' => $purchaseProduct['unit_percentage'],
+                        'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                         'sale_price' => $purchaseProduct['sale_price'],
-                        'sale_percentage' => $purchaseProduct['sale_percentage'],
+                        'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                         'purchase_quantity' => $purchaseProduct['quantity'],
                         'available_quantity' => $purchaseProduct['quantity'],
                     ]);
@@ -252,11 +252,11 @@ class PurchaseServices extends BaseServices
                 $this->storeStockLog([
                     'stock_id' => $stock->id,
                     'product_id' => $purchaseProduct['product']['id'],
-                    'mrp' => $purchaseProduct['mrp'],
+                    'mrp' => $purchaseProduct['mrp'] ?? 0,
                     'unit_price' => $purchaseProduct['unit_price'],
-                    'unit_percentage' => $purchaseProduct['unit_percentage'],
+                    'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                     'sale_price' => $purchaseProduct['sale_price'],
-                    'sale_percentage' => $purchaseProduct['sale_percentage'],
+                    'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                     'purchase_quantity' => $purchaseProduct['quantity'],
                     'available_quantity' => $purchaseProduct['quantity'],
                     'type' => StockLog::TYPE_PURCHASE

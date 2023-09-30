@@ -1,10 +1,9 @@
-<nav class="sidebar">
+<nav class="sidebar d-print-none">
     <div class="sidebar-header">
         <a href="{{ url('/home') }}" class="sidebar-brand">
             Chief <span>Drug</span>
         </a>
-{{--        {{ request()->is('purchases/create') ? 'active' : 'not-active' }}--}}
-        <div class="sidebar-toggler not-active">
+        <div class="sidebar-toggler {{ request()->is('purchases/create') ? 'active' : 'not-active' }}">
             <span></span>
             <span></span>
             <span></span>

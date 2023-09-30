@@ -183,16 +183,27 @@
                                                                 <span :title="__('default.company')">{{
                                                                         product.product.company
                                                                     }}</span>,
-                                                                <br>
                                                                 <span :title="__('default.category')">{{
                                                                         product.product.category
                                                                     }}</span>
+                                                                <br>
+                                                                <span :title="__('default.purchase_type')"
+                                                                      class="badge badge-info"
+                                                                      v-if="product.product.purchase_type === '%'">
+                                                                    ({{ product.product.purchase_type }}) Percentage
+                                                                </span>
+                                                                <span :title="__('default.purchase_type')"
+                                                                      class="badge badge-success"
+                                                                      v-else>
+                                                                    ({{ $currency_symbol }}) Direct Price
+                                                                </span>
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td width="8%">
                                                     <a-input-number
+                                                        v-if="product.product.purchase_type === '%'"
                                                         :class="product.stock_id ? 'readonly' : ''"
                                                         v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
@@ -223,6 +234,7 @@
                                                         />
 
                                                         <a-input-number
+                                                            v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.unit_percentage"
                                                             :prefix="'%'"
@@ -254,6 +266,7 @@
                                                         />
 
                                                         <a-input-number
+                                                            v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.sale_percentage"
                                                             :prefix="'%'"
@@ -300,7 +313,7 @@
 
                                                         <a-tooltip :title="__('default.remove')">
                                                             <CloseCircleOutlined class="color-danger"
-                                                                                 :style="{fontSize: '20px', marginLeft: '6px'}"/>
+                                                                                 :style="{fontSize: '20px'}"/>
                                                         </a-tooltip>
                                                     </a-popconfirm>
                                                 </td>
@@ -696,6 +709,7 @@ export default {
                             company: item.company.name,
                             category: item.category.name,
                             unit: item.unit.name + `(${item.unit.pack_size})`,
+                            purchase_type: item.purchase_type,
                             stocks: item.stocks
                         }
                     })
@@ -729,7 +743,8 @@ export default {
                 category: selectedProduct.category,
                 unit: selectedProduct.unit,
                 photo: selectedProduct.icon,
-                stocks: selectedProduct.stocks
+                stocks: selectedProduct.stocks,
+                purchase_type: selectedProduct.purchase_type
             };
 
             if (productInfo.stocks.length > 0){

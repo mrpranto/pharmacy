@@ -108,6 +108,7 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
+            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE
         ]);
 
         return $this;
@@ -132,6 +133,7 @@ class ProductServices extends BaseServices
                     'slug' => Str::slug($request->name.'-'.Str::uuid(), '-'),
                     'description' => $request->description,
                     'status' => $request->status === 'true' ? true : false,
+                    'purchase_type' => $request->purchase_type,
                 ]);
 
                 if ($request->has('product_photo')){
@@ -180,6 +182,7 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
+            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE
         ]);
 
         return $this;
@@ -208,6 +211,7 @@ class ProductServices extends BaseServices
                     'slug' => Str::slug($request->name.'-'.Str::uuid(), '-'),
                     'description' => $request->description,
                     'status' => $request->status === 'true' ? true : false,
+                    'purchase_type' => $request->purchase_type,
                 ]);
 
                 if ($request->has('product_photo')){

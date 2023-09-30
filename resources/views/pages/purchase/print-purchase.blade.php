@@ -46,10 +46,10 @@
     </div>
 
     <div class="row mb-3">
-        <div class="col-lg-12">
+        <div class="col-lg-12" id="printarea">
             <div class="card radius-20">
                 <div class="card-body">
-                    <div class="row" id="printarea">
+                    <div class="row">
                         <div class="col-sm-12">
                             <div class="container-fluid d-flex justify-content-between">
                                 <div class="col-lg-6 pl-0">
@@ -90,7 +90,6 @@
                                             <th class="text-right">{{ __('default.unit_price') }}</th>
                                             <th class="text-right">{{ __('default.sale_price') }}</th>
                                             <th class="text-right">{{ __('default.quantity') }}</th>
-                                            <th class="text-right">{{ __('default.discount') }}</th>
                                             <th class="text-right">{{ __('default.sub_total') }}</th>
                                         </tr>
                                         </thead>
@@ -128,9 +127,6 @@
                                                 <td>{{ show_currency($purchase_products['unit_price']) }}</td>
                                                 <td>{{ show_currency($purchase_products['sale_price']) }}</td>
                                                 <td>{{ $purchase_products['quantity'] }}</td>
-                                                <td>
-                                                    {{ $purchase_products['discount'] }} {{ $purchase_products['discount_type'] }}
-                                                </td>
                                                 <td>
                                                     {{ show_currency($purchase_products['subTotal']) }}
                                                 </td>

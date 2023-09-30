@@ -353,7 +353,7 @@ export default {
                 unit: row.unit_id,
                 image: row.product_photo?.full_url,
                 status: row.status == '1' ? true : false,
-
+                purchase_type: row.purchase_type,
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};

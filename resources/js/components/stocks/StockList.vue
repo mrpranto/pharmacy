@@ -545,7 +545,7 @@ export default {
         },
         totalQty(stocks, column){
             return stocks.reduce((accumulator, object) => {
-                return accumulator + object[column];
+                return parseFloat(accumulator) + parseFloat(object[column]);
             }, 0);
         },
         filterList(event, key) {
