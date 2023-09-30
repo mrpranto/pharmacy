@@ -186,12 +186,24 @@
                                                                 <span :title="__('default.category')">{{
                                                                         product.product.category
                                                                     }}</span>
+                                                                <br>
+                                                                <span :title="__('default.purchase_type')"
+                                                                      class="badge badge-info"
+                                                                      v-if="product.product.purchase_type === '%'">
+                                                                    ({{ product.product.purchase_type }}) Percentage
+                                                                </span>
+                                                                <span :title="__('default.purchase_type')"
+                                                                      class="badge badge-success"
+                                                                      v-else>
+                                                                    ({{ $currency_symbol }}) Direct Price
+                                                                </span>
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td width="8%">
                                                     <a-input-number
+                                                        v-if="product.product.purchase_type === '%'"
                                                         :class="product.stock_id ? 'readonly' : ''"
                                                         v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
@@ -222,6 +234,7 @@
                                                         />
 
                                                         <a-input-number
+                                                            v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.unit_percentage"
                                                             :prefix="'%'"
@@ -253,6 +266,7 @@
                                                         />
 
                                                         <a-input-number
+                                                            v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
                                                             v-model:value="product.sale_percentage"
                                                             :prefix="'%'"
@@ -299,7 +313,7 @@
 
                                                         <a-tooltip :title="__('default.remove')">
                                                             <CloseCircleOutlined class="color-danger"
-                                                                                 :style="{fontSize: '20px', marginLeft: '6px'}"/>
+                                                                                 :style="{fontSize: '20px'}"/>
                                                         </a-tooltip>
                                                     </a-popconfirm>
                                                 </td>
@@ -585,6 +599,7 @@ export default {
                     barcode: item.product.barcode,
                     company: item.product.company.name,
                     category: item.product.category.name,
+                    purchase_type: item.product.purchase_type,
                     unit: item.product.unit.name + `(${item.product.unit.pack_size})`,
                     photo: `${item.product.product_photo ? item.product.product_photo?.full_url : '/images/medicine.png'}`
                 }
@@ -645,6 +660,7 @@ export default {
                             icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
                             company: item.company.name,
                             category: item.category.name,
+                            purchase_type: item.purchase_type,
                             unit: item.unit.name + `(${item.unit.pack_size})`
                         }
                     })
@@ -678,6 +694,7 @@ export default {
                 category: selectedProduct.category,
                 unit: selectedProduct.unit,
                 photo: selectedProduct.icon,
+                purchase_type: selectedProduct.purchase_type
             };
 
             const isExistProduct = this.formState.formData.products.find(item => item.product.id === productInfo.id);
@@ -722,28 +739,71 @@ export default {
         changeDiscountAllowed(key) {
             this.formState.formData.products[key].discountAllow = true
         },
-        calculatePrices(key) {
-            const unitPrice = this.formState.formData.products[key].unit_price;
-            const quantity = this.formState.formData.products[key].quantity;
-            const discount = this.formState.formData.products[key].discount;
-            const discount_type = this.formState.formData.products[key].discount_type;
-            const discountAllow = this.formState.formData.products[key].discountAllow;
-            let subtotal;
-
-            if (discountAllow === true) {
-                if (discount_type === '%') {
-                    const multiply = (quantity * unitPrice)
-                    subtotal = multiply - ((multiply * discount) / 100)
-                } else {
-                    const multiply = (quantity * unitPrice)
-                    subtotal = multiply - discount
-                }
-            } else {
-                subtotal = (quantity * unitPrice)
+        calculatePrices(key, column = null) {
+            if (this.formState.validation[`products.${key}.${column}`]){
+                this.formState.validation[`products.${key}.${column}`] = ''
             }
+
+            const mrp = this.formState.formData.products[key].mrp;
+            const unitPrice = this.formState.formData.products[key].unit_price;
+            const unit_percentage = this.formState.formData.products[key].unit_percentage;
+            const sale_price = this.formState.formData.products[key].sale_price;
+            const sale_percentage = this.formState.formData.products[key].sale_percentage;
+            const quantity = this.formState.formData.products[key].quantity;
+
+            if (mrp && unitPrice){
+                let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100);
+                this.formState.formData.products[key].unit_percentage = parseFloat(cal_unit_percentage).toFixed(2);
+            }
+
+            if (mrp && sale_price){
+                let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                this.formState.formData.products[key].sale_percentage = parseFloat(cal_sale_percentage).toFixed(2);
+            }
+
+            const subtotal = parseFloat(quantity * unitPrice)
             this.formState.formData.products[key].subTotal = subtotal.toFixed(2)
             this.calculateTotal();
         },
+
+        calculateUnitPricePercentage(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const unitPrice = this.formState.formData.products[key].unit_price ?? 0;
+            if (mrp > 0){
+                let cal_unit_percentage = (((mrp - unitPrice)/ mrp) * 100);
+                this.formState.formData.products[key].unit_percentage = parseInt(unitPrice) > 0 ? parseFloat(cal_unit_percentage).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+        calculateUnitPrice(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const unit_percentage = this.formState.formData.products[key].unit_percentage ?? 0;
+            if (mrp > 0){
+                let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100));
+                this.formState.formData.products[key].unit_price = parseInt(unit_percentage) > 0 ? parseFloat(cal_unit_price).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+        calculateSalePercentage(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const sale_price = this.formState.formData.products[key].sale_price ?? 0;
+            if (mrp > 0){
+                let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                this.formState.formData.products[key].sale_percentage = parseInt(sale_price) > 0 ? parseFloat(cal_sale_percentage).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+        calculateSalePrice(key, column = null){
+            const mrp = this.formState.formData.products[key].mrp ?? 0;
+            const sale_percentage = this.formState.formData.products[key].sale_percentage ?? 0;
+            if (mrp > 0){
+                let cal_sale_price = (mrp - ((mrp * sale_percentage) / 100));
+                this.formState.formData.products[key].sale_price = parseInt(sale_percentage) > 0 ? parseFloat(cal_sale_price).toFixed(2) : null;
+            }
+            this.calculatePrices(key, column)
+        },
+
+
         calculateTotal() {
             const selectedProducts = this.formState.formData.products
             this.formState.totalItems = selectedProducts.length;

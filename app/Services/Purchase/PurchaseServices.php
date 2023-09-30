@@ -312,12 +312,12 @@ class PurchaseServices extends BaseServices
             'total' => 'required|numeric',
             'products' => 'required|array',
             'products.*.product.id' => 'required|numeric|exists:products,id',
+            'products.*.mrp' => 'nullable|numeric',
             'products.*.unit_price' => 'required|numeric|min:1',
-            'products.*.sale_price' => 'required|numeric|min:1',
+            'products.*.unit_percentage' => 'nullable|numeric',
+            'products.*.sale_price' => 'required|numeric|min:1|gt:products.*.unit_price',
+            'products.*.sale_percentage' => 'nullable|numeric',
             'products.*.quantity' => 'required|numeric|min:1',
-            'products.*.discountAllow' => 'required|boolean',
-            'products.*.discount' => 'nullable|numeric',
-            'products.*.discount_type' => 'nullable|string',
             'products.*.subTotal' => 'nullable|numeric',
         ]);
 
@@ -370,12 +370,12 @@ class PurchaseServices extends BaseServices
                             ->update([
                                 'purchase_id' => $this->model->id,
                                 'product_id' => $purchaseProduct['product']['id'],
+                                'mrp' => $purchaseProduct['mrp'] ?? 0,
                                 'unit_price' => $purchaseProduct['unit_price'],
+                                'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                                 'sale_price' => $purchaseProduct['sale_price'],
+                                'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                                 'quantity' => $purchaseProduct['quantity'],
-                                'discountAllow' => $purchaseProduct['discountAllow'],
-                                'discount' => $purchaseProduct['discount'],
-                                'discount_type' => $purchaseProduct['discount_type'],
                                 'subTotal' => $purchaseProduct['subTotal'],
                                 'product_details' => json_encode($purchaseProduct['product']),
                                 'created_at' => now(),
@@ -387,12 +387,12 @@ class PurchaseServices extends BaseServices
                             ->create([
                                 'purchase_id' => $this->model->id,
                                 'product_id' => $purchaseProduct['product']['id'],
+                                'mrp' => $purchaseProduct['mrp'] ?? 0,
                                 'unit_price' => $purchaseProduct['unit_price'],
+                                'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                                 'sale_price' => $purchaseProduct['sale_price'],
+                                'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                                 'quantity' => $purchaseProduct['quantity'],
-                                'discountAllow' => $purchaseProduct['discountAllow'],
-                                'discount' => $purchaseProduct['discount'],
-                                'discount_type' => $purchaseProduct['discount_type'],
                                 'subTotal' => $purchaseProduct['subTotal'],
                                 'product_details' => json_encode($purchaseProduct['product']),
                                 'created_at' => now(),
@@ -438,21 +438,18 @@ class PurchaseServices extends BaseServices
                 $existStock->update([
                     'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
                     'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
-                    'discountAllow' => $purchaseProduct['discountAllow'],
-                    'discount' => $purchaseProduct['discount'],
-                    'discount_type' => $purchaseProduct['discount_type'],
                 ]);
 
                 $this->storeStockLog([
                     'stock_id' => $existStock->id,
                     'product_id' => $existStock->product_id,
+                    'mrp' => $existStock->mrp ?? 0,
                     'unit_price' => $existStock->unit_price,
+                    'unit_percentage' => $existStock->unit_percentage ?? 0,
                     'sale_price' => $existStock->sale_price,
+                    'sale_percentage' => $existStock->sale_percentage ?? 0,
                     'purchase_quantity' => ($existStock->purchase_quantity + $purchaseProduct['quantity']),
                     'available_quantity' => ($existStock->available_quantity + $purchaseProduct['quantity']),
-                    'discountAllow' => $purchaseProduct['discountAllow'],
-                    'discount' => $purchaseProduct['discount'],
-                    'discount_type' => $purchaseProduct['discount_type'],
                     'type' => StockLog::TYPE_PURCHASE_UPDATE
                 ]);
 
@@ -462,25 +459,25 @@ class PurchaseServices extends BaseServices
                     ->newQuery()
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
+                        'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],
+                        'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                         'sale_price' => $purchaseProduct['sale_price'],
+                        'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                         'purchase_quantity' => $purchaseProduct['quantity'],
                         'available_quantity' => $purchaseProduct['quantity'],
-                        'discountAllow' => $purchaseProduct['discountAllow'],
-                        'discount' => $purchaseProduct['discount'],
-                        'discount_type' => $purchaseProduct['discount_type'],
                     ]);
 
                 $this->storeStockLog([
                     'stock_id' => $stock->id,
                     'product_id' => $purchaseProduct['product']['id'],
+                    'mrp' => $purchaseProduct['mrp'] ?? 0,
                     'unit_price' => $purchaseProduct['unit_price'],
+                    'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                     'sale_price' => $purchaseProduct['sale_price'],
+                    'sale_percentage' => $purchaseProduct['sale_percentage'] ?? 0,
                     'purchase_quantity' => $purchaseProduct['quantity'],
                     'available_quantity' => $purchaseProduct['quantity'],
-                    'discountAllow' => $purchaseProduct['discountAllow'],
-                    'discount' => $purchaseProduct['discount'],
-                    'discount_type' => $purchaseProduct['discount_type'],
                     'type' => StockLog::TYPE_PURCHASE_UPDATE
                 ]);
             }
