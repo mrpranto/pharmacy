@@ -74,6 +74,15 @@ class SidebarComposer
                     'path' => 'stocks',
                     'permission' => auth()->user()->can('app.dashboard')
                 ],
+                [
+                    'name' => __t('sales'),
+                    'icon' => 'shopping-bag',
+                    'permission' => auth()->user()->canany([
+                        'app.purchase.index', 'app.purchase.create'
+                    ]),
+                    'subMenu' => $this->subMenu->sales(),
+                    'id' => 'sales',
+                ],
             ]
         ]);
     }

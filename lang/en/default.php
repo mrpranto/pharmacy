@@ -217,5 +217,8 @@ return [
     'unit_percentage' => 'Unit percentage',
     'sale_percentage' => 'Sale percentage',
     'purchase_type' => 'Purchase type',
+    'sales' => 'Sales',
+    'add_sale' => 'Add sale',
+    'sales_list' => 'Sales List',
 
 ];

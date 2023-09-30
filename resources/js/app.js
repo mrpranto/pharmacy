@@ -86,6 +86,16 @@ import StockComponent from './components/stocks/StockList.vue';
 app.component('stock-component', StockComponent);
 
 
+/*
+* Sale component
+*/
+import AddNewSaleComponent from './components/sales/AddNewSale.vue';
+app.component('add-new-sale-component', AddNewSaleComponent);
+
+
+/*
+* App core component
+*/
 import AppTable from './components/core/AppTable.vue';
 app.component('app-table-component', AppTable);
 import Counter from './components/core/Counter.vue';
