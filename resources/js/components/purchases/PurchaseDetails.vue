@@ -44,10 +44,10 @@
                                 <tr>
                                     <th>#</th>
                                     <th>{{ __('default.product') }}</th>
+                                    <th class="text-right">{{ __('default.mrp') }}</th>
                                     <th class="text-right">{{ __('default.unit_price') }}</th>
                                     <th class="text-right">{{ __('default.sale_price') }}</th>
                                     <th class="text-right">{{ __('default.quantity') }}</th>
-                                    <th class="text-right">{{ __('default.discount') }}</th>
                                     <th class="text-right">{{ __('default.sub_total') }}</th>
                                 </tr>
                                 </thead>
@@ -84,17 +84,26 @@
                                                                     }}</span>,
                                                     <span :title="__('default.category')">{{
                                                             purchase_product.product.category.name
-                                                        }}</span>
+                                                        }}</span>,
+                                                    <span :title="__('default.purchase_type')">
+                                                        {{ purchase_product.product.purchase_type === '%' ? '(%) Percentage' : `(${$currency_symbol}) Direct Price` }}
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ $showCurrency(purchase_product.unit_price) }}</td>
-                                    <td>{{ $showCurrency(purchase_product.sale_price) }}</td>
-                                    <td>{{ purchase_product.quantity }}</td>
                                     <td>
-                                        {{ purchase_product.discount }} {{ purchase_product.discount_type }}
+                                        {{ $showCurrency(purchase_product.mrp) }}
                                     </td>
+                                    <td>
+                                        {{ $showCurrency(purchase_product.unit_price) }}
+                                        {{ purchase_product.unit_percentage ? ' / '+ purchase_product.unit_percentage +' %' : '' }}
+                                    </td>
+                                    <td>
+                                        {{ $showCurrency(purchase_product.sale_price) }}
+                                        {{ purchase_product.sale_percentage ? ' / '+ purchase_product.sale_percentage +' %' : '' }}
+                                    </td>
+                                    <td>{{ purchase_product.quantity }}</td>
                                     <td>
                                         {{ $showCurrency(purchase_product.subTotal) }}
                                     </td>

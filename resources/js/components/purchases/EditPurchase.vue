@@ -100,7 +100,7 @@
                                             @change="selectProduct"
                                         >
                                             <template
-                                                #option="{ value: val, label, icon, company, category, unit, barcode }">
+                                                #option="{ value: val, label, icon, company, category, unit, barcode, purchase_type }">
                                                 <a-image :width="35" :height="35" :src="icon"
                                                          class="img-sm rounded-circle" :aria-label="val"/>
                                                 &nbsp;&nbsp;
@@ -113,7 +113,10 @@
 													<span class="text-muted">{{
                                                             category
                                                         }}</span>, <b>{{ __('default.unit') }}:</b> <span
-                                                    class="text-muted">{{ unit }}</span>
+                                                    class="text-muted">{{ unit }}</span>,
+                                                     <b>{{ __('default.purchase_type') }}:</b> <span
+                                                    class="text-muted">{{ purchase_type === '%' ? purchase_type : $currency_symbol }}</span>
+
 												</span>
                                             </template>
                                         </a-select>
