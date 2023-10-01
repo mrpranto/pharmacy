@@ -126,9 +126,10 @@
 
 <script>
 import {UserAddOutlined, DownloadOutlined} from "@ant-design/icons-vue";
+
 export default {
     name: "AddNewSale",
-    components:{UserAddOutlined, DownloadOutlined}
+    components: {UserAddOutlined, DownloadOutlined}
 }
 </script>
 
