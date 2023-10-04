@@ -164,7 +164,7 @@
                             <b class="col-2 text-muted text-center">Sub-Total</b>
                             <b class="col-1 text-muted text-right"></b>
                         </div>
-    
+
                         <div class="col-12" style="height: 500px; overflow: auto">
                             <template v-for="item in 10">
                                 <div class="row border-bottom py-2 mb-0">
