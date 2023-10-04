@@ -4,7 +4,7 @@
 @endpush
 @section('content')
     <div class="page-content d-flex align-items-center justify-content-center"
-         style="background-image: url(http://127.0.0.1:8000/images/login-background.jpg);background-size: cover;">
+         style="background-image: url({{ asset('/images/login-background.jpg') }});background-size: cover;">
 
         <div class="row w-100 mx-0 auth-page">
             <div class="col-md-6 col-xl-4 mx-auto">

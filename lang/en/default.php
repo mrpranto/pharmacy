@@ -220,5 +220,6 @@ return [
     'sales' => 'Sales',
     'add_sale' => 'Add sale',
     'sales_list' => 'Sales List',
+    'discount_type' => 'Discount type',
 
 ];
