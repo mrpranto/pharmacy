@@ -222,4 +222,6 @@ return [
     'add_sale' => 'নতুন বিক্রয় করুন',
     'sales_list' => 'বিক্রয় তালিকা',
     'discount_type' => 'ডিসকাউন্ট ধরণ',
+    'selected_product' => 'নির্বাচিত প্রোডাক্ট',
+    'price' => 'দাম',
 ];

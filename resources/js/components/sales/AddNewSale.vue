@@ -158,10 +158,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="labels col-12 row border-bottom no-gutters py-2 mb-0">
-                            <b class="col-5 text-muted text-center">Selected Product</b>
-                            <b class="col-2 text-muted text-center">Price</b>
-                            <b class="col-2 text-muted text-center">Quantity</b>
-                            <b class="col-2 text-muted text-center">Sub-Total</b>
+                            <b class="col-5 text-muted text-center">{{ __('default.selected_product') }}</b>
+                            <b class="col-2 text-muted text-center">{{ __('default.price') }}</b>
+                            <b class="col-2 text-muted text-center">{{ __('default.quantity') }}</b>
+                            <b class="col-2 text-muted text-center">{{ __('default.discount') }}</b>
                             <b class="col-1 text-muted text-right"></b>
                         </div>
 
