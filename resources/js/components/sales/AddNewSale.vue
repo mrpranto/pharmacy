@@ -1,22 +1,12 @@
 <template>
     <div class="row m-3">
-        <div class="col-sm-12 col-md-7 col-lg-7">
-            <div class="row">
-                <div class="col-11">
-                    <a-form-item required>
-                        <a-input-group compact>
-                            <a-select
-                                style="width: 100%"
-                                :size="'large'"
-                                show-search
-                                :placeholder="__('default.search_product')"
-                                @change="">
-                            </a-select>
-                        </a-input-group>
-                    </a-form-item>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row mb-3">
+                <div class="col-10">
+                    <a-input size="large" :placeholder="__('default.search_product')" />
                 </div>
-                <div class="col-1">
-                    <button class="btn btn-primary btn-lg" style="border-radius: 5px"
+                <div class="col-2">
+                    <button class="btn btn-primary btn-block btn-lg" style="border-radius: 5px"
                             @click.prevent="formState.showFilterArea = true">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="24" height="24"
@@ -76,7 +66,7 @@
             </div>
 
             <div class="row mt-3 products-area mr-0">
-                <div class="col-sm-12 col-md-3 col-lg-3 mb-3 cursor-pointer" v-for="item in 400">
+                <div class="col-sm-12 col-md-4 col-lg-4 mb-3 cursor-pointer" v-for="item in 400">
                     <div class="card">
                         <div class="card-body product-area">
                             <div class="text-center mb-2">
@@ -119,7 +109,7 @@
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-5 col-lg-5">
+        <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row">
                 <div class="col-10">
                     <a-form-item required>
@@ -165,7 +155,7 @@
                             <b class="col-1 text-muted text-right"></b>
                         </div>
 
-                        <div class="col-12" style="height: 500px; overflow: auto">
+                        <div class="col-12 cart-area">
                             <template v-for="item in 10">
                                 <div class="row border-bottom py-2 mb-0">
                                     <div class="col-5 align-middle">
@@ -210,35 +200,38 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-2 align-middle">
-                                        BDT 120000
+                                    <div class="col-2 text-center pt-3">
+                                         <span>120000</span>
                                     </div>
-                                    <div class="col-2 align-middle">
-                                        <a-input-number value="20000" size="small" style="width: 80%;" :min="1"
+                                    <div class="col-2 text-center pt-3">
+                                        <a-input-number value="20000" size="small" style="width: 100%;" :min="1"
                                                         :max="100000"/>
                                     </div>
-                                    <div class="col-2 align-middle">
-                                        BDT 130000
+                                    <div class="col-2 text-center pt-3">
+                                         <span>130000</span>
                                     </div>
-                                    <div class="col-1 text-center align-middle">
+                                    <div class="col-1 text-center pt-3">
                                         <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
                                     </div>
 
                                     <div class="col-12 pt-3" v-if="formState.showDiscountArea === true">
                                         <a-form :layout="'inline'">
                                             <a-form-item :label="__('default.sale_price')">
-                                                <a-input-number value="20000" style="width: 114px" :min="1"
-                                                                :prefix="$currency_symbol" :max="100000"/>
+                                                <a-input-number value="20000"
+                                                                style="width: 98px"
+                                                                :min="1"
+                                                                size="small"
+                                                                :max="100000"/>
                                             </a-form-item>
                                             <a-form-item :label="__('default.discount')">
                                                 <a-input-number value="20000"
-                                                                style="width: 114px"
+                                                                style="width: 98px"
                                                                 :min="1"
-                                                                :prefix="'%'"
+                                                                size="small"
                                                                 :max="100000"/>
                                             </a-form-item>
                                             <a-form-item :label="__('default.discount_type')">
-                                                <a-radio-group v-model:value="formState.layout" button-style="solid">
+                                                <a-radio-group v-model:value="formState.layout" size="small" button-style="solid">
                                                     <a-radio-button value="$">{{ $currency_symbol }}</a-radio-button>
                                                     <a-radio-button value="%">%</a-radio-button>
                                                 </a-radio-group>
@@ -286,6 +279,7 @@ export default {
     cursor: pointer;
     min-height: 500px;
     max-height: 500px;
+    border-bottom: 1px #ededed solid;
 }
 
 /* Customize scrollbar appearance for WebKit browsers */
@@ -305,6 +299,38 @@ export default {
 .products-area:active::-webkit-scrollbar-thumb,
 .products-area:focus::-webkit-scrollbar-thumb,
 .products-area:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+/* Add scrollbar to a tbody element */
+.cart-area {
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: thin; /* Set the width of the scrollbar */
+    scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
+    cursor: pointer;
+    min-height: 300px;
+    max-height: 300px;
+    border-bottom: 1px #ededed solid;
+}
+
+
+/* Customize scrollbar appearance for WebKit browsers */
+.cart-area::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+.cart-area::-webkit-scrollbar-track {
+    background-color: #ededed; /* Set the color of the scrollbar track */
+}
+
+.cart-area::-webkit-scrollbar-thumb {
+    background-color: #b4b1b1; /* Set the color of the scrollbar thumb */
+    border-radius: 50px;
+}
+
+.cart-area:active::-webkit-scrollbar-thumb,
+.cart-area:focus::-webkit-scrollbar-thumb,
+.cart-area:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
 
@@ -330,55 +356,5 @@ figure .status {
     border-radius: 50%;
     border: 2px solid #fff;
 }
-
-/*Table head fixed*/
-
-.fixTableHead {
-    overflow-y: auto;
-    height: 460px;
-}
-
-.fixTableHead thead th {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    background-color: #ededed;
-}
-
-table.table-fixed {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-table.table-fixed th, table.table-fixed td {
-    padding: 8px 15px;
-    border: 1px solid #faf7f7;
-}
-
-table.table-fixed thead th {
-    background-color: #FAFAFA;
-    border-bottom: 1px solid #C7C7C7;
-}
-
-table.table-fixed tbody td, table.table-fixed tbody th {
-    background-color: #ffffff;
-}
-
-/*Table Scroll css*/
-
-.fixTableHead::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #FFFFFF;
-}
-
-.fixTableHead::-webkit-scrollbar {
-    width: 6px;
-    background-color: #FFFFFF;
-}
-
-.fixTableHead::-webkit-scrollbar-thumb {
-    background-color: #7c7878;
-}
-
 
 </style>
