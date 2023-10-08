@@ -38,7 +38,7 @@
 </head>
 <body
     data-base-url="{{url('/')}}"
-    class="{{ request()->is('purchases/create') || request()->is('purchases/*/edit') ? 'sidebar-folded' : '' }}">
+    class="{{ request()->is('purchases/create') || request()->is('purchases/*/edit') || request()->is('sales/create') ? 'sidebar-folded' : '' }}">
 
 <script src="{{ asset('assets/js/spinner.js') }}"></script>
 

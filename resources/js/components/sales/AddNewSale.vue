@@ -3,7 +3,7 @@
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row mb-3">
                 <div class="col-10">
-                    <a-input size="large" :placeholder="__('default.search_product')" />
+                    <a-input size="large" :placeholder="__('default.search_sale_product')" />
                 </div>
                 <div class="col-2">
                     <button class="btn btn-primary btn-block btn-lg" style="border-radius: 5px"
@@ -65,7 +65,8 @@
                 </div>
             </div>
 
-            <div class="row mt-3 products-area mr-0">
+            <div class="row mt-3 products-area mr-0"
+                 :class="windowHeight > 620 ? 'products-area-height-700' : 'products-area-height-400'">
                 <div class="col-sm-12 col-md-4 col-lg-4 mb-3 cursor-pointer" v-for="item in 400">
                     <div class="card">
                         <div class="card-body product-area">
@@ -257,6 +258,7 @@ export default {
     components: {UserAddOutlined, DownloadOutlined},
     data() {
         return {
+            windowHeight: window.innerHeight,
             formState: {
                 showFilterArea: false,
                 showDiscountArea: false
@@ -272,13 +274,19 @@ export default {
 }
 
 /* Add scrollbar to a tbody element */
+.products-area-height-700{
+    min-height: 700px;
+    max-height: 700px;
+}
+.products-area-height-400{
+    min-height: 400px;
+    max-height: 400px;
+}
 .products-area {
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
     scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
     cursor: pointer;
-    min-height: 500px;
-    max-height: 500px;
     border-bottom: 1px #ededed solid;
 }
 

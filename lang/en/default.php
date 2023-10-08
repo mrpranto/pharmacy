@@ -223,5 +223,6 @@ return [
     'discount_type' => 'Discount type',
     'selected_product' => 'Selected Product',
     'price' => 'Price',
+    'search_sale_product' => 'Search sale product...'
 
 ];

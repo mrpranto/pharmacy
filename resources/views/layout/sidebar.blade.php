@@ -3,7 +3,7 @@
         <a href="{{ url('/home') }}" class="sidebar-brand">
             Chief <span>Drug</span>
         </a>
-        <div class="sidebar-toggler {{ request()->is('purchases/create') || request()->is('purchases/*/edit') ? 'active' : 'not-active' }}">
+        <div class="sidebar-toggler {{ request()->is('purchases/create') || request()->is('purchases/*/edit') || request()->is('sales/create') ? 'active' : 'not-active' }}">
             <span></span>
             <span></span>
             <span></span>

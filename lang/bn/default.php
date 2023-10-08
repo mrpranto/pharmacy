@@ -224,4 +224,5 @@ return [
     'discount_type' => 'ডিসকাউন্ট ধরণ',
     'selected_product' => 'নির্বাচিত প্রোডাক্ট',
     'price' => 'দাম',
+    'search_sale_product' => 'বিক্রয় পণ্য অনুসন্ধান করুন...',
 ];
