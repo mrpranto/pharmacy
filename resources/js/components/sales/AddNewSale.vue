@@ -3,7 +3,7 @@
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row mb-3">
                 <div class="col-10">
-                    <a-input size="large" :placeholder="__('default.search_sale_product')" />
+                    <a-input size="large" :placeholder="__('default.search_sale_product')"/>
                 </div>
                 <div class="col-2">
                     <button class="btn btn-primary btn-block btn-lg" style="border-radius: 5px"
@@ -144,7 +144,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -156,8 +155,9 @@
                             <b class="col-1 text-muted text-right"></b>
                         </div>
 
-                        <div class="col-12 cart-area">
-                            <template v-for="item in 10">
+                        <div class="col-12 cart-area text-muted"
+                             :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
+                            <template v-for="item in 400">
                                 <div class="row border-bottom py-2 mb-0">
                                     <div class="col-5 align-middle">
                                         <div class="d-flex justify-content-start align-items-center">
@@ -202,14 +202,14 @@
                                         </div>
                                     </div>
                                     <div class="col-2 text-center pt-3">
-                                         <span>120000</span>
+                                        <span>120000</span>
                                     </div>
                                     <div class="col-2 text-center pt-3">
                                         <a-input-number value="20000" size="small" style="width: 100%;" :min="1"
                                                         :max="100000"/>
                                     </div>
                                     <div class="col-2 text-center pt-3">
-                                         <span>130000</span>
+                                        <span>130000</span>
                                     </div>
                                     <div class="col-1 text-center pt-3">
                                         <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
@@ -232,7 +232,8 @@
                                                                 :max="100000"/>
                                             </a-form-item>
                                             <a-form-item :label="__('default.discount_type')">
-                                                <a-radio-group v-model:value="formState.layout" size="small" button-style="solid">
+                                                <a-radio-group v-model:value="formState.layout" size="small"
+                                                               button-style="solid">
                                                     <a-radio-button value="$">{{ $currency_symbol }}</a-radio-button>
                                                     <a-radio-button value="%">%</a-radio-button>
                                                 </a-radio-group>
@@ -242,8 +243,48 @@
                                 </div>
                             </template>
                         </div>
+                        <div class="col-12">
+                            <dl class="row mt-4">
 
+                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">{{ __('default.subtotal') }} :</dt>
+                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right">
+                                    {{ $showCurrency(1299) }}
+                                </dd>
+
+                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">{{ __('default.other_cost') }} :
+                                </dt>
+                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right">
+                                    {{ $showCurrency(3990) }}
+                                </dd>
+
+                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">(-) {{ __('default.discount') }} :
+                                </dt>
+                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right">
+                                    {{ $showCurrency(3999) }}
+                                </dd>
+
+                                <dt class="col-sm-12 text-center text-muted">
+                                    <hr/>
+                                </dt>
+
+                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center"><h4>{{ __('default.total') }} :</h4>
+                                </dt>
+                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right"><h5>
+                                    {{ $showCurrency(50000) }}</h5></dd>
+                            </dl>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-4">
+                    <button class="btn btn-primary btn-block"><i class="mdi mdi-eye"></i> Preview</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-warning btn-block"><i class="mdi mdi-pause"></i> Draft</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-success btn-block"><i class="mdi mdi-check-bold"></i> Save & Print</button>
                 </div>
             </div>
         </div>
@@ -274,14 +315,16 @@ export default {
 }
 
 /* Add scrollbar to a tbody element */
-.products-area-height-700{
+.products-area-height-700 {
     min-height: 700px;
     max-height: 700px;
 }
-.products-area-height-400{
+
+.products-area-height-400 {
     min-height: 400px;
     max-height: 400px;
 }
+
 .products-area {
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
@@ -311,13 +354,22 @@ export default {
 }
 
 /* Add scrollbar to a tbody element */
+
+.cart-area-height-420 {
+    min-height: 420px;
+    max-height: 420px;
+}
+
+.cart-area-height-300 {
+    min-height: 300px;
+    max-height: 300px;
+}
+
 .cart-area {
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* Set the width of the scrollbar */
     scrollbar-color: #b4b1b1 #ededed; /* Set the color of the scrollbar thumb and track */
     cursor: pointer;
-    min-height: 300px;
-    max-height: 300px;
     border-bottom: 1px #ededed solid;
 }
 
