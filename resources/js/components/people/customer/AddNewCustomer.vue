@@ -99,11 +99,15 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = ''
-                        this.formState.formData.phone_number = ''
                         this.formState.formData.email = ''
                         this.formState.formData.address = ''
                         this.formState.formData.status = true
-                        this.$parent.getData()
+                        if (this.formState.callFrom !== 'sale'){
+                            this.formState.formData.phone_number = ''
+                            this.$parent.getData()
+                        }else {
+                            this.$parent.setData(this.formState.formData.phone_number)
+                        }
                         this.$parent.onClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {

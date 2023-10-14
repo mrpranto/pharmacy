@@ -3,10 +3,18 @@
 namespace App\Http\Controllers\Sale;
 
 use App\Http\Controllers\Controller;
+use App\Services\Sales\SalesServices;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SaleController extends Controller
 {
+    public function __construct(SalesServices $salesServices)
+    {
+        $this->services = $salesServices;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,9 +26,29 @@ class SaleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        return view('pages.sale.create');
+        return view('pages.sale.create', $this->services->createDependencies());
+    }
+
+    /**
+     * Get Customers for add sale.
+     *
+     * @return Collection|array
+     */
+    public function getCustomers(): Collection|array
+    {
+        return $this->services->getCustomers();
+    }
+
+    /**
+     * Get Products for add sale.
+     *
+     * @return Collection|array
+     */
+    public function getProducts(): Collection|array
+    {
+        return $this->services->getProducts();
     }
 
     /**

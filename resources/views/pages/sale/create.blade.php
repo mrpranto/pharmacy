@@ -5,7 +5,9 @@
 @endsection
 @section('content')
 
-    <add-new-sale-component />
+    <add-new-sale-component
+        :categories="{{ json_encode($categories) }}"
+        :companies="{{ json_encode($companies) }}" />
 
 @endsection
 

@@ -225,4 +225,7 @@ return [
     'selected_product' => 'নির্বাচিত প্রোডাক্ট',
     'price' => 'দাম',
     'search_sale_product' => 'বিক্রয় পণ্য অনুসন্ধান করুন...',
+    'stock_type' => 'স্টক ধরণ',
+    'product_filter' => 'পণ্য ফিল্টার',
+    'clear_filter' => 'ফিল্টার পরিষ্কার',
 ];
