@@ -266,20 +266,31 @@
                                         <span>{{ $showCurrency(cart.sale_price) }}</span>
                                     </div>
                                     <div class="col-3 text-center pt-3">
-                                        <a-input v-model:value="cart.quantity" style="width: 100%;">
-                                            <template #addonBefore>
-                                                -
-                                            </template>
-                                            <template #addonAfter>
-                                                +
-                                            </template>
-                                        </a-input>
+
+                                        <a-input-group compact>
+                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" style="z-index: 1">
+                                                <i class="mdi mdi-minus"></i>
+                                            </a-button>
+                                            <a-input v-model:value="cart.quantity" type="number" min="1" style="width: 50%;"/>
+                                            <a-button @click.prevent="incrementDecrement(cart_index, '+')">
+                                                <i class="mdi mdi-plus"></i>
+                                            </a-button>
+                                        </a-input-group>
+
                                     </div>
                                     <div class="col-2 text-center pt-3">
                                         <span>{{ $showCurrency(cart.sub_total) }}</span>
                                     </div>
                                     <div class="col-1 text-center pt-3">
-                                        <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
+                                        <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
+                                        cancel-text="No"
+                                        @confirm="removeFromCart(cart_index)">
+                                        <template #icon></template>
+
+                                        <a-tooltip :title="__('default.remove')">
+                                            <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
+                                        </a-tooltip>
+                                        </a-popconfirm>
                                     </div>
 
                                     <div class="col-12 pt-3" v-if="cart.discountArea === true">
@@ -308,7 +319,7 @@
                                 </div>
                             </template>
                             <template v-else>
-                                <div class="row pt-5">
+                                <div class="row pt-5" style="margin-top: 50px">
                                     <div class="col-12 mt-5">
                                         <h1 class="text-center">
                                             <i class="mdi mdi-cart"></i>
@@ -318,6 +329,20 @@
                                 </div>
                             </template>
                         </div>
+                        <div class="col-12 pt-4">
+                            <div class="row">
+                                <div class="col-4 text-center">
+                                    <h5>{{ __('default.total_items') }} : {{ formState.formData.totalUnit }}</h5>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <h5>{{ __('default.total_subtotal') }} : {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
                         <div class="col-12">
                             <dl class="row mt-4">
 
@@ -325,7 +350,7 @@
                                     ({{ $currency_symbol }}) :
                                 </dt>
                                 <dd class="col-sm-12 col-md-4 col-lg-5 text-right h5 mb-3">
-                                    {{ $showCurrency(1299) }}
+                                    {{ $showCurrency(formState.formData.totalSubTotal) }}
                                 </dd>
 
                                 <dt class="col-sm-12 col-md-6 col-lg-6 text-center">{{ __('default.other_cost') }}
@@ -447,21 +472,6 @@
                                 </div>
                             </a>
                         </div>
-
-                        <div class="col-sm-12 col-md-4 col-lg-4 mb-4">
-                            <a @click.prevent="selectStockProduct(null, null)">
-                                <div class="card border p-2 w-100 h-100 d-inline-block d-flex align-items-center stock-card">
-                                    <div>
-                                        <h1 class="text-center">
-                                            <i class="mdi mdi-plus"></i>
-                                        </h1>
-                                        <h5 class="text-center">
-                                            {{ __('default.add_new_price') }}
-                                        </h5>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -476,7 +486,7 @@ import {
     DownloadOutlined,
     ShoppingCartOutlined,
     SearchOutlined,
-    CloseOutlined
+    CloseOutlined, CloseCircleOutlined
 } from "@ant-design/icons-vue";
 import AddNewCustomer from "../people/customer/AddNewCustomer.vue";
 import {message} from "ant-design-vue";
@@ -484,6 +494,7 @@ import {message} from "ant-design-vue";
 export default {
     name: "AddNewSale",
     components: {
+        CloseCircleOutlined,
         AddNewCustomer,
         UserAddOutlined,
         DownloadOutlined,
@@ -529,7 +540,10 @@ export default {
                 },
                 formData: {
                     customer: null,
-                    products:[]
+                    products:[],
+                    totalUnit: 0,
+                    totalUnitQuantity: 0,
+                    totalSubTotal:0
                 },
                 request: {
                     search: '',
@@ -618,6 +632,43 @@ export default {
                 })
             }
             this.formState.selectedProduct.openStock = false
+            this.calculateTotal()
+        },
+        calculatePrice(index){
+            const salePrice = this.formState.formData.products[index].sale_price;
+            const quantity = this.formState.formData.products[index].quantity;
+            if (quantity){
+                this.formState.formData.products[index].sub_total = (parseFloat(salePrice) * parseInt(quantity)).toFixed(2);
+            }
+            this.calculateTotal()
+        },
+        calculateTotal() {
+            this.formState.formData.totalUnit = this.formState.formData.products.length;
+            this.formState.formData.totalUnitQuantity = this.formState.formData.products.reduce((accumulator, object) => {
+                return parseFloat(accumulator) + parseInt(object.quantity);
+            }, 0);
+            this.formState.formData.totalSubTotal = this.formState.formData.products.reduce((accumulator, object) => {
+                return parseFloat(accumulator) + parseFloat(object.sub_total);
+            }, 0).toFixed(2);
+        },
+        incrementDecrement(index, type){
+            const quantity = parseInt(this.formState.formData.products[index].quantity);
+            if (type === '-'){
+                const changeQty = quantity - 1;
+                if (changeQty > 0){
+                    this.formState.formData.products[index].quantity = changeQty;
+                }
+            }else if (type === '+'){
+                this.formState.formData.products[index].quantity = quantity + 1;
+            }
+            this.calculatePrice(index)
+            this.calculateTotal()
+        },
+        removeFromCart(key) {
+            const removeProductName = this.formState.formData.products[key].product.name;
+            message.warning(removeProductName + ' remove from this list.');
+            this.formState.formData.products.splice(key, 1);
+            this.calculateTotal()
         },
         showProductDetails(product){
             this.formState.selectedProduct = {

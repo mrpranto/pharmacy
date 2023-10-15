@@ -228,4 +228,5 @@ return [
     'stock_type' => 'স্টক ধরণ',
     'product_filter' => 'পণ্য ফিল্টার',
     'clear_filter' => 'ফিল্টার পরিষ্কার',
+    'total_subtotal' => 'মোট সাবটোটাল',
 ];

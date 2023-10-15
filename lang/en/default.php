@@ -226,6 +226,7 @@ return [
     'search_sale_product' => 'Search sale product...',
     'stock_type' => 'Stock type',
     'product_filter' => 'Product filter',
-    'clear_filter' => 'Clear Filter'
+    'clear_filter' => 'Clear Filter',
+    'total_subtotal' => 'Total Sub total',
 
 ];
