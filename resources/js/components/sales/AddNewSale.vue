@@ -109,19 +109,19 @@
                                 </div>
                             </div>
                             <div class="media d-block d-sm-flex flex-column align-items-center">
-                                <div class="d-flex align-items-center" style="height: 80px">
+                                <div class="d-flex align-items-center" style="height: 100px">
                                     <figure class="mb-0 mr-3">
-                                        <a-image
+                                        <img
                                             v-if="product.product_photo"
-                                            :width="80"
+                                            :width="100"
                                             :src="product.product_photo.full_url"
-                                            class="img-sm img-thumbnail rounded-circle"
+                                            class="img-thumbnail rounded-circle"
                                             :alt="product.name"/>
-                                        <a-image
+                                        <img
                                             v-else
-                                            :width="80"
+                                            :width="100"
                                             :src="'/images/medicine.png'"
-                                            class="img-sm img-thumbnail rounded-circle"
+                                            class="img-thumbnail rounded-circle"
                                             :alt="product.name"/>
                                         <div class="status online"></div>
                                     </figure>
@@ -268,11 +268,11 @@
                                     <div class="col-3 text-center pt-3">
 
                                         <a-input-group compact>
-                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" style="z-index: 1">
+                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" size="small" style="z-index: 1">
                                                 <i class="mdi mdi-minus"></i>
                                             </a-button>
-                                            <a-input v-model:value="cart.quantity" type="number" min="1" style="width: 50%;"/>
-                                            <a-button @click.prevent="incrementDecrement(cart_index, '+')">
+                                            <a-input v-model:value="cart.quantity" size="small" type="number" min="1" style="width: 65px;"/>
+                                            <a-button @click.prevent="incrementDecrement(cart_index, '+')" size="small">
                                                 <i class="mdi mdi-plus"></i>
                                             </a-button>
                                         </a-input-group>
@@ -294,27 +294,36 @@
                                     </div>
 
                                     <div class="col-12 pt-3" v-if="cart.discountArea === true">
-                                        <a-form :layout="'inline'">
-                                            <a-form-item :label="__('default.sale_price')">
-                                                <a-input-number v-model:value="cart.sale_price"
-                                                                style="width: 98px"
-                                                                :min="1"
-                                                                size="small"/>
-                                            </a-form-item>
-                                            <a-form-item :label="__('default.discount')">
-                                                <a-input-number v-model:value="cart.sale_percentage"
-                                                                style="width: 98px"
-                                                                :min="1"
-                                                                size="small"/>
-                                            </a-form-item>
-                                            <a-form-item :label="__('default.discount_type')">
-                                                <a-radio-group v-model:value="formState.layout" size="small"
-                                                               button-style="solid">
-                                                    <a-radio-button value="$">{{ $currency_symbol }}</a-radio-button>
-                                                    <a-radio-button value="%">%</a-radio-button>
-                                                </a-radio-group>
-                                            </a-form-item>
-                                        </a-form>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <a-form-item :label="__('default.sale_price')">
+                                                    <a-input-number v-model:value="cart.sale_price"
+                                                                    @change="calculatePrice(cart_index)"
+                                                                    @blur="setOriginalPrice(cart_index)"
+                                                                    style="width: 100%"
+                                                                    :prefix="$currency_symbol"
+                                                                    :min="1"
+                                                                    size="small"/>
+                                                </a-form-item>
+                                            </div>
+                                            <div class="col-6">
+                                                <a-form-item :label="__('default.discount')">
+                                                    <a-input-number v-if="cart.product.purchase_type === '$'"
+                                                                    v-model:value="cart.sale_percentage"
+                                                                    style="width: 100%"
+                                                                    prefix="%"
+                                                                    disabled
+                                                                    :min="1"
+                                                                    size="small"/>
+                                                    <a-input-number v-else
+                                                                    v-model:value="cart.sale_percentage"
+                                                                    style="width: 100%"
+                                                                    prefix="%"
+                                                                    :min="1"
+                                                                    size="small"/>
+                                                </a-form-item>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </template>
@@ -360,6 +369,8 @@
                                     <input type="number"
                                            style="width: 200px"
                                            step="0.01"
+                                           v-model="formState.formData.otherCost"
+                                           @input="calculateTotal"
                                            class="form-control form-control-sm text-right float-right text-black rounded"
                                            :placeholder="__('default.other_cost') +' ('+ $currency_symbol +')'"
                                            autocomplete="off">
@@ -372,6 +383,8 @@
                                     <input type="number"
                                            style="width: 200px;"
                                            step="0.01"
+                                           v-model="formState.formData.discount"
+                                           @input="calculateTotal"
                                            class="form-control form-control-sm text-right float-right text-black"
                                            :placeholder="__('default.discount') +' ('+ $currency_symbol +')'"
                                            autocomplete="off">
@@ -384,7 +397,7 @@
                                 <dt class="col-sm-12 col-md-6 col-lg-6 text-center"><h4>{{ __('default.total') }} :</h4>
                                 </dt>
                                 <dd class="col-sm-12 col-md-4 col-lg-5 text-right"><h5>
-                                    {{ $showCurrency(50000) }}</h5></dd>
+                                    {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
                             </dl>
                         </div>
                     </div>
@@ -543,7 +556,10 @@ export default {
                     products:[],
                     totalUnit: 0,
                     totalUnitQuantity: 0,
-                    totalSubTotal:0
+                    totalSubTotal:0,
+                    otherCost:0,
+                    discount:0,
+                    grandTotal:0
                 },
                 request: {
                     search: '',
@@ -621,10 +637,12 @@ export default {
                         id:product.id,
                         name:product.name.toUpperCase(),
                         barcode:product.barcode,
-                        unit:product.unit.name +`(${product.unit.pack_size})`
+                        unit:product.unit.name +`(${product.unit.pack_size})`,
+                        purchase_type: product.purchase_type
                     },
                     type: product.purchase_type,
                     sale_price: stock.sale_price,
+                    original_sale_price: stock.sale_price,
                     sale_percentage: stock.sale_percentage,
                     quantity: 1,
                     sub_total: stock.sale_price,
@@ -635,21 +653,40 @@ export default {
             this.calculateTotal()
         },
         calculatePrice(index){
-            const salePrice = this.formState.formData.products[index].sale_price;
-            const quantity = this.formState.formData.products[index].quantity;
+            const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
+            const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
+            if (original_sale_price > salePrice){
+                message.error('You can\'t lower this sale price from original price.');
+            }
+            const quantity = this.formState.formData.products[index].quantity === null ? 0 : this.formState.formData.products[index].quantity;
+            this.formState.formData.products[index].sale_price = salePrice;
             if (quantity){
                 this.formState.formData.products[index].sub_total = (parseFloat(salePrice) * parseInt(quantity)).toFixed(2);
             }
             this.calculateTotal()
+        },
+        setOriginalPrice(index){
+            const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
+            const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
+            if (original_sale_price > salePrice){
+                message.error('You can\'t lower this sale price from original price.');
+                this.formState.formData.products[index].sale_price = original_sale_price;
+            }
         },
         calculateTotal() {
             this.formState.formData.totalUnit = this.formState.formData.products.length;
             this.formState.formData.totalUnitQuantity = this.formState.formData.products.reduce((accumulator, object) => {
                 return parseFloat(accumulator) + parseInt(object.quantity);
             }, 0);
-            this.formState.formData.totalSubTotal = this.formState.formData.products.reduce((accumulator, object) => {
+            const totalSubTotal = this.formState.formData.products.reduce((accumulator, object) => {
                 return parseFloat(accumulator) + parseFloat(object.sub_total);
             }, 0).toFixed(2);
+
+            this.formState.formData.totalSubTotal = totalSubTotal
+
+            const otherCost = parseFloat(this.formState.formData.otherCost === '' ? 0 : this.formState.formData.otherCost);
+            const discount = parseFloat(this.formState.formData.discount === '' ? 0 : this.formState.formData.discount);
+            this.formState.formData.grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount);
         },
         incrementDecrement(index, type){
             const quantity = parseInt(this.formState.formData.products[index].quantity);
