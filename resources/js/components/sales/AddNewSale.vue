@@ -295,30 +295,44 @@
 
                                     <div class="col-12 pt-3" v-if="cart.discountArea === true">
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-3">
+                                                <a-form-item :label="__('default.mrp')">
+                                                    <a-input-number v-model:value="cart.mrp"
+                                                                    readonly
+                                                                    style="width: 140px"
+                                                                    :prefix="$currency_symbol"
+                                                                    size="small"/>
+                                                </a-form-item>
+                                            </div>
+                                            <div class="col-5">
                                                 <a-form-item :label="__('default.sale_price')">
                                                     <a-input-number v-model:value="cart.sale_price"
                                                                     @change="calculatePrice(cart_index)"
                                                                     @blur="setOriginalPrice(cart_index)"
+                                                                    :id="'sale_price_'+cart_index"
                                                                     style="width: 100%"
                                                                     :prefix="$currency_symbol"
                                                                     :min="1"
                                                                     size="small"/>
                                                 </a-form-item>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-4">
                                                 <a-form-item :label="__('default.discount')">
                                                     <a-input-number v-if="cart.product.purchase_type === '$'"
                                                                     v-model:value="cart.sale_percentage"
-                                                                    style="width: 100%"
+                                                                    style="width: 140px"
                                                                     prefix="%"
+                                                                    :id="'sale_percentage_'+cart_index"
                                                                     disabled
                                                                     :min="1"
                                                                     size="small"/>
                                                     <a-input-number v-else
                                                                     v-model:value="cart.sale_percentage"
-                                                                    style="width: 100%"
+                                                                    style="width: 140px"
                                                                     prefix="%"
+                                                                    :id="'sale_percentage_'+cart_index"
+                                                                    @change="calculatePrice(cart_index)"
+                                                                    @blur="setOriginalPrice(cart_index)"
                                                                     :min="1"
                                                                     size="small"/>
                                                 </a-form-item>
@@ -643,6 +657,7 @@ export default {
                     type: product.purchase_type,
                     sale_price: stock.sale_price,
                     original_sale_price: stock.sale_price,
+                    mrp: stock.mrp,
                     sale_percentage: stock.sale_percentage,
                     quantity: 1,
                     sub_total: stock.sale_price,
@@ -654,14 +669,25 @@ export default {
         },
         calculatePrice(index){
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
+            const mrp = this.formState.formData.products[index].mrp === null ? 0 : this.formState.formData.products[index].mrp;
             const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
-            if (original_sale_price > salePrice){
+            const salePercentage = this.formState.formData.products[index].sale_percentage === null ? 0 : this.formState.formData.products[index].sale_percentage;
+
+            if (event.target.id === 'sale_price_'+index){
+                this.formState.formData.products[index].sale_percentage = (((mrp - salePrice)/ mrp) * 100).toFixed(2);
+            }else if(event.target.id === 'sale_percentage_'+index){
+                this.formState.formData.products[index].sale_price = (mrp - ((mrp * salePercentage) / 100)).toFixed(2);
+            }
+
+            const newSalePrice = this.formState.formData.products[index].sale_price
+
+            if (original_sale_price > newSalePrice){
                 message.error('You can\'t lower this sale price from original price.');
             }
             const quantity = this.formState.formData.products[index].quantity === null ? 0 : this.formState.formData.products[index].quantity;
-            this.formState.formData.products[index].sale_price = salePrice;
+
             if (quantity){
-                this.formState.formData.products[index].sub_total = (parseFloat(salePrice) * parseInt(quantity)).toFixed(2);
+                this.formState.formData.products[index].sub_total = (parseFloat(newSalePrice) * parseInt(quantity)).toFixed(2);
             }
             this.calculateTotal()
         },
