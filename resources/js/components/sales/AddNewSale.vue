@@ -240,7 +240,7 @@
                                                  stroke-linecap="round"
                                                  stroke-linejoin="round"
                                                  class="feather feather-chevron-down cursor-pointer"
-                                                 @click.prevent="cart.discountArea = true">
+                                                 @click.prevent="showHideDiscountArea(cart_index, true)">
                                                 <polyline points="6 9 12 15 18 9"></polyline>
                                             </svg>
 
@@ -254,7 +254,7 @@
                                                  stroke-linecap="round"
                                                  stroke-linejoin="round"
                                                  class="feather feather-chevron-up cursor-pointer"
-                                                 @click.prevent="cart.discountArea = false">
+                                                 @click.prevent="showHideDiscountArea(cart_index, false)">
                                                 <polyline points="18 15 12 9 6 15"></polyline>
                                             </svg>
 
@@ -309,13 +309,9 @@
 
                                     <div class="col-12 pt-3" v-if="cart.discountArea === true">
                                         <div class="row">
-                                            <div class="col-3">
+                                            <div class="col-2">
                                                 <a-form-item :label="__('default.mrp')">
-                                                    <a-input-number v-model:value="cart.mrp"
-                                                                    readonly
-                                                                    style="width: 140px"
-                                                                    :prefix="$currency_symbol"
-                                                                    size="small"/>
+                                                    <p>{{ $currency_symbol +' '+ cart.mrp }}</p>
                                                 </a-form-item>
                                             </div>
                                             <div class="col-5">
@@ -327,14 +323,18 @@
                                                                     style="width: 100%"
                                                                     :prefix="$currency_symbol"
                                                                     :min="1"
+                                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
                                                                     size="small"/>
+                                                    <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                        {{ __('default.cant_lower_sale_price') }}
+                                                    </div>
                                                 </a-form-item>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-5">
                                                 <a-form-item :label="__('default.discount')">
                                                     <a-input-number v-if="cart.product.purchase_type === '$'"
                                                                     v-model:value="cart.sale_percentage"
-                                                                    style="width: 140px"
+                                                                    style="width: 100%"
                                                                     prefix="%"
                                                                     :id="'sale_percentage_'+cart_index"
                                                                     disabled
@@ -342,13 +342,17 @@
                                                                     size="small"/>
                                                     <a-input-number v-else
                                                                     v-model:value="cart.sale_percentage"
-                                                                    style="width: 140px"
+                                                                    style="width: 100%"
                                                                     prefix="%"
                                                                     :id="'sale_percentage_'+cart_index"
                                                                     @change="calculatePrice(cart_index)"
                                                                     @blur="setOriginalPrice(cart_index)"
                                                                     :min="1"
+                                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
                                                                     size="small"/>
+                                                    <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                        {{ __('default.cant_lower_sale_price') }}
+                                                    </div>
                                                 </a-form-item>
                                             </div>
                                         </div>
@@ -597,6 +601,7 @@ export default {
                 },
                 formData: {
                     customer: null,
+                    customerName: null,
                     products: [],
                     totalUnit: 0,
                     totalUnitQuantity: 0,
@@ -620,6 +625,13 @@ export default {
         this.getProduct()
     },
     watch: {
+        'formState.formData.customer': function (){
+            if (this.formState.formData.customer !== null){
+                const dependencyCustomer = this.formState.dependencies.customers.find(item => item.value === this.formState.formData.customer);
+                this.formState.formData.customerName = dependencyCustomer?.label;
+                this.setCartHistory()
+            }
+        },
         'formState.request.search': function () {
             this.getProduct()
         },
@@ -692,7 +704,8 @@ export default {
                     sale_percentage: stock.sale_percentage,
                     quantity: 1,
                     sub_total: stock.sale_price,
-                    discountArea: false
+                    discountArea: false,
+                    showAlert:false,
                 })
             }
             this.formState.selectedProduct.openStock = false
@@ -715,6 +728,9 @@ export default {
 
             if (original_sale_price > newSalePrice) {
                 message.error('You can\'t lower this sale price from original price.');
+                this.formState.formData.products[index].showAlert = true
+            }else {
+                this.formState.formData.products[index].showAlert = false
             }
             const quantity = this.formState.formData.products[index].quantity === null ? 0 : this.formState.formData.products[index].quantity;
 
@@ -760,11 +776,16 @@ export default {
             this.calculatePrice(index)
             this.calculateTotal()
         },
+        showHideDiscountArea(key, value){
+            this.formState.formData.products[key].discountArea = value;
+            this.setCartHistory();
+        },
         removeFromCart(key) {
             const removeProductName = this.formState.formData.products[key].product.name;
             message.warning(removeProductName + ' remove from this list.');
             this.formState.formData.products.splice(key, 1);
-            this.calculateTotal()
+            this.calculateTotal();
+            this.setCartHistory();
         },
         showProductDetails(product) {
             this.formState.selectedProduct = {
@@ -813,6 +834,9 @@ export default {
             }
         },
         async getCustomers(value = 'Walk-In') {
+            if (value !== 'Walk-In'){
+                value = value.split(' (')[0]
+            }
             this.formState.dependencies.customers = [];
             await axios.get('/get-sales-customers', {params: {search: value}})
                 .then(response => {
@@ -823,18 +847,12 @@ export default {
                         }
                     })
 
-                    console.log(this.formState.formData.customer)
-                    if (this.formState.formData.customer) {
-                        // const customer = response.data.find(item => item.id === this.formState.formData.customer);
-                        // console.log(customer)
-                        this.formState.formData.customer = 99;
+                    const firstCustomer = response.data.find(item => item.name === value || item.phone_number === value);
+
+                    if (firstCustomer) {
+                        this.formState.formData.customer = firstCustomer.id;
                     } else {
-                        const firstCustomer = response.data.find(item => item.name === value || item.phone_number === value);
-                        if (firstCustomer) {
-                            this.formState.formData.customer = firstCustomer.id;
-                        } else {
-                            this.formState.formData.customer = null;
-                        }
+                        this.formState.formData.customer = null;
                     }
                 })
                 .catch(error => console.error(error))
@@ -861,6 +879,9 @@ export default {
             this.customerFormState.disabled = false;
         },
         setData(customer = 'Walk-In') {
+            if (this.formState.formData.customerName){
+                customer = this.formState.formData.customerName
+            }
             this.getCustomers(customer)
         },
         onClose() {
