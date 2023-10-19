@@ -63,7 +63,8 @@
                                                 :placeholder="__('default.category')">
                                             </a-select>
                                         </a-input-group>
-                                        <a class="text-primary float-right text-decoration-none cursor-pointer" @click.prevent="formState.request.category = null">
+                                        <a class="text-primary float-right text-decoration-none cursor-pointer"
+                                           @click.prevent="formState.request.category = null">
                                             <small>{{ __('default.clear') }}</small>
                                         </a>
                                     </a-form-item>
@@ -80,7 +81,8 @@
                                                 :placeholder="__('default.company')">
                                             </a-select>
                                         </a-input-group>
-                                        <a class="text-primary float-right text-decoration-none cursor-pointer" @click.prevent="formState.request.company = null">
+                                        <a class="text-primary float-right text-decoration-none cursor-pointer"
+                                           @click.prevent="formState.request.company = null">
                                             <small>{{ __('default.clear') }}</small>
                                         </a>
                                     </a-form-item>
@@ -144,14 +146,19 @@
                                             }} : </span>{{ product.unit.name + `(${product.unit.pack_size})` }} <br>
                                         <span class="font-weight-bold">{{
                                                 __('default.purchase_type')
-                                            }} : </span> <span v-if="product.purchase_type === '%'" class="badge badge-info">{{ product.purchase_type }} Percentage</span>
-                                                        <span v-else class="badge badge-success">{{ $currency_symbol }} Direct Price</span><br>
+                                            }} : </span> <span v-if="product.purchase_type === '%'"
+                                                               class="badge badge-info">{{ product.purchase_type }} Percentage</span>
+                                        <span v-else class="badge badge-success">{{
+                                                $currency_symbol
+                                            }} Direct Price</span><br>
                                         <span class="font-weight-bold">{{
                                                 __('default.stock_type')
                                             }} : </span>{{ product.stocks.length }} <br>
                                         <span class="font-weight-bold">{{
                                                 __('default.total_stock')
-                                            }} : </span> <span class="badge badge-primary">{{ totalStock(product.stocks) }}</span> <br>
+                                            }} : </span> <span class="badge badge-primary">{{
+                                            totalStock(product.stocks)
+                                        }}</span> <br>
                                     </p>
                                 </div>
                             </div>
@@ -218,7 +225,8 @@
 
                         <div class="col-12 cart-area text-muted"
                              :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
-                            <template v-if="formState.formData.products.length" v-for="(cart, cart_index) in formState.formData.products">
+                            <template v-if="formState.formData.products.length"
+                                      v-for="(cart, cart_index) in formState.formData.products">
                                 <div class="row border-bottom py-2 mb-0">
                                     <div class="col-4 align-middle">
                                         <div class="d-flex justify-content-start align-items-center">
@@ -254,10 +262,14 @@
                                             <p class="ml-3">
                                                 {{ cart.product.name }}
                                                 <br>
-                                                <small><span class="font-weight-bolder">{{ __('default.barcode') }} :</span> {{ cart.product.barcode }},
+                                                <small><span class="font-weight-bolder">{{
+                                                        __('default.barcode')
+                                                    }} :</span> {{ cart.product.barcode }},
                                                 </small>
                                                 <br>
-                                                <small><span class="font-weight-bolder">{{ __('default.unit') }} :</span> {{ cart.product.unit }}
+                                                <small><span class="font-weight-bolder">{{
+                                                        __('default.unit')
+                                                    }} :</span> {{ cart.product.unit }}
                                                 </small>
                                             </p>
                                         </div>
@@ -268,10 +280,12 @@
                                     <div class="col-3 text-center pt-3">
 
                                         <a-input-group compact>
-                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" size="small" style="z-index: 1">
+                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" size="small"
+                                                      style="z-index: 1">
                                                 <i class="mdi mdi-minus"></i>
                                             </a-button>
-                                            <a-input v-model:value="cart.quantity" size="small" type="number" min="1" style="width: 65px;"/>
+                                            <a-input v-model:value="cart.quantity" size="small" type="number" min="1"
+                                                     style="width: 65px;"/>
                                             <a-button @click.prevent="incrementDecrement(cart_index, '+')" size="small">
                                                 <i class="mdi mdi-plus"></i>
                                             </a-button>
@@ -283,13 +297,13 @@
                                     </div>
                                     <div class="col-1 text-center pt-3">
                                         <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
-                                        cancel-text="No"
-                                        @confirm="removeFromCart(cart_index)">
-                                        <template #icon></template>
+                                                      cancel-text="No"
+                                                      @confirm="removeFromCart(cart_index)">
+                                            <template #icon></template>
 
-                                        <a-tooltip :title="__('default.remove')">
-                                            <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
-                                        </a-tooltip>
+                                            <a-tooltip :title="__('default.remove')">
+                                                <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
+                                            </a-tooltip>
                                         </a-popconfirm>
                                     </div>
 
@@ -361,7 +375,8 @@
                                     <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
                                 </div>
                                 <div class="col-4 text-center">
-                                    <h5>{{ __('default.total_subtotal') }} : {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
+                                    <h5>{{ __('default.total_subtotal') }} :
+                                        {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
                                 </div>
                             </div>
                             <hr>
@@ -454,10 +469,18 @@
                         <div class="media-body">
                             <h4 class="mt-0 mb-1">{{ formState.selectedProduct.name.toUpperCase() }}</h4>
                             <p>
-                                <span class="font-weight-bolder">{{ __('default.barcode') }} : </span>{{ formState.selectedProduct.barcode }} <br>
-                                <span class="font-weight-bolder">{{ __('default.company') }} : </span>{{ formState.selectedProduct.company }} <br>
-                                <span class="font-weight-bolder">{{ __('default.category') }} : </span>{{ formState.selectedProduct.category }} <br>
-                                <span class="font-weight-bolder">{{ __('default.unit') }} : </span>{{ formState.selectedProduct.unit }} <br>
+                                <span class="font-weight-bolder">{{
+                                        __('default.barcode')
+                                    }} : </span>{{ formState.selectedProduct.barcode }} <br>
+                                <span class="font-weight-bolder">{{
+                                        __('default.company')
+                                    }} : </span>{{ formState.selectedProduct.company }} <br>
+                                <span class="font-weight-bolder">{{
+                                        __('default.category')
+                                    }} : </span>{{ formState.selectedProduct.category }} <br>
+                                <span class="font-weight-bolder">{{
+                                        __('default.unit')
+                                    }} : </span>{{ formState.selectedProduct.unit }} <br>
                                 <span class="font-weight-bolder">{{ __('default.purchase_type') }} : </span>
                                 <span class="badge badge-info" v-if="formState.selectedProduct.purchase_type === '%'">
                                     ({{ formState.selectedProduct.purchase_type }}) Percentage
@@ -473,27 +496,34 @@
             <div class="row">
                 <div class="col-sm-12 pt-4">
                     <div class="row ">
-                        <div class="col-sm-12 col-md-4 col-lg-4 mb-4" v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
+                        <div class="col-sm-12 col-md-4 col-lg-4 mb-4"
+                             v-for="(stock, stock_index) in formState.selectedProduct.stocks" :key="stock_index">
                             <a @click.prevent="selectStockProduct(stock, formState.selectedProduct.id)">
                                 <div class="card border p-2 w-100 h-100 d-inline-block stock-card">
                                     <ul class="list-group">
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.mrp') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.mrp) }}</span>
+                                            <span>{{ __('default.mrp') }} : </span> <span
+                                            class="font-weight-bolder">{{ $showCurrency(stock.mrp) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.sale_price') }} : </span> <span class="font-weight-bolder">{{ $showCurrency(stock.sale_price) }}</span>
+                                            <span>{{ __('default.sale_price') }} : </span> <span
+                                            class="font-weight-bolder">{{ $showCurrency(stock.sale_price) }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.sale_percentage') }} : </span> <span class="font-weight-bolder">{{ stock.sale_percentage }}%</span>
+                                            <span>{{ __('default.sale_percentage') }} : </span> <span
+                                            class="font-weight-bolder">{{ stock.sale_percentage }}%</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.purchase_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.purchase_quantity }}</span>
+                                            <span>{{ __('default.purchase_quantity') }} : </span> <span
+                                            class="font-weight-bolder">{{ stock.purchase_quantity }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.sale_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.sale_quantity }}</span>
+                                            <span>{{ __('default.sale_quantity') }} : </span> <span
+                                            class="font-weight-bolder">{{ stock.sale_quantity }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span>{{ __('default.available_quantity') }} : </span> <span class="font-weight-bolder">{{ stock.available_quantity }}</span>
+                                            <span>{{ __('default.available_quantity') }} : </span> <span
+                                            class="font-weight-bolder">{{ stock.available_quantity }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -529,7 +559,7 @@ export default {
         SearchOutlined,
         CloseOutlined
     },
-    props: ['categories', 'companies'],
+    props: ['categories', 'companies', 'user_email'],
     data() {
         return {
             windowHeight: window.innerHeight,
@@ -567,24 +597,25 @@ export default {
                 },
                 formData: {
                     customer: null,
-                    products:[],
+                    products: [],
                     totalUnit: 0,
                     totalUnitQuantity: 0,
-                    totalSubTotal:0,
-                    otherCost:0,
-                    discount:0,
-                    grandTotal:0
+                    totalSubTotal: 0,
+                    otherCost: 0,
+                    discount: 0,
+                    grandTotal: 0
                 },
                 request: {
                     search: '',
                     category: null,
                     company: null
                 },
-                selectedProduct:{}
+                selectedProduct: {}
             }
         }
     },
     created() {
+        this.getCartHistory()
         this.setData()
         this.getProduct()
     },
@@ -631,27 +662,27 @@ export default {
 
     },
     methods: {
-        selectStockProduct(stock, product_id){
+        selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);
             const existProduct = this.formState.formData.products.find(item => item.product.id === product_id && item.sale_price === stock.sale_price)
-            if (existProduct){
+            if (existProduct) {
                 this.formState.formData.products.map(item => {
-                    if (item.product.id === existProduct.product.id && item.sale_price === stock.sale_price){
+                    if (item.product.id === existProduct.product.id && item.sale_price === stock.sale_price) {
                         item.quantity = item.quantity + 1
                         item.sub_total = (item.sale_price * item.quantity)
                         return item;
-                    }else {
+                    } else {
                         return item;
                     }
                 })
                 message.success(existProduct.product.name + ' already added in cart.');
-            }else {
+            } else {
                 this.formState.formData.products.push({
-                    product:{
-                        id:product.id,
-                        name:product.name.toUpperCase(),
-                        barcode:product.barcode,
-                        unit:product.unit.name +`(${product.unit.pack_size})`,
+                    product: {
+                        id: product.id,
+                        name: product.name.toUpperCase(),
+                        barcode: product.barcode,
+                        unit: product.unit.name + `(${product.unit.pack_size})`,
                         purchase_type: product.purchase_type
                     },
                     type: product.purchase_type,
@@ -666,35 +697,37 @@ export default {
             }
             this.formState.selectedProduct.openStock = false
             this.calculateTotal()
+            this.setCartHistory();
         },
-        calculatePrice(index){
+        calculatePrice(index) {
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
             const mrp = this.formState.formData.products[index].mrp === null ? 0 : this.formState.formData.products[index].mrp;
             const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
             const salePercentage = this.formState.formData.products[index].sale_percentage === null ? 0 : this.formState.formData.products[index].sale_percentage;
 
-            if (event.target.id === 'sale_price_'+index){
-                this.formState.formData.products[index].sale_percentage = (((mrp - salePrice)/ mrp) * 100).toFixed(2);
-            }else if(event.target.id === 'sale_percentage_'+index){
+            if (event.target.id === 'sale_price_' + index) {
+                this.formState.formData.products[index].sale_percentage = (((mrp - salePrice) / mrp) * 100).toFixed(2);
+            } else if (event.target.id === 'sale_percentage_' + index) {
                 this.formState.formData.products[index].sale_price = (mrp - ((mrp * salePercentage) / 100)).toFixed(2);
             }
 
             const newSalePrice = this.formState.formData.products[index].sale_price
 
-            if (original_sale_price > newSalePrice){
+            if (original_sale_price > newSalePrice) {
                 message.error('You can\'t lower this sale price from original price.');
             }
             const quantity = this.formState.formData.products[index].quantity === null ? 0 : this.formState.formData.products[index].quantity;
 
-            if (quantity){
+            if (quantity) {
                 this.formState.formData.products[index].sub_total = (parseFloat(newSalePrice) * parseInt(quantity)).toFixed(2);
             }
-            this.calculateTotal()
+            this.calculateTotal();
+            this.setCartHistory();
         },
-        setOriginalPrice(index){
+        setOriginalPrice(index) {
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
             const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
-            if (original_sale_price > salePrice){
+            if (original_sale_price > salePrice) {
                 message.error('You can\'t lower this sale price from original price.');
                 this.formState.formData.products[index].sale_price = original_sale_price;
             }
@@ -714,14 +747,14 @@ export default {
             const discount = parseFloat(this.formState.formData.discount === '' ? 0 : this.formState.formData.discount);
             this.formState.formData.grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount);
         },
-        incrementDecrement(index, type){
+        incrementDecrement(index, type) {
             const quantity = parseInt(this.formState.formData.products[index].quantity);
-            if (type === '-'){
+            if (type === '-') {
                 const changeQty = quantity - 1;
-                if (changeQty > 0){
+                if (changeQty > 0) {
                     this.formState.formData.products[index].quantity = changeQty;
                 }
-            }else if (type === '+'){
+            } else if (type === '+') {
                 this.formState.formData.products[index].quantity = quantity + 1;
             }
             this.calculatePrice(index)
@@ -733,7 +766,7 @@ export default {
             this.formState.formData.products.splice(key, 1);
             this.calculateTotal()
         },
-        showProductDetails(product){
+        showProductDetails(product) {
             this.formState.selectedProduct = {
                 id: product.id,
                 photo: product.product_photo ? product.product_photo.full_url : '/images/medicine.png',
@@ -741,7 +774,7 @@ export default {
                 barcode: product.barcode,
                 company: product.company.name,
                 category: product.category.name,
-                unit: product.unit.name +`(${product.unit.pack_size})`,
+                unit: product.unit.name + `(${product.unit.pack_size})`,
                 purchase_type: product.purchase_type,
                 stocks: product.stocks,
                 openStock: true,
@@ -758,15 +791,15 @@ export default {
                 .catch(error => console.error(error))
 
         },
-        checkProductSelected(product_id){
-           const existProduct = this.formState.formData.products.find(item => item.product.id === product_id);
-           if (existProduct){
-               return true
-           }else {
-               return false
-           }
+        checkProductSelected(product_id) {
+            const existProduct = this.formState.formData.products.find(item => item.product.id === product_id);
+            if (existProduct) {
+                return true
+            } else {
+                return false
+            }
         },
-        totalStock(stocks){
+        totalStock(stocks) {
             return stocks.reduce((accumulator, object) => {
                 return parseFloat(accumulator) + parseFloat(object.available_quantity);
             }, 0);
@@ -790,11 +823,18 @@ export default {
                         }
                     })
 
-                    const firstCustomer = response.data.find(item => item.name === value || item.phone_number === value);
-                    if (firstCustomer) {
-                        this.formState.formData.customer = firstCustomer.id;
+                    console.log(this.formState.formData.customer)
+                    if (this.formState.formData.customer) {
+                        // const customer = response.data.find(item => item.id === this.formState.formData.customer);
+                        // console.log(customer)
+                        this.formState.formData.customer = 99;
                     } else {
-                        this.formState.formData.customer = null;
+                        const firstCustomer = response.data.find(item => item.name === value || item.phone_number === value);
+                        if (firstCustomer) {
+                            this.formState.formData.customer = firstCustomer.id;
+                        } else {
+                            this.formState.formData.customer = null;
+                        }
                     }
                 })
                 .catch(error => console.error(error))
@@ -826,6 +866,16 @@ export default {
         onClose() {
             this.customerFormState.openCreate = false;
         },
+        setCartHistory() {
+            const cartHistory = this.formState.formData;
+            localStorage.setItem(this.user_email, JSON.stringify(cartHistory));
+        },
+        getCartHistory() {
+            const cartHistory = localStorage.getItem(this.user_email);
+            if (cartHistory) {
+                this.formState.formData = JSON.parse(cartHistory)
+            }
+        }
     }
 }
 </script>
@@ -951,13 +1001,14 @@ input[type=number] {
 }
 
 
-.stock-card:hover{
-    box-shadow:
-        0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+.stock-card:hover {
+    box-shadow: 0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
 }
-.readonly{
+
+.readonly {
     pointer-events: none;
 }
+
 .list-group-item {
     padding: 0.2rem 0.2rem;
     border: 0;

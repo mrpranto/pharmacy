@@ -6,6 +6,7 @@
 @section('content')
 
     <add-new-sale-component
+        :user_email="{{ json_encode(auth()->user()->email) }}"
         :categories="{{ json_encode($categories) }}"
         :companies="{{ json_encode($companies) }}" />
 
