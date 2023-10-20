@@ -231,4 +231,10 @@ return [
     'total_subtotal' => 'মোট সাবটোটাল',
     'cant_lower_sale_price' => 'এই বিক্রয় মূল্য কমাতে পারবেন না।',
     'cant_greater_sale_percentage' => 'এই ডিসকাউন্ট বাড়াতে পারবেন না।',
+    'preview_selected_product' => 'নির্বাচিত পণ্যের পূর্বরূপ দেখুন',
+    'customer' => 'ক্রেতা',
+    'item' => 'আইটেম',
+    'qty' => 'পরিমাণ',
+    'rate' => 'দাম',
+    'amount' => 'মোট দাম',
 ];

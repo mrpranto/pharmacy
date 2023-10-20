@@ -230,5 +230,11 @@ return [
     'total_subtotal' => 'Total Sub total',
     'cant_lower_sale_price' => 'Can\'t lower this sale price.',
     'cant_greater_sale_percentage' => 'Can\'t greater this discount.',
+    'preview_selected_product' => 'Preview selected product',
+    'customer' => 'Customer',
+    'item' => 'Item',
+    'qty' => 'Qty',
+    'rate' => 'Rate',
+    'amount' => 'Amount',
 
 ];

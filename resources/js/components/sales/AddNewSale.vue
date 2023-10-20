@@ -1,5 +1,7 @@
 <template>
     <div class="row m-3">
+
+<!--        Product Select Area Start-->
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row mb-3">
                 <div class="col-10">
@@ -167,7 +169,9 @@
                 </div>
             </div>
         </div>
+<!--        Product Select Are End-->
 
+<!--        Selected Product Area Start-->
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row">
                 <div class="col-10">
@@ -395,17 +399,17 @@
                         <div class="col-12">
                             <dl class="row mt-4">
 
-                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">{{ __('default.subtotal') }}
+                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.subtotal') }}
                                     ({{ $currency_symbol }}) :
                                 </dt>
-                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right h5 mb-3">
+                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right h5 mb-3">
                                     {{ $showCurrency(formState.formData.totalSubTotal) }}
                                 </dd>
 
-                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">{{ __('default.other_cost') }}
+                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.other_cost') }}
                                     ({{ $currency_symbol }}) :
                                 </dt>
-                                <dd class="col-sm-12 col-md-4 col-lg-5">
+                                <dd class="col-sm-12 col-md-6 col-lg-6">
                                     <input type="number"
                                            style="width: 200px"
                                            step="0.01"
@@ -416,10 +420,10 @@
                                            autocomplete="off">
                                 </dd>
 
-                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center">(-) {{ __('default.discount') }}
+                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">(-) {{ __('default.discount') }}
                                     ({{ $currency_symbol }}) :
                                 </dt>
-                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right">
+                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right">
                                     <input type="number"
                                            style="width: 200px;"
                                            step="0.01"
@@ -434,9 +438,9 @@
                                     <hr/>
                                 </dt>
 
-                                <dt class="col-sm-12 col-md-6 col-lg-6 text-center"><h4>{{ __('default.total') }} :</h4>
+                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ __('default.total') }} :</h4>
                                 </dt>
-                                <dd class="col-sm-12 col-md-4 col-lg-5 text-right"><h5>
+                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right"><h5>
                                     {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
                             </dl>
                         </div>
@@ -445,20 +449,25 @@
             </div>
             <div class="row mt-2">
                 <div class="col-4">
-                    <button class="btn btn-primary btn-block"><i class="mdi mdi-eye"></i> Preview</button>
+                    <button class="btn btn-primary btn-block" @click.prevent="formState.showPreview = true">
+                        <i class="mdi mdi-eye"></i> Preview
+                    </button>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-warning btn-block"><i class="mdi mdi-pause"></i> Draft</button>
+                    <button class="btn btn-warning btn-block" type="button"><i class="mdi mdi-pause"></i> Draft</button>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-success btn-block"><i class="mdi mdi-check-bold"></i> Save & Print</button>
+                    <button class="btn btn-success btn-block" type="button"><i class="mdi mdi-check-bold"></i> Save & Print</button>
                 </div>
             </div>
         </div>
+<!--        Selected Product Area End-->
 
+<!--        Add customer drawer area start-->
         <AddNewCustomer :formState="customerFormState"/>
+<!--        Add customer drawer area end -->
 
-
+<!--        Show Stock information start-->
         <a-modal v-model:open="formState.selectedProduct.openStock"
                  width="1000px"
                  :ok-button-props="{ hidden: true }"
@@ -544,6 +553,53 @@
                 </div>
             </div>
         </a-modal>
+<!--        Stock information end-->
+
+
+        <a-modal v-model:open="formState.showPreview"
+                 width="1000px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.preview_selected_product')">
+            <div class="row pt-2">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td colspan="5">{{ __('default.customer') }} : {{ formState.formData.customerName }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{ __('default.sl') }}</td>
+                            <td>{{ __('default.item') }}</td>
+                            <td class="text-center">{{ __('default.qty') }}</td>
+                            <td class="text-right">{{ __('default.rate') }}</td>
+                            <td class="text-right">{{ __('default.amount') }}</td>
+                        </tr>
+
+                        <tr v-for="(item, item_index) in formState.formData.products" :key="item_index">
+                            <td class="text-center border-bottom-0 border-top-0">{{ (item_index+1) }}</td>
+                            <td class="border-bottom-0 border-top-0">
+                                {{ item.product.name }}
+                                <br>
+                                <small>{{ __('default.unit') }} : {{ item.product.unit }}</small>
+                            </td>
+                            <td class="text-center border-bottom-0 border-top-0">
+                                {{ item.quantity }}
+                            </td>
+                            <td class="text-right border-bottom-0 border-top-0">
+                                {{ $showCurrency(item.sale_price) }}
+                            </td>
+                            <td class="text-right border-bottom-0 border-top-0">
+                                {{ $showCurrency(item.sub_total) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">{{ __('default.total') }} : </th>
+                            <th class="text-right">{{ $showCurrency(formState.formData.grandTotal) }}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </a-modal>
 
     </div>
 </template>
@@ -599,7 +655,7 @@ export default {
             formState: {
                 loader: false,
                 showFilterArea: false,
-                showDiscountArea: false,
+                showPreview: false,
                 dependencies: {
                     products: [],
                     customers: [],
