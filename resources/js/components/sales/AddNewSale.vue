@@ -269,7 +269,10 @@
                                                 <br>
                                                 <small><span class="font-weight-bolder">{{
                                                         __('default.unit')
-                                                    }} :</span> {{ cart.product.unit }}
+                                                    }} :</span> {{ cart.product.unit }},
+                                                    <br>
+                                                    <span class="badge badge-info" v-if="cart.product.purchase_type === '%'">{{ cart.product.purchase_type }} Percentage</span>
+                                                    <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
                                                 </small>
                                             </p>
                                         </div>
@@ -284,8 +287,12 @@
                                                       style="z-index: 1">
                                                 <i class="mdi mdi-minus"></i>
                                             </a-button>
-                                            <a-input v-model:value="cart.quantity" size="small" type="number" min="1"
-                                                     style="width: 65px;"/>
+                                            <a-input v-model:value="cart.quantity"
+                                                     size="small"
+                                                     type="number"
+                                                     min="1"
+                                                     @input="calculatePrice(cart_index)"
+                                                     style="width: 60px;"/>
                                             <a-button @click.prevent="incrementDecrement(cart_index, '+')" size="small">
                                                 <i class="mdi mdi-plus"></i>
                                             </a-button>
@@ -351,7 +358,7 @@
                                                                     :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
                                                                     size="small"/>
                                                     <div class="ant-form-item-explain-error" v-if="cart.showAlert">
-                                                        {{ __('default.cant_lower_sale_price') }}
+                                                        {{ __('default.cant_greater_sale_percentage') }}
                                                     </div>
                                                 </a-form-item>
                                             </div>
@@ -629,7 +636,7 @@ export default {
             if (this.formState.formData.customer !== null){
                 const dependencyCustomer = this.formState.dependencies.customers.find(item => item.value === this.formState.formData.customer);
                 this.formState.formData.customerName = dependencyCustomer?.label;
-                this.setCartHistory()
+                this.setCartHistory();
             }
         },
         'formState.request.search': function () {
@@ -762,6 +769,7 @@ export default {
             const otherCost = parseFloat(this.formState.formData.otherCost === '' ? 0 : this.formState.formData.otherCost);
             const discount = parseFloat(this.formState.formData.discount === '' ? 0 : this.formState.formData.discount);
             this.formState.formData.grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount);
+            this.setCartHistory();
         },
         incrementDecrement(index, type) {
             const quantity = parseInt(this.formState.formData.products[index].quantity);
@@ -851,9 +859,12 @@ export default {
 
                     if (firstCustomer) {
                         this.formState.formData.customer = firstCustomer.id;
+                        this.formState.formData.customerName = firstCustomer.name;
                     } else {
                         this.formState.formData.customer = null;
+                        this.formState.formData.customerName = null;
                     }
+                    this.setCartHistory();
                 })
                 .catch(error => console.error(error))
         },

@@ -229,5 +229,6 @@ return [
     'product_filter' => 'পণ্য ফিল্টার',
     'clear_filter' => 'ফিল্টার পরিষ্কার',
     'total_subtotal' => 'মোট সাবটোটাল',
-    'cant_lower_sale_price' => 'এই বিক্রয় মূল্য কমাতে পারে না।',
+    'cant_lower_sale_price' => 'এই বিক্রয় মূল্য কমাতে পারবেন না।',
+    'cant_greater_sale_percentage' => 'এই ডিসকাউন্ট বাড়াতে পারবেন না।',
 ];

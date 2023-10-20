@@ -229,5 +229,6 @@ return [
     'clear_filter' => 'Clear Filter',
     'total_subtotal' => 'Total Sub total',
     'cant_lower_sale_price' => 'Can\'t lower this sale price.',
+    'cant_greater_sale_percentage' => 'Can\'t greater this discount.',
 
 ];
