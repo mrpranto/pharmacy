@@ -561,18 +561,18 @@
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }"
                  :title="__('default.preview_selected_product')">
-            <div class="row pt-2">
+            <div class="row pt-2 cart-area" style="height: 500px;">
                 <div class="col-12">
                     <table class="table table-bordered">
                         <tr>
-                            <td colspan="5">{{ __('default.customer') }} : {{ formState.formData.customerName }}</td>
+                            <th colspan="5">{{ __('default.customer') }} : {{ formState.formData.customerName }}</th>
                         </tr>
                         <tr>
-                            <td class="text-center">{{ __('default.sl') }}</td>
-                            <td>{{ __('default.item') }}</td>
-                            <td class="text-center">{{ __('default.qty') }}</td>
-                            <td class="text-right">{{ __('default.rate') }}</td>
-                            <td class="text-right">{{ __('default.amount') }}</td>
+                            <th class="text-center">{{ __('default.sl') }}</th>
+                            <th>{{ __('default.item') }}</th>
+                            <th class="text-center">{{ __('default.qty') }}</th>
+                            <th class="text-right">{{ __('default.rate') }}</th>
+                            <th class="text-right">{{ __('default.amount') }}</th>
                         </tr>
 
                         <tr v-for="(item, item_index) in formState.formData.products" :key="item_index">
