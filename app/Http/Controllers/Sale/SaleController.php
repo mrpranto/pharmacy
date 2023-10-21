@@ -51,12 +51,17 @@ class SaleController extends Controller
         return $this->services->getProducts();
     }
 
+    public function salesPreview()
+    {
+        return view('pages.sale.preview', ['sales_data' => request()->all()]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        return $this->services->validateStore($request);
     }
 
     /**

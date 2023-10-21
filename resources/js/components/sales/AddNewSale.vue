@@ -448,16 +448,19 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-4">
-                    <button class="btn btn-primary btn-block" @click.prevent="formState.showPreview = true">
+                <div class="col-3">
+                    <button class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
                         <i class="mdi mdi-eye"></i> Preview
                     </button>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <button class="btn btn-warning btn-block" type="button"><i class="mdi mdi-pause"></i> Draft</button>
                 </div>
-                <div class="col-4">
-                    <button class="btn btn-success btn-block" type="button"><i class="mdi mdi-check-bold"></i> Save & Print</button>
+                <div class="col-3">
+                    <button class="btn btn-info btn-block" type="button"><i class="mdi mdi-check-circle"></i> Confirmed</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-success btn-block" type="button"><i class="mdi mdi-cart"></i> Delivered & Print</button>
                 </div>
             </div>
         </div>
@@ -561,9 +564,9 @@
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }"
                  :title="__('default.preview_selected_product')">
-            <div class="row pt-2 cart-area" style="height: 500px;">
-                <div class="col-12">
-                    <table class="table table-bordered">
+            <div class="row pt-2">
+                <div class="col-12" id="printArea">
+<!--                    <table class="table table-bordered">
                         <tr>
                             <th colspan="5">{{ __('default.customer') }} : {{ formState.formData.customerName }}</th>
                         </tr>
@@ -596,7 +599,7 @@
                             <th colspan="4">{{ __('default.total') }} : </th>
                             <th class="text-right">{{ $showCurrency(formState.formData.grandTotal) }}</th>
                         </tr>
-                    </table>
+                    </table>-->
                 </div>
             </div>
         </a-modal>
@@ -614,6 +617,7 @@ import {
 } from "@ant-design/icons-vue";
 import AddNewCustomer from "../people/customer/AddNewCustomer.vue";
 import {message} from "ant-design-vue";
+import { jsPDF } from "jspdf";
 
 export default {
     name: "AddNewSale",
@@ -737,6 +741,19 @@ export default {
 
     },
     methods: {
+        async save(){
+            await axios.post('/sales')
+        },
+        async printPreviewArea(){
+            await axios.post('/sales-preview', this.formState.formData)
+                .then(response => {
+                    this.formState.showPreview = true;
+                    setTimeout(function (){
+                        document.getElementById('printArea').innerHTML = response.data;
+                    }, 200)
+                })
+                .catch(error => console.error(error))
+        },
         selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);
             const existProduct = this.formState.formData.products.find(item => item.product.id === product_id && item.sale_price === stock.sale_price)

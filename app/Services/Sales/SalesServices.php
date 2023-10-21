@@ -86,4 +86,12 @@ class SalesServices extends BaseServices
         ];
     }
 
+    public function validateStore($request)
+    {
+        dd($request->all());
+        $request->validate([
+
+        ]);
+    }
+
 }

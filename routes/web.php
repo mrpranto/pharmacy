@@ -115,6 +115,7 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::resource('sales', SaleController::class);
     Route::get('/get-sales-customers', [SaleController::class, 'getCustomers']);
     Route::get('/get-sales-products', [SaleController::class, 'getProducts']);
+    Route::post('/sales-preview', [SaleController::class, 'salesPreview']);
 
 
 });

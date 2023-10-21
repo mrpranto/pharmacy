@@ -236,5 +236,6 @@ return [
     'qty' => 'Qty',
     'rate' => 'Rate',
     'amount' => 'Amount',
+    'sales_invoice_preview' => 'Sales invoice preview',
 
 ];

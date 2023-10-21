@@ -237,4 +237,5 @@ return [
     'qty' => 'পরিমাণ',
     'rate' => 'দাম',
     'amount' => 'মোট দাম',
+    'sales_invoice_preview' => 'বিক্রয় চালান পূর্বরূপ',
 ];
