@@ -449,7 +449,11 @@
             </div>
             <div class="row mt-2">
                 <div class="col-3">
-                    <button class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
+                    <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button v-else class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
                         <i class="mdi mdi-eye"></i> Preview
                     </button>
                 </div>
@@ -564,43 +568,8 @@
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }"
                  :title="__('default.preview_selected_product')">
-            <div class="row pt-2">
-                <div class="col-12" id="printArea">
-<!--                    <table class="table table-bordered">
-                        <tr>
-                            <th colspan="5">{{ __('default.customer') }} : {{ formState.formData.customerName }}</th>
-                        </tr>
-                        <tr>
-                            <th class="text-center">{{ __('default.sl') }}</th>
-                            <th>{{ __('default.item') }}</th>
-                            <th class="text-center">{{ __('default.qty') }}</th>
-                            <th class="text-right">{{ __('default.rate') }}</th>
-                            <th class="text-right">{{ __('default.amount') }}</th>
-                        </tr>
+            <div class="row pt-2" id="printArea">
 
-                        <tr v-for="(item, item_index) in formState.formData.products" :key="item_index">
-                            <td class="text-center border-bottom-0 border-top-0">{{ (item_index+1) }}</td>
-                            <td class="border-bottom-0 border-top-0">
-                                {{ item.product.name }}
-                                <br>
-                                <small>{{ __('default.unit') }} : {{ item.product.unit }}</small>
-                            </td>
-                            <td class="text-center border-bottom-0 border-top-0">
-                                {{ item.quantity }}
-                            </td>
-                            <td class="text-right border-bottom-0 border-top-0">
-                                {{ $showCurrency(item.sale_price) }}
-                            </td>
-                            <td class="text-right border-bottom-0 border-top-0">
-                                {{ $showCurrency(item.sub_total) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th colspan="4">{{ __('default.total') }} : </th>
-                            <th class="text-right">{{ $showCurrency(formState.formData.grandTotal) }}</th>
-                        </tr>
-                    </table>-->
-                </div>
             </div>
         </a-modal>
 
@@ -660,6 +629,8 @@ export default {
                 loader: false,
                 showFilterArea: false,
                 showPreview: false,
+                showPreviewLoader: false,
+                pdfPreview: '',
                 dependencies: {
                     products: [],
                     customers: [],
@@ -745,11 +716,13 @@ export default {
             await axios.post('/sales')
         },
         async printPreviewArea(){
+            this.formState.showPreviewLoader = true;
             await axios.post('/sales-preview', this.formState.formData)
                 .then(response => {
                     this.formState.showPreview = true;
-                    setTimeout(function (){
+                    setTimeout( () => {
                         document.getElementById('printArea').innerHTML = response.data;
+                        this.formState.showPreviewLoader = false;
                     }, 200)
                 })
                 .catch(error => console.error(error))

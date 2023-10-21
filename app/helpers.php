@@ -1,6 +1,11 @@
 <?php
 
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Mpdf\Mpdf;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 if (!function_exists('active_class')) {
     /**
@@ -113,5 +118,55 @@ if (! function_exists('show_currency')){
         }else if ($currency_position === 'after_with_space_amount'){
             return $amount .' '. $currency_symbol;
         }
+    }
+}
+
+if (! function_exists('app_information')){
+    /**
+     * @param $key
+     * @return CacheManager|Application|mixed
+     */
+    function app_information($key = null): mixed
+    {
+       $app_information = cache('app_setting');
+       if ($key){
+           return $app_information[$key];
+       }
+       return $app_information;
+    }
+}
+
+if (! function_exists('generate_pdf')){
+    /**
+     * @return StreamedResponse
+     * @throws \Mpdf\MpdfException
+     */
+    function generate_pdf($file, $dependentData = []): StreamedResponse
+    {
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => "A4",
+            'margin_top' => 35,
+            'margin_left' => 5,
+            'margin_right' => 5,
+            'margin_bottom' => 5,
+            'tempDir'=> base_path('storage/app/mpdf'),
+        ]);
+
+        $header = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Pdf-preview"'
+        ];
+
+        $html = view($file, $dependentData);
+        $html = $html->render();
+        $mpdf->SetTitle('Pdf-preview');
+        $mpdf->WriteHTML($html, 0);
+
+        // Save PDF on your public storage
+        Storage::disk('public')->put('Pdf-preview.pdf', $mpdf->Output('Pdf-preview', 'S'));
+
+        // Get file back from storage with the give header information
+        return Storage::disk('public')->download('Pdf-preview.pdf', 'Request', $header);
     }
 }

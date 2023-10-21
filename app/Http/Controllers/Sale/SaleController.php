@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Sales\SalesServices;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class SaleController extends Controller
@@ -51,9 +52,19 @@ class SaleController extends Controller
         return $this->services->getProducts();
     }
 
-    public function salesPreview()
+    /**
+     * @return View
+     */
+    public function salesPreview(): View
     {
-        return view('pages.sale.preview', ['sales_data' => request()->all()]);
+        Cache::put(auth()->user()->email, request()->all());
+
+        return view('pages.sale.preview');
+    }
+
+    public function salesPdf()
+    {
+        return $this->services->renderPdf();
     }
 
     /**

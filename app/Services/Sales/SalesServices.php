@@ -8,6 +8,9 @@ use App\Models\Product\Company;
 use App\Models\Product\Product;
 use App\Services\BaseServices;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
+use Mpdf\Mpdf;
+use PDF;
 
 class SalesServices extends BaseServices
 {
@@ -84,6 +87,18 @@ class SalesServices extends BaseServices
                 ->active()
                 ->get(['id', 'name'])
         ];
+    }
+
+    public function renderPdf()
+    {
+        $customer = Customer::query()
+            ->where('id', cache(auth()->user()->email)['customer'])
+            ->first();
+
+        return generate_pdf('pages.sale.pdf', [
+            'customer_phone' => $customer->phone_number,
+            'invoice_details' => cache(auth()->user()->email)
+        ]);
     }
 
     public function validateStore($request)

@@ -26,5 +26,10 @@ class AppServiceProvider extends ServiceProvider
             $setting = Setting::query()->where('type', 'general')->first();
             Cache::set('general_setting', $setting->settings_info);
         }
+
+        if (Cache::get('app_setting') == null){
+            $setting = Setting::query()->where('type', 'app_setting')->first();
+            Cache::set('app_setting', $setting->settings_info);
+        }
     }
 }
