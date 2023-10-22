@@ -10,7 +10,7 @@
 <body>
 <embed src="{{ route('show-sales-pdf') }}"
        type="application/pdf"
-       style="width: 100%; height:900px">
+       style="width: 100%; height:600px">
 </embed>
 </body>
 </html>

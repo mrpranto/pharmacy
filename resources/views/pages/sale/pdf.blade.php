@@ -18,7 +18,6 @@
         }
 
         table {
-            margin-top: 100px !important;
             border-collapse: collapse;
             width: 100%;
         }
@@ -36,16 +35,11 @@
 
         .main {
             width: 50%;
+            margin-top: 0px;
         }
 
         h4 {
             font-weight: lighter;
-        }
-
-        .table-title {
-            width: 100%;
-            text-align: center;
-            font-size: 11px;
         }
 
         .header {
@@ -64,9 +58,17 @@
                 <br>
                 <small style="font-weight: lighter;margin-bottom: 100px">{{ app_information('mobile') }}</small>
                 <br>
+                <small style="font-weight: lighter">
+                    @if($invoice_details['customerName'] === 'Walk-In')
+                        <b>{{ __t('customer') }} : </b> {{ $invoice_details['customerName'] }}
+                    @else
+                        <b>{{ __t('customer') }} : </b> {{ $invoice_details['customerName'] }}, {{ $customer_phone }}
+                    @endif
+                </small>
                 <br>
                 <small style="font-weight: lighter">
-                <b>Customer : </b> {{ $invoice_details['customerName'] }}, {{ $customer_phone }}
+                   <b>{{ __t('invoice_type') }} : </b> Preview,
+                   <b>{{ __t('print_at') }} : </b> {{ now()->format(format_date()) .' '. now()->format(format_time()) }}
                 </small>
             </h4>
         </div>
@@ -75,11 +77,11 @@
 <table style="width: 50%">
     <thead>
     <tr>
-        <th style="text-align: left">SL</th>
-        <th style="text-align: left; min-width: 25% !important;">Item</th>
-        <th style="text-align: center">Qty</th>
-        <th style="text-align: right">Rate</th>
-        <th style="text-align: right">Subtotal</th>
+        <th style="text-align: left">{{ __t('sl') }}</th>
+        <th style="text-align: left; min-width: 25% !important;">{{ __t('item') }}</th>
+        <th style="text-align: center">{{ __t('qty') }}</th>
+        <th style="text-align: right">{{ __t('rate') }}</th>
+        <th style="text-align: right">{{ __t('amount') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -90,9 +92,9 @@
                 {{ $product['product']['name'] }}
                 <br>
                 <small>
-                   Barcode:{{ $product['product']['barcode'] }},
+                    Barcode:{{ $product['product']['barcode'] }},
                     <br>
-                   Unit:{{ $product['product']['unit'] }}
+                    Unit:{{ $product['product']['unit'] }}
                 </small>
             </td>
             <td style="text-align: center; border-top: none">{{ $product['quantity'] }}</td>
@@ -101,7 +103,6 @@
         </tr>
     @endforeach
     </tbody>
-    <tfoot>
     <tr>
         <th colspan="2" style="text-align: left">subtotal:</th>
         <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['totalSubTotal']) }}</th>
@@ -118,10 +119,9 @@
         <th colspan="2" style="text-align: left">Grand total:</th>
         <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['grandTotal']) }}</th>
     </tr>
-    </tfoot>
 </table>
 <htmlpagefooter name="page-footer">
-    <div class="main" align="right" style="font-size: 12px;margin-top: 10px">
+    <div align="right" style="font-size: 10px; width: 50%">
         <i><b>{PAGENO} / {nbpg}</b></i>
     </div>
 </htmlpagefooter>

@@ -146,7 +146,7 @@ if (! function_exists('generate_pdf')){
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => "A4",
-            'margin_top' => 35,
+            'margin_top' => 32,
             'margin_left' => 5,
             'margin_right' => 5,
             'margin_bottom' => 5,

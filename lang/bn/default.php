@@ -238,4 +238,6 @@ return [
     'rate' => 'দাম',
     'amount' => 'মোট দাম',
     'sales_invoice_preview' => 'বিক্রয় চালান পূর্বরূপ',
+    'invoice_type' => 'চালানের ধরন',
+    'print_at' => 'মুদ্রণের সময়',
 ];
