@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('invoice_number', 100)->unique();
             $table->timestamp('invoice_date');
             $table->foreignId('customer_id')->constrained('customers', 'id');
-            $table->float('total_unit')->default(0);
-            $table->float('subtotal')->default(0);
-            $table->float('other_cost')->default(0);
+            $table->float('total_unit_qty', 18, 2)->default(0);
+            $table->float('subtotal', 18, 2)->default(0);
+            $table->float('other_cost', 18, 2)->default(0);
             $table->float('discount')->default(0);
-            $table->float('grand_total')->default(0);
+            $table->float('grand_total', 18, 2)->default(0);
             $table->string('status', 50)->default(Sale::STATUS_CONFIRMED);
             $table->mediumText('invoice_details')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();

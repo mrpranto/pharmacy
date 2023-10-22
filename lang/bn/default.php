@@ -240,4 +240,5 @@ return [
     'sales_invoice_preview' => 'বিক্রয় চালান পূর্বরূপ',
     'invoice_type' => 'চালানের ধরন',
     'print_at' => 'মুদ্রণের সময়',
+    'sales_invoice_created_successful' => 'বিক্রয় চালান সফলভাবে তৈরি করা হয়েছে।',
 ];

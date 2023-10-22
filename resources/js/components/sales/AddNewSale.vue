@@ -1,7 +1,7 @@
 <template>
     <div class="row m-3">
 
-<!--        Product Select Area Start-->
+        <!--        Product Select Area Start-->
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row mb-3">
                 <div class="col-10">
@@ -169,9 +169,9 @@
                 </div>
             </div>
         </div>
-<!--        Product Select Are End-->
+        <!--        Product Select Are End-->
 
-<!--        Selected Product Area Start-->
+        <!--        Selected Product Area Start-->
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="row">
                 <div class="col-10">
@@ -275,7 +275,10 @@
                                                         __('default.unit')
                                                     }} :</span> {{ cart.product.unit }},
                                                     <br>
-                                                    <span class="badge badge-info" v-if="cart.product.purchase_type === '%'">{{ cart.product.purchase_type }} Percentage</span>
+                                                    <span class="badge badge-info"
+                                                          v-if="cart.product.purchase_type === '%'">{{
+                                                            cart.product.purchase_type
+                                                        }} Percentage</span>
                                                     <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
                                                 </small>
                                             </p>
@@ -322,14 +325,14 @@
                                         <div class="row">
                                             <div class="col-2">
                                                 <a-form-item :label="__('default.mrp')">
-                                                    <p>{{ $currency_symbol +' '+ cart.mrp }}</p>
+                                                    <p>{{ $currency_symbol + ' ' + cart.mrp }}</p>
                                                 </a-form-item>
                                             </div>
                                             <div class="col-5">
+                                                <!--                                                @blur="setOriginalPrice(cart_index)"-->
                                                 <a-form-item :label="__('default.sale_price')">
                                                     <a-input-number v-model:value="cart.sale_price"
                                                                     @change="calculatePrice(cart_index)"
-                                                                    @blur="setOriginalPrice(cart_index)"
                                                                     :id="'sale_price_'+cart_index"
                                                                     style="width: 100%"
                                                                     :prefix="$currency_symbol"
@@ -357,7 +360,6 @@
                                                                     prefix="%"
                                                                     :id="'sale_percentage_'+cart_index"
                                                                     @change="calculatePrice(cart_index)"
-                                                                    @blur="setOriginalPrice(cart_index)"
                                                                     :min="1"
                                                                     :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
                                                                     size="small"/>
@@ -458,23 +460,41 @@
                     </button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-warning btn-block" type="button"><i class="mdi mdi-pause"></i> Draft</button>
+                    <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="save('draft')">
+                        <i class="mdi mdi-pause"></i> Draft
+                    </button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-info btn-block" type="button"><i class="mdi mdi-check-circle"></i> Confirmed</button>
+                    <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button v-else class="btn btn-info btn-block" type="button" @click.prevent="save('confirmed')"><i
+                        class="mdi mdi-check-circle"></i> Confirmed
+                    </button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-success btn-block" type="button"><i class="mdi mdi-cart"></i> Delivered & Print</button>
+                    <button class="btn btn-success btn-block" v-if="formState.showDeliverLoader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button v-else class="btn btn-success btn-block" type="button" @click.prevent="save('delivered')"><i
+                        class="mdi mdi-cart"></i> Delivered & Print
+                    </button>
                 </div>
             </div>
         </div>
-<!--        Selected Product Area End-->
+        <!--        Selected Product Area End-->
 
-<!--        Add customer drawer area start-->
+        <!--        Add customer drawer area start-->
         <AddNewCustomer :formState="customerFormState"/>
-<!--        Add customer drawer area end -->
+        <!--        Add customer drawer area end -->
 
-<!--        Show Stock information start-->
+        <!--        Show Stock information start-->
         <a-modal v-model:open="formState.selectedProduct.openStock"
                  width="1000px"
                  :ok-button-props="{ hidden: true }"
@@ -560,7 +580,7 @@
                 </div>
             </div>
         </a-modal>
-<!--        Stock information end-->
+        <!--        Stock information end-->
 
 
         <a-modal v-model:open="formState.showPreview"
@@ -586,7 +606,6 @@ import {
 } from "@ant-design/icons-vue";
 import AddNewCustomer from "../people/customer/AddNewCustomer.vue";
 import {message} from "ant-design-vue";
-import { jsPDF } from "jspdf";
 
 export default {
     name: "AddNewSale",
@@ -627,6 +646,9 @@ export default {
             },
             formState: {
                 loader: false,
+                showDraftLoader: false,
+                showConfirmLoader: false,
+                showDeliverLoader: false,
                 showFilterArea: false,
                 showPreview: false,
                 showPreviewLoader: false,
@@ -653,7 +675,8 @@ export default {
                     category: null,
                     company: null
                 },
-                selectedProduct: {}
+                selectedProduct: {},
+                validation: {}
             }
         }
     },
@@ -663,8 +686,8 @@ export default {
         this.getProduct()
     },
     watch: {
-        'formState.formData.customer': function (){
-            if (this.formState.formData.customer !== null){
+        'formState.formData.customer': function () {
+            if (this.formState.formData.customer !== null) {
                 const dependencyCustomer = this.formState.dependencies.customers.find(item => item.value === this.formState.formData.customer);
                 this.formState.formData.customerName = dependencyCustomer?.label;
                 this.setCartHistory();
@@ -712,15 +735,68 @@ export default {
 
     },
     methods: {
-        async save(){
-            await axios.post('/sales')
+        async save(type) {
+            if (type === 'draft'){
+                this.formState.showDraftLoader = true;
+            }else if(type === 'confirmed'){
+                this.formState.showConfirmLoader = true;
+            }else if(type === 'delivered'){
+                this.formState.showDeliverLoader = true;
+            }
+            await axios.post('/sales?type=' + type, this.formState.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.reset();
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.formState.showDraftLoader = false;
+                        this.formState.showConfirmLoader = false;
+                        this.formState.showDeliverLoader = false;
+                        if (type === 'delivered'){
+                            this.getProduct()
+                        }
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.formState.showDraftLoader = false;
+                        this.formState.showConfirmLoader = false;
+                        this.formState.showDeliverLoader = false;
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound);
+                        this.formState.validation = err.response.data.errors;
+                        this.formState.showDraftLoader = false;
+                        this.formState.showConfirmLoader = false;
+                        this.formState.showDeliverLoader = false;
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err);
+                        this.formState.showDraftLoader = false;
+                        this.formState.showConfirmLoader = false;
+                        this.formState.showDeliverLoader = false;
+                    }
+                })
         },
-        async printPreviewArea(){
+        reset() {
+            this.formState.formData = {
+                customer: 1,
+                customerName: null,
+                products: [],
+                totalUnit: 0,
+                totalUnitQuantity: 0,
+                totalSubTotal: 0,
+                otherCost: 0,
+                discount: 0,
+                grandTotal: 0
+            };
+            localStorage.setItem(this.user_email, JSON.stringify(this.formState.formData));
+        },
+        async printPreviewArea() {
             this.formState.showPreviewLoader = true;
             await axios.post('/sales-preview', this.formState.formData)
                 .then(response => {
                     this.formState.showPreview = true;
-                    setTimeout( () => {
+                    setTimeout(() => {
                         document.getElementById('printArea').innerHTML = response.data;
                         this.formState.showPreviewLoader = false;
                     }, 200)
@@ -758,7 +834,7 @@ export default {
                     quantity: 1,
                     sub_total: stock.sale_price,
                     discountArea: false,
-                    showAlert:false,
+                    showAlert: false,
                 })
             }
             this.formState.selectedProduct.openStock = false
@@ -782,7 +858,7 @@ export default {
             if (original_sale_price > newSalePrice) {
                 message.error('You can\'t lower this sale price from original price.');
                 this.formState.formData.products[index].showAlert = true
-            }else {
+            } else {
                 this.formState.formData.products[index].showAlert = false
             }
             const quantity = this.formState.formData.products[index].quantity === null ? 0 : this.formState.formData.products[index].quantity;
@@ -830,7 +906,7 @@ export default {
             this.calculatePrice(index)
             this.calculateTotal()
         },
-        showHideDiscountArea(key, value){
+        showHideDiscountArea(key, value) {
             this.formState.formData.products[key].discountArea = value;
             this.setCartHistory();
         },
@@ -888,7 +964,7 @@ export default {
             }
         },
         async getCustomers(value = 'Walk-In') {
-            if (value !== 'Walk-In'){
+            if (value !== 'Walk-In') {
                 value = value.split(' (')[0]
             }
             this.formState.dependencies.customers = [];
@@ -936,7 +1012,7 @@ export default {
             this.customerFormState.disabled = false;
         },
         setData(customer = 'Walk-In') {
-            if (this.formState.formData.customerName){
+            if (this.formState.formData.customerName) {
                 customer = this.formState.formData.customerName
             }
             this.getCustomers(customer)

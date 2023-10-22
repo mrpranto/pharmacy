@@ -9,10 +9,11 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
 {
-    use HasFactory, CreatedByRelationship;
+    use HasFactory, CreatedByRelationship, BootTrait;
 
     const STATUS_CONFIRMED = 'CONFIRMED';
     const STATUS_DRAFT = 'DRAFT';
@@ -20,7 +21,7 @@ class Sale extends Model
     const STATUS_DELIVERED = 'DELIVERED';
 
     protected $fillable = [
-        'invoice_number', 'invoice_date', 'customer_id', 'total_unit', 'subtotal',
+        'invoice_number', 'invoice_date', 'customer_id', 'total_unit_qty', 'subtotal', 'status',
         'other_cost', 'discount', 'grand_total', 'invoice_details', 'created_by', 'updated_by'
     ];
 
@@ -36,27 +37,11 @@ class Sale extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
-    public static function boot(): void
+    /**
+     * @return HasMany
+     */
+    public function saleProducts(): HasMany
     {
-        $maxId = (self::query()->max('id') + 1);
-
-        parent::boot();
-
-        static::creating(function ($model) use ($maxId) {
-            $model->fill([
-                'invoice_number' => str_pad($maxId, 8, '0', STR_PAD_LEFT),
-                'created_by' => auth()->id() ?? optional(User::query()->first())->id,
-                'updated_by' => auth()->id() ?? optional(User::query()->first())->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        });
-
-        static::updating(function ($model) {
-            $model->fill([
-                'updated_at' => now(),
-                'updated_by' => auth()->id() ?? optional(User::query()->first())->id,
-            ]);
-        });
+        return $this->hasMany(SaleProducts::class, 'sale_id', 'id');
     }
 }

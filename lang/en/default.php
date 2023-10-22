@@ -238,5 +238,6 @@ return [
     'amount' => 'Amount',
     'sales_invoice_preview' => 'Sales invoice preview',
     'invoice_type' => 'Invoice type',
-    'print_at' => 'Print at'
+    'print_at' => 'Print at',
+    'sales_invoice_created_successful' => 'Sales invoice created successful.',
 ];

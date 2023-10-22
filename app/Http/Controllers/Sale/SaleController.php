@@ -72,7 +72,9 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->services->validateStore($request);
+        return $this->services
+            ->validateStore($request)
+            ->storeSale($request);
     }
 
     /**

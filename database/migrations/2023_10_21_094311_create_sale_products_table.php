@@ -18,9 +18,10 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products', 'id');
             $table->float('mrp')->default(0);
             $table->float('original_sale_price')->default(0);
-            $table->float('sale_price')->default(0);
+            $table->float('sale_price', 14, 2)->default(0);
             $table->float('sale_percentage')->default(0);
-            $table->float('subtotal')->default(0);
+            $table->integer('quantity');
+            $table->float('subtotal', 18, 2)->default(0);
             $table->text('sale_product_details')->nullable();
             $table->timestamps();
         });
