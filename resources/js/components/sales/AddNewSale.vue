@@ -305,6 +305,12 @@
                                             </a-button>
                                         </a-input-group>
 
+                                        <div class="ant-form-item-explain-error text-danger"
+                                             v-if="formState.validation['products.'+cart_index+'.quantity']">
+                                            {{
+                                                formState.validation['products.' + cart_index + '.quantity'][0]
+                                            }}
+                                        </div>
                                     </div>
                                     <div class="col-2 text-center pt-3">
                                         <span>{{ $showCurrency(cart.sub_total) }}</span>
@@ -754,11 +760,13 @@ export default {
                         if (type === 'delivered'){
                             this.getProduct()
                         }
+                        this.formState.validation = {};
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
                         this.formState.showDraftLoader = false;
                         this.formState.showConfirmLoader = false;
                         this.formState.showDeliverLoader = false;
+                        this.formState.validation = {};
                     }
                 })
                 .catch(err => {

@@ -9,6 +9,7 @@ use App\Models\Product\Product;
 use App\Models\Sale\Sale;
 use App\Models\Stock\Stock;
 use App\Models\Stock\StockLog;
+use App\Rules\CheckAvailableQuantity;
 use App\Services\BaseServices;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -130,7 +131,7 @@ class SalesServices extends BaseServices
             'totalUnitQuantity' => 'required|numeric',
             'products' => 'required|array',
             'products.*.product.id' => 'required|numeric',
-            'products.*.quantity' => 'required|numeric',
+            'products.*.quantity' => ['required','numeric', new CheckAvailableQuantity()],
             'products.*.sale_price' => 'required|numeric|gte:products.*.original_sale_price',
             'products.*.sale_percentage' => 'nullable|numeric',
             'products.*.sub_total' => 'required|numeric',
