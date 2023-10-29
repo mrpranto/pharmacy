@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Sale;
 
 use App\Http\Controllers\Controller;
 use App\Services\Sales\SalesServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SaleController extends Controller
 {
@@ -19,9 +22,9 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('pages.sale.index', $this->services->accessPermissions());
     }
 
     /**
@@ -30,6 +33,14 @@ class SaleController extends Controller
     public function create(): View
     {
         return view('pages.sale.create', $this->services->createDependencies());
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function getSalesList(): LengthAwarePaginator
+    {
+        return $this->services->getSalesList();
     }
 
     /**
@@ -62,7 +73,10 @@ class SaleController extends Controller
         return view('pages.sale.preview');
     }
 
-    public function salesPdf()
+    /**
+     * @return StreamedResponse
+     */
+    public function salesPdf(): StreamedResponse
     {
         return $this->services->renderPdf();
     }
@@ -70,7 +84,7 @@ class SaleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         return $this->services
             ->validateStore($request)

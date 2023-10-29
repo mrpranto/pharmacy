@@ -800,16 +800,20 @@ export default {
             localStorage.setItem(this.user_email, JSON.stringify(this.formState.formData));
         },
         async printPreviewArea() {
-            this.formState.showPreviewLoader = true;
-            await axios.post('/sales-preview', this.formState.formData)
-                .then(response => {
-                    this.formState.showPreview = true;
-                    setTimeout(() => {
-                        document.getElementById('printArea').innerHTML = response.data;
-                        this.formState.showPreviewLoader = false;
-                    }, 200)
-                })
-                .catch(error => console.error(error))
+            if (this.formState.formData.products.length === 0){
+                message.warning('No products found in cart.');
+            }else {
+                this.formState.showPreviewLoader = true;
+                await axios.post('/sales-preview', this.formState.formData)
+                    .then(response => {
+                        this.formState.showPreview = true;
+                        setTimeout(() => {
+                            document.getElementById('printArea').innerHTML = response.data;
+                            this.formState.showPreviewLoader = false;
+                        }, 200)
+                    })
+                    .catch(error => console.error(error))
+            }
         },
         selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);

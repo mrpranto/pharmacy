@@ -241,4 +241,11 @@ return [
     'invoice_type' => 'চালানের ধরন',
     'print_at' => 'মুদ্রণের সময়',
     'sales_invoice_created_successful' => 'বিক্রয় চালান সফলভাবে তৈরি করা হয়েছে।',
+    'invoice_number' => 'ইনভয়েস নম্বর',
+    'invoice_date' => 'ইনভয়েস ডেট',
+    'CONFIRMED' => 'CONFIRMED',
+    'DRAFT' => 'DRAFT',
+    'CANCELED' => 'CANCELED',
+    'DELIVERED' => 'DELIVERED',
+    'sale_status' => 'বিক্রয় status'
 ];

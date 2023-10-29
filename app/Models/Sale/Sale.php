@@ -5,7 +5,6 @@ namespace App\Models\Sale;
 use App\Models\People\Customer;
 use App\Models\trait\BootTrait;
 use App\Models\trait\CreatedByRelationship;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -11,6 +11,7 @@ use App\Models\Stock\Stock;
 use App\Models\Stock\StockLog;
 use App\Rules\CheckAvailableQuantity;
 use App\Services\BaseServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,51 @@ class SalesServices extends BaseServices
         $this->company = $company;
         $this->model = $sale;
         $this->stock = $stock;
+    }
+
+    /**
+     * @return array[]
+     */
+    public function accessPermissions(): array
+    {
+        return [
+            'permission' => [
+                'create' => auth()->user()->can('app.purchase.create'),
+                'edit' => auth()->user()->can('app.purchase.edit'),
+                'show' => auth()->user()->can('app.purchase.show'),
+                'delete' => auth()->user()->can('app.purchase.delete')
+            ]
+        ];
+    }
+
+    public function getSalesList(): LengthAwarePaginator
+    {
+        return $this->model
+            ->newQuery()
+            ->select([
+                'sales.id', 'sales.invoice_number', 'sales.invoice_date', 'sales.customer_id',
+                'sales.total_unit_qty', 'sales.subtotal', 'sales.status', 'sales.other_cost',
+                'sales.discount', 'sales.grand_total', 'customers.name as customer_name'
+            ])
+            ->with(['customer:id,name,phone_number'])
+            ->join('customers', 'sales.customer_id', '=', 'customers.id')
+            ->when(request()->filled('date'), function ($q) {
+                $dates = explode(' to ', request()->get('date'));
+                $q->whereDate('sales.invoice_date', '>=', $dates[0])
+                    ->whereDate('sales.invoice_date', '<=', $dates[1]);
+            })
+            ->when(request()->filled('customer'), fn($q) => $q->where('sales.customer_id', request()->get('customer')))
+            ->when(request()->filled('sale_status'), fn($q) => $q->where('sales.status', request()->get('sale_status')))
+            ->when(request()->filled('search'), fn($q) => $q->where('sales.invoice_number', 'like', '%' . request()->get('search') . '%'))
+            ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
+                if (request()->get('order_by') == 'customer') {
+                    return $q->orderBy('customer_name', request()->get('order_dir'));
+                } else {
+                    return $q->orderBy(request()->get('order_by'), request()->get('order_dir'));
+                }
+            })
+            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
+            ->paginate(request()->get('per_page') ?? pagination());
     }
 
     /**
@@ -167,7 +213,7 @@ class SalesServices extends BaseServices
 
             DB::transaction(function () use ($request) {
                 $max_id = ($this->model->newQuery()->max('id') + 1);
-                $invoice_number = str_pad($max_id, '00000000', STR_PAD_LEFT);
+                $invoice_number = str_pad($max_id, 8, '00000', STR_PAD_LEFT);
 
                 $this->model = $this->model
                     ->newQuery()

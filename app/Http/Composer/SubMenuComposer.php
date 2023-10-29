@@ -78,7 +78,7 @@ class SubMenuComposer
             ],
             [
                 'name' => __t('sales_list'),
-                'url' => route('purchases.index'),
+                'url' => route('sales.index'),
                 'path' => ['sales', 'sales/*/edit'],
                 'permission' => auth()->user()->can('app.purchase.index')
             ],

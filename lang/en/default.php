@@ -240,4 +240,11 @@ return [
     'invoice_type' => 'Invoice type',
     'print_at' => 'Print at',
     'sales_invoice_created_successful' => 'Sales invoice created successful.',
+    'invoice_number' => 'Invoice number',
+    'invoice_date' => 'Invoice date',
+    'CONFIRMED' => 'CONFIRMED',
+    'DRAFT' => 'DRAFT',
+    'CANCELED' => 'CANCELED',
+    'DELIVERED' => 'DELIVERED',
+    'sale_status' => 'Sale Status',
 ];

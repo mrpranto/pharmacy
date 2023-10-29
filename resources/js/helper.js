@@ -43,16 +43,7 @@ export const showCurrency = (amount) => {
 
 export const date_format = (date) => {
     const format = window._general_setting?.date_format;
-    /*d-m-Y
-    Y-m-d
-    m-d-Y
-    d/m/Y
-    Y/m/d
-    m/d/Y
-    d.m.Y
-    Y.m.d
-    m.d.Y
-    F d, Y*/
+
     if (format === 'F d, Y')
     {
        return  moment(date).format('MMMM Do YYYY')
@@ -92,6 +83,17 @@ export const date_format = (date) => {
     else if (format === 'm.d.Y')
     {
         return  moment(date).format('MM.DD.YYYY')
+    }
+}
+export const time_format = (date_time) => {
+    const format = window._general_setting?.time_format;
+
+    if (format === 'H:i:s A')
+    {
+       return  moment(date_time).format('HH:mm:ss A')
+    }
+    else {
+        return  moment(date_time).format('hh:mm:ss A')
     }
 }
 
