@@ -247,4 +247,7 @@ return [
     'CANCELED' => 'CANCELED',
     'DELIVERED' => 'DELIVERED',
     'sale_status' => 'Sale Status',
+    'change_status' => 'Change Status',
+    'in_num' => 'In.Number',
+    'status_change_success' => 'Status change successful.'
 ];

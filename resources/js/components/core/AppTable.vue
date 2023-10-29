@@ -133,7 +133,7 @@
 
                                 <div class="dropdown-menu filter-column">
                                     <div class="dropdown-item">
-                                        <a-form-item :label="__('default.' + filter.title)">
+                                        <a-form-item :label="__('default.' + filter.title)" required>
                                             <a-select
                                                 v-model:value="filter.filterValue"
                                                 class="filter-select"

@@ -92,6 +92,15 @@ class SaleController extends Controller
     }
 
     /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function changeStatus($id): JsonResponse
+    {
+        return $this->services->changeStatus($id);
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)

@@ -43,9 +43,15 @@ body:hover::-webkit-scrollbar-thumb {
 .color-info:hover{
     color: #4ed1e8;
 }
+.color-success:hover{
+    color: #4ee863;
+}
 .color-primary:hover{
     color: #4e72e8;
 }
 .color-danger:hover{
     color: #e84e65;
+}
+.cursor-not-allowed{
+    cursor: not-allowed !important;
 }

@@ -35,6 +35,49 @@
             </div>
         </div>
 
+        <a-modal v-model:open="changeStatus.open"
+                 width="1000px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.change_status')">
+            <div class="row pt-2">
+                <div class="col-sm-3">
+                    <button class="btn btn-warning btn-block"
+                            :class="changeStatus.current_status === 'DRAFT' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;" @click="applyStatus('DRAFT')">
+                        <i class="mdi mdi-pause"></i> Draft
+                    </button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-info btn-block"
+                            :class="changeStatus.current_status === 'CONFIRMED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;"
+                            @click="applyStatus('CONFIRMED')">
+                        <i class="mdi mdi-check-circle"></i> Confirmed
+                    </button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-success btn-block"
+                            :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;"
+                            @click="applyStatus('DELIVERED')">
+                        <i class="mdi mdi-truck-delivery"></i> Delivered
+                    </button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-danger btn-block"
+                            :class="changeStatus.current_status === 'CANCELED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;"
+                            @click="applyStatus('CANCELED')">
+                        <i class="mdi mdi-cancel"></i> Canceled
+                    </button>
+                </div>
+            </div>
+        </a-modal>
 
     </div>
 </template>
@@ -63,10 +106,10 @@ export default {
                         isVisible: false
                     },
                     {
-                        title: 'invoice_number',
+                        title: 'in_num',
                         type: 'custom-html',
                         key: 'invoice_number',
-                        width: '15',
+                        width: '11',
                         orderAble: true,
                         isVisible: true ,
                         modifier: (purchase_reference) => {
@@ -125,7 +168,7 @@ export default {
                         title: 'total',
                         type: 'custom-html',
                         key: 'grand_total',
-                        width: '10',
+                        width: '12',
                         orderAble: true,
                         isVisible: true ,
                         modifier: (grand_total) => {
@@ -144,6 +187,8 @@ export default {
                                 return `<span class="badge badge-info">${status.toUpperCase()}</span>`;
                             }else if(status === 'DRAFT'){
                                 return `<span class="badge badge-warning">${status.toUpperCase()}</span>`;
+                            }else if(status === 'CANCELED'){
+                                return `<span class="badge badge-danger">${status.toUpperCase()}</span>`;
                             }else {
                                 return `<span class="badge badge-success">${status.toUpperCase()}</span>`;
                             }
@@ -154,8 +199,8 @@ export default {
                         type: 'action',
                         key: 'action',
                         permission: this.permission,
-                        componentName: 'purchase-action-component',
-                        width: '12',
+                        componentName: 'sale-action-component',
+                        width: '14',
                         isVisible: true
                     },
                 ],
@@ -204,6 +249,11 @@ export default {
                 purchase:{},
                 permission: this.permission,
                 open:false
+            },
+            changeStatus:{
+                open:false,
+                current_id: null,
+                current_status: null
             }
         }
     },
@@ -302,6 +352,32 @@ export default {
                     if (response.data.success) {
                         this.getData()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                    }
+                })
+                .catch(err => {
+                    this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
+                })
+        },
+        showStatusForm(id, row){
+            this.loader = true;
+            this.changeStatus.open = true;
+            this.changeStatus.current_id = row.id;
+            this.changeStatus.current_status = row.status;
+            if (this.changeStatus.open === true){
+                this.loader = false;
+            }
+        },
+        async applyStatus(status){
+            this.loader = true;
+            await axios.post('/change-status/'+this.changeStatus.current_id, {status:status})
+                .then(response => {
+                    if (response.data.success) {
+                        this.changeStatus.open = false;
+                        this.getData()
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.loader = false;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
                     }

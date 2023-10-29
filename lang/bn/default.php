@@ -247,5 +247,8 @@ return [
     'DRAFT' => 'DRAFT',
     'CANCELED' => 'CANCELED',
     'DELIVERED' => 'DELIVERED',
-    'sale_status' => 'বিক্রয় status'
+    'sale_status' => 'বিক্রয় স্ট্যাটাস',
+    'change_status' => 'স্ট্যাটাস বদলাও',
+    'in_num' => 'নাম্বার',
+    'status_change_success' => 'স্ট্যাটাস পরিবর্তন সফল হয়েছে।'
 ];

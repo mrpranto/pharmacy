@@ -119,4 +119,5 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::post('/sales-preview', [SaleController::class, 'salesPreview']);
     Route::get('/show-sales-pdf', [SaleController::class, 'salesPdf'])
         ->name('show-sales-pdf');
+    Route::post('/change-status/{id}', [SaleController::class, 'changeStatus']);
 });

@@ -93,6 +93,8 @@ import AddNewSaleComponent from './components/sales/AddNewSale.vue';
 app.component('add-new-sale-component', AddNewSaleComponent);
 import SaleListComponent from './components/sales/SaleList.vue';
 app.component('sale-list-component', SaleListComponent);
+import SalesActionComponent from './components/sales/Action.vue';
+app.component('sale-action-component', SalesActionComponent);
 
 
 /*

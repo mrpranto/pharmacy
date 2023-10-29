@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SalesServices extends BaseServices
@@ -50,10 +52,11 @@ class SalesServices extends BaseServices
     {
         return [
             'permission' => [
-                'create' => auth()->user()->can('app.purchase.create'),
-                'edit' => auth()->user()->can('app.purchase.edit'),
-                'show' => auth()->user()->can('app.purchase.show'),
-                'delete' => auth()->user()->can('app.purchase.delete')
+                'create' => auth()->user()->can('app.sales.create'),
+                'edit' => auth()->user()->can('app.sales.show'),
+                'show' => auth()->user()->can('app.sales.edit'),
+                'delete' => auth()->user()->can('app.sales.delete'),
+                'change_status' => auth()->user()->can('app.sales.status-change')
             ]
         ];
     }
@@ -294,6 +297,38 @@ class SalesServices extends BaseServices
                     'type' => StockLog::TYPE_SALE
                 ]);
             }
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function changeStatus($id): JsonResponse
+    {
+        try {
+
+            DB::transaction(function () use ($id){
+
+                $sales = $this->getModelById($id);
+
+                if (request()->get('status') === Sale::STATUS_DELIVERED){
+
+                    $this->adjustStock($sales->saleProducts);
+
+                    $sales->update(['status' => request()->get('status')]);
+                }else {
+                    $sales->update(['status' => request()->get('status')]);
+                }
+                
+            });
+
+            return response()->json(['success' => __t('status_change_success')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
         }
     }
 

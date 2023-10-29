@@ -456,7 +456,7 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-3">
+                <div class="col-4">
                     <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
@@ -465,7 +465,7 @@
                         <i class="mdi mdi-eye"></i> Preview
                     </button>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
@@ -474,22 +474,13 @@
                         <i class="mdi mdi-pause"></i> Draft
                     </button>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
                     </button>
                     <button v-else class="btn btn-info btn-block" type="button" @click.prevent="save('confirmed')"><i
                         class="mdi mdi-check-circle"></i> Confirmed
-                    </button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-success btn-block" v-if="formState.showDeliverLoader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
-                    </button>
-                    <button v-else class="btn btn-success btn-block" type="button" @click.prevent="save('delivered')"><i
-                        class="mdi mdi-cart"></i> Delivered & Print
                     </button>
                 </div>
             </div>

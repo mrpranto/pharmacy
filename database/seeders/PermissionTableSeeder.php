@@ -305,6 +305,40 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Stock List',
                 'slug' => 'app.stock.index'
             ],
+
+            /*
+             * Sales Permission
+             */
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Sales List',
+                'slug' => 'app.sales.index'
+            ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Add Sales',
+                'slug' => 'app.sales.create'
+            ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Show Sales',
+                'slug' => 'app.sales.show'
+            ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Edit Sales',
+                'slug' => 'app.sales.edit'
+            ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Delete Sales',
+                'slug' => 'app.sales.delete'
+            ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Change Sales Status',
+                'slug' => 'app.sales.status-change'
+            ],
         ];
     }
 

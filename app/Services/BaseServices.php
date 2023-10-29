@@ -21,4 +21,9 @@ class BaseServices
     {
         return $this->model;
     }
+
+    public function getModelById($id)
+    {
+        return $this->model->newQuery()->where('id', $id)->first();
+    }
 }
