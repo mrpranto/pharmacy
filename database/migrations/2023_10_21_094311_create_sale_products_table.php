@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->float('subtotal', 18, 2)->default(0);
             $table->text('sale_product_details')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

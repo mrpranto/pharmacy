@@ -250,5 +250,6 @@ return [
     'sale_status' => 'বিক্রয় স্ট্যাটাস',
     'change_status' => 'স্ট্যাটাস বদলাও',
     'in_num' => 'নাম্বার',
-    'status_change_success' => 'স্ট্যাটাস পরিবর্তন সফল হয়েছে।'
+    'status_change_success' => 'স্ট্যাটাস পরিবর্তন সফল হয়েছে।',
+    'sale_delete_successful' => 'বিক্রয় চালান মুছে ফেলা সফল হয়েছে।',
 ];

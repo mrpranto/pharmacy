@@ -215,7 +215,7 @@ class SalesServices extends BaseServices
         try {
 
             DB::transaction(function () use ($request) {
-                $max_id = ($this->model->newQuery()->max('id') + 1);
+                $max_id = ($this->model->newQuery()->withTrashed()->max('id') + 1);
                 $invoice_number = str_pad($max_id, 8, '00000', STR_PAD_LEFT);
 
                 $this->model = $this->model
@@ -322,10 +322,31 @@ class SalesServices extends BaseServices
                 }else {
                     $sales->update(['status' => request()->get('status')]);
                 }
-                
+
             });
 
             return response()->json(['success' => __t('status_change_success')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function deleteSale($id): JsonResponse
+    {
+        try {
+
+            DB::transaction(function () use ($id){
+                $sales = $this->getModelById($id);
+                $sales->saleProducts()->delete();
+                $sales->delete();
+            });
+
+            return response()->json(['success' => __t('sale_delete_successful')]);
 
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);

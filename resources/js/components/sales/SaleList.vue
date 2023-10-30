@@ -347,7 +347,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/purchases/${id}`)
+            await axios.delete(`/sales/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

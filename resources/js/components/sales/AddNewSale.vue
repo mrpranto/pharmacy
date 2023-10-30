@@ -751,6 +751,7 @@ export default {
                         if (type === 'delivered'){
                             this.getProduct()
                         }
+                        window.location.href = `/sales`;
                         this.formState.validation = {};
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
