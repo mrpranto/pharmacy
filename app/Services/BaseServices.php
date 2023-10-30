@@ -22,8 +22,19 @@ class BaseServices
         return $this->model;
     }
 
-    public function getModelById($id)
+    public function getModelById($id, array $with = [])
     {
-        return $this->model->newQuery()->where('id', $id)->first();
+        if (count($with)){
+            return $this->model
+                ->newQuery()
+                ->with($with)
+                ->where('id', $id)
+                ->first();
+        }else{
+            return $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->first();
+        }
     }
 }

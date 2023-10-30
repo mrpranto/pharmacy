@@ -120,4 +120,6 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::get('/show-sales-pdf', [SaleController::class, 'salesPdf'])
         ->name('show-sales-pdf');
     Route::post('/change-status/{id}', [SaleController::class, 'changeStatus']);
+    Route::get('/invoice-pdf/{id}', [SaleController::class, 'invoicePdf'])
+        ->name('invoice-pdf');
 });

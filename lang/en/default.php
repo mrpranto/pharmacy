@@ -250,5 +250,6 @@ return [
     'change_status' => 'Change Status',
     'in_num' => 'In.Number',
     'status_change_success' => 'Status change successful.',
-    'sale_delete_successful' => 'Sales delete successful.'
+    'sale_delete_successful' => 'Sales delete successful.',
+    'invoice_details' => 'Invoice details',
 ];

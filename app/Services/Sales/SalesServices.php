@@ -15,6 +15,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Mpdf\MpdfException;
 use PDF;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -153,6 +154,10 @@ class SalesServices extends BaseServices
         ];
     }
 
+    /**
+     * @return StreamedResponse
+     * @throws MpdfException
+     */
     public function renderPdf(): StreamedResponse
     {
         $customer = Customer::query()
@@ -351,6 +356,17 @@ class SalesServices extends BaseServices
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    public function renderInvoicePdf($id)
+    {
+        $sales = $this->getModelById($id, ['customer', 'saleProducts.product.unit']);
+
+//        dd($sales);
+
+        return generate_pdf('pages.sale.invoice-pdf', [
+            'invoice_details' => $sales
+        ]);
     }
 
 }

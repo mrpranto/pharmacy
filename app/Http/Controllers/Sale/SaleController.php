@@ -103,9 +103,18 @@ class SaleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
-        //
+        return view('pages.sale.invoice', ['id' => $id]);
+    }
+
+    /**
+     * @param $id
+     * @return StreamedResponse
+     */
+    public function invoicePdf($id): StreamedResponse
+    {
+        return $this->services->renderInvoicePdf($id);
     }
 
     /**

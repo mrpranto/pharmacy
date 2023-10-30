@@ -97,6 +97,18 @@ if (! function_exists('format_time')){
     }
 }
 
+if (! function_exists('format_datetime')){
+
+    /**
+     * @param $dateTime
+     * @return string
+     */
+    function format_datetime($dateTime): string
+    {
+        return \Carbon\Carbon::parse($dateTime)->format(format_date() .' '. format_time());
+    }
+}
+
 if (! function_exists('show_currency')){
 
     /**
@@ -146,10 +158,10 @@ if (! function_exists('generate_pdf')){
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => "A4",
-            'margin_top' => 32,
+            'margin_top' => 34,
             'margin_left' => 5,
             'margin_right' => 5,
-            'margin_bottom' => 5,
+            'margin_bottom' => 12,
             'tempDir'=> base_path('storage/app/mpdf'),
         ]);
 

@@ -79,6 +79,17 @@
             </div>
         </a-modal>
 
+
+        <a-modal v-model:open="show.open"
+                 width="1000px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.invoice_details')">
+            <div class="row pt-2" id="printArea">
+
+            </div>
+        </a-modal>
+
     </div>
 </template>
 <script>
@@ -246,8 +257,6 @@ export default {
                 ],
             },
             show:{
-                purchase:{},
-                permission: this.permission,
                 open:false
             },
             changeStatus:{
@@ -318,11 +327,13 @@ export default {
         },
         async showDetails(id) {
             this.loader = true
-            await axios.get('/purchases/' + id)
+            this.show.open = true
+            await axios.get('/sales/' + id)
                 .then(response => {
-                    this.show.purchase = response.data
-                    this.show.open = true
-                    this.loader = false
+                    setTimeout(() => {
+                        document.getElementById('printArea').innerHTML = response.data;
+                        this.loader = false
+                    }, 200)
                 })
                 .catch(err => {
                     console.error(err)

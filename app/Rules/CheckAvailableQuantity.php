@@ -40,7 +40,10 @@ class CheckAvailableQuantity implements ValidationRule
             ->where('product_id', $productId)
             ->where('sale_price', $salePrice)
             ->first();
-
-        return $stock->available_quantity;
+        if ($stock && $stock->available_quantity){
+            return $stock->available_quantity;
+        }else{
+            return 0;
+        }
     }
 }

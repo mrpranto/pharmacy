@@ -252,4 +252,5 @@ return [
     'in_num' => 'নাম্বার',
     'status_change_success' => 'স্ট্যাটাস পরিবর্তন সফল হয়েছে।',
     'sale_delete_successful' => 'বিক্রয় চালান মুছে ফেলা সফল হয়েছে।',
+    'invoice_details' => 'ইনভয়েস বিস্তারিত',
 ];
