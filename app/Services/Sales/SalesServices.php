@@ -391,7 +391,12 @@ class SalesServices extends BaseServices
             ])]);
     }
 
-    public function update($request, $id)
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function update($request, $id): JsonResponse
     {
         try {
 
