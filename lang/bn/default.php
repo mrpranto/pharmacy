@@ -254,4 +254,5 @@ return [
     'sale_delete_successful' => 'বিক্রয় চালান মুছে ফেলা সফল হয়েছে।',
     'invoice_details' => 'ইনভয়েস বিস্তারিত',
     'edit_sale' => 'বিক্রয় সম্পাদনা করুন',
+    'sales_invoice_updated_successful' => 'বিক্রয় চালান সফলভাবে সম্পাদনা হয়েছে।'
 ];

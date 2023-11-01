@@ -7,6 +7,7 @@ use App\Models\Product\Category;
 use App\Models\Product\Company;
 use App\Models\Product\Product;
 use App\Models\Sale\Sale;
+use App\Models\Sale\SaleProducts;
 use App\Models\Stock\Stock;
 use App\Models\Stock\StockLog;
 use App\Rules\CheckAvailableQuantity;
@@ -14,7 +15,9 @@ use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Mpdf\MpdfException;
 use PDF;
 use Psr\Container\ContainerExceptionInterface;
@@ -28,6 +31,7 @@ class SalesServices extends BaseServices
     public Category $category;
     public Company $company;
     public Stock $stock;
+    public SaleProducts $saleProducts;
 
     public function __construct(
         Customer $customer,
@@ -35,6 +39,7 @@ class SalesServices extends BaseServices
         Category $category,
         Company  $company,
         Sale     $sale,
+        SaleProducts $saleProducts,
         Stock    $stock
     )
     {
@@ -44,6 +49,7 @@ class SalesServices extends BaseServices
         $this->company = $company;
         $this->model = $sale;
         $this->stock = $stock;
+        $this->saleProducts = $saleProducts;
     }
 
     /**
@@ -174,7 +180,7 @@ class SalesServices extends BaseServices
      * @param $request
      * @return $this
      */
-    public function validateStore($request): static
+    public function validateStoreAndUpdate($request): static
     {
         $request->validate([
             'customer' => 'required|numeric|exists:customers,id',
@@ -378,7 +384,109 @@ class SalesServices extends BaseServices
      */
     public function getEditableData($id): array
     {
-        return array_merge($this->createDependencies(), ['sale' => $this->getModelById($id, ['customer:id,name', 'saleProducts.product'])]);
+        return array_merge($this->createDependencies(),
+            ['sale' => $this->getModelById($id, [
+                'customer:id,name',
+                'saleProducts.product'
+            ])]);
+    }
+
+    public function update($request, $id)
+    {
+        try {
+
+            DB::transaction(function () use ($request, $id){
+
+                $sale = $this->getModelById($id, ['saleProducts']);
+                $oldSaleProduct = $sale->saleProducts;
+                $existSaleProduct = [];
+                foreach ($request->products as $requestProduct){
+                    $checkExist = $oldSaleProduct
+                        ->where('sale_id', $id)
+                        ->where('product_id', $requestProduct['product']['id'])
+                        ->where('mrp', $requestProduct['mrp'])
+                        ->where('original_sale_price', $requestProduct['original_sale_price'])
+                        ->first();
+
+                    if ($checkExist){
+                        $existSaleProduct[] = [
+                            "id" => $checkExist->id,
+                            "sale_id" => $checkExist->sale_id,
+                            "product_id" => $checkExist->product_id,
+                            "mrp" => $requestProduct['mrp'],
+                            "original_sale_price" => $requestProduct['original_sale_price'],
+                            "sale_price" => $requestProduct['sale_price'],
+                            "sale_percentage" => $requestProduct['sale_percentage'],
+                            "quantity" => $requestProduct['quantity'],
+                            "subtotal" => $requestProduct['sub_total'],
+                        ];
+                    }else{
+                        $existSaleProduct[] = $requestProduct;
+                    }
+                }
+
+                $oldSaleProductIds = $oldSaleProduct->pluck('id')->toArray();
+                $existSaleProductIds = collect($existSaleProduct)->pluck('id')->toArray();
+                $removeAbleIds = array_diff($oldSaleProductIds, $existSaleProductIds);
+                $sale->saleProducts()->wherein('id', $removeAbleIds)->delete();
+
+                foreach ($existSaleProduct as $existProduct){
+                    if (isset($existProduct['product_id'])){
+                        $hasProduct = $this->saleProducts
+                            ->newQuery()
+                            ->where('sale_id', $id)
+                            ->where('product_id', $existProduct['product_id'])
+                            ->where('mrp', $existProduct['mrp'])
+                            ->where('original_sale_price', $existProduct['original_sale_price'])
+                            ->first();
+                        if ($hasProduct){
+                            $hasProduct->update([
+                                'sale_price' => $existProduct['sale_price'],
+                                'quantity' => $existProduct['quantity'],
+                                'sale_percentage' => $existProduct['sale_percentage'],
+                                'subtotal' => $existProduct['subtotal'],
+                                'sale_product_details' => json_encode($existProduct),
+                            ]);
+                        }
+                    }else{
+                        $this->saleProducts
+                            ->newQuery()
+                            ->create([
+                                'sale_id' => $id,
+                                'product_id' => $existProduct['product']['id'],
+                                'mrp' => $existProduct['mrp'],
+                                'original_sale_price' => $existProduct['original_sale_price'],
+                                'sale_price' => $existProduct['sale_price'],
+                                'quantity' => $existProduct['quantity'],
+                                'sale_percentage' => $existProduct['sale_percentage'],
+                                'subtotal' => $existProduct['sub_total'],
+                                'sale_product_details' => json_encode($existProduct),
+                            ]);
+                    }
+                }
+
+                $status = request()->filled('type') && request()->get('type') === 'confirmed' ? Sale::STATUS_CONFIRMED : Sale::STATUS_DRAFT;
+
+                $this->model
+                    ->newQuery()
+                    ->where('id', $id)
+                    ->update([
+                        'customer_id' => $request->customer,
+                        'total_unit_qty' => $request->totalUnitQuantity,
+                        'subtotal' => $request->totalSubTotal,
+                        'status' => $status,
+                        'other_cost' => $request->otherCost,
+                        'discount' => $request->discount,
+                        'grand_total' => $request->grandTotal,
+                        'invoice_details' => json_encode($request->all()),
+                    ]);
+            });
+
+            return response()->json(['success' => __t('sales_invoice_updated_successful')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 
 }

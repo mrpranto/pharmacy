@@ -87,7 +87,7 @@ class SaleController extends Controller
     public function store(Request $request): JsonResponse
     {
         return $this->services
-            ->validateStore($request)
+            ->validateStoreAndUpdate($request)
             ->storeSale($request);
     }
 
@@ -130,7 +130,9 @@ class SaleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return $this->services
+            ->validateStoreAndUpdate($request)
+            ->update($request, $id);
     }
 
     /**

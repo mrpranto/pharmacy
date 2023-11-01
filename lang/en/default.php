@@ -253,4 +253,5 @@ return [
     'sale_delete_successful' => 'Sales delete successful.',
     'invoice_details' => 'Invoice details',
     'edit_sale' => 'Edit sale',
+    'sales_invoice_updated_successful' => 'Sales invoice update successful',
 ];

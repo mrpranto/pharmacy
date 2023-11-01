@@ -470,7 +470,7 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
                     </button>
-                    <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="save('draft')">
+                    <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="update('draft')">
                         <i class="mdi mdi-pause"></i> Draft
                     </button>
                 </div>
@@ -479,7 +479,7 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
                     </button>
-                    <button v-else class="btn btn-info btn-block" type="button" @click.prevent="save('confirmed')"><i
+                    <button v-else class="btn btn-info btn-block" type="button" @click.prevent="update('confirmed')"><i
                         class="mdi mdi-check-circle"></i> Confirmed
                     </button>
                 </div>
@@ -734,7 +734,7 @@ export default {
             this.getCustomers(this.sale.customer.name)
             this.formState.formData = JSON.parse(this.sale.invoice_details);
         },
-        async save(type) {
+        async update(type) {
             if (type === 'draft') {
                 this.formState.showDraftLoader = true;
             } else if (type === 'confirmed') {
@@ -742,7 +742,7 @@ export default {
             } else if (type === 'delivered') {
                 this.formState.showDeliverLoader = true;
             }
-            await axios.post('/sales?type=' + type, this.formState.formData)
+            await axios.put(`/sales/${this.sale.id}?type=` + type, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
                         this.reset();
