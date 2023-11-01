@@ -253,4 +253,5 @@ return [
     'status_change_success' => 'স্ট্যাটাস পরিবর্তন সফল হয়েছে।',
     'sale_delete_successful' => 'বিক্রয় চালান মুছে ফেলা সফল হয়েছে।',
     'invoice_details' => 'ইনভয়েস বিস্তারিত',
+    'edit_sale' => 'বিক্রয় সম্পাদনা করুন',
 ];

@@ -40,6 +40,7 @@
 
         h4 {
             font-weight: lighter;
+            font-size: 13px;
         }
 
         .header {

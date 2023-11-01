@@ -358,15 +358,27 @@ class SalesServices extends BaseServices
         }
     }
 
-    public function renderInvoicePdf($id)
+    /**
+     * @param $id
+     * @return StreamedResponse
+     * @throws MpdfException
+     */
+    public function renderInvoicePdf($id): StreamedResponse
     {
         $sales = $this->getModelById($id, ['customer', 'saleProducts.product.unit']);
-
-//        dd($sales);
 
         return generate_pdf('pages.sale.invoice-pdf', [
             'invoice_details' => $sales
         ]);
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getEditableData($id): array
+    {
+        return array_merge($this->createDependencies(), ['sale' => $this->getModelById($id, ['customer:id,name', 'saleProducts.product'])]);
     }
 
 }

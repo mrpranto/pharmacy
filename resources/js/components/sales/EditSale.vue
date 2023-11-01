@@ -605,7 +605,7 @@ import AddNewCustomer from "../people/customer/AddNewCustomer.vue";
 import {message} from "ant-design-vue";
 
 export default {
-    name: "AddNewSale",
+    name: "EditSale",
     components: {
         CloseCircleOutlined,
         AddNewCustomer,
@@ -615,7 +615,7 @@ export default {
         SearchOutlined,
         CloseOutlined
     },
-    props: ['categories', 'companies', 'user_email'],
+    props: ['sale', 'categories', 'companies', 'user_email'],
     data() {
         return {
             windowHeight: window.innerHeight,
@@ -678,16 +678,14 @@ export default {
         }
     },
     created() {
-        this.getCartHistory()
-        this.setData()
         this.getProduct()
+        this.setOldData()
     },
     watch: {
         'formState.formData.customer': function () {
             if (this.formState.formData.customer !== null) {
                 const dependencyCustomer = this.formState.dependencies.customers.find(item => item.value === this.formState.formData.customer);
                 this.formState.formData.customerName = dependencyCustomer?.label;
-                this.setCartHistory();
             }
         },
         'formState.request.search': function () {
@@ -732,12 +730,16 @@ export default {
 
     },
     methods: {
+        setOldData() {
+            this.getCustomers(this.sale.customer.name)
+            this.formState.formData = JSON.parse(this.sale.invoice_details);
+        },
         async save(type) {
-            if (type === 'draft'){
+            if (type === 'draft') {
                 this.formState.showDraftLoader = true;
-            }else if(type === 'confirmed'){
+            } else if (type === 'confirmed') {
                 this.formState.showConfirmLoader = true;
-            }else if(type === 'delivered'){
+            } else if (type === 'delivered') {
                 this.formState.showDeliverLoader = true;
             }
             await axios.post('/sales?type=' + type, this.formState.formData)
@@ -748,7 +750,7 @@ export default {
                         this.formState.showDraftLoader = false;
                         this.formState.showConfirmLoader = false;
                         this.formState.showDeliverLoader = false;
-                        if (type === 'delivered'){
+                        if (type === 'delivered') {
                             this.getProduct()
                         }
                         window.location.href = `/sales`;
@@ -792,9 +794,9 @@ export default {
             localStorage.setItem(this.user_email, JSON.stringify(this.formState.formData));
         },
         async printPreviewArea() {
-            if (this.formState.formData.products.length === 0){
+            if (this.formState.formData.products.length === 0) {
                 message.warning('No products found in cart.');
-            }else {
+            } else {
                 this.formState.showPreviewLoader = true;
                 await axios.post('/sales-preview', this.formState.formData)
                     .then(response => {
@@ -843,7 +845,6 @@ export default {
             }
             this.formState.selectedProduct.openStock = false
             this.calculateTotal()
-            this.setCartHistory();
         },
         calculatePrice(index) {
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
@@ -871,7 +872,6 @@ export default {
                 this.formState.formData.products[index].sub_total = (parseFloat(newSalePrice) * parseInt(quantity)).toFixed(2);
             }
             this.calculateTotal();
-            this.setCartHistory();
         },
         setOriginalPrice(index) {
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
@@ -895,7 +895,6 @@ export default {
             const otherCost = parseFloat(this.formState.formData.otherCost === '' ? 0 : this.formState.formData.otherCost);
             const discount = parseFloat(this.formState.formData.discount === '' ? 0 : this.formState.formData.discount);
             this.formState.formData.grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount).toFixed(2);
-            this.setCartHistory();
         },
         incrementDecrement(index, type) {
             const quantity = parseInt(this.formState.formData.products[index].quantity);
@@ -912,14 +911,12 @@ export default {
         },
         showHideDiscountArea(key, value) {
             this.formState.formData.products[key].discountArea = value;
-            this.setCartHistory();
         },
         removeFromCart(key) {
             const removeProductName = this.formState.formData.products[key].product.name;
             message.warning(removeProductName + ' remove from this list.');
             this.formState.formData.products.splice(key, 1);
             this.calculateTotal();
-            this.setCartHistory();
         },
         showProductDetails(product) {
             this.formState.selectedProduct = {
@@ -990,7 +987,6 @@ export default {
                         this.formState.formData.customer = null;
                         this.formState.formData.customerName = null;
                     }
-                    this.setCartHistory();
                 })
                 .catch(error => console.error(error))
         },
@@ -1024,16 +1020,6 @@ export default {
         onClose() {
             this.customerFormState.openCreate = false;
         },
-        setCartHistory() {
-            const cartHistory = this.formState.formData;
-            localStorage.setItem(this.user_email, JSON.stringify(cartHistory));
-        },
-        getCartHistory() {
-            const cartHistory = localStorage.getItem(this.user_email);
-            if (cartHistory) {
-                this.formState.formData = JSON.parse(cartHistory)
-            }
-        }
     }
 }
 </script>

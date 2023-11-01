@@ -32,7 +32,7 @@ export default {
     },
     methods:{
         goEditPage(id){
-            window.location.href = `purchases/${id}/edit`;
+            window.location.href = `sales/${id}/edit`;
         }
     }
 }
