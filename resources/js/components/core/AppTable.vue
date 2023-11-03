@@ -326,8 +326,8 @@
                                                         />
                                                     </template>
                                                     <template v-else-if="column.type === 'custom-html'">
-                                            <span :class="column.className"
-                                                  v-html="column.modifier(row[column.key], row)"></span>
+                                                    <span :class="column.className"
+                                                        v-html="column.modifier(row[column.key], row)"></span>
                                                     </template>
                                                     <template v-else-if="column.type === 'custom-data'">
                                                         {{ column.modifier(row) }}

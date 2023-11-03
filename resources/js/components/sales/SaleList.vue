@@ -42,39 +42,56 @@
                  :title="__('default.change_status')">
             <div class="row pt-2">
                 <div class="col-sm-3">
-                    <button class="btn btn-warning btn-block"
-                            :class="changeStatus.current_status === 'DRAFT' ? 'disabled cursor-not-allowed' : ''"
-                            type="button"
-                            style="height: 100px;" @click="applyStatus('DRAFT')">
-                        <i class="mdi mdi-pause"></i> Draft
-                    </button>
+                    <a-popconfirm placement="top" title="Are you sure, you want to draft this ?" ok-text="Yes"
+                                  cancel-text="No"
+                                  @confirm="applyStatus('DRAFT')">
+                        <template #icon></template>
+                        <button class="btn btn-warning btn-block"
+                                :class="changeStatus.current_status === 'DRAFT' ? 'disabled cursor-not-allowed' : ''"
+                                type="button"
+                                style="height: 100px;">
+                            <i class="mdi mdi-pause"></i> Draft
+                        </button>
+                    </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-info btn-block"
-                            :class="changeStatus.current_status === 'CONFIRMED' ? 'disabled cursor-not-allowed' : ''"
-                            type="button"
-                            style="height: 100px;"
-                            @click="applyStatus('CONFIRMED')">
-                        <i class="mdi mdi-check-circle"></i> Confirmed
-                    </button>
+                    <a-popconfirm placement="top" title="Are you sure, you want to confirm this ?" ok-text="Yes"
+                                  cancel-text="No"
+                                  @confirm="applyStatus('CONFIRMED')">
+                        <template #icon></template>
+                        <button class="btn btn-info btn-block"
+                                :class="changeStatus.current_status === 'CONFIRMED' ? 'disabled cursor-not-allowed' : ''"
+                                type="button"
+                                style="height: 100px;">
+                            <i class="mdi mdi-check-circle"></i> Confirmed
+                        </button>
+                    </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-success btn-block"
-                            :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
-                            type="button"
-                            style="height: 100px;"
-                            @click="applyStatus('DELIVERED')">
-                        <i class="mdi mdi-truck-delivery"></i> Delivered
-                    </button>
+                    <a-popconfirm placement="top" title="Are you sure, you want to deliver this ?" ok-text="Yes"
+                                  cancel-text="No"
+                                  @confirm="applyStatus('DELIVERED')">
+                        <template #icon></template>
+                            <button class="btn btn-success btn-block"
+                                    :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
+                                    type="button"
+                                    style="height: 100px;">
+                                <i class="mdi mdi-truck-delivery"></i> Delivered
+                            </button>
+                    </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-danger btn-block"
-                            :class="changeStatus.current_status === 'CANCELED' ? 'disabled cursor-not-allowed' : ''"
-                            type="button"
-                            style="height: 100px;"
-                            @click="applyStatus('CANCELED')">
-                        <i class="mdi mdi-cancel"></i> Canceled
-                    </button>
+                    <a-popconfirm placement="top" title="Are you sure, you want to cancel this ?" ok-text="Yes"
+                                  cancel-text="No"
+                                  @confirm="applyStatus('CANCELED')">
+                        <template #icon></template>
+                        <button class="btn btn-danger btn-block"
+                                :class="changeStatus.current_status === 'CANCELED' ? 'disabled cursor-not-allowed' : ''"
+                                type="button"
+                                style="height: 100px;">
+                            <i class="mdi mdi-cancel"></i> Canceled
+                        </button>
+                    </a-popconfirm>
                 </div>
             </div>
         </a-modal>
@@ -124,7 +141,7 @@ export default {
                         orderAble: true,
                         isVisible: true ,
                         modifier: (purchase_reference) => {
-                            return purchase_reference
+                            return `<b>${purchase_reference}</b>`;
                         }
                     },
                     {

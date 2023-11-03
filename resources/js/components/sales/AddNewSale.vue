@@ -751,7 +751,11 @@ export default {
                         if (type === 'delivered'){
                             this.getProduct()
                         }
-                        window.location.href = `/sales`;
+
+                        setTimeout(function (){
+                            window.location.href = `/sales`
+                        }, 2000);
+
                         this.formState.validation = {};
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
