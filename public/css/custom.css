@@ -40,6 +40,9 @@ body:hover::-webkit-scrollbar-thumb {
     padding: 0.8rem 0.8rem;
 }
 
+.color-warning:hover{
+    color: #e8c94e;
+}
 .color-info:hover{
     color: #4ed1e8;
 }

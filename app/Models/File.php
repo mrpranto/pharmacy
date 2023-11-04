@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    use HasFactory, BootTrait, BootTrait;
+    use HasFactory, BootTrait;
 
     const IMAGE_FOLDER = 'avatar';
 

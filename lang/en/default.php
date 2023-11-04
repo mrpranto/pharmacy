@@ -254,4 +254,12 @@ return [
     'invoice_details' => 'Invoice details',
     'edit_sale' => 'Edit sale',
     'sales_invoice_updated_successful' => 'Sales invoice update successful',
+    'add_payment' => 'Add Payment',
+    'payment_status' => 'Payment',
+
+    'payment_type' => 'Payment Type',
+    'paid_amount' => 'Paid amount',
+    'bank_name' => 'Bank name',
+    'account_number' => 'Account number',
+    'transaction_number' => 'Transaction number'
 ];

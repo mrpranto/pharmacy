@@ -72,12 +72,12 @@
                                   cancel-text="No"
                                   @confirm="applyStatus('DELIVERED')">
                         <template #icon></template>
-                            <button class="btn btn-success btn-block"
-                                    :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
-                                    type="button"
-                                    style="height: 100px;">
-                                <i class="mdi mdi-truck-delivery"></i> Delivered
-                            </button>
+                        <button class="btn btn-success btn-block"
+                                :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
+                                type="button"
+                                style="height: 100px;">
+                            <i class="mdi mdi-truck-delivery"></i> Delivered
+                        </button>
                     </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
@@ -107,17 +107,76 @@
             </div>
         </a-modal>
 
+
+        <a-modal v-model:open="payment.open"
+                 width="900px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.add_payment')">
+            <div class="row pt-2">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="15%">{{ __('default.payment_type') }}</th>
+                            <th>{{ __('default.paid_amount') }}</th>
+                            <th>{{ __('default.bank_name') }}</th>
+                            <th>{{ __('default.account_number') }}</th>
+                            <th>{{ __('default.transaction_number') }}</th>
+                            <th class="text-center">
+                                <PlusCircleOutlined
+                                    @click.prevent="addNewPayment"
+                                    class="cursor-pointer color-primary"
+                                    :style="{fontSize: '20px'}"/>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(payment_data, payment_data_index) in payment.formData">
+                            <td>
+                                <a-select v-model:value="payment_data.type" :placeholder="__('default.payment_type')" style="width: 100%;">
+                                    <a-select-option v-for="(type, type_index) in payment_type" :key="type_index" :value="type">{{ type }}</a-select-option>
+                                </a-select>
+                            </td>
+                            <td>
+                                <a-input v-model:value="payment_data.paid_amount"/>
+                            </td>
+                            <td>
+                                <a-input v-model:value="payment_data.bank_name"/>
+                            </td>
+                            <td>
+                                <a-input v-model:value="payment_data.account_number"/>
+                            </td>
+                            <td>
+                                <a-input v-model:value="payment_data.transaction_number"/>
+                            </td>
+                            <td>
+                                <MinusCircleOutlined
+                                    @click.prevent="removePayment(payment_data_index)"
+                                    class="cursor-pointer color-danger"
+                                    :style="{fontSize: '20px'}"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </a-modal>
+
     </div>
 </template>
 <script>
 
 
 import {time_format} from "../../helper.js";
+import {DollarOutlined, PlusCircleOutlined, MinusCircleOutlined} from "@ant-design/icons-vue";
+import {message} from "ant-design-vue";
 
 export default {
     name: "SaleList",
-    components: {},
-    props: ['permission'],
+    components: {DollarOutlined, PlusCircleOutlined, MinusCircleOutlined},
+    props: ['permission', 'payment_type'],
     data() {
         return {
             loader: false,
@@ -137,9 +196,9 @@ export default {
                         title: 'in_num',
                         type: 'custom-html',
                         key: 'invoice_number',
-                        width: '11',
+                        width: '12',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (purchase_reference) => {
                             return `<b>${purchase_reference}</b>`;
                         }
@@ -148,13 +207,13 @@ export default {
                         title: 'customer',
                         type: 'custom-html',
                         key: 'customer',
-                        width: '13',
+                        width: '12',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (customer) => {
-                            if (customer.phone_number){
+                            if (customer.phone_number) {
                                 return `<span>${customer.name}<br/><small>(${customer.phone_number})</small></span>`;
-                            }else {
+                            } else {
                                 return `<span>${customer.name}</span>`;
                             }
                         }
@@ -165,7 +224,7 @@ export default {
                         key: 'invoice_date',
                         width: '15',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (invoice_date) => {
                             return `<span>${this.$date_format(invoice_date)}</span><br><small>${this.$time_format(invoice_date)}</small>`;
                         }
@@ -176,7 +235,7 @@ export default {
                         key: 'subtotal',
                         width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (subtotal) => {
                             return this.$showCurrency(subtotal);
                         }
@@ -187,7 +246,7 @@ export default {
                         key: 'total_unit_qty',
                         width: '10',
                         orderAble: false,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (total_unit_qty) => {
                             return `<span>Unit Qty : <b>${total_unit_qty}</b></span>`;
                         }
@@ -196,9 +255,9 @@ export default {
                         title: 'total',
                         type: 'custom-html',
                         key: 'grand_total',
-                        width: '12',
+                        width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (grand_total) => {
                             return this.$showCurrency(grand_total);
                         }
@@ -209,16 +268,31 @@ export default {
                         key: 'status',
                         width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (status) => {
-                            if (status === 'CONFIRMED'){
+                            if (status === 'CONFIRMED') {
                                 return `<span class="badge badge-info">${status.toUpperCase()}</span>`;
-                            }else if(status === 'DRAFT'){
+                            } else if (status === 'DRAFT') {
                                 return `<span class="badge badge-warning">${status.toUpperCase()}</span>`;
-                            }else if(status === 'CANCELED'){
+                            } else if (status === 'CANCELED') {
                                 return `<span class="badge badge-danger">${status.toUpperCase()}</span>`;
-                            }else {
+                            } else {
                                 return `<span class="badge badge-success">${status.toUpperCase()}</span>`;
+                            }
+                        }
+                    },
+                    {
+                        title: 'payment_status',
+                        type: 'custom-html',
+                        key: 'payment_status',
+                        width: '10',
+                        orderAble: true,
+                        isVisible: true,
+                        modifier: (payment_status) => {
+                            if (payment_status === 'DUE') {
+                                return `<span class="badge badge-danger">${payment_status}</span>`;
+                            } else {
+                                return `<span class="badge badge-success">${payment_status}</span>`;
                             }
                         }
                     },
@@ -228,7 +302,7 @@ export default {
                         key: 'action',
                         permission: this.permission,
                         componentName: 'sale-action-component',
-                        width: '14',
+                        width: '6',
                         isVisible: true
                     },
                 ],
@@ -273,13 +347,26 @@ export default {
                     },
                 ],
             },
-            show:{
-                open:false
+            show: {
+                open: false
             },
-            changeStatus:{
-                open:false,
+            changeStatus: {
+                open: false,
                 current_id: null,
                 current_status: null
+            },
+            payment: {
+                open: false,
+                current_id: null,
+                formData:[
+                    /*{
+                        paid_amount: null,
+                        type: null,
+                        bank_name: null,
+                        account_number: null,
+                        transaction_number: null,
+                    }*/
+                ]
             }
         }
     },
@@ -290,13 +377,13 @@ export default {
     mounted() {
     },
     watch: {
-        'options.request.customer': function (){
+        'options.request.customer': function () {
             this.getData()
         },
-        'options.request.sale_status': function (){
+        'options.request.sale_status': function () {
             this.getData()
         },
-        'options.request.date': function (){
+        'options.request.date': function () {
             this.getData()
         }
     },
@@ -388,18 +475,18 @@ export default {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
         },
-        showStatusForm(id, row){
+        showStatusForm(id, row) {
             this.loader = true;
             this.changeStatus.open = true;
             this.changeStatus.current_id = row.id;
             this.changeStatus.current_status = row.status;
-            if (this.changeStatus.open === true){
+            if (this.changeStatus.open === true) {
                 this.loader = false;
             }
         },
-        async applyStatus(status){
+        async applyStatus(status) {
             this.loader = true;
-            await axios.post('/change-status/'+this.changeStatus.current_id, {status:status})
+            await axios.post('/change-status/' + this.changeStatus.current_id, {status: status})
                 .then(response => {
                     if (response.data.success) {
                         this.changeStatus.open = false;
@@ -413,6 +500,23 @@ export default {
                 .catch(err => {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
+        },
+        showAddPaymentForm(id) {
+            this.payment.open = true
+            this.payment.current_id = true
+        },
+        addNewPayment(){
+            this.payment.formData.push({
+                paid_amount: null,
+                type: null,
+                bank_name: null,
+                account_number: null,
+                transaction_number: null,
+            })
+        },
+        removePayment(key){
+            message.warning('Payment information remove successful.');
+            this.payment.formData.splice(key, 1);
         }
     }
 }

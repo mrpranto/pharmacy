@@ -2,6 +2,7 @@
 
 namespace App\Services\Sales;
 
+use App\Models\Payment;
 use App\Models\People\Customer;
 use App\Models\Product\Category;
 use App\Models\Product\Company;
@@ -15,9 +16,7 @@ use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Mpdf\MpdfException;
 use PDF;
 use Psr\Container\ContainerExceptionInterface;
@@ -64,7 +63,8 @@ class SalesServices extends BaseServices
                 'show' => auth()->user()->can('app.sales.edit'),
                 'delete' => auth()->user()->can('app.sales.delete'),
                 'change_status' => auth()->user()->can('app.sales.status-change')
-            ]
+            ],
+            'payment_type' => Payment::getConst('TYPE_')
         ];
     }
 
@@ -74,10 +74,10 @@ class SalesServices extends BaseServices
             ->newQuery()
             ->select([
                 'sales.id', 'sales.invoice_number', 'sales.invoice_date', 'sales.customer_id',
-                'sales.total_unit_qty', 'sales.subtotal', 'sales.status', 'sales.other_cost',
-                'sales.discount', 'sales.grand_total', 'customers.name as customer_name'
+                'sales.total_unit_qty', 'sales.subtotal', 'sales.status', 'sales.payment_status',
+                'sales.other_cost', 'sales.discount', 'sales.grand_total', 'customers.name as customer_name'
             ])
-            ->with(['customer:id,name,phone_number'])
+            ->with(['customer:id,name,phone_number', 'payments'])
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
             ->when(request()->filled('date'), function ($q) {
                 $dates = explode(' to ', request()->get('date'));

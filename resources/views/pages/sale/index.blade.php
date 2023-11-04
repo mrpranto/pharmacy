@@ -5,7 +5,9 @@
 @endsection
 @section('content')
 
-    <sale-list-component :permission="{{ json_encode($permission) }}"></sale-list-component>
+    <sale-list-component
+        :permission="{{ json_encode($permission) }}"
+        :payment_type="{{ json_encode($payment_type) }}" />
 
 @endsection
 

@@ -254,5 +254,13 @@ return [
     'sale_delete_successful' => 'বিক্রয় চালান মুছে ফেলা সফল হয়েছে।',
     'invoice_details' => 'ইনভয়েস বিস্তারিত',
     'edit_sale' => 'বিক্রয় সম্পাদনা করুন',
-    'sales_invoice_updated_successful' => 'বিক্রয় চালান সফলভাবে সম্পাদনা হয়েছে।'
+    'sales_invoice_updated_successful' => 'বিক্রয় চালান সফলভাবে সম্পাদনা হয়েছে।',
+    'add_payment' => 'পেমেন্ট যোগ করুন',
+    'payment_status' => 'পেমেন্ট',
+
+    'payment_type' => 'পেমেন্ট ধরন',
+    'paid_amount' => 'পেইড এমাউন্ট',
+    'bank_name' => 'ব্যাংকের নাম',
+    'account_number' => 'একাউন্ট নম্বর',
+    'transaction_number' => 'ট্রানসাকশান নম্বর'
 ];
