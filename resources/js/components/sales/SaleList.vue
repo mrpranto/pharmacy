@@ -113,9 +113,42 @@
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }"
                  :title="__('default.add_payment')">
-            <div class="row pt-2">
+            <div class="row pt-4 border-top">
                 <div class="col-12">
-                    <table class="table table-bordered">
+                    <dl class="row">
+                        <dt class="col-sm-4 text-right">{{ __('default.invoice_number') }}</dt>
+                        <dd class="col-sm-8">: {{ payment.sale_info.invoice_number }}</dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.invoice_date') }}</dt>
+                        <dd class="col-sm-8">: {{ $date_format(payment.sale_info.invoice_date) }} <small> {{ $time_format(payment.sale_info.invoice_date) }}</small></dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.customer') }}</dt>
+                        <dd class="col-sm-8">: {{ payment.sale_info.customer.name }} <template v-if="payment.sale_info.customer.phone_number">({{ payment.sale_info.customer.phone_number }})</template></dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.subtotal') }}</dt>
+                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.sale_info.subtotal) }}</b></dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.total') }}</dt>
+                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.sale_info.grand_total) }}</b></dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.status') }}</dt>
+                        <dd class="col-sm-8">:
+                            <span v-if="payment.sale_info.status === 'CONFIRMED'" class="badge badge-info">{{ payment.sale_info.status.toUpperCase() }}</span>
+                            <span v-else-if="payment.sale_info.status === 'DRAFT'" class="badge badge-warning">{{ payment.sale_info.status.toUpperCase() }}</span>
+                            <span v-else-if="payment.sale_info.status === 'CANCELED'" class="badge badge-danger">{{ payment.sale_info.status.toUpperCase() }}</span>
+                            <span v-else class="badge badge-success">{{ payment.sale_info.status.toUpperCase() }}</span>
+                        </dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.payment_status') }}</dt>
+                        <dd class="col-sm-8">:
+                            <span class="badge badge-danger" v-if="payment.sale_info.payment_status">{{ payment.sale_info.payment_status.toUpperCase() }}</span>
+                            <span class="badge badge-success" v-else>{{ payment.sale_info.payment_status.toUpperCase() }}</span>
+                        </dd>
+                    </dl>
+                </div>
+
+                <div class="col-12">
+                    <table class="table table-striped border">
                         <thead>
                         <tr>
                             <th width="15%">{{ __('default.payment_type') }}</th>
@@ -134,21 +167,24 @@
                         <tbody>
                         <tr v-for="(payment_data, payment_data_index) in payment.formData">
                             <td>
-                                <a-select v-model:value="payment_data.type" :placeholder="__('default.payment_type')" style="width: 100%;">
+                                <a-select v-model:value="payment_data.type"
+                                          @change="setPaymentType(payment_data_index, payment_data.type)"
+                                          :placeholder="__('default.payment_type')"
+                                          style="width: 100%;">
                                     <a-select-option v-for="(type, type_index) in payment_type" :key="type_index" :value="type">{{ type }}</a-select-option>
                                 </a-select>
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.paid_amount"/>
+                                <a-input v-model:value="payment_data.paid_amount" class="text-right"/>
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.bank_name"/>
+                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.bank_name"/>
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.account_number"/>
+                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.account_number"/>
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.transaction_number"/>
+                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.transaction_number"/>
                             </td>
                             <td>
                                 <MinusCircleOutlined
@@ -158,9 +194,21 @@
                             </td>
                         </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>{{ __('default.total') }} : </th>
+                                <th class="text-right">{{ $showCurrency(totalPaidAmount) }}</th>
+                                <th colspan="4"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 
+                <div class="col-12 pt-3">
+                    <button class="btn btn-primary float-right">
+                        <i class="mdi mdi-check-circle"></i> {{ __('default.save') }}
+                    </button>
+                </div>
             </div>
         </a-modal>
 
@@ -358,6 +406,7 @@ export default {
             payment: {
                 open: false,
                 current_id: null,
+                sale_info: {},
                 formData:[
                     /*{
                         paid_amount: null,
@@ -385,6 +434,16 @@ export default {
         },
         'options.request.date': function () {
             this.getData()
+        }
+    },
+    computed: {
+        totalPaidAmount() {
+            let totalPaidAmount = 0;
+            this.payment.formData.forEach(item => {
+                const paidAmount = item.paid_amount === null ? 0 : parseFloat(item.paid_amount);
+                totalPaidAmount += paidAmount;
+            });
+            return totalPaidAmount.toFixed(2);
         }
     },
     methods: {
@@ -501,9 +560,10 @@ export default {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
         },
-        showAddPaymentForm(id) {
-            this.payment.open = true
-            this.payment.current_id = true
+        showAddPaymentForm(id, row) {
+            this.payment.open = true;
+            this.payment.current_id = true;
+            this.payment.sale_info = row;
         },
         addNewPayment(){
             this.payment.formData.push({
@@ -512,11 +572,27 @@ export default {
                 bank_name: null,
                 account_number: null,
                 transaction_number: null,
+                hideAccountArea: false
             })
         },
         removePayment(key){
             message.warning('Payment information remove successful.');
             this.payment.formData.splice(key, 1);
+        },
+        setPaymentType(key, value) {
+            const payment = this.payment.formData[key];
+            const existHasThisPaymentType = this.payment.formData.filter(item => item.type === value);
+            const paymentType = payment.type;
+            if (existHasThisPaymentType.length > 1){
+                message.error('Already added this payment type.');
+                this.payment.formData[key].type = null
+            }else {
+                if (paymentType === 'CASH') {
+                    payment.hideAccountArea = true
+                }else {
+                    payment.hideAccountArea = false
+                }
+            }
         }
     }
 }
