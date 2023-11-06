@@ -122,4 +122,5 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::post('/change-status/{id}', [SaleController::class, 'changeStatus']);
     Route::get('/invoice-pdf/{id}', [SaleController::class, 'invoicePdf'])
         ->name('invoice-pdf');
+    Route::post('/sales-payment', [SaleController::class, 'paymentSave']);
 });

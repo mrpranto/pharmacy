@@ -143,4 +143,14 @@ class SaleController extends Controller
     {
         return $this->services->deleteSale($id);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function paymentSave(): JsonResponse
+    {
+        return $this->services
+            ->validatePayment()
+            ->savePayment();
+    }
 }

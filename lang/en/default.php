@@ -261,5 +261,6 @@ return [
     'paid_amount' => 'Paid amount',
     'bank_name' => 'Bank name',
     'account_number' => 'Account number',
-    'transaction_number' => 'Transaction number'
+    'transaction_number' => 'Transaction number',
+    'payment_save_success' => 'Payment save successful.',
 ];

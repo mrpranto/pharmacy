@@ -17,7 +17,7 @@ class Payment extends Model
     const TYPE_NAGOD = 'NAGOD';
 
     protected $fillable = [
-        'paid_amount', 'type', 'account_number',
+        'paid_amount', 'type', 'account_number', 'bank_name',
         'transaction_number', 'paymentable', 'created_by', 'updated_by',
     ];
 

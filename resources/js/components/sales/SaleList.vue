@@ -141,7 +141,9 @@
 
                         <dt class="col-sm-4 text-right">{{ __('default.payment_status') }}</dt>
                         <dd class="col-sm-8">:
-                            <span class="badge badge-danger" v-if="payment.sale_info.payment_status">{{ payment.sale_info.payment_status.toUpperCase() }}</span>
+                            <span class="badge badge-danger" v-if="payment.sale_info.payment_status === 'DUE'">{{ payment.sale_info.payment_status.toUpperCase() }}</span>
+                            <span class="badge badge-info" v-else-if="payment.sale_info.payment_status === 'PARTIAL-PAID'">{{ payment.sale_info.payment_status.toUpperCase() }}</span>
+                            <span class="badge badge-warning" v-else-if="payment.sale_info.payment_status === 'OVER-DUE'">{{ payment.sale_info.payment_status.toUpperCase() }}</span>
                             <span class="badge badge-success" v-else>{{ payment.sale_info.payment_status.toUpperCase() }}</span>
                         </dd>
                     </dl>
@@ -194,7 +196,7 @@
                             </td>
                         </tr>
                         </tbody>
-                        <tfoot>
+                        <tfoot v-if="payment.formData.length">
                             <tr>
                                 <th>{{ __('default.total') }} : </th>
                                 <th class="text-right">{{ $showCurrency(totalPaidAmount) }}</th>
@@ -205,7 +207,7 @@
                 </div>
 
                 <div class="col-12 pt-3">
-                    <button class="btn btn-primary float-right">
+                    <button class="btn btn-primary float-right" @click.prevent="savePayment">
                         <i class="mdi mdi-check-circle"></i> {{ __('default.save') }}
                     </button>
                 </div>
@@ -339,6 +341,10 @@ export default {
                         modifier: (payment_status) => {
                             if (payment_status === 'DUE') {
                                 return `<span class="badge badge-danger">${payment_status}</span>`;
+                            } else if (payment_status === 'PARTIAL-PAID') {
+                                return `<span class="badge badge-info">${payment_status}</span>`;
+                            }  else if (payment_status === 'OVER-DUE') {
+                                return `<span class="badge badge-warning">${payment_status}</span>`;
                             } else {
                                 return `<span class="badge badge-success">${payment_status}</span>`;
                             }
@@ -405,17 +411,13 @@ export default {
             },
             payment: {
                 open: false,
+                loader: false,
                 current_id: null,
                 sale_info: {},
-                formData:[
-                    /*{
-                        paid_amount: null,
-                        type: null,
-                        bank_name: null,
-                        account_number: null,
-                        transaction_number: null,
-                    }*/
-                ]
+                totalPaid: 0,
+                paymentStatus: null,
+                formData:[],
+                validation:{}
             }
         }
     },
@@ -443,7 +445,19 @@ export default {
                 const paidAmount = item.paid_amount === null ? 0 : parseFloat(item.paid_amount);
                 totalPaidAmount += paidAmount;
             });
-            return totalPaidAmount.toFixed(2);
+
+            this.payment.totalPaid = parseFloat(totalPaidAmount.toFixed(2));
+
+            if (this.payment.sale_info.grand_total === this.payment.totalPaid){
+                this.payment.paymentStatus = 'PAID';
+            }else if (this.payment.totalPaid !== 0.00 && this.payment.sale_info.grand_total > this.payment.totalPaid) {
+                this.payment.paymentStatus = 'PARTIAL-PAID';
+            }else if (this.payment.sale_info.grand_total < this.payment.totalPaid) {
+                this.payment.paymentStatus = 'OVER-DUE';
+            }else {
+                this.payment.paymentStatus = 'DUE';
+            }
+            return this.payment.totalPaid;
         }
     },
     methods: {
@@ -562,8 +576,20 @@ export default {
         },
         showAddPaymentForm(id, row) {
             this.payment.open = true;
-            this.payment.current_id = true;
+            this.payment.current_id = id;
             this.payment.sale_info = row;
+            this.payment.formData = row.payments.map(item => {
+                const newItem = {
+                    id: item.id,
+                    paid_amount: item.paid_amount,
+                    type: item.type,
+                    bank_name: item.bank_name,
+                    account_number: item.account_number,
+                    transaction_number: item.transaction_number,
+                    hideAccountArea: item.type === "CASH" ? true : false
+                }
+                return newItem
+            })
         },
         addNewPayment(){
             this.payment.formData.push({
@@ -593,6 +619,31 @@ export default {
                     payment.hideAccountArea = false
                 }
             }
+        },
+        async savePayment(){
+            this.payment.loader = true
+            await axios.post('/sales-payment', this.payment)
+                .then(response => {
+                    if (response.data.success) {
+                        this.payment.validation = {};
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.payment.open = false;
+                        this.payment.loader = true;
+                        this.getData()
+                    }else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.payment.validation = {};
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound);
+                        this.payment.validation = err.response.data.errors;
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err);
+                    }
+                })
         }
     }
 }

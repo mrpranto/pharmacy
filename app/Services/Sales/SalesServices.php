@@ -238,8 +238,8 @@ class SalesServices extends BaseServices
                         'total_unit_qty' => $request->totalUnitQuantity,
                         'subtotal' => $request->totalSubTotal,
                         'status' => $this->status(),
-                        'other_cost' => $request->otherCost,
-                        'discount' => $request->discount,
+                        'other_cost' => $request->otherCost ?? 0,
+                        'discount' => $request->discount ?? 0,
                         'grand_total' => $request->grandTotal,
                         'invoice_details' => json_encode($request->all()),
                     ]);
@@ -480,14 +480,93 @@ class SalesServices extends BaseServices
                         'total_unit_qty' => $request->totalUnitQuantity,
                         'subtotal' => $request->totalSubTotal,
                         'status' => $status,
-                        'other_cost' => $request->otherCost,
-                        'discount' => $request->discount,
+                        'other_cost' => $request->otherCost ?? 0,
+                        'discount' => $request->discount ?? 0,
                         'grand_total' => $request->grandTotal,
                         'invoice_details' => json_encode($request->all()),
                     ]);
             });
 
             return response()->json(['success' => __t('sales_invoice_updated_successful')]);
+
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @return $this
+     */
+    public function validatePayment(): static
+    {
+        dd(request()->all());
+        request()->validate([
+            "current_id" => "required|exists:sales,id",
+            "totalPaid" => "required|numeric",
+            "paymentStatus" => "required|in:" . implode(',', Sale::getValidationConst('PAYMENT_STATUS_')),
+            "formData" => "required|array",
+            "formData.*.type" => "required|in:" . implode(',', Payment::getValidationConst('TYPE_')),
+            "formData.*.paid_amount" => "required|numeric",
+        ],[
+            "formData.*.type.required" => 'Payment type is required',
+            "formData.*.paid_amount.required" => 'Paid amount is required',
+            "formData.*.type.in" => 'Payment type is invalid',
+            "formData.*.paid_amount.numeric" => 'Paid amount must be numeric',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function savePayment(): JsonResponse
+    {
+        try {
+
+            DB::transaction(function (){
+
+                $existSale = $this->model
+                    ->newQuery()
+                    ->where('id', request()->get('current_id'))
+                    ->first();
+
+                if ($existSale->payments){
+
+                    foreach ($existSale->payments as $payment){
+                        $payment->update([
+                            'paid_amount' => $payment['paid_amount'],
+                            'type' => $payment['type'],
+                            'account_number' => $payment['account_number'],
+                            'transaction_number' => $payment['transaction_number'],
+                        ]);
+                    }
+                }else{
+                    $salesPayment = [];
+                    foreach (request()->get('formData') as $payment){
+                        $salesPayment[] = [
+                            'paid_amount' => $payment['paid_amount'],
+                            'type' => $payment['type'],
+                            'account_number' => $payment['account_number'],
+                            'transaction_number' => $payment['transaction_number'],
+                            'paymentable_type' => Sale::class,
+                            'paymentable_id' => request()->get('current_id'),
+                            'created_by' => auth()->id(),
+                            'updated_by' => auth()->id(),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                    Payment::query()->insert($salesPayment);
+                }
+
+                $existSale->update([
+                        'payment_status' => request()->get('paymentStatus'),
+                        'total_paid' => request()->get('totalPaid'),
+                    ]);
+            });
+
+            return response()->json(['success' => __t('payment_save_success')]);
 
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);

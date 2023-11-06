@@ -262,5 +262,6 @@ return [
     'paid_amount' => 'পেইড এমাউন্ট',
     'bank_name' => 'ব্যাংকের নাম',
     'account_number' => 'একাউন্ট নম্বর',
-    'transaction_number' => 'ট্রানসাকশান নম্বর'
+    'transaction_number' => 'ট্রানসাকশান নম্বর',
+    'payment_save_success' => 'পেমেন্ট যোগ করা সফল হয়েছে।',
 ];

@@ -896,7 +896,8 @@ export default {
 
             const otherCost = parseFloat(this.formState.formData.otherCost === '' ? 0 : this.formState.formData.otherCost);
             const discount = parseFloat(this.formState.formData.discount === '' ? 0 : this.formState.formData.discount);
-            this.formState.formData.grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount).toFixed(2);
+            const grandTotal = ((parseFloat(totalSubTotal) + otherCost) - discount).toFixed(2);
+            this.formState.formData.grandTotal = parseInt(Math.fround(grandTotal));
         },
         incrementDecrement(index, type) {
             const quantity = parseInt(this.formState.formData.products[index].quantity);
