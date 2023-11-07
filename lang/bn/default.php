@@ -264,4 +264,9 @@ return [
     'account_number' => 'একাউন্ট নম্বর',
     'transaction_number' => 'ট্রানসাকশান নম্বর',
     'payment_save_success' => 'পেমেন্ট যোগ করা সফল হয়েছে।',
+
+    'PAID' => 'PAID',
+    'DUE' => 'DUE',
+    'PARTIAL-PAID' => 'PARTIAL-PAID',
+    'OVER-DUE' => 'OVER-DUE',
 ];

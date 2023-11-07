@@ -6,10 +6,11 @@ use App\Models\trait\BootTrait;
 use App\Models\trait\GetConst;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory, BootTrait, GetConst;
+    use HasFactory, BootTrait, GetConst, SoftDeletes;
 
     const TYPE_CASH = 'CASH';
     const TYPE_BANK = 'BANK';

@@ -177,7 +177,7 @@
                                 </a-select>
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.paid_amount" class="text-right"/>
+                                <a-input v-model:value="payment_data.paid_amount" class="text-right" type="number"/>
                             </td>
                             <td>
                                 <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.bank_name"/>
@@ -338,15 +338,15 @@ export default {
                         width: '10',
                         orderAble: true,
                         isVisible: true,
-                        modifier: (payment_status) => {
+                        modifier: (payment_status, row) => {
                             if (payment_status === 'DUE') {
-                                return `<span class="badge badge-danger">${payment_status}</span>`;
+                                return `<span class="badge badge-danger" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             } else if (payment_status === 'PARTIAL-PAID') {
-                                return `<span class="badge badge-info">${payment_status}</span>`;
+                                return `<span class="badge badge-info" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             }  else if (payment_status === 'OVER-DUE') {
-                                return `<span class="badge badge-warning">${payment_status}</span>`;
+                                return `<span class="badge badge-warning" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             } else {
-                                return `<span class="badge badge-success">${payment_status}</span>`;
+                                return `<span class="badge badge-success" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             }
                         }
                     },
@@ -368,6 +368,7 @@ export default {
                     date: '',
                     customer: '',
                     sale_status: '',
+                    payment_status: '',
                 },
                 exportAble: {
                     csv: '',
@@ -397,6 +398,15 @@ export default {
                         filterValue: '',
                         option: [
                             'CONFIRMED', 'DRAFT', 'CANCELED', 'DELIVERED'
+                        ],
+                    },
+                    {
+                        title: 'payment_status',
+                        type: "button-checkbox",
+                        key: "payment_status",
+                        filterValue: '',
+                        option: [
+                            'PAID', 'DUE', 'PARTIAL-PAID', 'OVER-DUE'
                         ],
                     },
                 ],

@@ -263,4 +263,8 @@ return [
     'account_number' => 'Account number',
     'transaction_number' => 'Transaction number',
     'payment_save_success' => 'Payment save successful.',
+    'PAID' => 'PAID',
+    'DUE' => 'DUE',
+    'PARTIAL-PAID' => 'PARTIAL-PAID',
+    'OVER-DUE' => 'OVER-DUE',
 ];

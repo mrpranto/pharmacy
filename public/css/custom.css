@@ -58,3 +58,10 @@ body:hover::-webkit-scrollbar-thumb {
 .cursor-not-allowed{
     cursor: not-allowed !important;
 }
+
+.dropdown-action:hover{
+    background: #d8d8d8dd;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid #B7B7B7DD;
+}

@@ -2,7 +2,7 @@
     <div class="text-center">
 
         <a-dropdown :trigger="['click']" :title="__('default.action')" :placement="'bottomRight'"
-                    :arrow="{ pointAtCenter: true }" class="mr-1">
+                    :arrow="{ pointAtCenter: true }" class="mr-1 dropdown-action">
             <MoreOutlined :style="{fontSize: '20px'}"/>
             <template #overlay>
                 <a-menu>

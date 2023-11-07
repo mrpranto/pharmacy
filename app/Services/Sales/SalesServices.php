@@ -33,13 +33,13 @@ class SalesServices extends BaseServices
     public SaleProducts $saleProducts;
 
     public function __construct(
-        Customer $customer,
-        Product  $product,
-        Category $category,
-        Company  $company,
-        Sale     $sale,
+        Customer     $customer,
+        Product      $product,
+        Category     $category,
+        Company      $company,
+        Sale         $sale,
         SaleProducts $saleProducts,
-        Stock    $stock
+        Stock        $stock
     )
     {
         $this->customer = $customer;
@@ -75,7 +75,8 @@ class SalesServices extends BaseServices
             ->select([
                 'sales.id', 'sales.invoice_number', 'sales.invoice_date', 'sales.customer_id',
                 'sales.total_unit_qty', 'sales.subtotal', 'sales.status', 'sales.payment_status',
-                'sales.other_cost', 'sales.discount', 'sales.grand_total', 'customers.name as customer_name'
+                'sales.other_cost', 'sales.discount', 'sales.grand_total', 'sales.total_paid',
+                'customers.name as customer_name',
             ])
             ->with(['customer:id,name,phone_number', 'payments'])
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
@@ -86,6 +87,7 @@ class SalesServices extends BaseServices
             })
             ->when(request()->filled('customer'), fn($q) => $q->where('sales.customer_id', request()->get('customer')))
             ->when(request()->filled('sale_status'), fn($q) => $q->where('sales.status', request()->get('sale_status')))
+            ->when(request()->filled('payment_status'), fn($q) => $q->where('sales.payment_status', request()->get('payment_status')))
             ->when(request()->filled('search'), fn($q) => $q->where('sales.invoice_number', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
                 if (request()->get('order_by') == 'customer') {
@@ -191,7 +193,7 @@ class SalesServices extends BaseServices
             'totalUnitQuantity' => 'required|numeric',
             'products' => 'required|array',
             'products.*.product.id' => 'required|numeric',
-            'products.*.quantity' => ['required','numeric', new CheckAvailableQuantity()],
+            'products.*.quantity' => ['required', 'numeric', new CheckAvailableQuantity()],
             'products.*.sale_price' => 'required|numeric|gte:products.*.original_sale_price',
             'products.*.sale_percentage' => 'nullable|numeric',
             'products.*.sub_total' => 'required|numeric',
@@ -206,7 +208,7 @@ class SalesServices extends BaseServices
      */
     private function status()
     {
-        if (request()->filled('type')){
+        if (request()->filled('type')) {
             if (request()->get('type') == 'draft') {
                 return $this->model::STATUS_DRAFT;
             } elseif (request()->get('type') == 'confirmed') {
@@ -270,7 +272,7 @@ class SalesServices extends BaseServices
 
             return response()->json(['success' => __t('sales_invoice_created_successful')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -321,16 +323,16 @@ class SalesServices extends BaseServices
     {
         try {
 
-            DB::transaction(function () use ($id){
+            DB::transaction(function () use ($id) {
 
                 $sales = $this->getModelById($id);
 
-                if (request()->get('status') === Sale::STATUS_DELIVERED){
+                if (request()->get('status') === Sale::STATUS_DELIVERED) {
 
                     $this->adjustStock($sales->saleProducts);
 
                     $sales->update(['status' => request()->get('status')]);
-                }else {
+                } else {
                     $sales->update(['status' => request()->get('status')]);
                 }
 
@@ -338,7 +340,7 @@ class SalesServices extends BaseServices
 
             return response()->json(['success' => __t('status_change_success')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -351,7 +353,7 @@ class SalesServices extends BaseServices
     {
         try {
 
-            DB::transaction(function () use ($id){
+            DB::transaction(function () use ($id) {
                 $sales = $this->getModelById($id);
                 $sales->saleProducts()->delete();
                 $sales->delete();
@@ -359,7 +361,7 @@ class SalesServices extends BaseServices
 
             return response()->json(['success' => __t('sale_delete_successful')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -400,12 +402,12 @@ class SalesServices extends BaseServices
     {
         try {
 
-            DB::transaction(function () use ($request, $id){
+            DB::transaction(function () use ($request, $id) {
 
                 $sale = $this->getModelById($id, ['saleProducts']);
                 $oldSaleProduct = $sale->saleProducts;
                 $existSaleProduct = [];
-                foreach ($request->products as $requestProduct){
+                foreach ($request->products as $requestProduct) {
                     $checkExist = $oldSaleProduct
                         ->where('sale_id', $id)
                         ->where('product_id', $requestProduct['product']['id'])
@@ -413,7 +415,7 @@ class SalesServices extends BaseServices
                         ->where('original_sale_price', $requestProduct['original_sale_price'])
                         ->first();
 
-                    if ($checkExist){
+                    if ($checkExist) {
                         $existSaleProduct[] = [
                             "id" => $checkExist->id,
                             "sale_id" => $checkExist->sale_id,
@@ -425,7 +427,7 @@ class SalesServices extends BaseServices
                             "quantity" => $requestProduct['quantity'],
                             "subtotal" => $requestProduct['sub_total'],
                         ];
-                    }else{
+                    } else {
                         $existSaleProduct[] = $requestProduct;
                     }
                 }
@@ -435,8 +437,8 @@ class SalesServices extends BaseServices
                 $removeAbleIds = array_diff($oldSaleProductIds, $existSaleProductIds);
                 $sale->saleProducts()->wherein('id', $removeAbleIds)->delete();
 
-                foreach ($existSaleProduct as $existProduct){
-                    if (isset($existProduct['product_id'])){
+                foreach ($existSaleProduct as $existProduct) {
+                    if (isset($existProduct['product_id'])) {
                         $hasProduct = $this->saleProducts
                             ->newQuery()
                             ->where('sale_id', $id)
@@ -444,7 +446,7 @@ class SalesServices extends BaseServices
                             ->where('mrp', $existProduct['mrp'])
                             ->where('original_sale_price', $existProduct['original_sale_price'])
                             ->first();
-                        if ($hasProduct){
+                        if ($hasProduct) {
                             $hasProduct->update([
                                 'sale_price' => $existProduct['sale_price'],
                                 'quantity' => $existProduct['quantity'],
@@ -453,7 +455,7 @@ class SalesServices extends BaseServices
                                 'sale_product_details' => json_encode($existProduct),
                             ]);
                         }
-                    }else{
+                    } else {
                         $this->saleProducts
                             ->newQuery()
                             ->create([
@@ -489,7 +491,7 @@ class SalesServices extends BaseServices
 
             return response()->json(['success' => __t('sales_invoice_updated_successful')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -499,7 +501,6 @@ class SalesServices extends BaseServices
      */
     public function validatePayment(): static
     {
-        dd(request()->all());
         request()->validate([
             "current_id" => "required|exists:sales,id",
             "totalPaid" => "required|numeric",
@@ -507,7 +508,7 @@ class SalesServices extends BaseServices
             "formData" => "required|array",
             "formData.*.type" => "required|in:" . implode(',', Payment::getValidationConst('TYPE_')),
             "formData.*.paid_amount" => "required|numeric",
-        ],[
+        ], [
             "formData.*.type.required" => 'Payment type is required',
             "formData.*.paid_amount.required" => 'Paid amount is required',
             "formData.*.type.in" => 'Payment type is invalid',
@@ -524,29 +525,36 @@ class SalesServices extends BaseServices
     {
         try {
 
-            DB::transaction(function (){
+            DB::transaction(function () {
 
                 $existSale = $this->model
                     ->newQuery()
                     ->where('id', request()->get('current_id'))
                     ->first();
 
-                if ($existSale->payments){
+                $paymentIds = $existSale->payments()->pluck('id')->toArray();
+                $newPaymentIds = collect(request()->get('formData'))->pluck('id')->toArray();
+                $deleteAbleIds = array_diff($paymentIds, $newPaymentIds);
 
-                    foreach ($existSale->payments as $payment){
-                        $payment->update([
-                            'paid_amount' => $payment['paid_amount'],
-                            'type' => $payment['type'],
-                            'account_number' => $payment['account_number'],
-                            'transaction_number' => $payment['transaction_number'],
-                        ]);
-                    }
-                }else{
-                    $salesPayment = [];
-                    foreach (request()->get('formData') as $payment){
+                $existSale->payments()->whereIn('id', $deleteAbleIds)->delete();
+
+                $salesPayment = [];
+                foreach (request()->get('formData') as $payment) {
+                    if (isset($payment['id'])) {
+                        Payment::query()
+                            ->where('id', $payment['id'])
+                            ->update([
+                                'bank_name' => $payment['bank_name'],
+                                'paid_amount' => $payment['paid_amount'],
+                                'type' => $payment['type'],
+                                'account_number' => $payment['account_number'],
+                                'transaction_number' => $payment['transaction_number'],
+                            ]);
+                    } else {
                         $salesPayment[] = [
                             'paid_amount' => $payment['paid_amount'],
                             'type' => $payment['type'],
+                            'bank_name' => $payment['bank_name'],
                             'account_number' => $payment['account_number'],
                             'transaction_number' => $payment['transaction_number'],
                             'paymentable_type' => Sale::class,
@@ -557,18 +565,19 @@ class SalesServices extends BaseServices
                             'updated_at' => now(),
                         ];
                     }
-                    Payment::query()->insert($salesPayment);
                 }
 
+                Payment::query()->insert($salesPayment);
+
                 $existSale->update([
-                        'payment_status' => request()->get('paymentStatus'),
-                        'total_paid' => request()->get('totalPaid'),
-                    ]);
+                    'payment_status' => request()->get('paymentStatus'),
+                    'total_paid' => request()->get('totalPaid'),
+                ]);
             });
 
             return response()->json(['success' => __t('payment_save_success')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
