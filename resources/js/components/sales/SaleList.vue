@@ -446,6 +446,9 @@ export default {
         },
         'options.request.date': function () {
             this.getData()
+        },
+        'options.request.payment_status': function () {
+            this.getData()
         }
     },
     computed: {
@@ -504,6 +507,9 @@ export default {
             }
             if (filterType === 'sale_status') {
                 this.options.request.sale_status = filterValue
+            }
+            if (filterType === 'payment_status') {
+                this.options.request.payment_status = filterValue
             }
             if (filterType === 'date') {
                 this.options.request.date = filterValue
