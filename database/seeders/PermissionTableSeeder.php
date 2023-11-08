@@ -339,6 +339,11 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Change Sales Status',
                 'slug' => 'app.sales.status-change'
             ],
+            [
+                'module_id' => $this->module('Sales'),
+                'name' => 'Payment Add',
+                'slug' => 'app.sales.payment-add'
+            ],
         ];
     }
 

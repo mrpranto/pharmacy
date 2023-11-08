@@ -62,7 +62,8 @@ class SalesServices extends BaseServices
                 'edit' => auth()->user()->can('app.sales.show'),
                 'show' => auth()->user()->can('app.sales.edit'),
                 'delete' => auth()->user()->can('app.sales.delete'),
-                'change_status' => auth()->user()->can('app.sales.status-change')
+                'change_status' => auth()->user()->can('app.sales.status-change'),
+                'payment_add' => auth()->user()->can('app.sales.payment-add'),
             ],
             'payment_type' => Payment::getConst('TYPE_')
         ];

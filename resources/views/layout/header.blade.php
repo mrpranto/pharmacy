@@ -49,7 +49,7 @@
                     </a>
                 @endif
             </li>-->
-            <li class="nav-item dropdown nav-messages">
+<!--            <li class="nav-item dropdown nav-messages">
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i data-feather="mail"></i>
@@ -63,7 +63,7 @@
                         <div class="circle"></div>
                     </div>
                 </a>
-            </li>
+            </li>-->
 
 
             <li class="nav-item dropdown nav-profile">

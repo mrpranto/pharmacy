@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\People\CustomerController;
 use App\Http\Controllers\People\SupplierController;
 use App\Http\Controllers\Product\CategoryController;
@@ -123,4 +124,8 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::get('/invoice-pdf/{id}', [SaleController::class, 'invoicePdf'])
         ->name('invoice-pdf');
     Route::post('/sales-payment', [SaleController::class, 'paymentSave']);
+
+    //Expanse Route
+    Route::resource('expanses', ExpenseController::class);
+
 });
