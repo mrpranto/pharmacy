@@ -23,7 +23,7 @@
         }
 
         th, td {
-            border: 0.01em solid #d0cece;
+            border: 0.01em solid #000000;
             padding: 6px;
             font-size: 10px;
         }
@@ -106,19 +106,19 @@
     </tbody>
     <tr>
         <th colspan="2" style="text-align: left">subtotal:</th>
-        <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['totalSubTotal']) }}</th>
+        <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details['totalSubTotal']) }}</td>
     </tr>
     <tr>
         <th colspan="2" style="text-align: left">Other cost:</th>
-        <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['otherCost']) }}</th>
+        <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details['otherCost']) }}</td>
     </tr>
     <tr>
         <th colspan="2" style="text-align: left">(-) Discount:</th>
-        <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['discount']) }}</th>
+        <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details['discount']) }}</td>
     </tr>
     <tr>
         <th colspan="2" style="text-align: left">Grand total:</th>
-        <th colspan="3" style="text-align: right">{{ show_currency($invoice_details['grandTotal']) }}</th>
+        <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details['grandTotal']) }}</td>
     </tr>
 </table>
 <htmlpagefooter name="page-footer">

@@ -156,6 +156,7 @@ if (! function_exists('generate_pdf')){
     function generate_pdf($file, $dependentData = []): StreamedResponse
     {
         $mpdf = new Mpdf([
+            'default_font' => 'FreeSerif',
             'mode' => 'utf-8',
             'format' => "A4",
             'margin_top' => 34,
@@ -163,10 +164,8 @@ if (! function_exists('generate_pdf')){
             'margin_right' => 5,
             'margin_bottom' => 12,
             'tempDir'=> base_path('storage/app/mpdf'),
-            'allow_charset_conversion' => true
+            'allow_charset_conversion' => true,
         ]);
-
-        $mpdf->charset_in = 'iso-8859-4';
 
         $header = [
             'Content-Type' => 'application/pdf',
