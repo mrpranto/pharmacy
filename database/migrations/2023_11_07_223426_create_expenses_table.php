@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->mediumText('item_details');
             $table->text('details')->nullable();
+            $table->float('total_amount')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
             $table->timestamps();

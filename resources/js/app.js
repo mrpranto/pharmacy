@@ -100,6 +100,14 @@ app.component('sale-action-component', SalesActionComponent);
 
 
 /*
+* Expenses
+*/
+import ExpensesListComponent from './components/expenses/ExpensesList.vue';
+app.component('expenses-list-component', ExpensesListComponent);
+import ExpensesActionComponent from './components/expenses/Action.vue';
+app.component('expenses-action-component', ExpensesActionComponent);
+
+/*
 * App core component
 */
 import AppTable from './components/core/AppTable.vue';
@@ -119,6 +127,7 @@ app.config.globalProperties.$currency_symbol = window._general_setting?.currency
 app.config.globalProperties.$currency_symbol_position = window._general_setting?.currency_symbol_position;
 app.config.globalProperties.$showCurrency = showCurrency;
 app.config.globalProperties.$today = moment().format("YYYY-MM-DD");
+app.config.globalProperties.$today_time = moment().format("YYYY-MM-DD HH:mm:ss");
 
 const trans = {
     methods: {

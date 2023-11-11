@@ -14,7 +14,7 @@ class Expense extends Model
     const EXPANSE_ATTACHMENT = 'expanse_attachment';
 
     protected $fillable = [
-        'date', 'title', 'item_details', 'details', 'created_by', 'updated_by'
+        'date', 'title', 'item_details', 'details', 'total_amount', 'created_by', 'updated_by'
     ];
 
     protected $casts = [

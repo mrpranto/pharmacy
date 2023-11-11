@@ -269,4 +269,17 @@ return [
     'DUE' => 'DUE',
     'PARTIAL-PAID' => 'PARTIAL-PAID',
     'OVER-DUE' => 'OVER-DUE',
+
+    'expenses' => 'খরচপত্র',
+    'expenses_list' => 'খরচপত্র তালিকা',
+    'title' => 'টাইটেল',
+    'details' => 'বিস্তারিত',
+    'item_details' => 'আইটেম বিস্তারিত',
+    'add_expenses' => 'নতুন খরচপত্র তৈরি করুন',
+    'blank' => ' ',
+    'add_item' => 'আইটেম যোগ করুন',
+    'attachment' => 'নথি সংযুক্তি',
+    'select_attachment' => 'ফাইল সংযুক্তি নির্বাচন করুন...',
+    'select_file' => 'নথি নির্বাচন',
+    'expense_create_successful' => 'খরচপত্র তৈরি সফল হয়েছে।',
 ];

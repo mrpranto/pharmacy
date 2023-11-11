@@ -267,4 +267,17 @@ return [
     'DUE' => 'DUE',
     'PARTIAL-PAID' => 'PARTIAL-PAID',
     'OVER-DUE' => 'OVER-DUE',
+
+    'expenses' => 'Expenses',
+    'expenses_list' => 'Expenses list',
+    'title' => 'Title',
+    'details' => 'Details',
+    'item_details' => 'Item details',
+    'add_expenses' => 'Add new expenses',
+    'blank' => ' ',
+    'add_item' => 'Add Item',
+    'attachment' => 'Attachment',
+    'select_attachment' => 'Select file attachment...',
+    'select_file' => 'Select file',
+    'expense_create_successful' => 'Expense create successful.'
 ];

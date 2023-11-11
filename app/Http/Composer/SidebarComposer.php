@@ -83,6 +83,13 @@ class SidebarComposer
                     'subMenu' => $this->subMenu->sales(),
                     'id' => 'sales',
                 ],
+                [
+                    'name' => __t('expenses'),
+                    'icon' => 'dollar-sign',
+                    'url' => route('expanses.index'),
+                    'path' => 'expenses',
+                    'permission' => auth()->user()->can('app.expenses.index')
+                ],
             ]
         ]);
     }

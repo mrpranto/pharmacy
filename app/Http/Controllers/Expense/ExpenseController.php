@@ -3,16 +3,36 @@
 namespace App\Http\Controllers\Expense;
 
 use App\Http\Controllers\Controller;
+use App\Services\Expense\ExpenseServices;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ExpenseController extends Controller
 {
+    public function __construct(ExpenseServices $expenseServices)
+    {
+        $this->services = $expenseServices;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('pages.expenses.index', $this->services->accessPermissions());
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getExpenses(): LengthAwarePaginator
+    {
+        return $this->services->getExpenses();
     }
 
     /**
@@ -20,7 +40,9 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->services
+            ->validate($request)
+            ->storeExpenses($request);
     }
 
     /**

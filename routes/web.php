@@ -127,5 +127,6 @@ Route::group(['middleware' => 'authenticate'], function (){
 
     //Expanse Route
     Route::resource('expanses', ExpenseController::class);
+    Route::get('/get-expenses', [ExpenseController::class, 'getExpenses']);
 
 });

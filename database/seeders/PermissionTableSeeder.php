@@ -344,6 +344,35 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Payment Add',
                 'slug' => 'app.sales.payment-add'
             ],
+
+            /*
+             * Expenses
+             */
+            [
+                'module_id' => $this->module('Expenses'),
+                'name' => 'Expenses List',
+                'slug' => 'app.expenses.index'
+            ],
+            [
+                'module_id' => $this->module('Expenses'),
+                'name' => 'Show details Expenses',
+                'slug' => 'app.expenses.show'
+            ],
+            [
+                'module_id' => $this->module('Expenses'),
+                'name' => 'Add New Expenses',
+                'slug' => 'app.expenses.create'
+            ],
+            [
+                'module_id' => $this->module('Expenses'),
+                'name' => 'Edit Expenses',
+                'slug' => 'app.expenses.edit'
+            ],
+            [
+                'module_id' => $this->module('Expenses'),
+                'name' => 'Delete Expenses',
+                'slug' => 'app.expenses.delete'
+            ],
         ];
     }
 
