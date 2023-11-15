@@ -120,15 +120,40 @@ export default {
                         isVisible: true,
                         width: '20',
                     },
-                    /*{
+                    {
+                        title: 'amount',
+                        type: 'custom-html',
+                        key: 'total_amount',
+                        width: '10',
+                        orderAble: true,
+                        isVisible: true,
+                        modifier: (total_amount) => {
+                            return `<span>${this.$showCurrency(total_amount)}</span>`;
+                        }
+                    },
+                    {
                         title: 'item_details',
                         type: 'component',
-                        componentName: '',
+                        componentName: 'expenses-items-component',
                         key: 'item_details',
                         orderAble: false,
                         isVisible: true,
                         width: '10',
-                    },*/
+                    },
+                    {
+                        title: 'attachment',
+                        type: 'custom-html',
+                        key: 'expanse_attachment',
+                        width: '10',
+                        orderAble: false,
+                        isVisible: true,
+                        modifier: (expanse_attachment) => {
+                            if (expanse_attachment){
+                                return `<a href="${expanse_attachment.full_url}" download="true"
+                                            class="badge badge-pill badge-dark"><i class="mdi mdi-download"></i> Download</a>`;
+                            }
+                        }
+                    },
                     {
                         title: 'action',
                         type: 'action',

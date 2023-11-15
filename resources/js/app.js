@@ -106,6 +106,8 @@ import ExpensesListComponent from './components/expenses/ExpensesList.vue';
 app.component('expenses-list-component', ExpensesListComponent);
 import ExpensesActionComponent from './components/expenses/Action.vue';
 app.component('expenses-action-component', ExpensesActionComponent);
+import ExpensesItemDetailsComponent from './components/expenses/ItemDetails.vue';
+app.component('expenses-items-component', ExpensesItemDetailsComponent);
 
 /*
 * App core component

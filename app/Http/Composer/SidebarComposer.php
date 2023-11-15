@@ -87,7 +87,7 @@ class SidebarComposer
                     'name' => __t('expenses'),
                     'icon' => 'dollar-sign',
                     'url' => route('expanses.index'),
-                    'path' => 'expenses',
+                    'path' => 'expanses',
                     'permission' => auth()->user()->can('app.expenses.index')
                 ],
             ]

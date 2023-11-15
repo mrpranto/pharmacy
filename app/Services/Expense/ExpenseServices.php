@@ -41,8 +41,11 @@ class ExpenseServices extends BaseServices
     public function getExpenses(): LengthAwarePaginator
     {
         return $this->model->newQuery()
-            ->when(request()->filled('search'), fn($q) => $q->where('title', 'like', '%' . request()->get('search') . '%')
+            ->with(['expanseAttachment'])
+            ->when(request()->filled('search'),
+                fn($q) => $q->where('title', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('details', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('total_amount', 'like', '%' . request()->get('search') . '%')
             )
             ->when(request()->filled('order_by') && request()->filled('order_dir'),
                 fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))

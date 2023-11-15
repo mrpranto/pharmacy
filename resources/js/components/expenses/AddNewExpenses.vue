@@ -103,7 +103,7 @@
     </div>
 </template>
 <script>
-import {PaperClipOutlined} from '@ant-design/icons-vue';
+import {PaperClipOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons-vue';
 
 export default {
     name: "AddNewExpenses",
@@ -114,7 +114,7 @@ export default {
         }
     },
     components: {
-        PaperClipOutlined
+        PaperClipOutlined, MinusCircleOutlined, PlusOutlined
     },
     data() {
         return {
