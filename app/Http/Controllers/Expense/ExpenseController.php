@@ -27,11 +27,11 @@ class ExpenseController extends Controller
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getExpenses(): LengthAwarePaginator
+    public function getExpenses(): array
     {
         return $this->services->getExpenses();
     }

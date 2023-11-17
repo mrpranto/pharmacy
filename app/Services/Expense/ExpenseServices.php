@@ -36,13 +36,13 @@ class ExpenseServices extends BaseServices
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getExpenses(): LengthAwarePaginator
+    public function getExpenses(): array
     {
-        return $this->model->newQuery()
+        $expenses = $this->model->newQuery()
             ->with(['expanseAttachment'])
             ->when(request()->filled('search'),
                 fn($q) => $q->where('title', 'like', '%' . request()->get('search') . '%')
@@ -56,8 +56,12 @@ class ExpenseServices extends BaseServices
             })
             ->when(request()->filled('order_by') && request()->filled('order_dir'),
                 fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
-            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
-            ->paginate(request()->get('per_page') ?? pagination());
+            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'));
+
+        return  [
+            'expenses' => $expenses->paginate(request()->get('per_page') ?? pagination()),
+            'totalAmount' => $expenses->sum('total_amount')
+        ];
     }
 
     /**

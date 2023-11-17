@@ -33,13 +33,6 @@ class SidebarComposer
                     'permission' => auth()->user()->can('app.dashboard')
                 ],
                 [
-                    'name' => __t('users'),
-                    'icon' => 'user',
-                    'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
-                    'subMenu' => $this->subMenu->users(),
-                    'id' => 'users',
-                ],
-                [
                     'name' => __t('products'),
                     'icon' => 'briefcase',
                     'permission' => auth()->user()->canany([
@@ -89,6 +82,20 @@ class SidebarComposer
                     'url' => route('expanses.index'),
                     'path' => 'expanses',
                     'permission' => auth()->user()->can('app.expenses.index')
+                ],
+                [
+                    'name' => __t('users'),
+                    'icon' => 'user',
+                    'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),
+                    'subMenu' => $this->subMenu->users(),
+                    'id' => 'users',
+                ],
+                [
+                    'name' => __t('setting'),
+                    'icon' => 'settings',
+                    'url' => route('setting').'?type=app_setting',
+                    'path' => 'setting',
+                    'permission' => auth()->user()->can('app.setting')
                 ],
             ]
         ]);

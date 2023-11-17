@@ -6,8 +6,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <h5 class="mb-3 mb-md-0">{{ __('default.expenses') }}
-                                    <app-table-counter-component :total="options.total"/>
+                                <h5 class="mb-3 mb-md-0">
+                                    {{ __('default.expenses') }} |
+                                    <small class="font-bold">{{ __('default.total') }} : <b>{{ options.total }}</b></small> ,
+                                    <small class="font-bold">{{ __('default.total_amount') }} : <b>{{ $showCurrency(options.total_amount) }}</b></small>
                                 </h5>
                             </div>
                             <div>
@@ -32,7 +34,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
                 <div class="card radius-20">
@@ -87,6 +88,7 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                total_amount: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -206,10 +208,11 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/get-expenses', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
-                    this.formState.list_path = response.data.path
-                    this.formState.current_list_url = response.data.current_page
+                    this.options.responseData = response.data.expenses;
+                    this.options.total = response.data.expenses.total;
+                    this.formState.list_path = response.data.expenses.path;
+                    this.formState.current_list_url = response.data.expenses.current_page;
+                    this.options.total_amount = response.data.totalAmount;
                     this.options.loader = false;
                 })
                 .catch(err => {

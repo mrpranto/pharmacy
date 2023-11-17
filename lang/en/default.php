@@ -283,4 +283,5 @@ return [
     'edit_expenses' => 'Edit expenses',
     'expense_delete_successful' => 'Expense delete successful.',
     'expense_edit_successful' => 'Expense edit successful.',
+    'total_amount' => 'Total amount',
 ];
