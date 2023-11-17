@@ -1,10 +1,6 @@
 
 <template>
     <div>
-        <a-tooltip :title="__('default.show_details')" class="mr-1" v-if="permission.show">
-            <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
-                         @click="$parent.$parent.showDetails(row.id)"/>
-        </a-tooltip>
         <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit">
             <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                           @click.prevent="$parent.$parent.getEditData(row)"/>

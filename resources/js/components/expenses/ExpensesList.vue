@@ -44,6 +44,7 @@
         </div>
 
         <AddNewExpenses :formState="formState"/>
+        <EditExpenses :formState="formState"/>
 
     </div>
 </template>
@@ -52,10 +53,11 @@
 
 import AddNewExpenses from "./AddNewExpenses.vue";
 import dayjs from "dayjs";
+import EditExpenses from "./EditExpenses.vue";
 
 export default {
     name: 'ExpensesList',
-    components: {AddNewExpenses},
+    components: {EditExpenses, AddNewExpenses},
     props: ['permission'],
     data() {
         return {
@@ -99,13 +101,13 @@ export default {
                         key: 'title',
                         orderAble: true,
                         isVisible: true,
-                        width: '15',
+                        width: '18',
                     },
                     {
                         title: 'date',
                         type: 'custom-html',
                         key: 'date',
-                        width: '15',
+                        width: '17',
                         orderAble: true,
                         isVisible: true,
                         modifier: (date) => {
@@ -161,15 +163,24 @@ export default {
                         permission: this.permission,
                         componentName: 'expenses-action-component',
                         isVisible: true,
-                        width: '15',
+                        width: '10',
                     },
                 ],
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
                     order_by: 'id',
-                    order_dir: 'desc'
+                    order_dir: 'desc',
+                    date: ''
                 },
+                filters: [
+                    {
+                        title: 'date',
+                        type: "date",
+                        key: "date",
+                        filterValue: null,
+                    },
+                ],
                 exportAble: {}
             },
             show:{
@@ -180,6 +191,11 @@ export default {
     },
     created() {
         this.getData()
+    },
+    watch:{
+        'options.request.date': function () {
+            this.getData()
+        },
     },
     mounted() {
 
@@ -213,6 +229,7 @@ export default {
                 })
         },
         showAddForm() {
+            this.loader = true;
             this.formState.formData = {
                 title: '',
                 date: dayjs(this.$today_time, 'YYYY-MM-DD HH:mm:ss'),
@@ -222,25 +239,32 @@ export default {
             }
             this.formState.validation = false;
             this.formState.openCreate = true;
+            setTimeout(() => this.loader = false, 500)
+        },
+        filterData(filterValue, filterType) {
+            if (filterType === 'date') {
+                this.options.request.date = filterValue
+            }
         },
 
         onClose() {
             this.formState.openCreate = false;
         },
-        getEditData(supplier) {
-            this.getDependency()
-            this.formState.current_id = supplier.id;
+        getEditData(expenses) {
+            this.loader = true;
+            this.formState.current_id = expenses.id;
             this.formState.formData = {
-                name: supplier.name,
-                phone_number: supplier.phone_number,
-                email: supplier.email,
-                address: supplier.address,
-                companies: JSON.parse(supplier.companies).map(item => {
-                    return item.id
-                }),
+                title: expenses.title,
+                date: dayjs(expenses.date, 'YYYY-MM-DD HH:mm:ss'),
+                details: expenses.details,
+                item_details: JSON.parse(expenses.item_details),
+                total_amount: expenses.total_amount,
+                attachment: null
             }
+            this.formState.attachment = expenses.expanse_attachment?.full_url;
             this.formState.validation = {};
             this.formState.openEdit = true;
+            setTimeout(() => this.loader = false, 500)
         },
         onEditClose() {
             this.formState.openEdit = false;
@@ -264,7 +288,7 @@ export default {
             })
         },
         async delete(id) {
-            await axios.delete(`/peoples/suppliers/${id}`)
+            await axios.delete(`/expanses/${id}`)
                 .then(response => {
                     if (response.data.success) {
                         this.getData()

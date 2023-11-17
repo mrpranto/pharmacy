@@ -58,9 +58,11 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
+        return $this->services
+            ->validate($request)
+            ->updateExpense($request, $id);
     }
 
     /**
@@ -68,6 +70,6 @@ class ExpenseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->services->deleteExpense($id);
     }
 }

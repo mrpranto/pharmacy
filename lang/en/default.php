@@ -279,5 +279,8 @@ return [
     'attachment' => 'Attachment',
     'select_attachment' => 'Select file attachment...',
     'select_file' => 'Select file',
-    'expense_create_successful' => 'Expense create successful.'
+    'expense_create_successful' => 'Expense create successful.',
+    'edit_expenses' => 'Edit expenses',
+    'expense_delete_successful' => 'Expense delete successful.',
+    'expense_edit_successful' => 'Expense edit successful.',
 ];

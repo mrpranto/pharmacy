@@ -6,6 +6,8 @@ use App\Models\Expense\Expense;
 use App\Models\trait\FileHandler;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -44,9 +46,14 @@ class ExpenseServices extends BaseServices
             ->with(['expanseAttachment'])
             ->when(request()->filled('search'),
                 fn($q) => $q->where('title', 'like', '%' . request()->get('search') . '%')
-                ->orWhere('details', 'like', '%' . request()->get('search') . '%')
-                ->orWhere('total_amount', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('details', 'like', '%' . request()->get('search') . '%')
+                    ->orWhere('total_amount', 'like', '%' . request()->get('search') . '%')
             )
+            ->when(request()->filled('date'), function ($q) {
+                $dates = explode(' to ', request()->get('date'));
+                $q->whereDate('date', '>=', $dates[0])
+                    ->whereDate('date', '<=', $dates[1]);
+            })
             ->when(request()->filled('order_by') && request()->filled('order_dir'),
                 fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
@@ -70,24 +77,56 @@ class ExpenseServices extends BaseServices
         return $this;
     }
 
-    public function storeExpenses($request)
+    /**
+     * @param $request
+     * @return JsonResponse
+     */
+    public function storeExpenses($request): JsonResponse
     {
         try {
             $this->model = $this->model->newQuery()->create([
-                'date' => date('Y-m-d H:i:s'),
+                'date' => date('Y-m-d H:i:s', strtotime($request->date)),
                 'title' => $request->title,
                 'item_details' => $request->item_details,
                 'details' => $request->details,
                 'total_amount' => $request->total_amount,
             ]);
 
-            if ($request->has('attachment')){
+            if ($request->has('attachment')) {
                 $this->uploadAttachment($request->file('attachment'), $this->model);
             }
 
             return response()->json(['success' => __t('expense_create_successful')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function updateExpense($request, $id)
+    {
+        try {
+            $this->model = $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->first();
+
+            $this->model
+                ->update([
+                    'date' => date('Y-m-d H:i:s', strtotime($request->date)),
+                    'title' => $request->title,
+                    'item_details' => $request->item_details,
+                    'details' => $request->details,
+                    'total_amount' => $request->total_amount,
+                ]);
+
+            if ($request->has('attachment')) {
+                $this->uploadAttachment($request->file('attachment'), $this->model);
+            }
+
+            return response()->json(['success' => __t('expense_edit_successful')]);
+
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -99,7 +138,7 @@ class ExpenseServices extends BaseServices
      */
     public function uploadAttachment($attachment, $expense): void
     {
-        $this->deleteImage(optional($expense->expanseAttachment)->path);
+        $this->deleteFile(optional($expense->expanseAttachment)->path);
 
         $file_path = $this->storeFile($attachment, Expense::EXPANSE_ATTACHMENT);
 
@@ -108,5 +147,32 @@ class ExpenseServices extends BaseServices
         ], [
             'path' => $file_path
         ]);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function deleteExpense($id): JsonResponse
+    {
+        try {
+
+            DB::transaction(function () use ($id) {
+
+                $expense = $this->getModelById($id);
+
+                $this->deleteFile(optional($expense->expanseAttachment)->path);
+
+                $expense->expanseAttachment()->delete();
+
+                $expense->delete();
+
+            });
+
+            return response()->json(['success' => __t('expense_delete_successful')]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 }

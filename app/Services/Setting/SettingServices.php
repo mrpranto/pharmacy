@@ -118,7 +118,7 @@ class SettingServices extends BaseServices
             if (is_array($files) && count($files) && $disk->exists($files[0])) {
                 $disk->delete($files[0]);
             }
-            Artisan::call('backup:run');
+            Artisan::call('backup:run --only-db');
 
             return true;
 

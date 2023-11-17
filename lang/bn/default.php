@@ -282,4 +282,7 @@ return [
     'select_attachment' => 'ফাইল সংযুক্তি নির্বাচন করুন...',
     'select_file' => 'নথি নির্বাচন',
     'expense_create_successful' => 'খরচপত্র তৈরি সফল হয়েছে।',
+    'edit_expenses' => 'খরচপত্র সম্পাদনা করুন',
+    'expense_delete_successful' => 'খরচপত্র মুছে ফেলা সফল হয়েছে।',
+    'expense_edit_successful' => 'খরচপত্র সম্পাদনা সফল হয়েছে।',
 ];

@@ -1,12 +1,12 @@
 <template>
     <div>
         <a-drawer
-            :title="__('default.add_expenses')"
+            :title="__('default.edit_expenses')"
             :width="720"
-            :open="formState.openCreate"
+            :open="formState.openEdit"
             :body-style="{ paddingBottom: '80px' }"
             :footer-style="{ textAlign: 'right' }"
-            @close="$parent.onClose"
+            @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
 
@@ -92,15 +92,18 @@
                             {{ __('default.select_file') }}
                         </a-button>
                     </a-input-group>
+                    <a v-if="formState.attachment" :href="formState.attachment" download="" class="btn btn-link float-right text-decoration-none">
+                        <i class="mdi mdi-download"></i> {{ __('default.attachment') }}
+                    </a>
                 </a-form-item>
 
             </a-form>
             <template #footer>
-                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
+                <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="save">
-                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                <a-button type="primary" style="margin-right: 8px" @click.prevent="update">
+                    <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
         </a-drawer>
@@ -110,7 +113,7 @@
 import {PaperClipOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons-vue';
 
 export default {
-    name: "AddNewExpenses",
+    name: "EditExpenses",
     props: {
         formState: {
             type: Object,
@@ -133,22 +136,22 @@ export default {
 
     },
     methods: {
-        async save() {
+        async update() {
             this.formData.append('title', this.formState.formData.title);
             this.formData.append('date', this.formState.formData.date);
             this.formData.append('details', this.formState.formData.details);
             this.formData.append('item_details', JSON.stringify(this.formState.formData.item_details));
             this.formData.append('total_amount', this.formState.formData.total_amount);
-            await axios.post('/expanses', this.formData)
+            this.formData.append("_method", "put");
+            await axios.post('/expanses/'+this.formState.current_id, this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if (response.data.success) {
-                        this.formState.formData.title = ''
-                        this.formState.formData.date = ''
-                        this.formState.formData.details = ''
-                        this.formState.formData.item_details = []
-                        this.formState.formData.total_amount = 0
                         this.$parent.getData()
-                        this.$parent.onClose()
+                        this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
