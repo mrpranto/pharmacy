@@ -25,6 +25,84 @@
             </div>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi mdi-cart text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.received') }} {{ __('default.purchase') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.received.total_amount ?? 0) }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.received.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.received.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.received.total_quantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-download text-warning"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.pending') }} {{ __('default.purchase') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.pending.total_amount ?? 0) }}</h4>
+                                <span class="badge badge-warning badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.pending.total_purchase }}</span>
+                                <span class="badge badge-warning badge-pill m-1">{{ __('default.unit') }} : {{ options.pending.total_unit }}</span>
+                                <span class="badge badge-warning badge-pill m-1">{{ __('default.quantity') }} : {{ options.pending.total_quantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-close-circle text-danger"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.canceled') }} {{ __('default.purchase') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.canceled.total_amount ?? 0) }}</h4>
+                                <span class="badge badge-danger badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.canceled.total_purchase }}</span>
+                                <span class="badge badge-danger badge-pill m-1">{{ __('default.unit') }} : {{ options.canceled.total_unit }}</span>
+                                <span class="badge badge-danger badge-pill m-1">{{ __('default.quantity') }} : {{ options.canceled.total_quantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-chart-bar text-info"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.purchase') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.all.total_amount ?? 0) }}</h4>
+                                <span class="badge badge-info badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.all.total_purchase }}</span>
+                                <span class="badge badge-info badge-pill m-1">{{ __('default.unit') }} : {{ options.all.total_unit }}</span>
+                                <span class="badge badge-info badge-pill m-1">{{ __('default.quantity') }} : {{ options.all.total_quantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
                 <div class="card radius-20">
@@ -54,6 +132,10 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                received: {},
+                pending: {},
+                canceled: {},
+                all: {},
                 columns: [
                     {
                         title: 'sl',
@@ -68,7 +150,7 @@ export default {
                         key: 'reference',
                         width: '13',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (purchase_reference) => {
                             return purchase_reference
                         }
@@ -79,9 +161,9 @@ export default {
                         key: 'supplier',
                         width: '15',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (supplier) => {
-                            return  `<span>${supplier.name}<br/><small>(${supplier.phone_number})</small></span>`
+                            return `<span>${supplier.name}<br/><small>(${supplier.phone_number})</small></span>`
                         }
                     },
                     {
@@ -90,7 +172,7 @@ export default {
                         key: 'date',
                         width: '15',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (date) => {
                             return this.$date_format(date);
                         }
@@ -101,7 +183,7 @@ export default {
                         key: 'subtotal',
                         width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (subtotal) => {
                             return this.$showCurrency(subtotal);
                         }
@@ -112,7 +194,7 @@ export default {
                         key: 'purchase_products',
                         width: '10',
                         orderAble: false,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (purchase_products) => {
                             let totalQty = 0;
                             purchase_products.forEach(item => {
@@ -127,7 +209,7 @@ export default {
                         key: 'total',
                         width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (total) => {
                             return this.$showCurrency(total);
                         }
@@ -138,13 +220,13 @@ export default {
                         key: 'status',
                         width: '10',
                         orderAble: true,
-                        isVisible: true ,
+                        isVisible: true,
                         modifier: (status) => {
-                            if (status === 'received'){
+                            if (status === 'received') {
                                 return `<span class="badge badge-primary">${status.toUpperCase()}</span>`;
-                            }else if(status === 'pending'){
+                            } else if (status === 'pending') {
                                 return `<span class="badge badge-warning">${status.toUpperCase()}</span>`;
-                            }else {
+                            } else {
                                 return `<span class="badge badge-danger">${status.toUpperCase()}</span>`;
                             }
                         }
@@ -200,10 +282,10 @@ export default {
                     },
                 ],
             },
-            show:{
-                purchase:{},
+            show: {
+                purchase: {},
                 permission: this.permission,
-                open:false
+                open: false
             }
         }
     },
@@ -214,13 +296,13 @@ export default {
     mounted() {
     },
     watch: {
-        'options.request.supplier': function (){
+        'options.request.supplier': function () {
             this.getData()
         },
-        'options.request.purchase_status': function (){
+        'options.request.purchase_status': function () {
             this.getData()
         },
-        'options.request.date': function (){
+        'options.request.date': function () {
             this.getData()
         }
     },
@@ -230,8 +312,12 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/get-purchases', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
+                    this.options.responseData = response.data.purchase;
+                    this.options.total = response.data.purchase.total;
+                    this.options.received = response.data.received;
+                    this.options.pending = response.data.pending;
+                    this.options.canceled = response.data.canceled;
+                    this.options.all = response.data.all;
                     this.options.loader = false;
                 })
                 .catch(err => {

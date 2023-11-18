@@ -31,12 +31,13 @@ class CustomerController extends Controller
         return view('pages.peoples.customers.index', $this->services->accessPermissions());
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCustomers(): LengthAwarePaginator
+    public function getCustomers(): array
     {
         return $this->services->getCustomers();
     }

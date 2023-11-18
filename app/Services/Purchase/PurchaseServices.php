@@ -57,14 +57,10 @@ class PurchaseServices extends BaseServices
         ];
     }
 
-    /**
-     * @return LengthAwarePaginator
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getPurchaseList(): LengthAwarePaginator
+
+    public function getPurchaseList()
     {
-        return $this->model->newQuery()
+        $purchase = $this->model->newQuery()
             ->select(['purchases.*', 'suppliers.name as supplier_name'])
             ->with(['supplier', 'purchaseProducts'])
             ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
@@ -84,6 +80,56 @@ class PurchaseServices extends BaseServices
             })
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
+
+        $counters = $this->counter();
+
+        return [
+            'purchase' => $purchase,
+            'received' => $counters['received'],
+            'pending' => $counters['pending'],
+            'canceled' => $counters['canceled'],
+            'all' => $counters['all'],
+        ];
+    }
+
+    public function counter()
+    {
+        $purchase = $this->model
+            ->newQuery()
+            ->withCount('purchaseProducts')
+            ->withSum('purchaseProducts', 'quantity')
+            ->get(['id', 'total', 'status']);
+
+        $received = $purchase->where('status', $this->model::STATUS_RECEIVED);
+        $pending = $purchase->where('status', $this->model::STATUS_PENDING);
+        $canceled = $purchase->where('status', $this->model::STATUS_CANCELED);
+
+        return [
+            'received' => [
+                'total_purchase' => $received->count(),
+                'total_amount' => $received->sum('total'),
+                'total_unit' => $received->sum('purchase_products_count'),
+                'total_quantity' => $received->sum('purchase_products_sum_quantity'),
+            ],
+            'pending' => [
+                'total_purchase' => $pending->count(),
+                'total_amount' => $pending->sum('total'),
+                'total_unit' => $pending->sum('purchase_products_count'),
+                'total_quantity' => $pending->sum('purchase_products_sum_quantity'),
+            ],
+            'canceled' => [
+                'total_purchase' => $canceled->count(),
+                'total_amount' => $canceled->sum('total'),
+                'total_unit' => $canceled->sum('purchase_products_count'),
+                'total_quantity' => $canceled->sum('purchase_products_sum_quantity'),
+            ],
+            'all' => [
+                'total_purchase' => $purchase->count(),
+                'total_amount' => $purchase->sum('total'),
+                'total_unit' => $purchase->sum('purchase_products_count'),
+                'total_quantity' => $purchase->sum('purchase_products_sum_quantity'),
+            ],
+        ];
     }
 
     /**

@@ -34,12 +34,8 @@ class PurchaseController extends Controller
         return view('pages.purchase.index', $this->services->accessPermissions());
     }
 
-    /**
-     * @return LengthAwarePaginator
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getPurchaseList(): LengthAwarePaginator
+
+    public function getPurchaseList()
     {
         Gate::authorize('app.purchase.index');
 

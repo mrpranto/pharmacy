@@ -35,13 +35,13 @@ class CustomerServices extends BaseServices
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCustomers(): LengthAwarePaginator
+    public function getCustomers(): array
     {
-        return $this->model->newQuery()
+        $customers = $this->model->newQuery()
             ->where('id', '!=', 1)
             ->when(request()->filled('search'), fn($q) => $q->where('phone_number', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('name', 'like', '%' . request()->get('search') . '%')
@@ -52,6 +52,20 @@ class CustomerServices extends BaseServices
                 fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
+
+        return [
+            'customers' => $customers,
+            'active_customers' => $this->model
+                ->newQuery()
+                ->where('id', '!=', 1)
+                ->where('status', 1)
+                ->count(),
+            'in_active_customers' => $this->model
+                ->newQuery()
+                ->where('id', '!=', 1)
+                ->where('status', 0)
+                ->count(),
+        ];
     }
 
     /**
