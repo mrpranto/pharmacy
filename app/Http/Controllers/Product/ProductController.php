@@ -33,12 +33,13 @@ class ProductController extends Controller
         return view('pages.products.products.index', $this->services->accessPermissions());
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getProducts(): LengthAwarePaginator
+    public function getProducts(): array
     {
         Gate::authorize('app.product.index');
 

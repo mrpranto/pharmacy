@@ -34,20 +34,27 @@ class UnitServices extends BaseServices
         ];
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getUnits(): LengthAwarePaginator
+    public function getUnits(): array
     {
-        return $this->model->newQuery()
+        $units = $this->model->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('pack_size', 'like', '%' . request()->get('search') . '%')
                 ->orWhere('name', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), fn($q) => $q->orderBy(request()->get('order_by'), request()->get('order_dir')))
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
+
+        return [
+            'units' => $units,
+            'active_units' => $this->model->newQuery()->where('status', 1)->count(),
+            'in_active_units' => $this->model->newQuery()->where('status', 0)->count(),
+        ];
     }
 
     /**

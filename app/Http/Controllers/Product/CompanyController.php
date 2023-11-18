@@ -33,12 +33,13 @@ class CompanyController extends Controller
         return view('pages.products.companies.index', $this->services->accessPermissions());
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCompanies(): LengthAwarePaginator
+    public function getCompanies(): array
     {
         Gate::authorize('app.company.index');
 

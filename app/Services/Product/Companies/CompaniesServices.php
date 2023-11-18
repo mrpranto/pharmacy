@@ -34,14 +34,15 @@ class CompaniesServices extends BaseServices
         ];
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCompanies(): LengthAwarePaginator
+    public function getCompanies(): array
     {
-        return $this->model->newQuery()
+        $companies = $this->model->newQuery()
             ->when(request()->filled('search'), fn($q) => $q->where('name', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('status'), fn($q) => $q->where('status', request()->get('status')))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
@@ -49,6 +50,12 @@ class CompaniesServices extends BaseServices
             })
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
+
+        return [
+            'companies' => $companies,
+            'active_companies' => $this->model->newQuery()->where('status', 1)->count(),
+            'in_active_companies' => $this->model->newQuery()->where('status', 0)->count(),
+        ];
     }
 
     /**

@@ -42,14 +42,15 @@ class ProductServices extends BaseServices
         ];
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getProducts(): LengthAwarePaginator
+    public function getProducts(): array
     {
-        return $this->model->newQuery()
+        $productsQuery = $this->model->newQuery()
             ->select(['products.*', 'categories.name as category_name', 'companies.name as company_name', 'units.name as unit_name'])
             ->with(['category', 'company', 'unit'])
             ->join('categories', 'products.category_id', '=', 'categories.id')
@@ -66,6 +67,7 @@ class ProductServices extends BaseServices
             ->when(request()->filled('company'), fn($q) => $q->where('company_id', request()->get('company')))
             ->when(request()->filled('unit'), fn($q) => $q->where('unit_id', request()->get('unit')))
             ->when(request()->filled('status'), fn($q) => $q->where('products.status', request()->get('status')))
+            ->when(request()->filled('purchase_type'), fn($q) => $q->where('products.purchase_type', request()->get('purchase_type')))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
                 if (request()->get('order_by') == 'category') {
                     return $q->orderBy('category_name', request()->get('order_dir'));
@@ -77,8 +79,15 @@ class ProductServices extends BaseServices
                     return $q->orderBy(request()->get('order_by'), request()->get('order_dir'));
                 }
             })
-            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
-            ->paginate(request()->get('per_page') ?? pagination());
+            ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'));
+
+        return [
+            'products' => $productsQuery->paginate(request()->get('per_page') ?? pagination()),
+            'active_products' => $this->model->where('products.status', 1)->count(),
+            'in_active_products' => $this->model->where('products.status', 0)->count(),
+            'direct_price_products' => $this->model->where('products.purchase_type', '$')->count(),
+            'percentage_products' => $this->model->where('products.purchase_type', '%')->count(),
+        ];
     }
 
     /**

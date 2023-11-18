@@ -33,12 +33,13 @@ class CategoryController extends Controller
         return view('pages.products.categories.index', $this->services->accessPermissions());
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCategories(): LengthAwarePaginator
+    public function getCategories(): array
     {
         Gate::authorize('app.category.index');
 

@@ -284,4 +284,10 @@ return [
     'expense_delete_successful' => 'Expense delete successful.',
     'expense_edit_successful' => 'Expense edit successful.',
     'total_amount' => 'Total amount',
+    'active' => 'Active',
+    'in_active' => 'In-Active',
+    'direct_price' => 'Direct price',
+    'percentage_price' => 'Percentage',
+    '$' => '($) Direct price',
+    '%' => '(%) Percentage',
 ];

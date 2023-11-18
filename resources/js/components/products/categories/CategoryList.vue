@@ -32,6 +32,40 @@
             </div>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-check-circle text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.active') }} {{ __('default.category') }}</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.active_categories }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-close-circle text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.in_active') }} {{ __('default.category') }}</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.in_active_categories }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
                 <div class="card radius-20">
@@ -82,6 +116,8 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                active_categories: 0,
+                in_active_categories: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -162,10 +198,12 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/product/get-categories', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
-                    this.formState.list_path = response.data.path
-                    this.formState.current_list_url = response.data.current_page
+                    this.options.responseData = response.data.categories;
+                    this.options.total = response.data.categories.total;
+                    this.options.active_categories = response.data.active_categories;
+                    this.options.in_active_categories = response.data.in_active_categories;
+                    this.formState.list_path = response.data.categories.path;
+                    this.formState.current_list_url = response.data.categories.current_page;
                     this.options.loader = false;
                 })
                 .catch(err => {

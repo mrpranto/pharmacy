@@ -285,4 +285,11 @@ return [
     'edit_expenses' => 'খরচপত্র সম্পাদনা করুন',
     'expense_delete_successful' => 'খরচপত্র মুছে ফেলা সফল হয়েছে।',
     'expense_edit_successful' => 'খরচপত্র সম্পাদনা সফল হয়েছে।',
+    'total_amount' => 'মোট দাম',
+    'active' => 'সক্রিয়',
+    'in_active' => 'নিষ্ক্রিয়',
+    'direct_price' => 'সরাসরি মূল্য',
+    'percentage_price' => 'শতাংশ মূল্য',
+    '$' => '($) সরাসরি মূল্য',
+    '%' => '(%) শতাংশ মূল্য',
 ];

@@ -33,6 +33,72 @@
             </div>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-check-circle text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.active') }} {{ __('default.product') }}</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.active_products }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-close-circle text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.in_active') }} {{ __('default.product') }}</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.in_active_products }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-currency-usd text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.direct_price') }} {{ __('default.product') }} ({{ $currency_symbol }})</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.direct_price_products }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div>
+                                <h1><i class="mdi mdi-percent text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.percentage_price') }} {{ __('default.product') }} (%)</p>
+                                <h3 class="mt-2 font-weight-light">{{ options.percentage_products }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
                 <div class="card radius-20">
@@ -94,6 +160,10 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                active_products: 0,
+                in_active_products: 0,
+                direct_price_products: 0,
+                percentage_products: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -188,6 +258,8 @@ export default {
                     category: '',
                     company: '',
                     unit: '',
+                    purchase_type: '',
+                    summary: 1,
                 },
                 exportAble: {
                     csv: '',
@@ -220,6 +292,15 @@ export default {
                         option: [],
                         filterOption: this.selectFilterOption
                     },
+                    {
+                        title: 'purchase_type',
+                        type: "button-checkbox",
+                        key: "purchase_type",
+                        filterValue: '',
+                        option: [
+                            '$', '%',
+                        ],
+                    },
                 ],
             },
             show:{
@@ -243,6 +324,9 @@ export default {
         },
         'options.request.unit': function () {
             this.getData()
+        },
+        'options.request.purchase_type': function () {
+            this.getData()
         }
     },
     methods: {
@@ -251,10 +335,16 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/product/get-products', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
-                    this.formState.list_path = response.data.path
-                    this.formState.current_list_url = response.data.current_page
+                    this.options.responseData = response.data.products;
+                    this.options.total = response.data.products.total;
+                    this.formState.list_path = response.data.products.path;
+                    this.formState.current_list_url = response.data.products.current_page;
+
+                    this.options.active_products = response.data.active_products;
+                    this.options.in_active_products = response.data.in_active_products;
+                    this.options.direct_price_products = response.data.direct_price_products;
+                    this.options.percentage_products = response.data.percentage_products;
+
                     this.options.loader = false;
                 })
                 .catch(err => {
@@ -321,6 +411,8 @@ export default {
                 this.options.request.company = filterValue
             } else if (filterType === 'unit') {
                 this.options.request.unit = filterValue
+            } else if (filterType === 'purchase_type') {
+                this.options.request.purchase_type = filterValue
             }
         },
         showAddForm() {

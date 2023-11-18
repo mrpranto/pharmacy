@@ -33,12 +33,13 @@ class UnitController extends Controller
         return view('pages.products.units.index', $this->services->accessPermissions());
     }
 
+
     /**
-     * @return LengthAwarePaginator
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getUnits(): LengthAwarePaginator
+    public function getUnits(): array
     {
         Gate::authorize('app.unit.index');
 
