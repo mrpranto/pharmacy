@@ -38,7 +38,7 @@
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
+                            <div class="list-card-icon">
                                 <h1><i class="mdi mdi-check-circle text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
@@ -54,7 +54,7 @@
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
+                            <div class="list-card-icon">
                                 <h1><i class="mdi mdi-close-circle text-primary"></i></h1>
                             </div>
                             <div class="pl-4">

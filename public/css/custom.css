@@ -65,3 +65,6 @@ body:hover::-webkit-scrollbar-thumb {
     padding: 3px;
     border: 1px solid #B7B7B7DD;
 }
+.list-card-icon{
+    background-color: #dbe3f3;padding: 8px 16px 0;border-radius: 5px
+}

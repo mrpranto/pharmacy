@@ -30,7 +30,7 @@
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
+                            <div class="list-card-icon">
                                 <h1><i class="mdi mdi mdi-cart text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
@@ -49,15 +49,15 @@
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
-                                <h1><i class="mdi mdi-download text-warning"></i></h1>
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-basket-fill text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.pending') }} {{ __('default.purchase') }}</p>
                                 <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.pending.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-warning badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.pending.total_purchase }}</span>
-                                <span class="badge badge-warning badge-pill m-1">{{ __('default.unit') }} : {{ options.pending.total_unit }}</span>
-                                <span class="badge badge-warning badge-pill m-1">{{ __('default.quantity') }} : {{ options.pending.total_quantity }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.pending.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.pending.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.pending.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -68,15 +68,15 @@
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
-                                <h1><i class="mdi mdi-close-circle text-danger"></i></h1>
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-close-circle text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.canceled') }} {{ __('default.purchase') }}</p>
                                 <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.canceled.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-danger badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.canceled.total_purchase }}</span>
-                                <span class="badge badge-danger badge-pill m-1">{{ __('default.unit') }} : {{ options.canceled.total_unit }}</span>
-                                <span class="badge badge-danger badge-pill m-1">{{ __('default.quantity') }} : {{ options.canceled.total_quantity }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.canceled.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.canceled.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.canceled.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -87,15 +87,15 @@
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div>
-                                <h1><i class="mdi mdi-chart-bar text-info"></i></h1>
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-chart-bar text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.total') }} {{ __('default.purchase') }}</p>
                                 <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.all.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-info badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.all.total_purchase }}</span>
-                                <span class="badge badge-info badge-pill m-1">{{ __('default.unit') }} : {{ options.all.total_unit }}</span>
-                                <span class="badge badge-info badge-pill m-1">{{ __('default.quantity') }} : {{ options.all.total_quantity }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.all.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.all.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.all.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
