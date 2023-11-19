@@ -25,6 +25,72 @@
             </div>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-apps text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.unit_qty') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ (options.totalUnitQuantity ?? 0) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-checkbox-multiple-blank-circle-outline text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.subtotal') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalSubtotalAmount ?? 0) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-checkbox-multiple-marked-circle text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.grand_total') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalGrandTotalAmount ?? 0) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-credit-card-multiple text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.payment') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalPaidAmount ?? 0) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row inbox-wrapper">
             <div class="col-lg-12">
                 <div class="card radius-20">
@@ -234,6 +300,10 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                totalUnitQuantity: 0,
+                totalSubtotalAmount: 0,
+                totalGrandTotalAmount: 0,
+                totalPaidAmount: 0,
                 columns: [
                     {
                         title: 'sl',
@@ -479,8 +549,14 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/get-sales-list', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
+                    this.options.responseData = response.data.sales;
+                    this.options.total = response.data.sales.total;
+
+                    this.options.totalUnitQuantity = response.data.totalUnitQuantity;
+                    this.options.totalSubtotalAmount = response.data.totalSubtotalAmount;
+                    this.options.totalGrandTotalAmount = response.data.totalGrandTotalAmount;
+                    this.options.totalPaidAmount = response.data.totalPaidAmount;
+
                     this.options.loader = false;
                 })
                 .catch(err => {

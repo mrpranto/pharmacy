@@ -33,7 +33,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <div class="card radius-20">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">

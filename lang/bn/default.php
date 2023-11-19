@@ -256,7 +256,7 @@ return [
     'edit_sale' => 'বিক্রয় সম্পাদনা করুন',
     'sales_invoice_updated_successful' => 'বিক্রয় চালান সফলভাবে সম্পাদনা হয়েছে।',
     'add_payment' => 'পেমেন্ট যোগ করুন',
-    'payment_status' => 'পেমেন্ট',
+    'payment_status' => 'পেমেন্ট স্ট্যাটাস',
 
     'payment_type' => 'পেমেন্ট ধরন',
     'paid_amount' => 'পেইড এমাউন্ট',
@@ -293,4 +293,6 @@ return [
     '$' => '($) সরাসরি মূল্য',
     '%' => '(%) শতাংশ মূল্য',
     'available_stock' => 'উপলব্ধ স্টক',
+    'grand_total' => 'সর্বমোট',
+    'payment' => 'পেমেন্ট',
 ];

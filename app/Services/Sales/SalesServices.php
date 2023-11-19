@@ -69,9 +69,9 @@ class SalesServices extends BaseServices
         ];
     }
 
-    public function getSalesList(): LengthAwarePaginator
+    public function getSalesList()
     {
-        return $this->model
+        $sales = $this->model
             ->newQuery()
             ->select([
                 'sales.id', 'sales.invoice_number', 'sales.invoice_date', 'sales.customer_id',
@@ -99,6 +99,24 @@ class SalesServices extends BaseServices
             })
             ->when(!request()->filled('order_by') && !request()->filled('order_dir'), fn($q) => $q->orderBy('id', 'desc'))
             ->paginate(request()->get('per_page') ?? pagination());
+
+        $salesCounter = $this->model
+            ->newQuery()
+            ->select(
+                DB::raw('sum(total_unit_qty) as totalUnitQuantity'),
+                DB::raw('sum(subtotal) as totalSubtotalAmount'),
+                DB::raw('sum(grand_total) as totalGrandTotalAmount'),
+                DB::raw('sum(total_paid) as totalPaidAmount'),
+            )
+            ->first();
+
+        return [
+            'sales' => $sales,
+            'totalUnitQuantity' => $salesCounter->totalUnitQuantity,
+            'totalSubtotalAmount' => $salesCounter->totalSubtotalAmount,
+            'totalGrandTotalAmount' => $salesCounter->totalGrandTotalAmount,
+            'totalPaidAmount' => $salesCounter->totalPaidAmount,
+        ];
     }
 
     /**

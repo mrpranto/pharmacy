@@ -36,10 +36,8 @@ class SaleController extends Controller
         return view('pages.sale.create', $this->services->createDependencies());
     }
 
-    /**
-     * @return LengthAwarePaginator
-     */
-    public function getSalesList(): LengthAwarePaginator
+
+    public function getSalesList()
     {
         return $this->services->getSalesList();
     }

@@ -38,7 +38,6 @@
                 </div>
             </div>
 
-
             <div class="col-sm-12 col-md-3 col-lg-4">
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">

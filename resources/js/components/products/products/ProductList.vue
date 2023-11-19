@@ -35,7 +35,7 @@
 
         <div class="row mb-3">
             <div class="col-sm-12 col-md-3 col-lg-3">
-                <div class="card radius-20">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="list-card-icon">
@@ -51,7 +51,7 @@
             </div>
 
             <div class="col-sm-12 col-md-3 col-lg-3">
-                <div class="card radius-20">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="list-card-icon">
@@ -67,7 +67,7 @@
             </div>
 
             <div class="col-sm-12 col-md-3 col-lg-3">
-                <div class="card radius-20">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="list-card-icon">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="col-sm-12 col-md-3 col-lg-3">
-                <div class="card radius-20">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="list-card-icon">
