@@ -259,7 +259,6 @@ export default {
                     company: '',
                     unit: '',
                     purchase_type: '',
-                    summary: 1,
                 },
                 exportAble: {
                     csv: '',
