@@ -190,20 +190,21 @@
 
                             </div>
                         </div>
+
                         <div class="btn-group" v-if="filter.type === 'date'">
-                            <div class="dropdown show mr-1">
+                            <div class="mr-1">
                                 <span class="filter-button">
                                 <span v-if="filter.filterValue !== null" class="mr-1"
                                       :class="filter.filterValue !== null ? 'text-primary' : ''"
                                       @click.prevent="clearFilter(filter_index, filter.key)">
                                     <i class="mdi mdi-close-circle"></i>
                                 </span>
-                                <span data-toggle="dropdown">
+                                <span class="daterange">
                                     <span v-if="filter.filterValue !== null"
                                           :class="filter.filterValue !== null ? 'text-primary' : ''">
                                         {{ __('default.' + filter.title) }}
                                         | {{
-                                            filter.filterValue ? filter.filterValue[0].format('YYYY-MM-DD') + ' to ' + filter.filterValue[1].format('YYYY-MM-DD') : ''
+                                            filter.filterValue ?? ''
                                         }}
                                     </span>
                                     <span v-else>
@@ -211,22 +212,12 @@
                                         {{ __('default.' + filter.title) }}
                                     </span>
                                 </span>
-
-                                <div class="dropdown-menu filter-column">
-                                    <div class="dropdown-item">
-                                        <a-form-item :label="__('default.date')" required>
-                                            <a-range-picker
-                                                v-model:value="filter.filterValue"
-                                                :presets="rangePresets"
-                                                style="min-width: 300px; max-width: 130%"
-                                                @change="getDateFilter"/>
-                                        </a-form-item>
-                                    </div>
-                                </div>
                             </span>
 
                             </div>
                         </div>
+
+
                     </template>
                 </div>
 
@@ -496,6 +487,24 @@ export default {
             $(".filter-column").click(function (e) {
                 e.stopPropagation();
             })
+
+            let date_range = this.options.filters?.find(filter => filter.type === 'date');
+            $('.daterange').daterangepicker({
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                "alwaysShowCalendars": true,
+                showDropdowns: true,
+                minYear: 1901,
+                maxYear: parseInt(moment().format('YYYY'),10)
+            }, function (start, end, label) {
+                date_range.filterValue = start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD');
+            });
         })
         this.getColWidth();
     },
@@ -520,6 +529,18 @@ export default {
                 label: 1
             }
             this.$parent.getData()
+        },
+        'options.filters':{
+            immediate: true,
+            deep: true,
+            handler() {
+                if (this.options.filters) {
+                    const daterange = this.options.filters?.find(item => item.type === 'date');
+                    if (daterange.filterValue){
+                        this.setDateRangeValue(daterange.filterValue)
+                    }
+                }
+            },
         },
     },
     methods: {
@@ -557,6 +578,9 @@ export default {
 
                 this.visibleColumn = visibleColumn.length;
             }
+        },
+        setDateRangeValue(value){
+            this.$parent.filterData(value, 'date')
         },
         getPages() {
             const last_page = this.options.responseData?.last_page

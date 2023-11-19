@@ -18,6 +18,7 @@
     <link href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet"/>
     <!-- end plugin css -->
+    <link href="{{ asset('assets/daterange/daterangepicker.css') }}" rel="stylesheet"/>
 
     @stack('plugin-styles')
 
@@ -82,7 +83,8 @@
 <!-- plugin js -->
 @stack('plugin-scripts')
 <!-- end plugin js -->
-
+<script src="{{ asset('assets/daterange/moment.min.js') }}"></script>
+<script src="{{ asset('assets/daterange/daterangepicker.min.js') }}"></script>
 <!-- common js -->
 <script src="{{ asset('assets/js/template.js') }}"></script>
 <script src="{{ asset('/js/clock.js') }}"></script>
