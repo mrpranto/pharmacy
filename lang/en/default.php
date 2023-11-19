@@ -290,4 +290,5 @@ return [
     'percentage_price' => 'Percentage',
     '$' => '($) Direct price',
     '%' => '(%) Percentage',
+    'available_stock' => 'Available Stock',
 ];

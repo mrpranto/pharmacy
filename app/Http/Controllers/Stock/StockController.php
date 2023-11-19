@@ -19,10 +19,8 @@ class StockController extends Controller
         return view('pages.stocks.index');
     }
 
-    /**
-     * @return LengthAwarePaginator
-     */
-    public function getStocks(): LengthAwarePaginator
+
+    public function getStocks()
     {
         return $this->services->getStocks();
     }

@@ -20,6 +20,59 @@
             </div>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-3 col-lg-4">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi mdi-cart text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.purchase') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalPurchaseAmount ?? 0) }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.totalPurchaseQuantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12 col-md-3 col-lg-4">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-shopping text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.sales') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalSaleAmount ?? 0) }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.totalSaleQuantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-3 col-lg-4">
+                <div class="card radius-20 w-100 h-100 d-inline-block">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="list-card-icon">
+                                <h1><i class="mdi mdi-database text-primary"></i></h1>
+                            </div>
+                            <div class="pl-4">
+                                <p>{{ __('default.total') }} {{ __('default.available_stock') }}</p>
+                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalStockCostAmount ?? 0) }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.totalAvailableQuantity }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <div class="row inbox-wrapper">
@@ -419,6 +472,12 @@ export default {
                 loader: false,
                 responseData: {},
                 total: 0,
+                totalPurchaseQuantity: 0,
+                totalPurchaseAmount: 0,
+                totalSaleQuantity: 0,
+                totalSaleAmount: 0,
+                totalAvailableQuantity: 0,
+                totalStockCostAmount: 0,
                 request: {
                     per_page: this.$general_setting.pagination,
                     search: '',
@@ -496,8 +555,16 @@ export default {
             this.options.responseData = [];
             await axios.get(url ?? '/get-stocks', {params: this.options.request})
                 .then(response => {
-                    this.options.responseData = response.data;
-                    this.options.total = response.data.total;
+                    this.options.responseData = response.data.stocks;
+                    this.options.total = response.data.stocks.total;
+
+                    this.options.totalPurchaseQuantity = response.data.purchase.totalPurchaseQuantity;
+                    this.options.totalPurchaseAmount = response.data.purchase.totalPurchaseAmount;
+                    this.options.totalSaleQuantity = response.data.sales.totalSaleQuantity;
+                    this.options.totalSaleAmount = response.data.sales.totalSaleAmount;
+                    this.options.totalAvailableQuantity = response.data.available.totalAvailableQuantity;
+                    this.options.totalStockCostAmount = response.data.available.totalStockCostAmount;
+
                     this.options.loader = false;
                     this.getTotalValue()
                     this.getPages()
