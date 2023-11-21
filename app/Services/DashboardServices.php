@@ -96,15 +96,7 @@ class DashboardServices extends BaseServices
     public function dashboard(): array
     {
         return [
-            'total_customer' => Customer::query()->count(),
-            'total_supplier' => Supplier::query()->count(),
-            'total_user' => User::query()->where('id', '!=', 1)->count(),
-            'total_product' => Product::query()->count(),
-            'total_company' => Company::query()->count(),
-            'total_category' => Category::query()->count(),
-            'total_purchase' => Purchase::query()->count(),
-            'total_stock' => Stock::query()->distinct('product_id')->count(),
-            'total_sale' => 0,
+            'months' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         ];
     }
 }
