@@ -877,6 +877,42 @@ export default {
     margin-top: 8px;
 }
 
+
+.dropdown-menu {
+    margin-top: 8px;
+    border-radius: 5px !important;
+    border: 1px solid #ddd;
+}
+
+.dropdown-menu:before, .dropdown-menu:after {
+    position: absolute;
+    display: inline-block;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+}
+
+.dropdown-menu:before {
+    top: -7px;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+}
+
+.dropdown-menu:after {
+    top: -6px;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+    border-left: 6px solid transparent;
+}
+
+.dropdown-menu:before {
+    left: 17px;
+}
+
+.dropdown-menu:after {
+    left: 18px;
+}
+
 /*Table head fixed*/
 
 .table-fixed {
