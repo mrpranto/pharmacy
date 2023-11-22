@@ -755,7 +755,7 @@ export default {
                         }
                         setTimeout(function (){
                             window.location.href = `/sales`
-                        }, 2000)
+                        }, 1000)
                         this.formState.validation = {};
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);

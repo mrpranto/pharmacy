@@ -4,7 +4,7 @@
     @include('layout.breadcrumb',['paths' => ['dashboard']])
 @endsection
 @push('style')
-    <link href="{{ asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet"/>
 @endpush
 
 @section('content')
@@ -14,14 +14,17 @@
             <div class="card radius-20">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-3">
-                        <h6 class="card-title mb-0"> <i class="mdi mdi-calendar-multiple-check"></i> Weekly sales & Purchase</h6>
+                        <h6 class="card-title mb-0"><i class="mdi mdi-calendar-multiple-check"></i> Weekly sales &
+                            Purchase</h6>
                         <div class="d-flex justify-content-between">
                             <div class="d-flex justify-content-between mr-3">
-                                <div style="height: 10px;width: 10px;background-color: #282f3a;margin: 4px"></div> <span>Sales</span>
+                                <div style="height: 10px;width: 10px;background-color: #282f3a;margin: 4px"></div>
+                                <span>Sales</span>
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <div style="height: 10px;width: 10px;background-color: #7987a1;margin: 4px"></div> <span>Purchase</span>
+                                <div style="height: 10px;width: 10px;background-color: #7987a1;margin: 4px"></div>
+                                <span>Purchase</span>
                             </div>
                         </div>
                     </div>
@@ -128,14 +131,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -175,7 +178,6 @@
         </div>
     </div>
 
-
 @endsection
 
 @push('plugin-scripts')
@@ -184,6 +186,91 @@
     <script src="{{ asset('assets/plugins/apexcharts/apexcharts.min.js') }}"></script>
 @endpush
 
+{{--@dd($weeklyChart)--}}
+
 @push('custom-scripts')
-    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+    {{--    <script src="{{ asset('assets/js/dashboard.js') }}"></script>--}}
+    <script>
+        $(function () {
+            'use strict'
+            var gridLineColor = 'rgba(77, 138, 240, .1)';
+            var colors = {
+                primary: "#727cf5",
+                secondary: "#7987a1",
+                success: "#42b72a",
+                info: "#68afff",
+                warning: "#fbbc06",
+                danger: "#ff3366",
+                light: "#ececec",
+                dark: "#282f3a",
+                muted: "#686868"
+            }
+            // Monthly sales chart start
+            if ($('#monthly-sales-chart').length) {
+                var monthlySalesChart = document.getElementById('monthly-sales-chart').getContext('2d');
+                new Chart(monthlySalesChart, {
+                        type: 'bar',
+                        data: {
+                            labels: [
+                                @foreach($weeklyChart['labels'] as $key => $label)
+                                    '{{ $label }}'{{ count($weeklyChart['labels']) == ($key+1) ?'': ',' }}
+                                    @endforeach
+                            ],
+                            datasets: [{
+                                label: 'Sales',
+                                data: [
+                                    @foreach($weeklyChart['weeklySale'] as $key => $sale)
+                                        {{ $sale }}{{ count($weeklyChart['labels']) == ($key+1) ?'': ',' }}
+                                        @endforeach
+                                ],
+                                backgroundColor: colors.dark
+                            }, {
+                                label: 'Purchase',
+                                data: [
+                                    @foreach($weeklyChart['weeklyPurchase'] as $key => $purchase)
+                                        {{ $purchase }}{{ count($weeklyChart['labels']) == ($key+1) ?'': ',' }}
+                                        @endforeach
+                                ],
+                                backgroundColor: colors.secondary
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false,
+                                labels: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    barPercentage: .3,
+                                    categoryPercentage: .6,
+                                    gridLines: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        fontColor: '#8392a5',
+                                        fontSize: 10
+                                    }
+                                }],
+                                yAxes: [{
+                                    gridLines: {
+                                        color: gridLineColor
+                                    },
+                                    ticks: {
+                                        fontColor: '#8392a5',
+                                        fontSize: 10,
+                                        min: 100,
+                                        max: {{ $weeklyChart['max'] }}
+                                    }
+                                }]
+                            }
+                        }
+                    }
+                );
+            }
+        });
+    </script>
 @endpush

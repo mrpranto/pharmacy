@@ -553,9 +553,9 @@ export default {
                     this.options.total = response.data.sales.total;
 
                     this.options.totalUnitQuantity = response.data.totalUnitQuantity;
-                    this.options.totalSubtotalAmount = response.data.totalSubtotalAmount;
-                    this.options.totalGrandTotalAmount = response.data.totalGrandTotalAmount;
-                    this.options.totalPaidAmount = response.data.totalPaidAmount;
+                    this.options.totalSubtotalAmount = response.data.totalSubtotalAmount.toFixed(2);
+                    this.options.totalGrandTotalAmount = response.data.totalGrandTotalAmount.toFixed(2);
+                    this.options.totalPaidAmount = response.data.totalPaidAmount.toFixed(2);
 
                     this.options.loader = false;
                 })
