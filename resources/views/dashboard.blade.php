@@ -10,7 +10,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-5 col-xl-5">
+        <div class="col-lg-6 col-xl-6">
             <div class="card radius-20">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-3">
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-7 col-xl-7">
+        <div class="col-lg-6 col-xl-6">
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
                     <div class="card radius-20">
@@ -97,6 +97,77 @@
                                     <h1><i class="mdi mdi-cart"></i></h1>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7 col-xl-7">
+            <div class="card radius-20">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-baseline mb-3">
+                        <h6 class="card-title mb-0">
+                            <i class="mdi mdi-timetable"></i> Recent Sales
+                        </h6>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-striped border">
+                                <thead>
+                                <tr>
+                                    <th>{{ __t('sl') }}</th>
+                                    <th>{{ __t('invoice_number') }}</th>
+                                    <th>{{ __t('invoice_date') }}</th>
+                                    <th>{{ __t('customer') }}</th>
+                                    <th>{{ __t('grand_total') }}</th>
+                                    <th>{{ __t('payment_status') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-xl-5">
+            <div class="card radius-20">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-baseline mb-3">
+                        <h6 class="card-title mb-0">
+                            <i class="mdi mdi-account-star"></i> Top Customer
+                        </h6>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-striped border">
+                                <thead>
+                                <tr>
+                                    <th>{{ __t('customer') }}</th>
+                                    <th class="text-right">{{ __t('grand_total') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
