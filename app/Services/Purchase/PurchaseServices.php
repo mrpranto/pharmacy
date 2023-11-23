@@ -58,7 +58,12 @@ class PurchaseServices extends BaseServices
     }
 
 
-    public function getPurchaseList()
+    /**
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getPurchaseList(): array
     {
         $purchase = $this->model->newQuery()
             ->select(['purchases.*', 'suppliers.name as supplier_name'])
@@ -92,7 +97,10 @@ class PurchaseServices extends BaseServices
         ];
     }
 
-    public function counter()
+    /**
+     * @return array[]
+     */
+    public function counter(): array
     {
         $purchase = $this->model
             ->newQuery()
@@ -141,12 +149,12 @@ class PurchaseServices extends BaseServices
     {
         return $this->product
             ->newQuery()
-            ->active()
             ->with(['category:id,name', 'company:id,name', 'unit:id,name,pack_size', 'stocks'])
             ->when(request()->filled('search'), function ($q) {
                 $q->where('barcode', 'like', "%" . request()->get('search') . "%")
                     ->orWhere('name', 'like', "%" . request()->get('search') . "%");
             })
+            ->active()
             ->orderBy('id', 'desc')
             ->take(10)
             ->get(['id', 'name', 'category_id', 'company_id', 'unit_id', 'barcode', 'status', 'purchase_type']);

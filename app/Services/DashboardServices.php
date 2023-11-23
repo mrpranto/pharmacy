@@ -3,24 +3,29 @@
 namespace App\Services;
 
 use App\Models\People\Customer;
-use App\Models\People\Supplier;
-use App\Models\Product\Category;
-use App\Models\Product\Company;
-use App\Models\Product\Product;
 use App\Models\Purchase\Purchase;
 use App\Models\Sale\Sale;
-use App\Models\Stock\Stock;
 use App\Models\trait\FileHandler;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardServices extends BaseServices
 {
+    public $sale;
+    public $purchase;
+    public $customer;
+    public function __construct(Sale $sale, Purchase $purchase, Customer $customer)
+    {
+        $this->sale = $sale;
+        $this->purchase = $purchase;
+        $this->customer = $customer;
+    }
+
     use FileHandler;
 
     /**
@@ -31,8 +36,8 @@ class DashboardServices extends BaseServices
     {
         $request->validate([
             "name" => "required|string",
-            "email" => "required|email|unique:users,email,".auth()->id(),
-            "phone_number" => "required|numeric|unique:users,phone_number,".auth()->id(),
+            "email" => "required|email|unique:users,email," . auth()->id(),
+            "phone_number" => "required|numeric|unique:users,phone_number," . auth()->id(),
             "gender" => "required|in:male,female",
             "address" => "nullable|string",
             "profile_picture" => 'nullable|image|max:2048',
@@ -99,54 +104,109 @@ class DashboardServices extends BaseServices
     public function dashboard()
     {
         return [
-            'weeklyChart' => $this->weeklyRevenue()
+            'weeklyChart' => $this->weeklyRevenue(),
+            ...$this->counter(),
+            ...$this->recentSalesAndTopCustomer()
         ];
     }
 
 
-    private function weeklyRevenue()
+    /**
+     * @return array
+     */
+    private function weeklyRevenue(): array
     {
         $currentDate = Carbon::now()->format('Y-m-d');
         $reverseWeekDate = Carbon::now()->subDays(6)->format('Y-m-d');
 
         $sales = Sale::query()
-            ->with([
-                'saleProducts:id,sale_id,product_id,mrp,original_sale_price,sale_price,sale_percentage,quantity,subtotal'
-            ])
             ->select(DB::raw("DATE(invoice_date) as date"), 'id')
             ->whereDate('invoice_date', '>=', $reverseWeekDate)
             ->whereDate('invoice_date', '<=', $currentDate)
+            ->withCount(['saleProducts as total_profit' => function (Builder $builder) {
+                $builder->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity))'));
+            }])
             ->get()
             ->groupBy('date')
             ->toArray();
 
-        return $sales;
-
         $periods = CarbonPeriod::create($reverseWeekDate, $currentDate);
 
         $labels = [];
-        $salesDailyTotal = [];
-
+        $profitDailyTotal = [];
         foreach ($periods as $period) {
             $date = $period->format('Y-m-d');
             $labels[] = $period->format('d M');
-            $dailySaleSum = 0;
+            $dailyProfitSum = 0;
             if (isset($sales[$date])) {
                 foreach ($sales[$date] ?? [] as $dailySale) {
-                    $dailySaleSum += $dailySale['grand_total'];
+                    $dailyProfitSum += $dailySale['total_profit'];
                 }
             }
-            $salesDailyTotal[] = $dailySaleSum;
+            $profitDailyTotal[] = $dailyProfitSum;
         }
-
-        $saleMax = max($salesDailyTotal);
-        $max = $saleMax;
-
+        $max = max($profitDailyTotal);
         return [
             'labels' => $labels,
-            'weeklySale' => $salesDailyTotal,
-
+            'weeklyRevenue' => $profitDailyTotal,
             'max' => $max
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function counter(): array
+    {
+        $todaySalesQuery = $this->sale->newQuery()
+            ->select(['id', 'grand_total'])
+            ->whereDate('invoice_date', now()->format('Y-m-d'));
+
+        $todaySalesAmount = $todaySalesQuery->sum('grand_total');
+
+        $todayEarningAmount = $todaySalesQuery
+            ->withCount(['saleProducts as total_earning' => function (Builder $builder) {
+                $builder->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity))'));
+            }])
+            ->get()
+            ->sum('total_earning');
+
+        $totalSales = $this->sale->newQuery()->sum('grand_total');
+        $totalPurchase = $this->purchase->newQuery()->sum('total');
+
+        return [
+            'todaySales' => round($todaySalesAmount, 2),
+            'todayEarning' => round($todayEarningAmount, 2),
+            'totalSales' => round($totalSales, 2),
+            'totalPurchase' => round($totalPurchase, 2),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function recentSalesAndTopCustomer(): array
+    {
+        return [
+            'recent_sales' => $this->sale
+                ->newQuery()
+                ->with(['createdBy:id,name,role_id', 'createdBy.role:id,name', 'customer:id,name,phone_number'])
+                ->orderByDesc('id')
+                ->take(10)
+                ->get([
+                    "id", "invoice_number", "invoice_date", "customer_id",
+                    "total_unit_qty", "subtotal", "other_cost", "discount",
+                    "grand_total", "status", "payment_status", "total_paid",
+                    "created_by",
+                ]),
+            'customers' => $this->customer
+                ->newQuery()
+                ->join('sales', 'sales.customer_id', '=', 'customers.id')
+                ->select('customers.id', 'customers.name', 'customers.phone_number', DB::raw('sum(grand_total) as totalGrandTotal'))
+                ->orderByDesc('totalGrandTotal')
+                ->groupBy('customers.id', 'customers.name', 'customers.phone_number')
+                ->take(10)
+                ->get()
         ];
     }
 }

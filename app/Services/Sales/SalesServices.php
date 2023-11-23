@@ -69,7 +69,12 @@ class SalesServices extends BaseServices
         ];
     }
 
-    public function getSalesList()
+    /**
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getSalesList(): array
     {
         $sales = $this->model
             ->newQuery()
@@ -112,10 +117,10 @@ class SalesServices extends BaseServices
 
         return [
             'sales' => $sales,
-            'totalUnitQuantity' => $salesCounter->totalUnitQuantity,
-            'totalSubtotalAmount' => $salesCounter->totalSubtotalAmount,
-            'totalGrandTotalAmount' => $salesCounter->totalGrandTotalAmount,
-            'totalPaidAmount' => $salesCounter->totalPaidAmount,
+            'totalUnitQuantity' => round($salesCounter->totalUnitQuantity, 2),
+            'totalSubtotalAmount' => round($salesCounter->totalSubtotalAmount, 2),
+            'totalGrandTotalAmount' => round($salesCounter->totalGrandTotalAmount, 2),
+            'totalPaidAmount' => round($salesCounter->totalPaidAmount, 2),
         ];
     }
 

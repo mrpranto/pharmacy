@@ -14,17 +14,11 @@
             <div class="card radius-20">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-3">
-                        <h6 class="card-title mb-0"><i class="mdi mdi-calendar-multiple-check"></i> Weekly sales &
-                            Purchase</h6>
+                        <h6 class="card-title mb-0"><i class="mdi mdi-calendar-multiple-check"></i> Weekly Revenue</h6>
                         <div class="d-flex justify-content-between">
                             <div class="d-flex justify-content-between mr-3">
                                 <div style="height: 10px;width: 10px;background-color: #282f3a;margin: 4px"></div>
-                                <span>Sales</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <div style="height: 10px;width: 10px;background-color: #7987a1;margin: 4px"></div>
-                                <span>Purchase</span>
+                                <span>Revenue</span>
                             </div>
                         </div>
                     </div>
@@ -41,8 +35,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                                 <div class="pl-4">
-                                    <p><i class="mdi mdi-calendar-check"></i> Today Sales</p>
-                                    <h4 class="mt-2 font-weight-light">{{ show_currency(1212) }}</h4>
+                                    <p><i class="mdi mdi-calendar"></i> Today Sales</p>
+                                    <h4 class="mt-2 font-weight-light">
+                                        <span>{{ show_currency($todaySales) }}</span> <span class="ml-4"><i data-feather="trending-up"></i></span>
+                                    </h4>
                                     <p class="mt-2 font-weight-light small">* Update every order success.</p>
                                 </div>
                                 <div class="list-card-icon">
@@ -58,8 +54,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                                 <div class="pl-4">
-                                    <p><i class="mdi mdi-calendar-check"></i> Today Earning</p>
-                                    <h4 class="mt-2 font-weight-light">{{ show_currency(1212) }}</h4>
+                                    <p><i class="mdi mdi-calendar"></i> Today Earning</p>
+                                    <h4 class="mt-2 font-weight-light">
+                                        {{ show_currency($todayEarning) }} <span class="ml-4"><i data-feather="trending-up"></i></span>
+                                    </h4>
                                     <p class="mt-2 font-weight-light small">* Update every order success.</p>
                                 </div>
                                 <div class="list-card-icon">
@@ -75,8 +73,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                                 <div class="pl-4">
-                                    <p><i class="mdi mdi-calendar-check"></i> Total orders</p>
-                                    <h4 class="mt-2 font-weight-light">{{ show_currency(1212) }}</h4>
+                                    <p><i class="mdi mdi-calendar-text"></i> Total orders</p>
+                                    <h4 class="mt-2 font-weight-light">
+                                        {{ show_currency($totalSales) }} <span class="ml-4"><i data-feather="activity"></i></span>
+                                    </h4>
                                     <p class="mt-2 font-weight-light small">* Al time success order.</p>
                                 </div>
                                 <div class="list-card-icon">
@@ -92,8 +92,10 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                                 <div class="pl-4">
-                                    <p><i class="mdi mdi-calendar-check"></i> Total purchase</p>
-                                    <h4 class="mt-2 font-weight-light">{{ show_currency(1212) }}</h4>
+                                    <p><i class="mdi mdi-calendar-text"></i> Total purchase</p>
+                                    <h4 class="mt-2 font-weight-light">
+                                        {{ show_currency($totalPurchase) }} <span class="ml-4"><i data-feather="activity"></i></span>
+                                    </h4>
                                     <p class="mt-2 font-weight-light small">* Al time success purchase.</p>
                                 </div>
                                 <div class="list-card-icon">
@@ -122,23 +124,59 @@
                             <table class="table table-striped border">
                                 <thead>
                                 <tr>
-                                    <th>{{ __t('sl') }}</th>
                                     <th>{{ __t('invoice_number') }}</th>
                                     <th>{{ __t('invoice_date') }}</th>
                                     <th>{{ __t('customer') }}</th>
                                     <th>{{ __t('grand_total') }}</th>
+                                    <th>{{ __t('status') }}</th>
                                     <th>{{ __t('payment_status') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @foreach($recent_sales as $sale)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $sale->invoice_number }}</td>
+                                    <td>
+                                        {{ date(format_date(), strtotime($sale->invoice_date)) }}
+                                        <br>
+                                        <small>{{ date(format_time(), strtotime($sale->invoice_date)) }}</small>
+                                    </td>
+                                    <td>
+                                        {{ $sale->customer->name }}
+                                        @if($sale->customer_id != 1)
+                                            <br>
+                                            <small>({{ $sale->customer->phone_number }})</small>
+                                        @endif
+                                    </td>
+                                    <td>{{ show_currency($sale->grand_total) }}</td>
+                                    <td>
+                                        @if ($sale->status === 'CONFIRMED')
+                                            <span class="badge badge-info">{{ $sale->status }}</span>
+                                        @elseif ($sale->status === 'DRAFT')
+                                            <span class="badge badge-warning">{{ $sale->status }}</span>
+                                        @elseif ($sale->status === 'CANCELED')
+                                            <span class="badge badge-danger">{{ $sale->status }}</span>
+                                        @else
+                                            <span class="badge badge-success">{{ $sale->status }}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($sale->payment_status === 'DUE')
+                                            <span class="badge badge-danger"
+                                                  title="{{ $sale->total_paid }}">{{ $sale->payment_status }}</span>
+                                        @elseif ($sale->payment_status === 'PARTIAL-PAID')
+                                            <span class="badge badge-info"
+                                                  title="{{ $sale->total_paid }}">{{ $sale->payment_status }}</span>
+                                        @elseif ($sale->payment_status === 'OVER-DUE')
+                                            <span class="badge badge-warning"
+                                                  title="{{ $sale->total_paid }}}">{{ $sale->payment_status }}</span>
+                                        @else
+                                            <span class="badge badge-success"
+                                                  title="{{ $sale->total_paid }}">{{ $sale->payment_status }}</span>
+                                        @endif
+                                    </td>
                                 </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -165,10 +203,18 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @foreach($customers as $customer)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        {{ $customer->name }}
+                                        @if($customer->id != 1)
+                                            <br>
+                                            <small>({{ $customer->phone_number }})</small>
+                                        @endif
+                                    </td>
+                                    <td class="text-right">{{ show_currency($customer->totalGrandTotal) }}</td>
                                 </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -186,10 +232,7 @@
     <script src="{{ asset('assets/plugins/apexcharts/apexcharts.min.js') }}"></script>
 @endpush
 
-{{--@dd($weeklyChart)--}}
-
 @push('custom-scripts')
-    {{--    <script src="{{ asset('assets/js/dashboard.js') }}"></script>--}}
     <script>
         $(function () {
             'use strict'
@@ -217,21 +260,13 @@
                                     @endforeach
                             ],
                             datasets: [{
-                                label: 'Sales',
+                                label: 'Revenue',
                                 data: [
-                                    @foreach($weeklyChart['weeklySale'] as $key => $sale)
+                                    @foreach($weeklyChart['weeklyRevenue'] as $key => $sale)
                                         {{ $sale }}{{ count($weeklyChart['labels']) == ($key+1) ?'': ',' }}
                                         @endforeach
                                 ],
                                 backgroundColor: colors.dark
-                            }, {
-                                label: 'Purchase',
-                                data: [
-                                    @foreach($weeklyChart['weeklyPurchase'] as $key => $purchase)
-                                        {{ $purchase }}{{ count($weeklyChart['labels']) == ($key+1) ?'': ',' }}
-                                        @endforeach
-                                ],
-                                backgroundColor: colors.secondary
                             }]
                         },
                         options: {
