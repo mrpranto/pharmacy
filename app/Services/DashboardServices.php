@@ -99,67 +99,53 @@ class DashboardServices extends BaseServices
     public function dashboard()
     {
         return [
-            'weeklyChart' => $this->weeklySalesPurchase()
+            'weeklyChart' => $this->weeklyRevenue()
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    private function weeklySalesPurchase(): array
+
+    private function weeklyRevenue()
     {
         $currentDate = Carbon::now()->format('Y-m-d');
         $reverseWeekDate = Carbon::now()->subDays(6)->format('Y-m-d');
 
         $sales = Sale::query()
-            ->select(DB::raw("DATE(invoice_date) as date"), 'grand_total')
+            ->with([
+                'saleProducts:id,sale_id,product_id,mrp,original_sale_price,sale_price,sale_percentage,quantity,subtotal'
+            ])
+            ->select(DB::raw("DATE(invoice_date) as date"), 'id')
             ->whereDate('invoice_date', '>=', $reverseWeekDate)
             ->whereDate('invoice_date', '<=', $currentDate)
             ->get()
             ->groupBy('date')
             ->toArray();
 
-        $purchases = Purchase::query()
-            ->select('date', 'total')
-            ->whereDate('date', '>=', $reverseWeekDate)
-            ->whereDate('date', '<=', $currentDate)
-            ->get()
-            ->groupBy('date')
-            ->toArray();
-
+        return $sales;
 
         $periods = CarbonPeriod::create($reverseWeekDate, $currentDate);
 
         $labels = [];
         $salesDailyTotal = [];
-        $purchaseDailyTotal = [];
+
         foreach ($periods as $period) {
             $date = $period->format('Y-m-d');
             $labels[] = $period->format('d M');
             $dailySaleSum = 0;
-            $dailyPurchaseSum = 0;
             if (isset($sales[$date])) {
                 foreach ($sales[$date] ?? [] as $dailySale) {
                     $dailySaleSum += $dailySale['grand_total'];
                 }
             }
             $salesDailyTotal[] = $dailySaleSum;
-            if (isset($purchases[$date])) {
-                foreach ($purchases[$date] ?? [] as $dailyPurchase) {
-                    $dailyPurchaseSum += $dailyPurchase['total'];
-                }
-            }
-            $purchaseDailyTotal[] = $dailyPurchaseSum;
         }
 
         $saleMax = max($salesDailyTotal);
-        $purchaseMax = max($purchaseDailyTotal);
-        $max = $saleMax > $purchaseMax ? $saleMax : $purchaseMax;
+        $max = $saleMax;
 
         return [
             'labels' => $labels,
             'weeklySale' => $salesDailyTotal,
-            'weeklyPurchase' => $purchaseDailyTotal,
+
             'max' => $max
         ];
     }

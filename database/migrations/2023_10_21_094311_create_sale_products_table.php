@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sale_id')->constrained('sales', 'id');
             $table->foreignId('product_id')->constrained('products', 'id');
+            $table->float('unit_price')->default(0);
             $table->float('mrp')->default(0);
             $table->float('original_sale_price')->default(0);
             $table->float('sale_price', 14, 2)->default(0);

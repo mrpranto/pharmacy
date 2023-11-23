@@ -34,12 +34,13 @@ class CheckAvailableQuantity implements ValidationRule
         $attribute = explode('.', $attribute);
         $requestProducts = request()->get('products');
         $key = (int) $attribute[1];
-        $salePrice = $requestProducts[$key]['sale_price'];
+        $salePrice = $requestProducts[$key]['original_sale_price'];
         $productId = $requestProducts[$key]['product']['id'];
         $stock = Stock::query()
             ->where('product_id', $productId)
             ->where('sale_price', $salePrice)
             ->first();
+
         if ($stock && $stock->available_quantity){
             return $stock->available_quantity;
         }else{

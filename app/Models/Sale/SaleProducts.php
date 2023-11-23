@@ -13,7 +13,7 @@ class SaleProducts extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'sale_id', 'product_id', 'mrp', 'original_sale_price', 'sale_price',
+        'sale_id', 'product_id', 'mrp', 'original_sale_price', 'sale_price', 'unit_price',
         'sale_percentage', 'quantity', 'subtotal', 'sale_product_details',
     ];
 

@@ -836,6 +836,7 @@ export default {
                     },
                     type: product.purchase_type,
                     sale_price: stock.sale_price,
+                    unit_price: stock.unit_price,
                     original_sale_price: stock.sale_price,
                     mrp: stock.mrp,
                     sale_percentage: stock.sale_percentage,

@@ -273,6 +273,7 @@ class SalesServices extends BaseServices
                         'product_id' => $saleProduct['product']['id'],
                         'mrp' => $saleProduct['mrp'],
                         'original_sale_price' => $saleProduct['original_sale_price'],
+                        'unit_price' => $saleProduct['unit_price'],
                         'sale_price' => $saleProduct['sale_price'],
                         'sale_percentage' => $saleProduct['sale_percentage'],
                         'quantity' => $saleProduct['quantity'],
@@ -441,6 +442,7 @@ class SalesServices extends BaseServices
                             "product_id" => $checkExist->product_id,
                             "mrp" => $requestProduct['mrp'],
                             "original_sale_price" => $requestProduct['original_sale_price'],
+                            'unit_price' => $requestProduct['unit_price'],
                             "sale_price" => $requestProduct['sale_price'],
                             "sale_percentage" => $requestProduct['sale_percentage'],
                             "quantity" => $requestProduct['quantity'],
@@ -467,6 +469,7 @@ class SalesServices extends BaseServices
                             ->first();
                         if ($hasProduct) {
                             $hasProduct->update([
+                                'unit_price' => $existProduct['unit_price'],
                                 'sale_price' => $existProduct['sale_price'],
                                 'quantity' => $existProduct['quantity'],
                                 'sale_percentage' => $existProduct['sale_percentage'],
@@ -481,6 +484,7 @@ class SalesServices extends BaseServices
                                 'sale_id' => $id,
                                 'product_id' => $existProduct['product']['id'],
                                 'mrp' => $existProduct['mrp'],
+                                'unit_price' => $existProduct['unit_price'],
                                 'original_sale_price' => $existProduct['original_sale_price'],
                                 'sale_price' => $existProduct['sale_price'],
                                 'quantity' => $existProduct['quantity'],

@@ -835,6 +835,7 @@ export default {
                         purchase_type: product.purchase_type
                     },
                     type: product.purchase_type,
+                    unit_price: stock.unit_price,
                     sale_price: stock.sale_price,
                     original_sale_price: stock.sale_price,
                     mrp: stock.mrp,
