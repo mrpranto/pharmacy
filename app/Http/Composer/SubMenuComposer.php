@@ -84,6 +84,17 @@ class SubMenuComposer
             ],
         ];
     }
+    public function reports(): array
+    {
+        return [
+            [
+                'name' => __t('add_sale'),
+                'url' => route('sales.create'),
+                'path' => 'sales/create',
+                'permission' => auth()->user()->can('app.purchase.create')
+            ],
+        ];
+    }
 
     /**
      * @return array[]

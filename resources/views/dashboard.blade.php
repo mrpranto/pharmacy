@@ -15,12 +15,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar"></i> Today Sales</p>
+                            <p><i class="mdi mdi-calendar"></i> {{ __t('today_sales') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 <span>{{ show_currency($todaySales) }}</span> <span class="ml-4"><i
                                         data-feather="trending-up"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Update every order success.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('update_every_order') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-shopping text-primary"></i></h1>
@@ -35,11 +35,11 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar"></i> Today Earning</p>
+                            <p><i class="mdi mdi-calendar"></i> {{ __t('today_earning') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 {{ show_currency($todayEarning) }} <span class="ml-4"><i data-feather="trending-up"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Update every order success.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('update_every_order') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-wallet text-primary"></i></h1>
@@ -54,12 +54,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar"></i> Today Expense</p>
+                            <p><i class="mdi mdi-calendar"></i> {{ __t('today_expense') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 {{ show_currency($todayExpense) }} <span class="ml-4"><i
                                         data-feather="trending-down"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Update every expense add.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('update_every_expense') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-currency-usd text-primary"></i></h1>
@@ -74,12 +74,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar-text"></i> Total orders</p>
+                            <p><i class="mdi mdi-calendar-text"></i> {{ __t('total_orders') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 {{ show_currency($totalSales) }} <span class="ml-4"><i
                                         data-feather="activity"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Al time success order.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('all_time_order') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-truck-delivery text-primary"></i></h1>
@@ -94,12 +94,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar-text"></i> Total purchase</p>
+                            <p><i class="mdi mdi-calendar-text"></i> {{ __t('total_purchase') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 {{ show_currency($totalPurchase) }} <span class="ml-4"><i
                                         data-feather="activity"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Al time success purchase.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('all_time_purchase') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-cart text-primary"></i></h1>
@@ -114,12 +114,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" style="height: 130px">
                         <div class="pl-4">
-                            <p><i class="mdi mdi-calendar-text"></i> Total Available Stocks</p>
+                            <p><i class="mdi mdi-calendar-text"></i> {{ __t('total_available_stocks') }}</p>
                             <h4 class="mt-2 font-weight-light">
                                 {{ show_currency($totalCurrentStockValue) }} <span class="ml-4"><i
-                                        data-feather="download"></i></span>
+                                        data-feather="bar-chart-2"></i></span>
                             </h4>
-                            <p class="mt-2 font-weight-light small">* Current available stocks.</p>
+                            <p class="mt-2 font-weight-light small">* {{ __t('current_available_stock') }}.</p>
                         </div>
                         <div class="list-card-icon">
                             <h1><i class="mdi mdi-database text-primary"></i></h1>
@@ -134,7 +134,8 @@
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-3 grid-margin grid-margin-xl-0 stretch-card">
             <div class="card radius-20">
                 <div class="card-body">
-                    <h6 class="card-title mb-0"><i class="mdi mdi-calendar-multiple-check"></i> Half of Monthly Revenue
+                    <h6 class="card-title mb-0">
+                        <i class="mdi mdi-calendar-multiple-check"></i> {{ __t('half_monthly_revenue') }}
                     </h6>
                     <canvas id="monthly-sales-chart"></canvas>
                 </div>
@@ -146,7 +147,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-3">
                         <h6 class="card-title mb-0">
-                            <i class="mdi mdi-account-star"></i> Top Customer
+                            <i class="mdi mdi-account-star"></i> {{ __t('top_customer') }}
                         </h6>
                     </div>
 
@@ -166,7 +167,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-3">
                         <h6 class="card-title mb-0">
-                            <i class="mdi mdi-timetable"></i> Recent Sales
+                            <i class="mdi mdi-timetable"></i> {{ __t('recent_sales') }}
                         </h6>
                     </div>
 

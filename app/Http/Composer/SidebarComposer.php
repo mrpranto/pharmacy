@@ -84,6 +84,14 @@ class SidebarComposer
                     'permission' => auth()->user()->can('app.expenses.index')
                 ],
                 [
+                    'name' => __t('reports'),
+                    'icon' => 'book-open',
+                    'url' => route('expanses.index'),
+                    'permission' => auth()->user()->can('app.expenses.index'),
+                    'subMenu' => $this->subMenu->reports(),
+                    'id' => 'reports',
+                ],
+                [
                     'name' => __t('users'),
                     'icon' => 'user',
                     'permission' => auth()->user()->canany(['app.user.index', 'app.roles.index']),

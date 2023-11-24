@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -26,6 +27,8 @@ class SaleController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('app.sales.index');
+
         return view('pages.sale.index', $this->services->accessPermissions());
     }
 
@@ -34,6 +37,8 @@ class SaleController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('app.sales.create');
+
         return view('pages.sale.create', $this->services->createDependencies());
     }
 
@@ -45,6 +50,8 @@ class SaleController extends Controller
      */
     public function getSalesList(): array
     {
+        Gate::authorize('app.sales.index');
+
         return $this->services->getSalesList();
     }
 
@@ -55,6 +62,8 @@ class SaleController extends Controller
      */
     public function getCustomers(): Collection|array
     {
+        Gate::authorize('app.sales.create');
+
         return $this->services->getCustomers();
     }
 
@@ -65,6 +74,8 @@ class SaleController extends Controller
      */
     public function getProducts(): Collection|array
     {
+        Gate::authorize('app.sales.create');
+
         return $this->services->getProducts();
     }
 
@@ -73,6 +84,8 @@ class SaleController extends Controller
      */
     public function salesPreview(): View
     {
+        Gate::authorize('app.sales.show');
+
         Cache::put(auth()->user()->email, request()->all());
 
         return view('pages.sale.preview');
@@ -83,6 +96,8 @@ class SaleController extends Controller
      */
     public function salesPdf(): StreamedResponse
     {
+        Gate::authorize('app.sales.show');
+
         return $this->services->renderPdf();
     }
 
@@ -91,6 +106,8 @@ class SaleController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        Gate::authorize('app.sales.create');
+
         return $this->services
             ->validateStoreAndUpdate($request)
             ->storeSale($request);
@@ -102,6 +119,8 @@ class SaleController extends Controller
      */
     public function changeStatus($id): JsonResponse
     {
+        Gate::authorize('app.sales.status-change');
+
         return $this->services->changeStatus($id);
     }
 
@@ -110,6 +129,8 @@ class SaleController extends Controller
      */
     public function show(string $id): View
     {
+        Gate::authorize('app.sales.show');
+
         return view('pages.sale.invoice', ['id' => $id]);
     }
 
@@ -119,6 +140,8 @@ class SaleController extends Controller
      */
     public function invoicePdf($id): StreamedResponse
     {
+        Gate::authorize('app.sales.show');
+
         return $this->services->renderInvoicePdf($id);
     }
 
@@ -127,6 +150,8 @@ class SaleController extends Controller
      */
     public function edit(string $id): View
     {
+        Gate::authorize('app.sales.edit');
+
         return view('pages.sale.edit', $this->services->getEditableData($id));
     }
 
@@ -135,6 +160,8 @@ class SaleController extends Controller
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        Gate::authorize('app.sales.edit');
+
         return $this->services
             ->validateStoreAndUpdate($request)
             ->update($request, $id);
@@ -145,6 +172,8 @@ class SaleController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
+        Gate::authorize('app.sales.delete');
+
         return $this->services->deleteSale($id);
     }
 
@@ -153,6 +182,8 @@ class SaleController extends Controller
      */
     public function paymentSave(): JsonResponse
     {
+        Gate::authorize('app.sales.payment-add');
+
         return $this->services
             ->validatePayment()
             ->savePayment();

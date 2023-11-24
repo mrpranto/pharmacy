@@ -37,7 +37,8 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="plus-square"></i> {{ __t('quick_access') }}
+                    <i data-feather="plus-square"></i>
+                    <span class="font-weight-medium ml-1 mr-1">{{ __t('quick_access') }}</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="languageDropdown">
 
