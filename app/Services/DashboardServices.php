@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Expense\Expense;
 use App\Models\People\Customer;
 use App\Models\Purchase\Purchase;
 use App\Models\Sale\Sale;
+use App\Models\Stock\Stock;
 use App\Models\trait\FileHandler;
 use App\Models\User;
 use Carbon\Carbon;
@@ -19,11 +21,15 @@ class DashboardServices extends BaseServices
     public $sale;
     public $purchase;
     public $customer;
-    public function __construct(Sale $sale, Purchase $purchase, Customer $customer)
+    public $expense;
+    public $stock;
+    public function __construct(Sale $sale, Purchase $purchase, Customer $customer, Expense $expense, Stock $stock)
     {
         $this->sale = $sale;
         $this->purchase = $purchase;
         $this->customer = $customer;
+        $this->expense = $expense;
+        $this->stock = $stock;
     }
 
     use FileHandler;
@@ -117,7 +123,7 @@ class DashboardServices extends BaseServices
     private function weeklyRevenue(): array
     {
         $currentDate = Carbon::now()->format('Y-m-d');
-        $reverseWeekDate = Carbon::now()->subDays(6)->format('Y-m-d');
+        $reverseWeekDate = Carbon::now()->subDays(14)->format('Y-m-d');
 
         $sales = Sale::query()
             ->select(DB::raw("DATE(invoice_date) as date"), 'id')
@@ -171,14 +177,24 @@ class DashboardServices extends BaseServices
             ->get()
             ->sum('total_earning');
 
+        $todayExpense = $this->expense
+            ->newQuery()
+            ->whereDate('date', date('Y-m-d'))
+            ->sum('total_amount');
+
         $totalSales = $this->sale->newQuery()->sum('grand_total');
         $totalPurchase = $this->purchase->newQuery()->sum('total');
+        $totalStocks = $this->stock->newQuery()
+            ->select(DB::raw('sum(available_quantity * unit_price) as totalStockCostAmount'))
+            ->first();
 
         return [
             'todaySales' => round($todaySalesAmount, 2),
             'todayEarning' => round($todayEarningAmount, 2),
+            'todayExpense' => round($todayExpense, 2),
             'totalSales' => round($totalSales, 2),
             'totalPurchase' => round($totalPurchase, 2),
+            'totalCurrentStockValue' => round($totalStocks->totalStockCostAmount, 2)
         ];
     }
 
@@ -192,7 +208,7 @@ class DashboardServices extends BaseServices
                 ->newQuery()
                 ->with(['createdBy:id,name,role_id', 'createdBy.role:id,name', 'customer:id,name,phone_number'])
                 ->orderByDesc('id')
-                ->take(10)
+                ->take(5)
                 ->get([
                     "id", "invoice_number", "invoice_date", "customer_id",
                     "total_unit_qty", "subtotal", "other_cost", "discount",
@@ -205,8 +221,9 @@ class DashboardServices extends BaseServices
                 ->select('customers.id', 'customers.name', 'customers.phone_number', DB::raw('sum(grand_total) as totalGrandTotal'))
                 ->orderByDesc('totalGrandTotal')
                 ->groupBy('customers.id', 'customers.name', 'customers.phone_number')
-                ->take(10)
+                ->take(5)
                 ->get()
+                ->toArray()
         ];
     }
 }
