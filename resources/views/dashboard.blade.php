@@ -173,7 +173,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="table-responsive">
-                                <table class="table table-striped border">
+                                <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
                                         <th>{{ __t('invoice_number') }}</th>

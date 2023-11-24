@@ -293,4 +293,5 @@ return [
     'available_stock' => 'Available Stock',
     'grand_total' => 'Grand total',
     'payment' => 'Payment',
+    'quick_access' => 'Quick access',
 ];

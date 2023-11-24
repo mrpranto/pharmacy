@@ -34,6 +34,30 @@
                 </div>
             </li>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i data-feather="plus-square"></i> {{ __t('quick_access') }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="languageDropdown">
+
+                    <a href="{{ route('purchases.create') }}" class="dropdown-item py-2">
+                        <i class="mdi mdi-cart-arrow-down"></i> <span class="ml-1"> {{ __t('add_purchase') }} </span>
+                    </a>
+                    <a href="{{ route('purchases.index') }}" class="dropdown-item py-2">
+                        <i class="mdi mdi-cart"></i> <span class="ml-1"> {{ __t('purchase_list') }} </span>
+                    </a>
+
+                    <a href="{{ route('sales.create') }}" class="dropdown-item py-2">
+                        <i class="mdi mdi-plus"></i> <span class="ml-1"> {{ __t('add_sale') }} </span>
+                    </a>
+                    <a href="{{ route('sales.index') }}" class="dropdown-item py-2">
+                        <i class="mdi mdi-shopping"></i> <span class="ml-1"> {{ __t('sales_list') }} </span>
+                    </a>
+
+                </div>
+            </li>
+
 <!--            <li class="nav-item dropdown">
                 @if(session()->get('color-mode') == 'white')
                     <a class="nav-link" href="{{ route('set-color-mode', 'dark') }}">
@@ -64,6 +88,7 @@
                     </div>
                 </a>
             </li>-->
+
 
 
             <li class="nav-item dropdown nav-profile">

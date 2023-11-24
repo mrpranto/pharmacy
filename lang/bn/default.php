@@ -295,4 +295,5 @@ return [
     'available_stock' => 'উপলব্ধ স্টক',
     'grand_total' => 'সর্বমোট',
     'payment' => 'পেমেন্ট',
+    'quick_access' => 'দ্রুত প্রবেশ',
 ];
