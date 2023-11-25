@@ -88,7 +88,19 @@ class SubMenuComposer
     {
         return [
             [
-                'name' => __t('add_sale'),
+                'name' => __t('summary'),
+                'url' => route('sales.create'),
+                'path' => 'sales/create',
+                'permission' => auth()->user()->can('app.purchase.create')
+            ],
+            [
+                'name' => __t('purchase_report'),
+                'url' => route('sales.create'),
+                'path' => 'sales/create',
+                'permission' => auth()->user()->can('app.purchase.create')
+            ],
+            [
+                'name' => __t('sales_report'),
                 'url' => route('sales.create'),
                 'path' => 'sales/create',
                 'permission' => auth()->user()->can('app.purchase.create')

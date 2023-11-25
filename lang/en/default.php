@@ -309,4 +309,8 @@ return [
     'half_monthly_revenue' => 'Half of Monthly Revenue',
     'top_customer' => 'Top Customer',
     'recent_sales' => 'Recent Sales',
+
+    'purchase_report' => 'Purchase report',
+    'sales_report' => 'Sales report',
+    'summary' => 'Summary',
 ];

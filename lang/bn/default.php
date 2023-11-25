@@ -311,4 +311,8 @@ return [
     'half_monthly_revenue' => 'মাসিক আয়ের অর্ধেক',
     'top_customer' => 'শীর্ষ গ্রাহক',
     'recent_sales' => 'সাম্প্রতিক বিক্রয়',
+
+    'purchase_report' => 'ক্রয় প্রতিবেদন',
+    'sales_report' => 'বিক্রয় রিপোর্ট',
+    'summary' => 'সারসংক্ষেপ',
 ];
