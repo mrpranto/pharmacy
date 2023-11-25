@@ -108,7 +108,17 @@
                  :title="__('default.change_status')">
             <div class="row pt-2">
                 <div class="col-sm-3">
-                    <a-popconfirm placement="top" title="Are you sure, you want to draft this ?" ok-text="Yes"
+                    <button v-if="changeStatus.current_status === 'DRAFT'"
+                            class="btn btn-warning btn-block"
+                            :class="changeStatus.current_status === 'DRAFT' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;">
+                        <i class="mdi mdi-pause"></i> Draft
+                    </button>
+
+                    <a-popconfirm v-else placement="top"
+                                  title="Are you sure, you want to draft this ?"
+                                  ok-text="Yes"
                                   cancel-text="No"
                                   @confirm="applyStatus('DRAFT')">
                         <template #icon></template>
@@ -121,7 +131,16 @@
                     </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <a-popconfirm placement="top" title="Are you sure, you want to confirm this ?" ok-text="Yes"
+                    <button v-if="changeStatus.current_status === 'CONFIRMED'"
+                            class="btn btn-info btn-block"
+                            :class="changeStatus.current_status === 'CONFIRMED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;">
+                        <i class="mdi mdi-check-circle"></i> Confirmed
+                    </button>
+                    <a-popconfirm v-else placement="top"
+                                  title="Are you sure, you want to confirm this ?"
+                                  ok-text="Yes"
                                   cancel-text="No"
                                   @confirm="applyStatus('CONFIRMED')">
                         <template #icon></template>
@@ -134,7 +153,17 @@
                     </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <a-popconfirm placement="top" title="Are you sure, you want to deliver this ?" ok-text="Yes"
+                    <button v-if="changeStatus.current_status === 'DELIVERED'"
+                            class="btn btn-success btn-block"
+                            :class="changeStatus.current_status === 'DELIVERED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;">
+                        <i class="mdi mdi-truck-delivery"></i> Delivered
+                    </button>
+                    <a-popconfirm v-else
+                                  placement="top"
+                                  title="Are you sure, you want to deliver this ?"
+                                  ok-text="Yes"
                                   cancel-text="No"
                                   @confirm="applyStatus('DELIVERED')">
                         <template #icon></template>
@@ -147,7 +176,16 @@
                     </a-popconfirm>
                 </div>
                 <div class="col-sm-3">
-                    <a-popconfirm placement="top" title="Are you sure, you want to cancel this ?" ok-text="Yes"
+                    <button v-if="changeStatus.current_status === 'CANCELED'"
+                            class="btn btn-danger btn-block"
+                            :class="changeStatus.current_status === 'CANCELED' ? 'disabled cursor-not-allowed' : ''"
+                            type="button"
+                            style="height: 100px;">
+                        <i class="mdi mdi-cancel"></i> Canceled
+                    </button>
+                    <a-popconfirm v-else placement="top"
+                                  title="Are you sure, you want to cancel this ?"
+                                  ok-text="Yes"
                                   cancel-text="No"
                                   @confirm="applyStatus('CANCELED')">
                         <template #icon></template>
