@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
                 <div class="card radius-20 w-100 h-100 d-inline-block">
                     <div class="card-body">
