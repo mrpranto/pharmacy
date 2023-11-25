@@ -255,7 +255,7 @@ return [
     'edit_sale' => 'Edit sale',
     'sales_invoice_updated_successful' => 'Sales invoice update successful',
     'add_payment' => 'Add Payment',
-    'payment_status' => 'Payment Status',
+    'payment_status' => 'Pay Status',
 
     'payment_type' => 'Payment Type',
     'paid_amount' => 'Paid amount',

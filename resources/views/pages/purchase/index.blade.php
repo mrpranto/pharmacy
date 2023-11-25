@@ -4,6 +4,8 @@
     @include('layout.breadcrumb',['paths' => ['purchase', 'purchase_list']])
 @endsection
 @section('content')
-    <purchase-list-component :permission="{{ json_encode($permission) }}"></purchase-list-component>
+    <purchase-list-component
+        :permission="{{ json_encode($permission) }}"
+        :payment_type="{{ json_encode($payment_type) }}"/>
 @endsection
 

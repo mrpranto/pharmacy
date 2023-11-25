@@ -1,27 +1,56 @@
 
 <template>
-    <div>
-        <a-tooltip :title="__('default.show_details')" class="mr-1"  v-if="permission.show">
-            <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
-                         @click="$parent.$parent.showDetails(row.id)"/>
-        </a-tooltip>
+    <div class="text-center">
 
-        <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit && row.status !== 'received'">
-                <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
-                              @click.prevent="goEditPage(row.id)"/>
-        </a-tooltip>
+        <a-dropdown :trigger="['click']" :title="__('default.action')" :placement="'bottomRight'"
+                    :arrow="{ pointAtCenter: true }" class="mr-1 dropdown-action">
+            <MoreOutlined :style="{fontSize: '20px'}"/>
+            <template #overlay>
+                <a-menu>
+                    <a-menu-item key="1" v-if="permission.payment_add" @click="$parent.$parent.showAddPaymentForm(row.id, row)">
+                        <span class="color-warning">
+                            <DollarOutlined :style="{fontSize: '15px', marginRight: '4px'}"/>
+                            {{ __('default.add_payment') }}
+                        </span>
+                    </a-menu-item>
 
-        <a-tooltip :title="__('default.delete')"  v-if="permission.delete">
-            <DeleteOutlined class="color-danger" :style="{fontSize: '20px', marginLeft: '6px'}"
-                            @click.prevent="$parent.$parent.showDeleteForm(row.id)"/>
-        </a-tooltip>
+                    <a-menu-item key="1" v-if="permission.show" @click="$parent.$parent.showDetails(row.id, row)">
+                        <span class="color-info">
+                            <EyeOutlined :style="{fontSize: '15px', marginRight: '4px'}"/>
+                            {{ __('default.show_details') }}
+                        </span>
+                    </a-menu-item>
+
+                    <a-menu-item key="1" v-if="permission.edit && row.status !== 'received'" @click="goEditPage(row.id)">
+                        <span class="color-primary">
+                            <FormOutlined :style="{fontSize: '15px', marginRight: '4px'}"/>
+                            {{ __('default.edit') }}
+                        </span>
+                    </a-menu-item>
+
+                    <a-menu-item key="1" v-if="permission.delete" @click="$parent.$parent.showDeleteForm(row.id)">
+                        <span class="color-danger">
+                            <DeleteOutlined :style="{fontSize: '15px', marginRight: '4px'}"/>
+                            {{ __('default.delete') }}
+                        </span>
+                    </a-menu-item>
+                </a-menu>
+            </template>
+        </a-dropdown>
     </div>
 </template>
 <script>
-import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+import {
+    MoreOutlined,
+    FormOutlined,
+    EyeOutlined,
+    DeleteOutlined,
+    DollarOutlined,
+    CheckSquareOutlined
+} from '@ant-design/icons-vue';
 export default {
     name: "Action",
-    components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined},
+    components:{CheckSquareOutlined, DollarOutlined, DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined},
     props:['row', 'permission'],
     mounted() {
 

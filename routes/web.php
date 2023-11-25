@@ -107,6 +107,7 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::get('/get-purchases', [PurchaseController::class, 'getPurchaseList']);
     Route::get('/get-purchases-products', [PurchaseController::class, 'getProducts']);
     Route::get('/get-purchases-suppliers', [PurchaseController::class, 'getSuppliers']);
+    Route::post('/purchase-payment', [PurchaseController::class, 'paymentSave']);
 
     //Stock route
     Route::get('/stocks', [StockController::class, 'stockPage'])->name('stocks');

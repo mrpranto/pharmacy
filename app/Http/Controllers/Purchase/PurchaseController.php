@@ -138,4 +138,14 @@ class PurchaseController extends Controller
 
         return $this->services->delete($id);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function paymentSave(): JsonResponse
+    {
+        return $this->services
+            ->validatePayment()
+            ->savePayment();
+    }
 }

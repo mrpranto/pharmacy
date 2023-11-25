@@ -2,13 +2,13 @@
 
 namespace App\Services\Purchase;
 
+use App\Models\Payment;
 use App\Models\People\Supplier;
 use App\Models\Product\Product;
 use App\Models\Purchase\Purchase;
 use App\Models\Stock\Stock;
 use App\Models\Stock\StockLog;
 use App\Services\BaseServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
@@ -52,8 +52,10 @@ class PurchaseServices extends BaseServices
                 'create' => auth()->user()->can('app.purchase.create'),
                 'edit' => auth()->user()->can('app.purchase.edit'),
                 'show' => auth()->user()->can('app.purchase.show'),
-                'delete' => auth()->user()->can('app.purchase.delete')
-            ]
+                'delete' => auth()->user()->can('app.purchase.delete'),
+                'payment_add' => auth()->user()->can('app.purchase.payment-add')
+            ],
+            'payment_type' => Payment::getConst('TYPE_')
         ];
     }
 
@@ -67,7 +69,7 @@ class PurchaseServices extends BaseServices
     {
         $purchase = $this->model->newQuery()
             ->select(['purchases.*', 'suppliers.name as supplier_name'])
-            ->with(['supplier', 'purchaseProducts'])
+            ->with(['supplier', 'purchaseProducts', 'payments'])
             ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
             ->when(request()->get('date'), function ($q) {
                 $dates = explode(' to ', request()->get('date'));
@@ -559,6 +561,92 @@ class PurchaseServices extends BaseServices
             $this->model->delete();
 
             return response()->json(['success' => __t('purchase_delete')]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @return $this
+     */
+    public function validatePayment(): static
+    {
+        request()->validate([
+            "current_id" => "required|exists:purchases,id",
+            "totalPaid" => "required|numeric",
+            "paymentStatus" => "required|in:" . implode(',', Purchase::getValidationConst('PAYMENT_STATUS_')),
+            "formData" => "required|array",
+            "formData.*.type" => "required|in:" . implode(',', Payment::getValidationConst('TYPE_')),
+            "formData.*.paid_amount" => "required|numeric",
+        ], [
+            "formData.*.type.required" => 'Payment type is required',
+            "formData.*.paid_amount.required" => 'Paid amount is required',
+            "formData.*.type.in" => 'Payment type is invalid',
+            "formData.*.paid_amount.numeric" => 'Paid amount must be numeric',
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function savePayment(): JsonResponse
+    {
+        try {
+
+            DB::transaction(function () {
+
+                $existPurchase = $this->model
+                    ->newQuery()
+                    ->where('id', request()->get('current_id'))
+                    ->first();
+
+                $paymentIds = $existPurchase->payments()->pluck('id')->toArray();
+                $newPaymentIds = collect(request()->get('formData'))->pluck('id')->toArray();
+                $deleteAbleIds = array_diff($paymentIds, $newPaymentIds);
+
+                $existPurchase->payments()->whereIn('id', $deleteAbleIds)->delete();
+
+                $salesPayment = [];
+                foreach (request()->get('formData') as $payment) {
+                    if (isset($payment['id'])) {
+                        Payment::query()
+                            ->where('id', $payment['id'])
+                            ->update([
+                                'bank_name' => $payment['bank_name'],
+                                'paid_amount' => $payment['paid_amount'],
+                                'type' => $payment['type'],
+                                'account_number' => $payment['account_number'],
+                                'transaction_number' => $payment['transaction_number'],
+                            ]);
+                    } else {
+                        $salesPayment[] = [
+                            'paid_amount' => $payment['paid_amount'],
+                            'type' => $payment['type'],
+                            'bank_name' => $payment['bank_name'],
+                            'account_number' => $payment['account_number'],
+                            'transaction_number' => $payment['transaction_number'],
+                            'paymentable_type' => Purchase::class,
+                            'paymentable_id' => request()->get('current_id'),
+                            'created_by' => auth()->id(),
+                            'updated_by' => auth()->id(),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                }
+
+                Payment::query()->insert($salesPayment);
+
+                $existPurchase->update([
+                    'payment_status' => request()->get('paymentStatus'),
+                    'total_paid' => request()->get('totalPaid'),
+                ]);
+            });
+
+            return response()->json(['success' => __t('payment_save_success')]);
 
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);

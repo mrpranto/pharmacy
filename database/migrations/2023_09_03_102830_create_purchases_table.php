@@ -23,6 +23,8 @@ return new class extends Migration
             $table->double('discount')->default(0);
             $table->double('total');
             $table->text('note')->nullable();
+            $table->string('payment_status')->default(App\Models\Purchase\Purchase::PAYMENT_STATUS_DUE);
+            $table->float('total_paid', 18, 2)->default(0);
             $table->mediumText('purchase_details')->nullable();
             $table->foreignId('created_by')
                 ->constrained('users', 'id');

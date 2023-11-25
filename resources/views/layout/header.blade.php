@@ -14,31 +14,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-
-                    @if(session()->get('lang') == 'en')
-                        <i class="flag-icon flag-icon-us mt-1" title="us"></i>
-                        <span class="font-weight-medium ml-1 mr-1">English</span>
-                    @else
-                        <i class="flag-icon flag-icon-bd mt-1" title="bd"></i>
-                        <span class="font-weight-medium ml-1 mr-1">বাংলা</span>
-                    @endif
-                </a>
-                <div class="dropdown-menu" aria-labelledby="languageDropdown">
-
-                    <a href="{{ route('set-lang', 'en') }}" class="dropdown-item py-2">
-                        <i class="flag-icon flag-icon-us" title="us" id="us"></i> <span class="ml-1"> English </span>
-                    </a>
-                    <a href="{{ route('set-lang', 'bn') }}" class="dropdown-item py-2">
-                        <i class="flag-icon flag-icon-bd" title="bd" id="bd"></i> <span class="ml-1"> বাংলা </span>
-                    </a>
-                </div>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
                     <i data-feather="plus-square"></i>
-                    <span class="font-weight-medium ml-1 mr-1">{{ __t('quick_access') }}</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="languageDropdown">
 
@@ -56,6 +32,27 @@
                         <i class="mdi mdi-shopping"></i> <span class="ml-1"> {{ __t('sales_list') }} </span>
                     </a>
 
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+
+                    @if(session()->get('lang') == 'en')
+                        <i class="flag-icon flag-icon-us mt-1" title="us"></i>
+                    @else
+                        <i class="flag-icon flag-icon-bd mt-1" title="bd"></i>
+                    @endif
+                </a>
+                <div class="dropdown-menu" aria-labelledby="languageDropdown">
+
+                    <a href="{{ route('set-lang', 'en') }}" class="dropdown-item py-2">
+                        <i class="flag-icon flag-icon-us" title="us" id="us"></i> <span class="ml-1"> English </span>
+                    </a>
+                    <a href="{{ route('set-lang', 'bn') }}" class="dropdown-item py-2">
+                        <i class="flag-icon flag-icon-bd" title="bd" id="bd"></i> <span class="ml-1"> বাংলা </span>
+                    </a>
                 </div>
             </li>
 
