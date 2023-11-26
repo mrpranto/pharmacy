@@ -122,13 +122,13 @@ if (! function_exists('show_currency')){
         $currency_symbol = $general_setting ? $general_setting['currency_symbol'] : '\u09f3';
 
         if ($currency_position === 'before_amount'){
-            return $currency_symbol . $amount;
+            return $currency_symbol . number_format($amount, 2);
         }else if ($currency_position === 'before_with_space_amount'){
-            return $currency_symbol .' '. $amount;
+            return $currency_symbol .' '. number_format($amount, 2);
         }else if ($currency_position === 'after_amount'){
-            return $amount . $currency_symbol;
+            return number_format($amount, 2) . $currency_symbol;
         }else if ($currency_position === 'after_with_space_amount'){
-            return $amount .' '. $currency_symbol;
+            return number_format($amount, 2) .' '. $currency_symbol;
         }
     }
 }

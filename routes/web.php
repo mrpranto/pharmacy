@@ -133,7 +133,10 @@ Route::group(['middleware' => 'authenticate'], function (){
 
     //Report Route
     Route::group(['prefix' => 'report'], function (){
-        Route::get('summary', [ReportController::class, 'summary'])
-            ->name('report.summary');
+        Route::get('summary', [ReportController::class, 'summary'])->name('report.summary');
     });
+});
+
+Route::get('/pos', function (){
+    return view('pos-print');
 });

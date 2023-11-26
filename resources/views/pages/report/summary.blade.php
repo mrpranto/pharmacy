@@ -100,7 +100,7 @@
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
                                     <p>{{ __t('total_purchase_quantity') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> {{ $purchase['totalPurchaseQuantity'] }}</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ number_format($purchase['totalPurchaseQuantity']) }}</div>
                             </div>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
                                     <p>{{ __t('total_sales_quantity') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> {{ $sales['totalSalesQuantity'] }}</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ number_format($sales['totalSalesQuantity']) }}</div>
                             </div>
                         </div>
                     </div>

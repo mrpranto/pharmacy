@@ -32,7 +32,7 @@
         }
 
         .main {
-            width: 50%;
+            width: 100%;
             margin-top: 0px;
         }
 
@@ -80,7 +80,7 @@
         </div>
     </div>
 </htmlpageheader>
-<table style="width: 50%">
+<table style="width: 100%">
     <thead>
     <tr>
         <th style="text-align: left">{{ __t('sl') }}</th>
@@ -127,7 +127,7 @@
     </tr>
 </table>
 <htmlpagefooter name="page-footer">
-    <div align="right" style="font-size: 10px; width: 50%">
+    <div align="right" style="font-size: 10px; width: 100%">
         <i><b>{PAGENO} / {nbpg}</b></i>
     </div>
 </htmlpagefooter>
