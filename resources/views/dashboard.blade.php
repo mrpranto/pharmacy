@@ -244,8 +244,6 @@
 
 @push('plugin-scripts')
     <script src="{{ asset('assets/plugins/chartjs/Chart.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/jquery.flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('assets/plugins/apexcharts/apexcharts.min.js') }}"></script>
 @endpush
 
 

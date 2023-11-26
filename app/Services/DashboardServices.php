@@ -18,11 +18,19 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardServices extends BaseServices
 {
-    public $sale;
-    public $purchase;
-    public $customer;
-    public $expense;
-    public $stock;
+    public Sale $sale;
+    public Purchase $purchase;
+    public Customer $customer;
+    public Expense $expense;
+    public Stock $stock;
+
+    /**
+     * @param Sale $sale
+     * @param Purchase $purchase
+     * @param Customer $customer
+     * @param Expense $expense
+     * @param Stock $stock
+     */
     public function __construct(Sale $sale, Purchase $purchase, Customer $customer, Expense $expense, Stock $stock)
     {
         $this->sale = $sale;
@@ -107,7 +115,7 @@ class DashboardServices extends BaseServices
      *
      * @return array
      */
-    public function dashboard()
+    public function dashboard(): array
     {
         return [
             'weeklyChart' => $this->weeklyRevenue(),

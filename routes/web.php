@@ -12,6 +12,7 @@ use App\Http\Controllers\Product\CompanyController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\UnitController;
 use App\Http\Controllers\Purchase\PurchaseController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Stock\StockController;
@@ -130,4 +131,9 @@ Route::group(['middleware' => 'authenticate'], function (){
     Route::resource('expanses', ExpenseController::class);
     Route::get('/get-expenses', [ExpenseController::class, 'getExpenses']);
 
+    //Report Route
+    Route::group(['prefix' => 'report'], function (){
+        Route::get('summary', [ReportController::class, 'summary'])
+            ->name('report.summary');
+    });
 });

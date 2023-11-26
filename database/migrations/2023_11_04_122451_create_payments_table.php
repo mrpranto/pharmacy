@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->float('paid_amount')->default(0);
+            $table->float('paid_amount', 18, 2)->default(0);
             $table->string('type')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('account_number')->nullable();
