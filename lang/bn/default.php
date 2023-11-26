@@ -308,11 +308,23 @@ return [
     'all_time_purchase' => 'সব সময় সাফল্য ক্রয়',
     'total_available_stocks' => 'মোট উপলব্ধ স্টক',
     'current_available_stock' => 'বর্তমান উপলব্ধ স্টক',
-    'half_monthly_revenue' => 'মাসিক আয়ের অর্ধেক',
+    'half_monthly_revenue' => 'অর্ধ মাসিক আয়',
     'top_customer' => 'শীর্ষ গ্রাহক',
     'recent_sales' => 'সাম্প্রতিক বিক্রয়',
 
     'purchase_report' => 'ক্রয় প্রতিবেদন',
     'sales_report' => 'বিক্রয় রিপোর্ট',
     'summary' => 'সারসংক্ষেপ',
+
+
+    'purchase_receive_summary' => 'ক্রয় প্রাপ্তি সারাংশ',
+    'sales_receive_summary' => 'বিক্রয় ডেলিভারি সারাংশ',
+    'total_grand_total' => 'মোট গ্র্যান্ড মোট',
+    'total_sub_total' => 'মোট সাব মোট',
+    'total_discount' => 'মোট ডিসকাউন্ট',
+    'total_paid_amount' => 'মোট প্রদত্ত পরিমাণ',
+    'total_due_amount' => 'মোট বকেয়া পরিমাণ',
+    'total_purchase_quantity' => 'মোট ক্রয়ের পরিমাণ',
+    'total_sales_quantity' => 'মোট বিক্রয় পরিমাণ',
+    'all_time_profit' => 'সব সময়ের লাভ',
 ];

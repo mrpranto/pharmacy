@@ -313,4 +313,17 @@ return [
     'purchase_report' => 'Purchase report',
     'sales_report' => 'Sales report',
     'summary' => 'Summary',
+
+    'purchase_receive_summary' => 'Purchase Receive Summary',
+    'sales_receive_summary' => 'Sales Delivery Summary',
+    'total_grand_total' => 'Total Grand Total',
+    'total_sub_total' => 'Total Sub Total',
+    'total_discount' => 'Total Discount',
+    'total_paid_amount' => 'Total Paid Amount',
+    'total_due_amount' => 'Total Due Amount',
+    'total_purchase_quantity' => 'Total Purchase Quantity',
+    'total_sales_quantity' => 'Total Sales Quantity',
+    'al_time_revenue' => 'All time revenue',
+    'al_time_expense' => 'All time expense',
+    'all_time_profit' => 'All time profit',
 ];

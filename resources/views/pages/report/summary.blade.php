@@ -6,61 +6,89 @@
 @section('content')
 
     <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8 offset-xl-2 mb-3">
+            <div class="card radius-20">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                        <div class="d-flex align-items-center">
+                            <i data-feather="check-circle" class="icon-md text-primary mr-2"></i>
+                            <p>{{ __t('al_time_revenue') }}</p>
+                        </div>
+                        <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['revenue']) }}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                        <div class="d-flex align-items-center">
+                            <i data-feather="dollar-sign" class="icon-md text-primary mr-2"></i>
+                            <p>{{ __t('al_time_expense') }}</p>
+                        </div>
+                        <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['expense']) }}</div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                        <div class="d-flex align-items-center">
+                            <p class="h4"><i data-feather="credit-card" class="icon-md text-primary mr-2"></i>{{ __t('all_time_profit') }}</p>
+                        </div>
+                        <div class="mr-3 h4 font-weight-lighter"> {{ show_currency($profit['profit']) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-3 grid-margin grid-margin-xl-0 stretch-card">
             <div class="card radius-20">
                 <div class="card-body">
-                    <h6 class="card-title"><i class="mdi mdi-cart"></i> Purchase Receive Summary</h6>
+                    <h6 class="card-title"><i class="mdi mdi-cart"></i> {{ __t('purchase_receive_summary') }}</h6>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <canvas id="purchaseChartjsPie"></canvas>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 pt-5">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 pt-5">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Grand Total</p>
+                                    <p>{{ __t('total_grand_total') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($purchase['totalGrandTotal']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Sub Total</p>
+                                    <p>{{ __t('total_sub_total') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($purchase['totalSubTotal']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Discount </p>
+                                    <p>{{ __t('total_discount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($purchase['totalDiscount']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Paid Amount </p>
+                                    <p>{{ __t('total_paid_amount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($purchase['totalPaid']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Due Amount </p>
+                                    <p>{{ __t('total_due_amount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($purchase['totalDue']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Purchase Quantity </p>
+                                    <p>{{ __t('total_purchase_quantity') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ $purchase['totalPurchaseQuantity'] }}</div>
                             </div>
                         </div>
                     </div>
@@ -71,58 +99,58 @@
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-3 grid-margin grid-margin-xl-0 stretch-card">
             <div class="card radius-20">
                 <div class="card-body">
-                    <h6 class="card-title"><i class="mdi mdi-shopping"></i> Sales Delivery Summary</h6>
+                    <h6 class="card-title"><i class="mdi mdi-shopping"></i> {{ __t('sales_receive_summary') }}</h6>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <canvas id="saleschartjsPie"></canvas>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 pt-5">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Grand Total</p>
+                                    <p>{{ __t('total_grand_total') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($sales['totalGrandTotal']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Sub Total</p>
+                                    <p>{{ __t('total_sub_total') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($sales['totalSubTotal']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Total Discount </p>
+                                    <p>{{ __t('total_discount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($sales['totalDiscount']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Paid Amount </p>
+                                    <p>{{ __t('total_paid_amount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($sales['totalPaid']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Due Amount </p>
+                                    <p>{{ __t('total_due_amount') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($sales['totalDue']) }}</div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <div class="d-flex align-items-center">
                                     <i data-feather="chevrons-right" class="icon-md text-primary mr-2"></i>
-                                    <p>Sales Quantity </p>
+                                    <p>{{ __t('total_sales_quantity') }}</p>
                                 </div>
-                                <div class="mr-3 h5 font-weight-lighter"> $123123</div>
+                                <div class="mr-3 h5 font-weight-lighter"> {{ $sales['totalSalesQuantity'] }}</div>
                             </div>
                         </div>
                     </div>
@@ -158,7 +186,7 @@
                 new Chart($('#purchaseChartjsPie'), {
                     type: 'pie',
                     data: {
-                        labels: ["Grand Total", "Sub Total", "Total Discount", "Total Paid", "Total Due", "Total Purchase Quantity"],
+                        labels: ["{{ __t('total_grand_total') }}", "{{ __t('total_sub_total') }}", "{{ __t('total_discount') }}", "{{ __t('total_paid_amount') }}", "{{ __t('total_due_amount') }}", "{{ __t('total_purchase_quantity') }}"],
                         datasets: [{
                             label: "Purchase Receive Summary",
                             backgroundColor: ["#727cf5", "#7987a1", "#42b72a", "#68afff", "#fbbc06", "#ff3366"],
@@ -172,11 +200,11 @@
                 new Chart($('#saleschartjsPie'), {
                     type: 'pie',
                     data: {
-                        labels: ["Africa", "Asia", "Europe"],
+                        labels: ["{{ __t('total_grand_total') }}", "{{ __t('total_sub_total') }}", "{{ __t('total_discount') }}", "{{ __t('total_paid_amount') }}", "{{ __t('total_due_amount') }}", "{{ __t('total_sales_quantity') }}"],
                         datasets: [{
-                            label: "Population (millions)",
-                            backgroundColor: ["#7ee5e5", "#f77eb9", "#4d8af0"],
-                            data: [2478, 4267, 1334]
+                            label: "Sales Delivery Summary",
+                            backgroundColor: ["#fbbc06", "#ff3366","#ececec", "#282f3a", "#686868", "#4d8af0"],
+                            data: [{{ $sales['totalGrandTotal'] }}, {{ $sales['totalSubTotal'] }}, {{ $sales['totalDiscount'] }}, {{ $sales['totalPaid'] }}, {{ $sales['totalDue'] }}, {{ $sales['totalSalesQuantity'] }}]
                         }]
                     }
                 });

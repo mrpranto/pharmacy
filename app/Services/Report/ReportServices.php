@@ -2,20 +2,33 @@
 
 namespace App\Services\Report;
 
+use App\Models\Expense\Expense;
 use App\Models\Purchase\Purchase;
 use App\Models\Purchase\PurchaseProduct;
+use App\Models\Sale\Sale;
+use App\Models\Sale\SaleProducts;
 use App\Services\BaseServices;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class ReportServices extends BaseServices
 {
     public Purchase $purchase;
     public PurchaseProduct $purchaseProduct;
-    public function __construct(Purchase $purchase, PurchaseProduct $purchaseProduct)
+
+    public Sale $sale;
+    public SaleProducts $saleProduct;
+    public Expense $expense;
+
+    public function __construct(
+        Purchase $purchase, PurchaseProduct $purchaseProduct,
+        Sale     $sale, SaleProducts $saleProduct, Expense $expense
+    )
     {
         $this->purchase = $purchase;
         $this->purchaseProduct = $purchaseProduct;
+        $this->sale = $sale;
+        $this->saleProduct = $saleProduct;
+        $this->expense = $expense;
     }
 
     /**
@@ -24,7 +37,9 @@ class ReportServices extends BaseServices
     public function summary(): array
     {
         return [
-            'purchase' => $this->purchase()
+            'purchase' => $this->purchase(),
+            'sales' => $this->sales(),
+            'profit' => $this->profit()
         ];
     }
 
@@ -35,20 +50,20 @@ class ReportServices extends BaseServices
     {
         $purchase = $this->purchase
             ->newQuery()
-            ->where('purchases.status', $this->purchase::STATUS_RECEIVED)
+            ->where('status', $this->purchase::STATUS_RECEIVED)
             ->select(
-                DB::raw('sum(purchases.total) as totalGrandTotal'),
-                DB::raw('sum(purchases.subtotal) as totalSubTotal'),
-                DB::raw('sum(purchases.discount) as totalDiscount'),
-                DB::raw('sum(purchases.total_paid) as totalPaid'),
-                DB::raw('sum(purchases.total - total_paid) as totalDue'),
+                DB::raw('sum(total) as totalGrandTotal'),
+                DB::raw('sum(subtotal) as totalSubTotal'),
+                DB::raw('sum(discount) as totalDiscount'),
+                DB::raw('sum(total_paid) as totalPaid'),
+                DB::raw('sum(total - total_paid) as totalDue'),
             )
             ->first()
             ->toArray();
 
         $purchaseIds = $this->purchase
             ->newQuery()
-            ->where('purchases.status', $this->purchase::STATUS_RECEIVED)
+            ->where('status', $this->purchase::STATUS_RECEIVED)
             ->pluck('id')
             ->toArray();
 
@@ -60,6 +75,49 @@ class ReportServices extends BaseServices
         return [
             ...$purchase,
             'totalPurchaseQuantity' => $purchaseQuantity
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function sales(): array
+    {
+        return $this->sale
+            ->newQuery()
+            ->where('status', $this->sale::STATUS_DELIVERED)
+            ->select(
+                DB::raw('sum(grand_total) as totalGrandTotal'),
+                DB::raw('sum(subtotal) as totalSubTotal'),
+                DB::raw('sum(discount) as totalDiscount'),
+                DB::raw('sum(total_paid) as totalPaid'),
+                DB::raw('sum(grand_total - total_paid) as totalDue'),
+                DB::raw('sum(total_unit_qty) as totalSalesQuantity'),
+            )
+            ->first()
+            ->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function profit(): array
+    {
+        $revenue = $this->saleProduct
+            ->newQuery()
+            ->whereHas('sale', fn($query) => $query->where('status', $this->sale::STATUS_DELIVERED))
+            ->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity)) as revenue'))
+            ->first()
+            ->revenue;
+
+        $expense = $this->expense
+            ->newQuery()
+            ->sum('total_amount');
+
+        return [
+            'revenue' => $revenue,
+            'expense' => $expense,
+            'profit' => ($revenue - $expense)
         ];
     }
 }
