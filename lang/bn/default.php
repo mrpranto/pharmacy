@@ -326,5 +326,7 @@ return [
     'total_due_amount' => 'মোট বকেয়া পরিমাণ',
     'total_purchase_quantity' => 'মোট ক্রয়ের পরিমাণ',
     'total_sales_quantity' => 'মোট বিক্রয় পরিমাণ',
+    'al_time_revenue' => 'সব সময় রাজস্ব',
+    'al_time_expense' => 'সব সময়ের খরচ',
     'all_time_profit' => 'সব সময়ের লাভ',
 ];

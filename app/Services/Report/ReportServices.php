@@ -14,11 +14,17 @@ class ReportServices extends BaseServices
 {
     public Purchase $purchase;
     public PurchaseProduct $purchaseProduct;
-
     public Sale $sale;
     public SaleProducts $saleProduct;
     public Expense $expense;
 
+    /**
+     * @param Purchase $purchase
+     * @param PurchaseProduct $purchaseProduct
+     * @param Sale $sale
+     * @param SaleProducts $saleProduct
+     * @param Expense $expense
+     */
     public function __construct(
         Purchase $purchase, PurchaseProduct $purchaseProduct,
         Sale     $sale, SaleProducts $saleProduct, Expense $expense

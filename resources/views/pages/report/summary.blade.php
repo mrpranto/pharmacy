@@ -6,29 +6,41 @@
 @section('content')
 
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8 offset-xl-2 mb-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
             <div class="card radius-20">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
-                        <div class="d-flex align-items-center">
-                            <i data-feather="check-circle" class="icon-md text-primary mr-2"></i>
-                            <p>{{ __t('al_time_revenue') }}</p>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 pt-5">
+                            <canvas id="profitChartjsPie"></canvas>
                         </div>
-                        <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['revenue']) }}</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
-                        <div class="d-flex align-items-center">
-                            <i data-feather="dollar-sign" class="icon-md text-primary mr-2"></i>
-                            <p>{{ __t('al_time_expense') }}</p>
+
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 pt-5 mt-5 d-flex flex-column justify-content-center">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <i data-feather="check-circle" class="icon-md text-primary mr-2"></i>
+                                        <p>{{ __t('al_time_revenue') }}</p>
+                                    </div>
+                                    <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['revenue']) }}</div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <i data-feather="dollar-sign" class="icon-md text-primary mr-2"></i>
+                                        <p>{{ __t('al_time_expense') }}</p>
+                                    </div>
+                                    <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['expense']) }}</div>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <p class="h4"><i data-feather="credit-card"
+                                                         class="icon-md text-primary mr-2"></i>{{ __t('all_time_profit') }}
+                                        </p>
+                                    </div>
+                                    <div class="mr-3 h4 font-weight-lighter"> {{ show_currency($profit['profit']) }}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mr-3 h5 font-weight-lighter"> {{ show_currency($profit['expense']) }}</div>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
-                        <div class="d-flex align-items-center">
-                            <p class="h4"><i data-feather="credit-card" class="icon-md text-primary mr-2"></i>{{ __t('all_time_profit') }}</p>
-                        </div>
-                        <div class="mr-3 h4 font-weight-lighter"> {{ show_currency($profit['profit']) }}</div>
                     </div>
                 </div>
             </div>
@@ -180,6 +192,20 @@
                 light: "#ececec",
                 dark: "#282f3a",
                 muted: "#686868"
+            }
+
+            if ($('#profitChartjsPie').length) {
+                new Chart($('#profitChartjsPie'), {
+                    type: 'pie',
+                    data: {
+                        labels: ["{{ __t('al_time_revenue') }}", "{{ __t('al_time_expense') }}", "{{ __t('all_time_profit') }}"],
+                        datasets: [{
+                            label: "Profit Summary",
+                            backgroundColor: ["#68afff", "#fbbc06", "#ff3366"],
+                            data: [{{ $profit['revenue'] }}, {{ $profit['expense'] }}, {{ $profit['profit'] }}]
+                        }]
+                    }
+                });
             }
 
             if ($('#purchaseChartjsPie').length) {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Report;
 
 use App\Http\Controllers\Controller;
 use App\Services\Report\ReportServices;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class ReportController extends Controller
 {
@@ -13,7 +13,10 @@ class ReportController extends Controller
         $this->services = $reportServices;
     }
 
-    public function summary()
+    /**
+     * @return View
+     */
+    public function summary(): View
     {
         return view('pages.report.summary', $this->services->summary());
     }
