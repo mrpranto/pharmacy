@@ -110,6 +110,12 @@ import ExpensesItemDetailsComponent from './components/expenses/ItemDetails.vue'
 app.component('expenses-items-component', ExpensesItemDetailsComponent);
 
 /*
+* Reports
+*/
+import PurchaseReportComponent from './components/reports/Purchase.vue';
+app.component('purchase-report-component', PurchaseReportComponent);
+
+/*
 * App core component
 */
 import AppTable from './components/core/AppTable.vue';

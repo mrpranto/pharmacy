@@ -5,4 +5,6 @@
 @endsection
 @section('content')
 
+    <purchase-report-component/>
+
 @endsection
