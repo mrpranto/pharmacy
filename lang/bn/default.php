@@ -329,4 +329,6 @@ return [
     'al_time_revenue' => 'সব সময় রাজস্ব',
     'al_time_expense' => 'সব সময়ের খরচ',
     'all_time_profit' => 'সব সময়ের লাভ',
+    'stock_value' => 'স্টক মূল্য',
+    'total_available_stock_value' => 'মোট উপলব্ধ স্টক মূল্য',
 ];

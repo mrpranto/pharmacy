@@ -326,4 +326,6 @@ return [
     'al_time_revenue' => 'All time revenue',
     'al_time_expense' => 'All time expense',
     'all_time_profit' => 'All time profit',
+    'stock_value' => 'Stock value',
+    'total_available_stock_value' => 'Total available stock value',
 ];

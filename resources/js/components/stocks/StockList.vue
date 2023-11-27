@@ -63,7 +63,7 @@
                                 <h1><i class="mdi mdi-database text-primary"></i></h1>
                             </div>
                             <div class="pl-4">
-                                <p>{{ __('default.total') }} {{ __('default.available_stock') }}</p>
+                                <p>{{ __('default.total_available_stock_value') }}</p>
                                 <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.totalStockCostAmount ?? 0) }}</h4>
                                 <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.totalAvailableQuantity }}</span>
                             </div>
@@ -170,17 +170,17 @@
                                                 {{ __('default.product') }}
                                                  </span>
                                             </td>
-                                            <td width="15%">
+                                            <td width="12%">
                                                  <span class="font-bold pull-left">
                                                 {{ __('default.category') }}
                                                  </span>
                                             </td>
-                                            <td width="20%">
+                                            <td width="16%">
                                                  <span class="font-bold pull-left">
                                                 {{ __('default.company') }}
                                                  </span>
                                             </td>
-                                            <td width="15%">
+                                            <td width="12%">
                                                  <span class="font-bold pull-left">
                                                 {{ __('default.unit') }}
                                                  </span>
@@ -195,7 +195,12 @@
                                                 {{ __('default.total_available_qty') }}
                                                  </span>
                                             </td>
-                                            <td width="8%"></td>
+                                            <td width="12%" class="text-center">
+                                                 <span class="font-bold">
+                                                {{ __('default.stock_value') }}
+                                                 </span>
+                                            </td>
+                                            <td width="6%"></td>
                                         </tr>
                                         </thead>
                                         <tbody class="tbody-scroll"
@@ -237,17 +242,17 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td width="15%">
+                                                    <td width="12%">
                                                         <div class="overflow-hidden">
                                                             {{ product.category.name }}
                                                         </div>
                                                     </td>
-                                                    <td width="20%">
+                                                    <td width="16%">
                                                         <div class="overflow-hidden">
                                                             {{ product.company.name }}
                                                         </div>
                                                     </td>
-                                                    <td width="15%">
+                                                    <td width="12%">
                                                         <div class="overflow-hidden">
                                                             {{ product.unit.name }} ({{ product.unit.pack_size }})
                                                         </div>
@@ -262,7 +267,12 @@
                                                             {{ totalQty(product.stocks, 'available_quantity') }}
                                                         </span>
                                                     </td>
-                                                    <td width="8%" class="text-center">
+                                                    <td width="12%" class="text-center">
+                                                        <span class="font-bold">
+                                                            {{ $showCurrency(totalStockValue(product.stocks)) }}
+                                                        </span>
+                                                    </td>
+                                                    <td width="6%" class="text-center">
                                                         <a data-toggle="collapse"
                                                            :data-target="'#stock'+product_index"
                                                            class="accordion-toggle">
@@ -317,6 +327,7 @@
                                                                                             <span class="mr-3"><b>{{ __('default.total_purchase_qty') }} : </b> {{ totalQty(product.stocks, 'purchase_quantity') }},</span>
                                                                                             <span class="mr-3"><b>{{ __('default.total_sale_qty') }} : </b> {{ totalQty(product.stocks, 'sale_quantity') }},</span>
                                                                                             <span class="mr-3"><b>{{ __('default.total_available_qty') }} : </b> {{ totalQty(product.stocks, 'available_quantity') }}</span>
+                                                                                            <span class="mr-3"><b>{{ __('default.total_available_stock_value') }} : </b> {{ $showCurrency(totalStockValue(product.stocks)) }}</span>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
@@ -335,6 +346,7 @@
                                                                                         <th class="text-center">{{ __('default.purchase_quantity') }}</th>
                                                                                         <th class="text-center">{{ __('default.sale_quantity') }}</th>
                                                                                         <th class="text-center">{{ __('default.available_quantity') }}</th>
+                                                                                        <th class="text-center">{{ __('default.stock_value') }}</th>
                                                                                     </tr>
 
                                                                                     <tr v-for="(stock, stock_index) in product.stocks" :key="stock_index"  :class="isEven(stock_index) ? 'row-color' : ''">
@@ -345,6 +357,7 @@
                                                                                         <td class="text-center">{{ stock.purchase_quantity }}</td>
                                                                                         <td class="text-center">{{ stock.sale_quantity }}</td>
                                                                                         <td class="text-center">{{ stock.available_quantity }}</td>
+                                                                                        <td class="text-center">{{ $showCurrency(stock.unit_price * stock.available_quantity) }}</td>
                                                                                     </tr>
 
                                                                                 </table>
@@ -612,6 +625,11 @@ export default {
         totalQty(stocks, column){
             return stocks.reduce((accumulator, object) => {
                 return parseFloat(accumulator) + parseFloat(object[column]);
+            }, 0);
+        },
+        totalStockValue(stocks){
+            return stocks.reduce((accumulator, object) => {
+                return parseFloat(accumulator) + parseFloat((object.unit_price * object.available_quantity));
             }, 0);
         },
         filterList(event, key) {

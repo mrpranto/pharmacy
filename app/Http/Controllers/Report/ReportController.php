@@ -20,4 +20,9 @@ class ReportController extends Controller
     {
         return view('pages.report.summary', $this->services->summary());
     }
+
+    public function purchasePage()
+    {
+        return view('pages.report.purchase');
+    }
 }

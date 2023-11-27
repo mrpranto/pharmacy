@@ -95,8 +95,8 @@ class SubMenuComposer
             ],
             [
                 'name' => __t('purchase_report'),
-                'url' => route('sales.create'),
-                'path' => 'sales/create',
+                'url' => route('report.purchase'),
+                'path' => 'report/purchase',
                 'permission' => auth()->user()->can('app.purchase.create')
             ],
             [
