@@ -73,11 +73,12 @@ class PurchaseServices extends BaseServices
             ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
             ->when(request()->get('date'), function ($q) {
                 $dates = explode(' to ', request()->get('date'));
-                $q->whereBetween('date', [$dates[0], $dates[1]]);
+                $q->whereBetween('purchases.date', [$dates[0], $dates[1]]);
             })
-            ->when(request()->filled('supplier'), fn($q) => $q->where('supplier_id', request()->get('supplier')))
-            ->when(request()->filled('purchase_status'), fn($q) => $q->where('status', request()->get('purchase_status')))
-            ->when(request()->filled('search'), fn($q) => $q->where('reference', 'like', '%' . request()->get('search') . '%'))
+            ->when(request()->filled('supplier'), fn($q) => $q->where('purchases.supplier_id', request()->get('supplier')))
+            ->when(request()->filled('purchase_status'), fn($q) => $q->where('purchases.status', request()->get('purchase_status')))
+            ->when(request()->filled('payment_status'), fn($q) => $q->where('purchases.payment_status', request()->get('payment_status')))
+            ->when(request()->filled('search'), fn($q) => $q->where('purchases.reference', 'like', '%' . request()->get('search') . '%'))
             ->when(request()->filled('order_by') && request()->filled('order_dir'), function ($q) {
                 if (request()->get('order_by') == 'supplier') {
                     return $q->orderBy('supplier_name', request()->get('order_dir'));

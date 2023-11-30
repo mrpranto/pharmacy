@@ -1,77 +1,21 @@
 <template>
-    <div class="row">
-        <div class="col-sm-12 mb-3">
-            <div class="card radius-20">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <h5 class="mb-3 mb-md-0">
-                                {{ __('default.purchase_report') }}
-                            </h5>
-                        </div>
-                        <div>
-                            <a-spin v-if="loader"/>
-                        </div>
-                        <div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <div class="card radius-20">
-                <div class="card-body">
-                    <div class="row pt-2">
-                        <div class="col-sm-3">
-                            <a-form layout="horizontal">
-                                <a-form-item label="Date">
-                                    <a-range-picker :presets="rangePreset" style="width: 100%"/>
-                                </a-form-item>
-                            </a-form>
-                        </div>
-                        <div class="col-sm-3">
-                            <a-form layout="horizontal">
-                                <a-form-item label="Supplier">
-                                    <a-select
-                                        v-model:value="request.supplier"
-                                        show-search
-                                        placeholder="Select a supplier"
-                                        style="width: 100%"
-                                        :options="suppliers"
-                                        :filter-option="selectFilterOption"
-                                    ></a-select>
-                                </a-form-item>
-                            </a-form>
-                        </div>
-                        <div class="col-sm-3">
-                            <a-form layout="horizontal">
-                                <a-form-item label="Purchase status">
-                                    <a-select
-                                        v-model:value="request.purchase_status"
-                                        multiple="multiple"
-                                        show-search
-                                        placeholder="Select purchase status"
-                                        style="width: 100%"
-                                        :options="suppliers"
-                                        :filter-option="selectFilterOption"
-                                    ></a-select>
-                                </a-form-item>
-                            </a-form>
-                        </div>
-                        <div class="col-sm-3">
-                            <a-form layout="horizontal">
-                                <a-form-item label="Pyment status">
-                                    <a-select
-                                        v-model:value="request.payment_status"
-                                        multiple="multiple"
-                                        show-search
-                                        placeholder="Select payment status"
-                                        style="width: 100%"
-                                        :options="suppliers"
-                                        :filter-option="selectFilterOption"
-                                    ></a-select>
-                                </a-form-item>
-                            </a-form>
+    <div>
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h5 class="mb-3 mb-md-0">
+                                    {{ __('default.purchase') }}  {{ __('default.report') }}
+                                </h5>
+                            </div>
+                            <div>
+                                <a-spin v-if="loader"/>
+                            </div>
+                            <div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

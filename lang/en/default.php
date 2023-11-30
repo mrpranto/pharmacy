@@ -328,4 +328,5 @@ return [
     'all_time_profit' => 'All time profit',
     'stock_value' => 'Stock value',
     'total_available_stock_value' => 'Total available stock value',
+    'report' => 'Report',
 ];

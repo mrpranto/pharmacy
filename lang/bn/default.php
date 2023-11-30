@@ -331,4 +331,5 @@ return [
     'all_time_profit' => 'সব সময়ের লাভ',
     'stock_value' => 'স্টক মূল্য',
     'total_available_stock_value' => 'মোট উপলব্ধ স্টক মূল্য',
+    'report' => 'প্রতিবেদন',
 ];

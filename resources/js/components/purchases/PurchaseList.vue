@@ -375,6 +375,7 @@ export default {
                     date: '',
                     supplier: '',
                     purchase_status: '',
+                    payment_status: '',
                 },
                 exportAble: {
                     csv: '',
@@ -404,6 +405,15 @@ export default {
                         filterValue: '',
                         option: [
                             'received', 'pending', 'canceled'
+                        ],
+                    },
+                    {
+                        title: 'payment_status',
+                        type: "button-checkbox",
+                        key: "payment_status",
+                        filterValue: '',
+                        option: [
+                            'PAID', 'DUE', 'PARTIAL-PAID', 'OVER-DUE'
                         ],
                     },
                 ],
@@ -436,6 +446,9 @@ export default {
             this.getData()
         },
         'options.request.purchase_status': function () {
+            this.getData()
+        },
+        'options.request.payment_status': function () {
             this.getData()
         },
         'options.request.date': function () {
@@ -502,6 +515,9 @@ export default {
             }
             if (filterType === 'purchase_status') {
                 this.options.request.purchase_status = filterValue
+            }
+            if (filterType === 'payment_status') {
+                this.options.request.payment_status = filterValue
             }
             if (filterType === 'date') {
                 this.options.request.date = filterValue
