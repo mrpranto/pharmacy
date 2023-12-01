@@ -5,6 +5,6 @@
 @endsection
 @section('content')
 
-    <purchase-report-component/>
+    <purchase-report-component :suppliers="{{ json_encode($suppliers) }}"/>
 
 @endsection

@@ -329,4 +329,5 @@ return [
     'stock_value' => 'Stock value',
     'total_available_stock_value' => 'Total available stock value',
     'report' => 'Report',
+    'due_amount' => 'Due amount',
 ];

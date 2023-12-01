@@ -23,6 +23,8 @@ class ReportController extends Controller
 
     public function purchasePage()
     {
-        return view('pages.report.purchase');
+        set_time_limit(300);
+
+        return view('pages.report.purchase',['suppliers' => $this->services->suppliers()]);
     }
 }

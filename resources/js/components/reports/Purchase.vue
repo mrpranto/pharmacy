@@ -4,18 +4,260 @@
             <div class="col-lg-12">
                 <div class="card radius-20">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex justify-content-start align-items-center flex-wrap">
                             <div>
                                 <h5 class="mb-3 mb-md-0">
-                                    {{ __('default.purchase') }}  {{ __('default.report') }}
+                                    {{ __('default.purchase') }} {{ __('default.report') }} <span class="ml-2">|</span>
                                 </h5>
                             </div>
-                            <div>
-                                <a-spin v-if="loader"/>
-                            </div>
-                            <div>
+                            <div class="ml-3 d-flex justify-content-start">
+                                <a-button type="dashed" shape="round" size="small" class="daterange"
+                                          :class="request.date ? 'active-button' : ''" style="margin-right: 5px;">
+                                    <template #icon>
+                                        <i class="mdi mdi-plus-circle mr-1"></i>
+                                    </template>
+                                    {{ __('default.date') }}
+                                </a-button>
+
+                                <div class="dropdown">
+                                    <a-button type="dashed" shape="round" size="small" :class="request.supplier ? 'active-button' : ''"
+                                              class="dropdown-toggle" id="supplier"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false" style="margin-right: 5px;">
+                                        <template #icon>
+                                            <i class="mdi mdi-plus-circle mr-1"></i>
+                                        </template>
+                                        {{ __('default.supplier') }}
+                                    </a-button>
+                                    <form class="dropdown-menu p-4"  aria-labelledby="supplier">
+                                        <a-form-item :label="__('default.supplier')" required style="margin-bottom: 0">
+                                            <a-select
+                                                v-model:value="request.supplier"
+                                                show-search
+                                                placeholder="Select a person"
+                                                style="width: 250px"
+                                                :options="suppliers"
+                                                :filter-option="selectFilterOption"
+                                            ></a-select>
+                                            <a class="text-primary mt-2 float-right text-decoration-none cursor-pointer"
+                                               v-if="request.supplier"
+                                               @click.prevent="request.supplier = null">
+                                                <small>{{ __('default.clear') }}</small>
+                                            </a>
+                                        </a-form-item>
+                                    </form>
+                                </div>
+
+                                <div class="dropdown">
+                                    <a-button type="dashed" shape="round" size="small" :class="request.purchase_status.length ? 'active-button' : ''"
+                                              class="dropdown-toggle" id="purchase_status"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false" style="margin-right: 5px;">
+                                        <template #icon>
+                                            <i class="mdi mdi-plus-circle mr-1"></i>
+                                        </template>
+                                        {{ __('default.purchase_status') }}
+                                    </a-button>
+
+                                    <form class="dropdown-menu p-4"  aria-labelledby="purchase_status">
+                                        <a-checkbox-group v-model:value="request.purchase_status" style="width: 250px">
+                                            <a-row>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="received">{{ __('default.received') }}</a-checkbox>
+                                                </a-col>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="pending">{{ __('default.pending') }}</a-checkbox>
+                                                </a-col>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="canceled">{{ __('default.canceled') }}</a-checkbox>
+                                                </a-col>
+                                            </a-row>
+                                        </a-checkbox-group>
+                                        <a class="text-primary mt-2 float-right text-decoration-none cursor-pointer"
+                                           v-if="request.purchase_status.length"
+                                           @click.prevent="request.purchase_status = []">
+                                            <small>{{ __('default.clear') }}</small>
+                                        </a>
+                                    </form>
+                                </div>
+
+                                <div class="dropdown">
+                                    <a-button type="dashed" shape="round" size="small" :class="request.payment_status.length ? 'active-button' : ''"
+                                              class="dropdown-toggle" id="payment_status"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false" style="margin-right: 5px;">
+                                        <template #icon>
+                                            <i class="mdi mdi-plus-circle mr-1"></i>
+                                        </template>
+                                        {{ __('default.payment_status') }}
+                                    </a-button>
+                                    <form class="dropdown-menu p-4"  aria-labelledby="payment_status">
+                                        <a-checkbox-group v-model:value="request.payment_status" style="width: 270px">
+                                            <a-row>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="PAID">{{ __('default.PAID') }}</a-checkbox>
+                                                </a-col>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="DUE">{{ __('default.DUE') }}</a-checkbox>
+                                                </a-col>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="PARTIAL-PAID">{{ __('default.PARTIAL-PAID') }}</a-checkbox>
+                                                </a-col>
+                                                <a-col :span="12">
+                                                    <a-checkbox value="OVER-DUE">{{ __('default.OVER-DUE') }}</a-checkbox>
+                                                </a-col>
+                                            </a-row>
+                                        </a-checkbox-group>
+                                        <a class="text-primary mt-2 float-right text-decoration-none cursor-pointer"
+                                           v-if="request.payment_status.length"
+                                           @click.prevent="request.payment_status = []">
+                                            <small>{{ __('default.clear') }}</small>
+                                        </a>
+                                    </form>
+                                </div>
 
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mt-2">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="card radius-20 w-100 h-100 d-inline-block">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="list-card-icon">
+                                        <h1><i class="mdi mdi-checkbox-multiple-blank-circle-outline text-primary"></i></h1>
+                                    </div>
+                                    <div class="pl-4">
+                                        <p>{{ __('default.total') }} {{ __('default.subtotal') }}</p>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="card radius-20 w-100 h-100 d-inline-block">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="list-card-icon">
+                                        <h1><i class="mdi mdi-checkbox-multiple-marked-circle text-primary"></i></h1>
+                                    </div>
+                                    <div class="pl-4">
+                                        <p>{{ __('default.total') }} {{ __('default.grand_total') }}</p>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="card radius-20 w-100 h-100 d-inline-block">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="list-card-icon">
+                                        <h1><i class="mdi mdi-credit-card-multiple text-primary"></i></h1>
+                                    </div>
+                                    <div class="pl-4">
+                                        <p>{{ __('default.total') }} {{ __('default.payment') }}</p>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="card radius-20 w-100 h-100 d-inline-block">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="list-card-icon">
+                                        <h1><i class="mdi mdi-credit-card-off text-primary"></i></h1>
+                                    </div>
+                                    <div class="pl-4">
+                                        <p>{{ __('default.total_due_amount') }}</p>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mt-2">
+                <div class="card radius-20">
+                    <div class="card-body">
+                        <pre>
+                            {{ request }}
+                        </pre>
+
+                        <div class="mb-3">
+                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.date">
+                                {{ request.date }}
+                                <a class="text-decoration-none cursor-pointer ml-2">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
+                            </span>
+
+                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.supplier">
+                                {{ suppliers.find(item => item.value === request.supplier).label }}
+                                <a class="text-decoration-none cursor-pointer ml-2">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
+                            </span>
+
+                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.purchase_status.length">
+                                <template v-for="(purchase_status, purchase_status_index) in request.purchase_status">
+                                    {{ purchase_status.toUpperCase() + ', ' }}
+                                </template>
+                                <a class="text-decoration-none cursor-pointer ml-2">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-inverse-secondary">{{ __('default.sl') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.purchase_reference') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.supplier') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.date') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.subtotal') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.total_amount') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.paid_amount') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.due_amount') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.purchase_status') }}</th>
+                                        <th class="bg-inverse-secondary">{{ __('default.payment_status') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <a-spin :tip="__('default.loading')" />
+                                    </td>
+                                </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -25,27 +267,57 @@
 </template>
 <script>
 import dayjs from 'dayjs';
+
 export default {
     name: "Purchase",
+    props:['suppliers'],
     data() {
         return {
             loader: false,
-            rangePreset:[
-                { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
-                { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
-                { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
-                { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
+            rangePreset: [
+                {label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()]},
+                {label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()]},
+                {label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()]},
+                {label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()]},
             ],
-            suppliers:[],
-            request:{
-                date: null,
+            request: {
+                date: this.$today +' to '+ this.$today,
                 supplier: null,
-                purchase_status: null,
-                payment_status: null,
+                purchase_status: [],
+                payment_status: [],
             }
         }
     },
-    methods:{
+    created() {
+
+    },
+    mounted() {
+        const self = this;
+        this.$nextTick(() => {
+
+            $(".filter-column").click(function (e) {
+                e.stopPropagation();
+            })
+
+            $('.daterange').daterangepicker({
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                "alwaysShowCalendars": true,
+                showDropdowns: true,
+                minYear: 1901,
+                maxYear: parseInt(moment().format('YYYY'), 10)
+            }, function (start, end, label) {
+                self.request.date = start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD');
+            });
+        })
+    },
+    methods: {
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
@@ -53,5 +325,47 @@ export default {
 }
 </script>
 <style scoped>
+.active-button {
+    color: #1677ff;
+    border-color: #1677ff;
+}
 
+.dropdown-toggle::after {
+    content: none;
+}
+
+.dropdown-menu {
+    margin-top: 8px;
+    border-radius: 5px !important;
+    border: 1px solid #ddd;
+}
+
+.dropdown-menu:before, .dropdown-menu:after {
+    position: absolute;
+    display: inline-block;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+}
+
+.dropdown-menu:before {
+    top: -7px;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+}
+
+.dropdown-menu:after {
+    top: -6px;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+    border-left: 6px solid transparent;
+}
+
+.dropdown-menu:before {
+    left: 17px;
+}
+
+.dropdown-menu:after {
+    left: 18px;
+}
 </style>

@@ -17,7 +17,7 @@ return [
     'pagination' => 'পৃষ্ঠা সংখ্যা',
 
     'add_role' => 'নতুন রোল তৈরী করুন ',
-    'loading' => 'লোডয়িং...',
+    'loading' => 'লোডিং...',
     'show_details' => 'বিস্তারিত দেখুন',
     'you_can_show' => 'আপনি চাইলে কলাম দেখতে এবং লুকাতে পারেন। ',
     'clear' => 'পরিষ্কার',
@@ -332,4 +332,5 @@ return [
     'stock_value' => 'স্টক মূল্য',
     'total_available_stock_value' => 'মোট উপলব্ধ স্টক মূল্য',
     'report' => 'প্রতিবেদন',
+    'due_amount' => 'বকেয়া পরিমাণ',
 ];

@@ -3,6 +3,7 @@
 namespace App\Services\Report;
 
 use App\Models\Expense\Expense;
+use App\Models\People\Supplier;
 use App\Models\Purchase\Purchase;
 use App\Models\Purchase\PurchaseProduct;
 use App\Models\Sale\Sale;
@@ -17,6 +18,7 @@ class ReportServices extends BaseServices
     public Sale $sale;
     public SaleProducts $saleProduct;
     public Expense $expense;
+    public Supplier $supplier;
 
     /**
      * @param Purchase $purchase
@@ -24,10 +26,12 @@ class ReportServices extends BaseServices
      * @param Sale $sale
      * @param SaleProducts $saleProduct
      * @param Expense $expense
+     * @param Supplier $supplier
      */
     public function __construct(
         Purchase $purchase, PurchaseProduct $purchaseProduct,
-        Sale     $sale, SaleProducts $saleProduct, Expense $expense
+        Sale     $sale, SaleProducts $saleProduct, Expense $expense,
+        Supplier $supplier
     )
     {
         $this->purchase = $purchase;
@@ -35,6 +39,7 @@ class ReportServices extends BaseServices
         $this->sale = $sale;
         $this->saleProduct = $saleProduct;
         $this->expense = $expense;
+        $this->supplier = $supplier;
     }
 
     /**
@@ -125,5 +130,18 @@ class ReportServices extends BaseServices
             'expense' => $expense,
             'profit' => ($revenue - $expense)
         ];
+    }
+
+    public function suppliers()
+    {
+        return $this->supplier
+            ->newQuery()
+            ->get(['id', 'name', 'phone_number'])
+            ->map(function ($item){
+                return [
+                    'value' => $item->id,
+                    'label' => $item->name ."({$item->phone_number})"
+                ];
+            });
     }
 }
