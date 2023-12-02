@@ -20,7 +20,8 @@
                                 </a-button>
 
                                 <div class="dropdown">
-                                    <a-button type="dashed" shape="round" size="small" :class="request.supplier ? 'active-button' : ''"
+                                    <a-button type="dashed" shape="round" size="small"
+                                              :class="request.supplier ? 'active-button' : ''"
                                               class="dropdown-toggle" id="supplier"
                                               data-toggle="dropdown" aria-haspopup="true"
                                               aria-expanded="false" style="margin-right: 5px;">
@@ -29,7 +30,7 @@
                                         </template>
                                         {{ __('default.supplier') }}
                                     </a-button>
-                                    <form class="dropdown-menu p-4"  aria-labelledby="supplier">
+                                    <form class="dropdown-menu p-4" aria-labelledby="supplier">
                                         <a-form-item :label="__('default.supplier')" required style="margin-bottom: 0">
                                             <a-select
                                                 v-model:value="request.supplier"
@@ -49,7 +50,8 @@
                                 </div>
 
                                 <div class="dropdown">
-                                    <a-button type="dashed" shape="round" size="small" :class="request.purchase_status.length ? 'active-button' : ''"
+                                    <a-button type="dashed" shape="round" size="small"
+                                              :class="request.purchase_status.length ? 'active-button' : ''"
                                               class="dropdown-toggle" id="purchase_status"
                                               data-toggle="dropdown" aria-haspopup="true"
                                               aria-expanded="false" style="margin-right: 5px;">
@@ -59,17 +61,13 @@
                                         {{ __('default.purchase_status') }}
                                     </a-button>
 
-                                    <form class="dropdown-menu p-4"  aria-labelledby="purchase_status">
+                                    <form class="dropdown-menu p-4" aria-labelledby="purchase_status">
                                         <a-checkbox-group v-model:value="request.purchase_status" style="width: 250px">
                                             <a-row>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="received">{{ __('default.received') }}</a-checkbox>
-                                                </a-col>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="pending">{{ __('default.pending') }}</a-checkbox>
-                                                </a-col>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="canceled">{{ __('default.canceled') }}</a-checkbox>
+                                                <a-col :span="12" v-for="(purchase_status_label) in purchase_status">
+                                                    <a-checkbox :value="purchase_status_label">
+                                                        {{ __('default.' + purchase_status_label) }}
+                                                    </a-checkbox>
                                                 </a-col>
                                             </a-row>
                                         </a-checkbox-group>
@@ -82,7 +80,8 @@
                                 </div>
 
                                 <div class="dropdown">
-                                    <a-button type="dashed" shape="round" size="small" :class="request.payment_status.length ? 'active-button' : ''"
+                                    <a-button type="dashed" shape="round" size="small"
+                                              :class="request.payment_status.length ? 'active-button' : ''"
                                               class="dropdown-toggle" id="payment_status"
                                               data-toggle="dropdown" aria-haspopup="true"
                                               aria-expanded="false" style="margin-right: 5px;">
@@ -91,20 +90,13 @@
                                         </template>
                                         {{ __('default.payment_status') }}
                                     </a-button>
-                                    <form class="dropdown-menu p-4"  aria-labelledby="payment_status">
+                                    <form class="dropdown-menu p-4" aria-labelledby="payment_status">
                                         <a-checkbox-group v-model:value="request.payment_status" style="width: 270px">
                                             <a-row>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="PAID">{{ __('default.PAID') }}</a-checkbox>
-                                                </a-col>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="DUE">{{ __('default.DUE') }}</a-checkbox>
-                                                </a-col>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="PARTIAL-PAID">{{ __('default.PARTIAL-PAID') }}</a-checkbox>
-                                                </a-col>
-                                                <a-col :span="12">
-                                                    <a-checkbox value="OVER-DUE">{{ __('default.OVER-DUE') }}</a-checkbox>
+                                                <a-col :span="12" v-for="(payment_status_label) in payment_status">
+                                                    <a-checkbox :value="payment_status_label">
+                                                        {{ __('default.' + payment_status_label) }}
+                                                    </a-checkbox>
                                                 </a-col>
                                             </a-row>
                                         </a-checkbox-group>
@@ -129,11 +121,12 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="list-card-icon">
-                                        <h1><i class="mdi mdi-checkbox-multiple-blank-circle-outline text-primary"></i></h1>
+                                        <h1><i class="mdi mdi-checkbox-multiple-blank-circle-outline text-primary"></i>
+                                        </h1>
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.total') }} {{ __('default.subtotal') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(total_subtotal) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +142,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.total') }} {{ __('default.grand_total') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(total_grand_total) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +158,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.total') }} {{ __('default.payment') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(total_paid) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +174,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.total_due_amount') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(total_due) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -193,30 +186,46 @@
             <div class="col-lg-12 mt-2">
                 <div class="card radius-20">
                     <div class="card-body">
-                        <pre>
-                            {{ request }}
-                        </pre>
-
                         <div class="mb-3">
-                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.date">
+                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.date">
                                 {{ request.date }}
-                                <a class="text-decoration-none cursor-pointer ml-2">
+                                <a class="text-decoration-none cursor-pointer ml-2 mr-2"
+                                   @click.prevent="request.date = null">
                                     <i class="mdi mdi-close-circle"></i>
                                 </a>
                             </span>
 
-                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.supplier">
+                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                  v-if="request.supplier">
                                 {{ suppliers.find(item => item.value === request.supplier).label }}
-                                <a class="text-decoration-none cursor-pointer ml-2">
+                                <a class="text-decoration-none cursor-pointer ml-2 mr-2"
+                                   @click.prevent="request.supplier = null">
                                     <i class="mdi mdi-close-circle"></i>
                                 </a>
                             </span>
 
-                            <span class="pt-1 pr-3 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.purchase_status.length">
+                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                  v-if="request.purchase_status.length">
                                 <template v-for="(purchase_status, purchase_status_index) in request.purchase_status">
-                                    {{ purchase_status.toUpperCase() + ', ' }}
+                                    {{
+                                        purchase_status_index === 0 ? purchase_status.toUpperCase() : ', ' + purchase_status.toUpperCase()
+                                    }}
                                 </template>
-                                <a class="text-decoration-none cursor-pointer ml-2">
+                                <a class="text-decoration-none cursor-pointer ml-2 mr-2"
+                                   @click.prevent="request.purchase_status = []">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
+                            </span>
+
+                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                  v-if="request.payment_status.length">
+                                <template v-for="(payment_status, payment_status_index) in request.payment_status">
+                                    {{
+                                        payment_status_index === 0 ? payment_status.toUpperCase() : ', ' + payment_status.toUpperCase()
+                                    }}
+                                </template>
+                                <a class="text-decoration-none cursor-pointer ml-2 mr-2"
+                                   @click.prevent="request.payment_status = []">
                                     <i class="mdi mdi-close-circle"></i>
                                 </a>
                             </span>
@@ -225,37 +234,71 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover">
                                 <thead>
-                                    <tr>
-                                        <th class="bg-inverse-secondary">{{ __('default.sl') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.purchase_reference') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.supplier') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.date') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.subtotal') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.total_amount') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.paid_amount') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.due_amount') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.purchase_status') }}</th>
-                                        <th class="bg-inverse-secondary">{{ __('default.payment_status') }}</th>
-                                    </tr>
+                                <tr>
+                                    <th class="bg-inverse-secondary">{{ __('default.sl') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.purchase_reference') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.supplier') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.date') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.subtotal') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.total_amount') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.paid_amount') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.due_amount') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.purchase_status') }}</th>
+                                    <th class="bg-inverse-secondary">{{ __('default.payment_status') }}</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr v-if="loader">
                                     <td colspan="10" class="text-center">
-                                        <a-spin :tip="__('default.loading')" />
+                                        <a-spin :tip="__('default.loading')"/>
                                     </td>
                                 </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                <template v-else>
+                                    <tr v-if="purchase_reports.length"
+                                        v-for="(purchase, purchase_index) in purchase_reports">
+                                        <td>{{ (purchase_index + 1) }}</td>
+                                        <td>{{ purchase.reference }}</td>
+                                        <td>{{ purchase.supplier_name }} <br> ({{ purchase.supplier_phone_number }})
+                                        </td>
+                                        <td>{{ $date_format(purchase.date) }}</td>
+                                        <td>{{ $showCurrency(purchase.subtotal) }}</td>
+                                        <td>{{ $showCurrency(purchase.total) }}</td>
+                                        <td>{{ $showCurrency(purchase.total_paid) }}</td>
+                                        <td>{{ $showCurrency(purchase.total_due) }}</td>
+                                        <td>
+                                            <span class="badge badge-primary" v-if="purchase.status === 'received'">
+                                                {{ purchase.status.toUpperCase() }}
+                                            </span>
+                                            <span class="badge badge-warning" v-else-if="purchase.status === 'pending'">
+                                                {{ purchase.status.toUpperCase() }}
+                                            </span>
+                                            <span class="badge badge-danger" v-else>
+                                                {{ purchase.status.toUpperCase() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-danger" v-if="purchase.payment_status === 'DUE'">
+                                                {{ purchase.payment_status.toUpperCase() }}
+                                            </span>
+                                            <span class="badge badge-info"
+                                                  v-else-if="purchase.payment_status === 'PARTIAL-PAID'">
+                                                {{ purchase.payment_status.toUpperCase() }}
+                                            </span>
+                                            <span class="badge badge-warning"
+                                                  v-else-if="purchase.payment_status === 'OVER-DUE'">
+                                                {{ purchase.payment_status.toUpperCase() }}
+                                            </span>
+                                            <span class="badge badge-success" v-else>
+                                                {{ purchase.payment_status.toUpperCase() }}
+                                            </span>
+                                        </td>
                                     </tr>
+                                    <tr v-else>
+                                        <td colspan="10" class="text-center">
+                                            {{ __('default.no_data_found') }}
+                                        </td>
+                                    </tr>
+                                </template>
                                 </tbody>
                             </table>
                         </div>
@@ -270,7 +313,7 @@ import dayjs from 'dayjs';
 
 export default {
     name: "Purchase",
-    props:['suppliers'],
+    props: ['suppliers'],
     data() {
         return {
             loader: false,
@@ -280,25 +323,48 @@ export default {
                 {label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()]},
                 {label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()]},
             ],
+            purchase_status: [
+                'received', 'pending', 'canceled'
+            ],
+            payment_status: [
+                'PAID', 'DUE', 'PARTIAL-PAID', 'OVER-DUE'
+            ],
             request: {
-                date: this.$today +' to '+ this.$today,
+                date: this.$today + ' to ' + this.$today,
                 supplier: null,
                 purchase_status: [],
                 payment_status: [],
-            }
+            },
+            purchase_reports: [],
+            total_subtotal: 0,
+            total_grand_total: 0,
+            total_paid: 0,
+            total_due: 0
         }
     },
     created() {
-
+        this.getData()
+    },
+    watch: {
+        'request.date': function () {
+            this.getData()
+        },
+        'request.supplier': function () {
+            this.getData()
+        },
+        'request.purchase_status': function () {
+            this.getData()
+        },
+        'request.payment_status': function () {
+            this.getData()
+        },
     },
     mounted() {
         const self = this;
         this.$nextTick(() => {
-
             $(".filter-column").click(function (e) {
                 e.stopPropagation();
             })
-
             $('.daterange').daterangepicker({
                 ranges: {
                     'Today': [moment(), moment()],
@@ -318,6 +384,19 @@ export default {
         })
     },
     methods: {
+        async getData() {
+            this.loader = true;
+            await axios.get('/report/get-purchase', {params: this.request})
+                .then(response => {
+                    this.purchase_reports = response.data.purchase_reports;
+                    this.total_subtotal = response.data.total_subtotal;
+                    this.total_grand_total = response.data.total_grand_total;
+                    this.total_paid = response.data.total_paid;
+                    this.total_due = response.data.total_due;
+                    this.loader = false;
+                })
+                .catch(err => console.error(err))
+        },
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },

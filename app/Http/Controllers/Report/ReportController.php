@@ -21,10 +21,21 @@ class ReportController extends Controller
         return view('pages.report.summary', $this->services->summary());
     }
 
-    public function purchasePage()
+    /**
+     * @return View
+     */
+    public function purchasePage(): View
+    {
+        return view('pages.report.purchase',['suppliers' => $this->services->suppliers()]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPurchaseData(): array
     {
         set_time_limit(300);
 
-        return view('pages.report.purchase',['suppliers' => $this->services->suppliers()]);
+        return $this->services->getPurchaseData();
     }
 }

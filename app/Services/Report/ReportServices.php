@@ -9,6 +9,7 @@ use App\Models\Purchase\PurchaseProduct;
 use App\Models\Sale\Sale;
 use App\Models\Sale\SaleProducts;
 use App\Services\BaseServices;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ReportServices extends BaseServices
@@ -132,16 +133,61 @@ class ReportServices extends BaseServices
         ];
     }
 
-    public function suppliers()
+    /**
+     * @return Collection
+     */
+    public function suppliers(): Collection
     {
         return $this->supplier
             ->newQuery()
             ->get(['id', 'name', 'phone_number'])
-            ->map(function ($item){
+            ->map(function ($item) {
                 return [
                     'value' => $item->id,
-                    'label' => $item->name ."({$item->phone_number})"
+                    'label' => $item->name . "({$item->phone_number})"
                 ];
             });
+    }
+
+    /**
+     * @return array
+     */
+    public function getPurchaseData(): array
+    {
+        if (request()->filled('date')){
+            $purchaseReports = $this->purchase
+                ->newQuery()
+                ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+                ->select(
+                    'suppliers.name as supplier_name', 'suppliers.phone_number as supplier_phone_number',
+                    'purchases.date', 'purchases.status', 'purchases.reference', 'purchases.subtotal',
+                    'purchases.total', 'purchases.total_paid', 'purchases.payment_status',
+                    DB::raw('(purchases.total - purchases.total_paid) as total_due')
+                )
+                ->when(request()->filled('date'), function ($q){
+                    $dates = explode(' to ', request()->get('date'));
+                    $q->whereBetween('purchases.date', [$dates[0], $dates[1]]);
+                })
+                ->when(request()->filled('supplier'), fn($q) => $q->where('purchases.supplier_id', request()->get('supplier')))
+                ->when(request()->filled('purchase_status'), fn($q) => $q->whereIn('purchases.status', request()->get('purchase_status')))
+                ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('purchases.payment_status', request()->get('payment_status')))
+                ->get();
+
+            return [
+                'purchase_reports' => $purchaseReports,
+                'total_subtotal' => $purchaseReports->sum('subtotal'),
+                'total_grand_total' => $purchaseReports->sum('total'),
+                'total_paid' => $purchaseReports->sum('total_paid'),
+                'total_due' => $purchaseReports->sum('total_due'),
+            ];
+        }
+
+        return [
+            'purchase_reports' => [],
+            'total_subtotal' => 0,
+            'total_grand_total' => 0,
+            'total_paid' => 0,
+            'total_due' => 0,
+        ];
     }
 }

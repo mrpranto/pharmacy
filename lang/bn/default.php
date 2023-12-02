@@ -333,4 +333,5 @@ return [
     'total_available_stock_value' => 'মোট উপলব্ধ স্টক মূল্য',
     'report' => 'প্রতিবেদন',
     'due_amount' => 'বকেয়া পরিমাণ',
+    'no_data_found' => 'কোন তথ্য পাওয়া যায়নি',
 ];

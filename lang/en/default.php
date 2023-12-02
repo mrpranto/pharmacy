@@ -330,4 +330,5 @@ return [
     'total_available_stock_value' => 'Total available stock value',
     'report' => 'Report',
     'due_amount' => 'Due amount',
+    'no_data_found' => 'No data found.',
 ];
