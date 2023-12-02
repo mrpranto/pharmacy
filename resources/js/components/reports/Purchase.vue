@@ -7,7 +7,8 @@
                         <div class="d-flex justify-content-start align-items-center flex-wrap">
                             <div>
                                 <h5 class="mb-3 mb-md-0">
-                                    {{ __('default.purchase') }} {{ __('default.report') }} <span class="ml-2">|</span>
+                                    {{ __('default.purchase') }} {{ __('default.report') }}
+                                    <span class="ml-1 font-weight-lighter">| {{ __('default.total') }} : {{ total_purchase }}</span>
                                 </h5>
                             </div>
                             <div class="ml-3 d-flex justify-content-start">
@@ -186,8 +187,18 @@
             <div class="col-lg-12 mt-2">
                 <div class="card radius-20">
                     <div class="card-body">
-                        <div class="mb-3">
-                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.date">
+                        <div class="d-flex justify-content-between">
+                            <div class="mb-3">
+                                <a-button type="default" :size="'small'"
+                                          shape="round" class="mr-2"
+                                          :title="__('default.refresh')"
+                                          @click.prevent="refresh">
+                                    <template #icon>
+                                        <i class="mdi mdi-reload"></i>
+                                    </template>
+                                </a-button>
+
+                                <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2" v-if="request.date">
                                 {{ request.date }}
                                 <a class="text-decoration-none cursor-pointer ml-2 mr-2"
                                    @click.prevent="request.date = null">
@@ -195,8 +206,8 @@
                                 </a>
                             </span>
 
-                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
-                                  v-if="request.supplier">
+                                <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                      v-if="request.supplier">
                                 {{ suppliers.find(item => item.value === request.supplier).label }}
                                 <a class="text-decoration-none cursor-pointer ml-2 mr-2"
                                    @click.prevent="request.supplier = null">
@@ -204,8 +215,8 @@
                                 </a>
                             </span>
 
-                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
-                                  v-if="request.purchase_status.length">
+                                <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                      v-if="request.purchase_status.length">
                                 <template v-for="(purchase_status, purchase_status_index) in request.purchase_status">
                                     {{
                                         purchase_status_index === 0 ? purchase_status.toUpperCase() : ', ' + purchase_status.toUpperCase()
@@ -217,8 +228,8 @@
                                 </a>
                             </span>
 
-                            <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
-                                  v-if="request.payment_status.length">
+                                <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                      v-if="request.payment_status.length">
                                 <template v-for="(payment_status, payment_status_index) in request.payment_status">
                                     {{
                                         payment_status_index === 0 ? payment_status.toUpperCase() : ', ' + payment_status.toUpperCase()
@@ -229,22 +240,41 @@
                                     <i class="mdi mdi-close-circle"></i>
                                 </a>
                             </span>
+                            </div>
+                            <div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <a-input v-model:value="request.search"
+                                                 style="border-radius: 20px;"
+                                                 size="small"
+                                                 @pressEnter="searchData"
+                                                 :placeholder="__('default.search')+'...'">
+                                            <template #suffix>
+                                                <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!request.search"/>
+                                                <a-tooltip title="Clear Search" placement="left" @click.prevent="clearSearch" v-else>
+                                                    <close-circle-filled style="color: rgba(0, 0, 0, 0.45)"/>
+                                                </a-tooltip>
+                                            </template>
+                                        </a-input>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="bg-inverse-secondary">{{ __('default.sl') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.purchase_reference') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.supplier') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.date') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.subtotal') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.total_amount') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.paid_amount') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.due_amount') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.purchase_status') }}</th>
-                                    <th class="bg-inverse-secondary">{{ __('default.payment_status') }}</th>
+                                    <th class="bg-gray">{{ __('default.sl') }}</th>
+                                    <th class="bg-gray">{{ __('default.purchase_reference') }}</th>
+                                    <th class="bg-gray">{{ __('default.supplier') }}</th>
+                                    <th class="bg-gray">{{ __('default.date') }}</th>
+                                    <th class="bg-gray">{{ __('default.subtotal') }}</th>
+                                    <th class="bg-gray">{{ __('default.total_amount') }}</th>
+                                    <th class="bg-gray">{{ __('default.paid_amount') }}</th>
+                                    <th class="bg-gray">{{ __('default.due_amount') }}</th>
+                                    <th class="bg-gray">{{ __('default.purchase_status') }}</th>
+                                    <th class="bg-gray">{{ __('default.payment_status') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -257,7 +287,12 @@
                                     <tr v-if="purchase_reports.length"
                                         v-for="(purchase, purchase_index) in purchase_reports">
                                         <td>{{ (purchase_index + 1) }}</td>
-                                        <td>{{ purchase.reference }}</td>
+                                        <td>
+                                            <a :href="'/purchase-print/'+purchase.id" target="_blank"
+                                               class="text-decoration-none font-bold">
+                                                {{ purchase.reference }} <span class="ml-1"><i class="mdi mdi-call-made"></i></span>
+                                            </a>
+                                        </td>
                                         <td>{{ purchase.supplier_name }} <br> ({{ purchase.supplier_phone_number }})
                                         </td>
                                         <td>{{ $date_format(purchase.date) }}</td>
@@ -310,9 +345,11 @@
 </template>
 <script>
 import dayjs from 'dayjs';
+import {CloseCircleFilled, SearchOutlined} from "@ant-design/icons-vue";
 
 export default {
     name: "Purchase",
+    components: {CloseCircleFilled, SearchOutlined},
     props: ['suppliers'],
     data() {
         return {
@@ -334,12 +371,14 @@ export default {
                 supplier: null,
                 purchase_status: [],
                 payment_status: [],
+                search: null,
             },
             purchase_reports: [],
             total_subtotal: 0,
             total_grand_total: 0,
             total_paid: 0,
-            total_due: 0
+            total_due: 0,
+            total_purchase: 0,
         }
     },
     created() {
@@ -393,9 +432,25 @@ export default {
                     this.total_grand_total = response.data.total_grand_total;
                     this.total_paid = response.data.total_paid;
                     this.total_due = response.data.total_due;
+                    this.total_purchase = response.data.total_purchase;
                     this.loader = false;
                 })
                 .catch(err => console.error(err))
+        },
+        async refresh(){
+            this.request.date = this.$today + ' to ' + this.$today;
+            this.request.supplier = null;
+            this.request.purchase_status = [];
+            this.request.payment_status = [];
+            this.request.search = null;
+            await this.getData();
+        },
+        async searchData(){
+            await this.getData()
+        },
+        async clearSearch() {
+            this.request.search = '';
+            await this.getData();
         },
         selectFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;

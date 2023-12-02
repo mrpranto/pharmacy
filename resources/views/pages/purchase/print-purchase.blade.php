@@ -180,9 +180,6 @@
     function printPurchase(){
        window.print()
     }
-    $(document).ready(function (){
-        printPurchase()
-    })
 </script>
 @endpush
 

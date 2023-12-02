@@ -160,7 +160,7 @@ class ReportServices extends BaseServices
                 ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
                 ->select(
                     'suppliers.name as supplier_name', 'suppliers.phone_number as supplier_phone_number',
-                    'purchases.date', 'purchases.status', 'purchases.reference', 'purchases.subtotal',
+                    'purchases.id', 'purchases.date', 'purchases.status', 'purchases.reference', 'purchases.subtotal',
                     'purchases.total', 'purchases.total_paid', 'purchases.payment_status',
                     DB::raw('(purchases.total - purchases.total_paid) as total_due')
                 )
@@ -171,6 +171,10 @@ class ReportServices extends BaseServices
                 ->when(request()->filled('supplier'), fn($q) => $q->where('purchases.supplier_id', request()->get('supplier')))
                 ->when(request()->filled('purchase_status'), fn($q) => $q->whereIn('purchases.status', request()->get('purchase_status')))
                 ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('purchases.payment_status', request()->get('payment_status')))
+                ->when(request()->filled('search'), fn($q) => $q->where('suppliers.name', 'like', "%".request()->get('search')."%")
+                    ->orWhere('suppliers.phone_number', 'like', "%".request()->get('search')."%")
+                    ->orWhere('purchases.reference', 'like', "%".request()->get('search')."%")
+                )
                 ->get();
 
             return [
@@ -179,6 +183,7 @@ class ReportServices extends BaseServices
                 'total_grand_total' => $purchaseReports->sum('total'),
                 'total_paid' => $purchaseReports->sum('total_paid'),
                 'total_due' => $purchaseReports->sum('total_due'),
+                'total_purchase' => $purchaseReports->count(),
             ];
         }
 
@@ -188,6 +193,7 @@ class ReportServices extends BaseServices
             'total_grand_total' => 0,
             'total_paid' => 0,
             'total_due' => 0,
+            'total_purchase' => 0,
         ];
     }
 }
