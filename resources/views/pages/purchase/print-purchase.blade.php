@@ -51,7 +51,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="container-fluid d-flex justify-content-between">
+                            <div class="container-fluid mt-3 d-flex justify-content-between">
                                 <div class="col-lg-6 pl-0">
                                     <h5 class="mb-2 text-muted">{{ __('default.supplier') }} : {{
                                     $purchase->supplier['name']
@@ -65,9 +65,9 @@
                                     <h4 class="text-right font-weight-normal">{{ __('default.total') }}:
                                         {{ show_currency($purchase->total) }}</h4>
                                     <h6 class="mb-0 mt-3 text-right font-weight-normal mb-2">
-                                        <p><span class="text-muted">{{ __('default.date') }} :</span>
+                                        <p class="mb-2"><span class="text-muted">{{ __('default.date') }} :</span>
                                             {{ date(format_date(), strtotime($purchase->date)) }}</p>
-                                        <p>
+                                        <p class="mb-2">
                                             <span class="text-muted">{{ __('default.status') }} : </span>
                                             @if($purchase->status == 'received')
                                                 <span>{{ strtoupper($purchase->status) }}</span>
@@ -77,10 +77,14 @@
                                                 <span>{{ strtoupper($purchase->status) }}</span>
                                             @endif
                                         </p>
+                                        <p class="mb-2">
+                                            <span class="text-muted">{{ __('default.payment_status') }} : </span>
+                                            <span>{{ strtoupper($purchase->payment_status) }}</span>
+                                        </p>
                                     </h6>
                                 </div>
                             </div>
-                            <div class="container-fluid mt-5 d-flex justify-content-center w-100">
+                            <div class="container-fluid mt-3 d-flex justify-content-center w-100">
                                 <div class="table-responsive w-100">
                                     <table class="table table-hover table-striped border">
                                         <thead>
@@ -136,7 +140,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="container-fluid mt-5 w-100">
+                            <div class="container-fluid mt-3 w-100">
                                 <div class="row">
                                     <div class="col-md-6 ml-auto">
                                         <div class="table-responsive">
@@ -158,6 +162,18 @@
                                                     <td class="text-bold-800 h3">{{ __('default.total') }}</td>
                                                     <td class="text-bold-800 text-right h3">
                                                         {{ show_currency($purchase->total) }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-800 h3">{{ __('default.paid_amount') }}</td>
+                                                    <td class="text-bold-800 text-right h3">
+                                                        {{ show_currency($purchase->total_paid) }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-800 h3">{{ __('default.due_amount') }}</td>
+                                                    <td class="text-bold-800 text-right h3">
+                                                        {{ show_currency($purchase->total - $purchase->total_paid) }}
                                                     </td>
                                                 </tr>
                                                 </tbody>
