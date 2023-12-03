@@ -284,50 +284,62 @@
                                     </td>
                                 </tr>
                                 <template v-else>
-                                    <tr v-if="purchase_reports.length"
-                                        v-for="(purchase, purchase_index) in purchase_reports">
-                                        <td>{{ (purchase_index + 1) }}</td>
-                                        <td>
-                                            <a :href="'/purchase-print/'+purchase.id" target="_blank"
-                                               class="text-decoration-none font-bold">
-                                                {{ purchase.reference }} <span class="ml-1"><i class="mdi mdi-call-made"></i></span>
-                                            </a>
-                                        </td>
-                                        <td>{{ purchase.supplier_name }} <br> ({{ purchase.supplier_phone_number }})
-                                        </td>
-                                        <td>{{ $date_format(purchase.date) }}</td>
-                                        <td>{{ $showCurrency(purchase.subtotal) }}</td>
-                                        <td>{{ $showCurrency(purchase.total) }}</td>
-                                        <td>{{ $showCurrency(purchase.total_paid) }}</td>
-                                        <td>{{ $showCurrency(purchase.total_due) }}</td>
-                                        <td>
+                                    <template v-if="purchase_reports.length">
+                                        <tr v-for="(purchase, purchase_index) in purchase_reports">
+                                            <td>{{ (purchase_index + 1) }}</td>
+                                            <td>
+                                                <a :href="'/purchase-print/'+purchase.id" target="_blank"
+                                                   class="text-decoration-none font-bold">
+                                                    {{ purchase.reference }} <span class="ml-1"><i class="mdi mdi-call-made"></i></span>
+                                                </a>
+                                            </td>
+                                            <td>{{ purchase.supplier_name }} <br> ({{ purchase.supplier_phone_number }})
+                                            </td>
+                                            <td>{{ $date_format(purchase.date) }}</td>
+                                            <td>{{ $showCurrency(purchase.subtotal) }}</td>
+                                            <td>{{ $showCurrency(purchase.total) }}</td>
+                                            <td>{{ $showCurrency(purchase.total_paid) }}</td>
+                                            <td>{{ $showCurrency(purchase.total_due) }}</td>
+                                            <td>
                                             <span class="badge badge-primary" v-if="purchase.status === 'received'">
                                                 {{ purchase.status.toUpperCase() }}
                                             </span>
-                                            <span class="badge badge-warning" v-else-if="purchase.status === 'pending'">
+                                                <span class="badge badge-warning" v-else-if="purchase.status === 'pending'">
                                                 {{ purchase.status.toUpperCase() }}
                                             </span>
-                                            <span class="badge badge-danger" v-else>
+                                                <span class="badge badge-danger" v-else>
                                                 {{ purchase.status.toUpperCase() }}
                                             </span>
-                                        </td>
-                                        <td>
+                                            </td>
+                                            <td>
                                             <span class="badge badge-danger" v-if="purchase.payment_status === 'DUE'">
                                                 {{ purchase.payment_status.toUpperCase() }}
                                             </span>
-                                            <span class="badge badge-info"
-                                                  v-else-if="purchase.payment_status === 'PARTIAL-PAID'">
+                                                <span class="badge badge-info"
+                                                      v-else-if="purchase.payment_status === 'PARTIAL-PAID'">
                                                 {{ purchase.payment_status.toUpperCase() }}
                                             </span>
-                                            <span class="badge badge-warning"
-                                                  v-else-if="purchase.payment_status === 'OVER-DUE'">
+                                                <span class="badge badge-warning"
+                                                      v-else-if="purchase.payment_status === 'OVER-DUE'">
                                                 {{ purchase.payment_status.toUpperCase() }}
                                             </span>
-                                            <span class="badge badge-success" v-else>
+                                                <span class="badge badge-success" v-else>
                                                 {{ purchase.payment_status.toUpperCase() }}
                                             </span>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="4">
+                                                {{ __('default.total') }}
+                                                {{ totalCalculate }}
+                                            </th>
+                                            <th>{{ $showCurrency(calculated.total_subtotal) }}</th>
+                                            <th>{{ $showCurrency(calculated.total_grand_total) }}</th>
+                                            <th>{{ $showCurrency(calculated.total_paid) }}</th>
+                                            <th>{{ $showCurrency(calculated.total_due) }}</th>
+                                            <th colspan="2"></th>
+                                        </tr>
+                                    </template>
                                     <tr v-else>
                                         <td colspan="10" class="text-center">
                                             {{ __('default.no_data_found') }}
@@ -379,6 +391,12 @@ export default {
             total_paid: 0,
             total_due: 0,
             total_purchase: 0,
+            calculated:{
+                total_subtotal: 0,
+                total_grand_total: 0,
+                total_paid: 0,
+                total_due: 0,
+            }
         }
     },
     created() {
@@ -420,7 +438,26 @@ export default {
             }, function (start, end, label) {
                 self.request.date = start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD');
             });
-        })
+        });
+    },
+    computed: {
+        totalCalculate(){
+            this.calculated.total_subtotal = this.purchase_reports.reduce((accumulator, item) => {
+                return parseFloat(accumulator) + parseFloat(item.subtotal);
+            }, 0);
+
+            this.calculated.total_grand_total = this.purchase_reports.reduce((accumulator, item) => {
+                return parseFloat(accumulator) + parseFloat(item.total);
+            }, 0);
+
+            this.calculated.total_paid = this.purchase_reports.reduce((accumulator, item) => {
+                return parseFloat(accumulator) + parseFloat(item.total_paid);
+            }, 0);
+
+            this.calculated.total_due = this.purchase_reports.reduce((accumulator, item) => {
+                return parseFloat(accumulator) + parseFloat(item.total_due);
+            }, 0);
+        }
     },
     methods: {
         async getData() {

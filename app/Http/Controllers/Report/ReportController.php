@@ -8,6 +8,9 @@ use Illuminate\Contracts\View\View;
 
 class ReportController extends Controller
 {
+    /**
+     * @param ReportServices $reportServices
+     */
     public function __construct(ReportServices $reportServices)
     {
         $this->services = $reportServices;
@@ -37,5 +40,13 @@ class ReportController extends Controller
         set_time_limit(300);
 
         return $this->services->getPurchaseData();
+    }
+
+    /**
+     * @return View
+     */
+    public function salePage(): View
+    {
+        return view('pages.report.sale',['customers' => $this->services->customers()]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services\Report;
 
 use App\Models\Expense\Expense;
+use App\Models\People\Customer;
 use App\Models\People\Supplier;
 use App\Models\Purchase\Purchase;
 use App\Models\Purchase\PurchaseProduct;
@@ -20,6 +21,7 @@ class ReportServices extends BaseServices
     public SaleProducts $saleProduct;
     public Expense $expense;
     public Supplier $supplier;
+    public Customer $customer;
 
     /**
      * @param Purchase $purchase
@@ -28,11 +30,12 @@ class ReportServices extends BaseServices
      * @param SaleProducts $saleProduct
      * @param Expense $expense
      * @param Supplier $supplier
+     * @param Customer $customer
      */
     public function __construct(
         Purchase $purchase, PurchaseProduct $purchaseProduct,
         Sale     $sale, SaleProducts $saleProduct, Expense $expense,
-        Supplier $supplier
+        Supplier $supplier, Customer $customer
     )
     {
         $this->purchase = $purchase;
@@ -41,6 +44,7 @@ class ReportServices extends BaseServices
         $this->saleProduct = $saleProduct;
         $this->expense = $expense;
         $this->supplier = $supplier;
+        $this->customer = $customer;
     }
 
     /**
@@ -195,5 +199,22 @@ class ReportServices extends BaseServices
             'total_due' => 0,
             'total_purchase' => 0,
         ];
+    }
+
+    /**
+     * @return Collection
+     */
+    public function customers(): Collection
+    {
+        return $this->customer
+            ->newQuery()
+            ->where('status', true)
+            ->get(['id', 'name', 'phone_number'])
+            ->map(function ($item) {
+                return [
+                    'value' => $item->id,
+                    'label' => $item->name . "({$item->phone_number})"
+                ];
+            });
     }
 }

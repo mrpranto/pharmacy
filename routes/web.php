@@ -134,8 +134,14 @@ Route::group(['middleware' => 'authenticate'], function (){
     //Report Route
     Route::group(['prefix' => 'report'], function (){
         Route::get('summary', [ReportController::class, 'summary'])->name('report.summary');
+
+        //Purchase report route.
         Route::get('purchase', [ReportController::class, 'purchasePage'])->name('report.purchase');
         Route::get('get-purchase', [ReportController::class, 'getPurchaseData']);
+
+        //Sale report route
+        Route::get('sale', [ReportController::class, 'salePage'])->name('report.sale');
+
     });
 });
 
