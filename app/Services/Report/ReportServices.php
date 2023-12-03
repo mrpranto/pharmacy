@@ -154,7 +154,7 @@ class ReportServices extends BaseServices
      */
     public function getPurchaseData(): array
     {
-        if (request()->filled('date')){
+        if (request()->filled('date') || request()->filled('supplier') || request()->filled('purchase_status') || request()->filled('payment_status')){
             $purchaseReports = $this->purchase
                 ->newQuery()
                 ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
