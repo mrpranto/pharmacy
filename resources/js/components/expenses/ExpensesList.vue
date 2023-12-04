@@ -151,9 +151,9 @@ export default {
                         width: '10',
                         orderAble: false,
                         isVisible: true,
-                        modifier: (expanse_attachment) => {
+                        modifier: (expanse_attachment, row) => {
                             if (expanse_attachment){
-                                return `<a href="${expanse_attachment.full_url}" download="true"
+                                return `<a href="${expanse_attachment.full_url}" download="${this.convertToSlug(row.title)}"
                                             class="badge badge-pill badge-dark"><i class="mdi mdi-download"></i> Download</a>`;
                             }
                         }
@@ -218,6 +218,11 @@ export default {
                 .catch(err => {
                     console.error(err)
                 })
+        },
+        convertToSlug(Text) {
+            return Text.toLowerCase()
+                .replace(/ /g, "-")
+                .replace(/[^\w-]+/g, "");
         },
         async showDetails(id) {
             this.loader = true
