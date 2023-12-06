@@ -49,4 +49,11 @@ class ReportController extends Controller
     {
         return view('pages.report.sale',['customers' => $this->services->customers()]);
     }
+
+    public function getSalesData()
+    {
+        set_time_limit(300);
+
+        return $this->services->getSaleData();
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\Purchase\PurchaseProduct;
 use App\Models\Sale\Sale;
 use App\Models\Sale\SaleProducts;
 use App\Services\BaseServices;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -158,7 +159,7 @@ class ReportServices extends BaseServices
      */
     public function getPurchaseData(): array
     {
-        if (request()->filled('date') || request()->filled('supplier') || request()->filled('purchase_status') || request()->filled('payment_status')){
+        if (request()->filled('date') || request()->filled('supplier') || request()->filled('purchase_status') || request()->filled('payment_status')) {
             $purchaseReports = $this->purchase
                 ->newQuery()
                 ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
@@ -168,16 +169,16 @@ class ReportServices extends BaseServices
                     'purchases.total', 'purchases.total_paid', 'purchases.payment_status',
                     DB::raw('(purchases.total - purchases.total_paid) as total_due')
                 )
-                ->when(request()->filled('date'), function ($q){
+                ->when(request()->filled('date'), function ($q) {
                     $dates = explode(' to ', request()->get('date'));
                     $q->whereBetween('purchases.date', [$dates[0], $dates[1]]);
                 })
                 ->when(request()->filled('supplier'), fn($q) => $q->where('purchases.supplier_id', request()->get('supplier')))
                 ->when(request()->filled('purchase_status'), fn($q) => $q->whereIn('purchases.status', request()->get('purchase_status')))
                 ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('purchases.payment_status', request()->get('payment_status')))
-                ->when(request()->filled('search'), fn($q) => $q->where('suppliers.name', 'like', "%".request()->get('search')."%")
-                    ->orWhere('suppliers.phone_number', 'like', "%".request()->get('search')."%")
-                    ->orWhere('purchases.reference', 'like', "%".request()->get('search')."%")
+                ->when(request()->filled('search'), fn($q) => $q->where('suppliers.name', 'like', "%" . request()->get('search') . "%")
+                    ->orWhere('suppliers.phone_number', 'like', "%" . request()->get('search') . "%")
+                    ->orWhere('purchases.reference', 'like', "%" . request()->get('search') . "%")
                 )
                 ->get();
 
@@ -213,8 +214,48 @@ class ReportServices extends BaseServices
             ->map(function ($item) {
                 return [
                     'value' => $item->id,
-                    'label' => $item->name . "({$item->phone_number})"
+                    'label' => $item->name . ($item->phone_number ? "({$item->phone_number})" : '')
                 ];
             });
+    }
+
+    public function getSaleData()
+    {
+        $sales = $this->sale
+            ->newQuery()
+            ->select([
+                'id', 'invoice_number', 'invoice_date', 'customer_id',
+                'total_unit_qty', 'subtotal', 'grand_total', 'status',
+                'payment_status', 'total_paid', DB::raw('(grand_total - total_paid) as totalDue')
+            ])
+            ->with('customer:id,name,phone_number')
+            ->withCount(['saleProducts as totalRevenue' => function (Builder $builder) {
+                $builder->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity)) as revenue'));
+            }])
+            ->when(request()->filled('date'), function ($q) {
+                $dates = explode(' to ', request()->get('date'));
+                $q->whereDate('invoice_date', '>=', $dates[0])->whereDate('invoice_date', '<=', $dates[1]);
+            })
+            ->when(request()->filled('customer'), fn($q) => $q->where('customer_id', request()->get('customer')))
+            ->when(request()->filled('sale_status'), fn($q) => $q->whereIn('status', request()->get('sale_status')))
+            ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('payment_status', request()->get('payment_status')))
+            ->when(request()->filled('search'), fn($q) => $q->whereHas('customer',
+                fn($q) => $q->where('name', 'like', "%" . request()->get('search') . "%")
+                    ->orWhere('phone_number', 'like', "%" . request()->get('search') . "%"))
+                ->orWhere('invoice_number', 'like', "%" . request()->get('search') . "%")
+            )
+            ->orderByDesc('id')
+            ->get();
+
+        return [
+            'sales' => $sales,
+            'totalQuantity' => $sales->sum('total_unit_qty'),
+            'totalSubtotal' => $sales->sum('subtotal'),
+            'totalGrandTotal' => $sales->sum('grand_total'),
+            'totalPaid' => $sales->sum('total_paid'),
+            'totalDue' => $sales->sum('totalDue'),
+            'totalProfit' => round($sales->sum('totalRevenue'), 2),
+            'total_sales' => $sales->count(),
+        ];
     }
 }

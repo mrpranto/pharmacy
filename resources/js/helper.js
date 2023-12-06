@@ -26,9 +26,10 @@ export const showErrorMessage = (message,  placement, sound) => {
     }
 }
 
-export const showCurrency = (amount) => {
+export const showCurrency = (amnt) => {
     const currency_symbol = window._general_setting?.currency_symbol;
     const currency_symbol_position = window._general_setting?.currency_symbol_position;
+    let amount = parseFloat(amnt)
 
     if (currency_symbol_position === 'before_amount'){
        return currency_symbol + amount.toLocaleString();

@@ -4,7 +4,6 @@ namespace App\Services\People\Customers;
 
 use App\Models\People\Customer;
 use App\Services\BaseServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

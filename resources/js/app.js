@@ -114,6 +114,8 @@ app.component('expenses-items-component', ExpensesItemDetailsComponent);
 */
 import PurchaseReportComponent from './components/reports/Purchase.vue';
 app.component('purchase-report-component', PurchaseReportComponent);
+import SalesReportComponent from './components/reports/Sales.vue';
+app.component('sales-report-component', SalesReportComponent);
 
 /*
 * App core component

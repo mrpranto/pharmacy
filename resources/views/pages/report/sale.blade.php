@@ -5,6 +5,6 @@
 @endsection
 @section('content')
 
-
+    <sales-report-component :customers="{{ json_encode($customers) }}" />
 
 @endsection

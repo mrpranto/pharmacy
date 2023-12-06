@@ -141,6 +141,7 @@ Route::group(['middleware' => 'authenticate'], function (){
 
         //Sale report route
         Route::get('sale', [ReportController::class, 'salePage'])->name('report.sale');
+        Route::get('get-sale', [ReportController::class, 'getSalesData']);
 
     });
 });

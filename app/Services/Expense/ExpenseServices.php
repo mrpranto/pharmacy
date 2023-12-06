@@ -5,7 +5,6 @@ namespace App\Services\Expense;
 use App\Models\Expense\Expense;
 use App\Models\trait\FileHandler;
 use App\Services\BaseServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
