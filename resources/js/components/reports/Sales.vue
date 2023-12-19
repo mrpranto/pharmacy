@@ -327,7 +327,7 @@
                                         <tr v-for="(sale, sale_index) in sales">
                                             <td>{{ (sale_index + 1) }}</td>
                                             <td>
-                                                <a :href="'/purchase-print/'+sale.id" target="_blank"
+                                                <a :href="'/invoice-pdf/'+sale.id" target="_blank"
                                                    class="text-decoration-none font-bold">
                                                     {{ sale.invoice_number }} <span class="ml-1"><i
                                                     class="mdi mdi-call-made"></i></span>

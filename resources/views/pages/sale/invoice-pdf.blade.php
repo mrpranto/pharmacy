@@ -110,19 +110,19 @@
     @endforeach
     </tbody>
     <tr>
-        <th colspan="2" style="text-align: left">subtotal:</th>
+        <th colspan="2" style="text-align: left">{{ __t('subtotal') }}:</th>
         <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details->subtotal) }}</td>
     </tr>
     <tr>
-        <th colspan="2" style="text-align: left">Other cost:</th>
+        <th colspan="2" style="text-align: left">{{ __t('other_cost') }}:</th>
         <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details->other_cost) }}</td>
     </tr>
     <tr>
-        <th colspan="2" style="text-align: left">(-) Discount:</th>
+        <th colspan="2" style="text-align: left">(-) {{ __t('discount') }}:</th>
         <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details->discount) }}</td>
     </tr>
     <tr>
-        <th colspan="2" style="text-align: left">Grand total:</th>
+        <th colspan="2" style="text-align: left">{{ __t('grand_total') }}:</th>
         <td colspan="3" style="text-align: right;background-color: #ddd;">{{ show_currency($invoice_details->grand_total) }}</td>
     </tr>
 </table>
