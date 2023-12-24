@@ -333,7 +333,10 @@
                                                     class="mdi mdi-call-made"></i></span>
                                                 </a>
                                             </td>
-                                            <td>{{ sale.customer.name }} <br> ({{ sale.customer.phone_number }})
+                                            <td>{{ sale.customer.name }} <br>
+                                                <template v-if="sale.customer.phone_number">
+                                                    ({{ sale.customer.phone_number }})
+                                                </template>
                                             </td>
                                             <td>
                                                 {{ $date_format(sale.invoice_date) }} <br>
@@ -391,7 +394,7 @@
                                         </tr>
                                     </template>
                                     <tr v-else>
-                                        <td colspan="10" class="text-center">
+                                        <td colspan="11" class="text-center">
                                             {{ __('default.no_data_found') }}
                                         </td>
                                     </tr>
