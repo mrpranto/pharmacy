@@ -188,7 +188,11 @@
                                     <tbody>
                                     @foreach($recent_sales as $sale)
                                         <tr>
-                                            <td>{{ $sale->invoice_number }}</td>
+                                            <td>
+                                                <a href="{{ route('invoice-pdf', $sale->id) }}" target="_blank">
+                                                    {{ $sale->invoice_number }} <i class="mdi mdi-arrow-top-right"></i>
+                                                </a>
+                                            </td>
                                             <td>
                                                 {{ date(format_date(), strtotime($sale->invoice_date)) }}
                                                 <br>

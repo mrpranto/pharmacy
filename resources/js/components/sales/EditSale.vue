@@ -102,7 +102,7 @@
             </div>
             <div v-else class="row mt-3 products-area mr-0"
                  :class="windowHeight > 620 ? 'products-area-height-700' : 'products-area-height-400'">
-                <div class="col-sm-12 col-md-4 col-lg-4 mb-3 cursor-pointer"
+                <div class="col-sm-12 col-md-6 col-lg-6 mb-3 cursor-pointer"
                      v-for="(product, product_index) in this.formState.dependencies.products"
                      :key="product_index" @click.prevent="showProductDetails(product)">
                     <div class="card w-100 h-100 d-inline-block product-area">
@@ -131,36 +131,48 @@
                                     </figure>
                                 </div>
 
-                                <div class="media-body">
-                                    <p class="font-weight-bolder mt-3 mb-1">{{ product.name.toUpperCase() }}</p>
-                                    <p>
+                                <div class="col-12">
+                                    <p class="font-weight-bolder text-center fw-bolder mt-3 mb-1">{{
+                                            product.name.toUpperCase()
+                                        }}</p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.barcode')
-                                            }} : </span> {{ product.barcode }} <br>
+                                            }} : </span> <span> {{ product.barcode }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.company')
-                                            }} : </span>{{ product.company.name }} <br>
+                                            }} : </span> <span> {{ product.company.name }} </span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.category')
-                                            }} : </span>{{ product.category.name }} <br>
+                                            }} : </span> <span>{{ product.category.name }} </span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.unit')
-                                            }} : </span>{{ product.unit.name + `(${product.unit.pack_size})` }} <br>
-                                        <span class="font-weight-bold">{{
-                                                __('default.purchase_type')
-                                            }} : </span> <span v-if="product.purchase_type === '%'"
-                                                               class="badge badge-info">{{ product.purchase_type }} Percentage</span>
+                                            }} : </span> <span>{{
+                                            product.unit.name + `(${product.unit.pack_size})`
+                                        }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
+                                        <span class="font-weight-bold">{{ __('default.purchase_type') }} : </span>
+                                        <span v-if="product.purchase_type === '%'"
+                                              class="badge badge-info">{{ product.purchase_type }} Percentage</span>
                                         <span v-else class="badge badge-success">{{
                                                 $currency_symbol
-                                            }} Direct Price</span><br>
+                                            }} Direct Price</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.stock_type')
-                                            }} : </span>{{ product.stocks.length }} <br>
-                                        <span class="font-weight-bold">{{
-                                                __('default.total_stock')
-                                            }} : </span> <span class="badge badge-primary">{{
-                                            totalStock(product.stocks)
-                                        }}</span> <br>
+                                            }} : </span><span>{{ product.stocks.length }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
+                                        <span class="font-weight-bold">{{ __('default.total_stock') }} : </span> <span
+                                        class="badge badge-primary">{{ totalStock(product.stocks) }}</span>
                                     </p>
                                 </div>
                             </div>

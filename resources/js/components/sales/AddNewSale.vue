@@ -112,7 +112,7 @@
                                     <i class="mdi mdi-check-circle"></i> Already in cart.
                                 </div>
                             </div>
-                            <div class="media d-block d-sm-flex flex-column align-items-center">
+                            <div class="media d-block d-flex flex-column align-items-center">
                                 <div class="d-flex align-items-center" style="height: 100px">
                                     <figure class="mb-0 mr-3">
                                         <img
@@ -131,36 +131,48 @@
                                     </figure>
                                 </div>
 
-                                <div class="media-body">
-                                    <p class="font-weight-bolder mt-3 mb-1">{{ product.name.toUpperCase() }}</p>
-                                    <p>
+                                <div class="col-12">
+                                    <p class="font-weight-bolder text-center fw-bolder mt-3 mb-1">{{
+                                            product.name.toUpperCase()
+                                        }}</p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.barcode')
-                                            }} : </span> {{ product.barcode }} <br>
+                                            }} : </span> <span> {{ product.barcode }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.company')
-                                            }} : </span>{{ product.company.name }} <br>
+                                            }} : </span> <span> {{ product.company.name }} </span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.category')
-                                            }} : </span>{{ product.category.name }} <br>
+                                            }} : </span> <span>{{ product.category.name }} </span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.unit')
-                                            }} : </span>{{ product.unit.name + `(${product.unit.pack_size})` }} <br>
-                                        <span class="font-weight-bold">{{
-                                                __('default.purchase_type')
-                                            }} : </span> <span v-if="product.purchase_type === '%'"
-                                                               class="badge badge-info">{{ product.purchase_type }} Percentage</span>
+                                            }} : </span> <span>{{
+                                            product.unit.name + `(${product.unit.pack_size})`
+                                        }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
+                                        <span class="font-weight-bold">{{ __('default.purchase_type') }} : </span>
+                                        <span v-if="product.purchase_type === '%'"
+                                              class="badge badge-info">{{ product.purchase_type }} Percentage</span>
                                         <span v-else class="badge badge-success">{{
                                                 $currency_symbol
-                                            }} Direct Price</span><br>
+                                            }} Direct Price</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.stock_type')
-                                            }} : </span>{{ product.stocks.length }} <br>
-                                        <span class="font-weight-bold">{{
-                                                __('default.total_stock')
-                                            }} : </span> <span class="badge badge-primary">{{
-                                            totalStock(product.stocks)
-                                        }}</span> <br>
+                                            }} : </span><span>{{ product.stocks.length }}</span>
+                                    </p>
+                                    <p class="d-flex justify-content-between mb-1">
+                                        <span class="font-weight-bold">{{ __('default.total_stock') }} : </span> <span
+                                        class="badge badge-primary">{{ totalStock(product.stocks) }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -733,11 +745,11 @@ export default {
     },
     methods: {
         async save(type) {
-            if (type === 'draft'){
+            if (type === 'draft') {
                 this.formState.showDraftLoader = true;
-            }else if(type === 'confirmed'){
+            } else if (type === 'confirmed') {
                 this.formState.showConfirmLoader = true;
-            }else if(type === 'delivered'){
+            } else if (type === 'delivered') {
                 this.formState.showDeliverLoader = true;
             }
             await axios.post('/sales?type=' + type, this.formState.formData)
@@ -748,11 +760,11 @@ export default {
                         this.formState.showDraftLoader = false;
                         this.formState.showConfirmLoader = false;
                         this.formState.showDeliverLoader = false;
-                        if (type === 'delivered'){
+                        if (type === 'delivered') {
                             this.getProduct()
                         }
 
-                        setTimeout(function (){
+                        setTimeout(function () {
                             window.location.href = `/sales`
                         }, 1000);
 
@@ -796,9 +808,9 @@ export default {
             localStorage.setItem(this.user_email, JSON.stringify(this.formState.formData));
         },
         async printPreviewArea() {
-            if (this.formState.formData.products.length === 0){
+            if (this.formState.formData.products.length === 0) {
                 message.warning('No products found in cart.');
-            }else {
+            } else {
                 this.formState.showPreviewLoader = true;
                 await axios.post('/sales-preview', this.formState.formData)
                     .then(response => {
