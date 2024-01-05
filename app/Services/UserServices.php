@@ -49,7 +49,7 @@ class UserServices extends BaseServices
     {
         return $this->model
             ->newQuery()
-            ->with('role')
+            ->with('role:id,name')
             ->when(request()->filled('search'), function ($q) {
                 $q->where('name', 'like', '%' . request()->get('search') . '%')
                     ->orWhere('email', 'like', '%' . request()->get('search') . '%')
