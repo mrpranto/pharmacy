@@ -74,13 +74,13 @@ class SubMenuComposer
                 'name' => __t('add_sale'),
                 'url' => route('sales.create'),
                 'path' => 'sales/create',
-                'permission' => auth()->user()->can('app.purchase.create')
+                'permission' => auth()->user()->can('app.sales.create')
             ],
             [
                 'name' => __t('sales_list'),
                 'url' => route('sales.index'),
                 'path' => ['sales', 'sales/*/edit'],
-                'permission' => auth()->user()->can('app.purchase.index')
+                'permission' => auth()->user()->can('app.sales.index')
             ],
         ];
     }
@@ -91,19 +91,19 @@ class SubMenuComposer
                 'name' => __t('summary'),
                 'url' => route('report.summary'),
                 'path' => 'report/summary',
-                'permission' => auth()->user()->can('app.purchase.create')
+                'permission' => auth()->user()->can('app.report.summary')
             ],
             [
                 'name' => __t('purchase_report'),
                 'url' => route('report.purchase'),
                 'path' => 'report/purchase',
-                'permission' => auth()->user()->can('app.purchase.create')
+                'permission' => auth()->user()->can('app.report.purchase')
             ],
             [
                 'name' => __t('sales_report'),
                 'url' => route('report.sale'),
                 'path' => 'report/sale',
-                'permission' => auth()->user()->can('app.purchase.create')
+                'permission' => auth()->user()->can('app.report.sales')
             ],
         ];
     }

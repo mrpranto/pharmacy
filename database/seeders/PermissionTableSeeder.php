@@ -378,6 +378,25 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete Expenses',
                 'slug' => 'app.expenses.delete'
             ],
+
+            /*
+            * Reports
+            */
+            [
+                'module_id' => $this->module('Report'),
+                'name' => 'Summary Report',
+                'slug' => 'app.report.summary'
+            ],
+            [
+                'module_id' => $this->module('Report'),
+                'name' => 'Purchase Report',
+                'slug' => 'app.report.purchase'
+            ],
+            [
+                'module_id' => $this->module('Report'),
+                'name' => 'Sales Report',
+                'slug' => 'app.report.sales'
+            ],
         ];
     }
 

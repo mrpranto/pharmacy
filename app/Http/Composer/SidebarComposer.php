@@ -65,13 +65,13 @@ class SidebarComposer
                     'icon' => 'database',
                     'url' => route('stocks'),
                     'path' => 'stocks',
-                    'permission' => auth()->user()->can('app.dashboard')
+                    'permission' => auth()->user()->can('app.stock.index')
                 ],
                 [
                     'name' => __t('sales'),
                     'icon' => 'shopping-bag',
                     'permission' => auth()->user()->canany([
-                        'app.purchase.index', 'app.purchase.create'
+                        'app.sales.index', 'app.sales.create'
                     ]),
                     'subMenu' => $this->subMenu->sales(),
                     'id' => 'sales',

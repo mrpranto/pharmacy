@@ -58,8 +58,8 @@ class SalesServices extends BaseServices
         return [
             'permission' => [
                 'create' => auth()->user()->can('app.sales.create'),
-                'edit' => auth()->user()->can('app.sales.show'),
-                'show' => auth()->user()->can('app.sales.edit'),
+                'edit' => auth()->user()->can('app.sales.edit'),
+                'show' => auth()->user()->can('app.sales.show'),
                 'delete' => auth()->user()->can('app.sales.delete'),
                 'change_status' => auth()->user()->can('app.sales.status-change'),
                 'payment_add' => auth()->user()->can('app.sales.payment-add'),
@@ -152,13 +152,13 @@ class SalesServices extends BaseServices
             ->with(['stocks'])
             ->whereHas('stocks')
             ->active()
-            ->when(request()->filled('search'),
-                fn($query) => $query->where('name', 'like', '%' . request('search') . '%')
-                    ->orWhere('barcode', 'like', '%' . request('search') . '%'))
             ->when(request()->filled('category'),
                 fn($query) => $query->where('category_id', request('category')))
             ->when(request()->filled('company'),
                 fn($query) => $query->where('company_id', request('company')))
+            ->when(request()->filled('search'),
+                fn($query) => $query->where('name', 'like', '%' . request('search') . '%')
+                    ->orWhere('barcode', 'like', '%' . request('search') . '%'))
             ->take(100)
             ->get([
                 'id', 'category_id', 'company_id', 'unit_id', 'barcode', 'name', 'purchase_type', 'status'

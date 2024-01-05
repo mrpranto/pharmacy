@@ -102,7 +102,7 @@
             </div>
             <div v-else class="row mt-3 products-area mr-0"
                  :class="windowHeight > 620 ? 'products-area-height-700' : 'products-area-height-400'">
-                <div class="col-sm-12 col-md-4 col-lg-4 mb-3 cursor-pointer"
+                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3 cursor-pointer"
                      v-for="(product, product_index) in this.formState.dependencies.products"
                      :key="product_index" @click.prevent="showProductDetails(product)">
                     <div class="card w-100 h-100 d-inline-block product-area">
