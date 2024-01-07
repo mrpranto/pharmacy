@@ -196,7 +196,7 @@ class SalesServices extends BaseServices
             ->first();
 
         return generate_pdf('pages.sale.pdf', [
-            'customer_phone' => $customer->phone_number,
+            'customer_phone' => $customer ? $customer->phone_number : '-',
             'invoice_details' => cache(auth()->user()->email)
         ]);
     }

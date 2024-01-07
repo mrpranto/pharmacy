@@ -44,6 +44,8 @@
                                             :options="formState.dependencies.suppliers"
                                             :filter-option="selectFilterOption"
                                             @change="checkValueIsSet('supplier')"
+                                            ref="supplier"
+                                            @keyup.right="$refs.status.focus()"
                                         ></a-select>
                                         <a-tooltip :title="__('default.add_supplier')" placement="top">
                                             <a-button @click="showAddNewSupplierModal">
@@ -62,7 +64,9 @@
                                 <a-form-item :label="__('default.date')" required>
                                     <a-input-group compact
                                                    :class="formState.validation.date ? 'ant-input ant-input-status-error': ''">
-                                        <a-date-picker v-model:value="formState.formData.date" @change="checkValueIsSet('date')" style="width: 100%"/>
+                                        <a-date-picker v-model:value="formState.formData.date"
+                                                       @change="checkValueIsSet('date')"
+                                                       style="width: 100%"/>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.date">
                                         {{ formState.validation.date[0] }}
@@ -73,7 +77,11 @@
                             <div class="col-sm-12 col-md-3 col-lg-3">
                                 <a-form-item :label="__('default.status')" required>
                                     <a-input-group compact :class="formState.validation.status ? 'ant-input ant-input-status-error': ''">
-                                        <a-select v-model:value="formState.formData.status" @change="checkValueIsSet('status')" style="width: 100%">
+                                        <a-select v-model:value="formState.formData.status"
+                                                  @change="checkValueIsSet('status')"
+                                                  style="width: 100%"
+                                                  ref="status"
+                                                  @keyup.right="$refs.product.focus()">
                                             <a-select-option value="received">{{ __('default.received') }}</a-select-option>
                                             <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
                                             <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
@@ -99,6 +107,7 @@
                                             :filter-option="false"
                                             @search="getProducts"
                                             @change="selectProduct"
+                                            ref="product"
                                         >
                                             <template
                                                 #option="{ value: val, label, icon, company, category, unit, barcode, purchase_type }">
@@ -214,6 +223,9 @@
                                                         @keyup="calculatePrices(product_index, 'mrp')"
                                                         @change="calculatePrices(product_index, 'mrp')"
                                                         style="width: 100%"
+                                                        :ref="'mrp'+product_index"
+                                                        @keyup.left="focusInput(product_index-1, 'previous', 'quantity')"
+                                                        @keyup.right="focusInput(product_index, 'next', 'unit_price')"
                                                     />
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.mrp']">
@@ -233,6 +245,9 @@
                                                             @keyup="calculateUnitPricePercentage(product_index, 'unit_price')"
                                                             @change="calculateUnitPricePercentage(product_index, 'unit_price')"
                                                             style="width: 55%"
+                                                            :ref="'unit_price'+product_index"
+                                                            @keyup.left="focusInput(product_index, 'previous', 'mrp')"
+                                                            @keyup.right="focusInput(product_index, 'next', 'unit_percentage')"
                                                         />
 
                                                         <a-input-number
@@ -245,6 +260,9 @@
                                                             @keyup="calculateUnitPrice(product_index, 'unit_percentage')"
                                                             @change="calculateUnitPrice(product_index, 'unit_percentage')"
                                                             style="width: 45%"
+                                                            :ref="'unit_percentage'+product_index"
+                                                            @keyup.left="focusInput(product_index, 'previous', 'unit_price')"
+                                                            @keyup.right="focusInput(product_index, 'next', 'sale_price')"
                                                         />
                                                     </div>
 
@@ -265,6 +283,9 @@
                                                             @keyup="calculateSalePercentage(product_index, 'sale_price')"
                                                             @change="calculateSalePercentage(product_index, 'sale_price')"
                                                             style="width: 55%"
+                                                            :ref="'sale_price'+product_index"
+                                                            @keyup.left="focusInput(product_index, 'previous', 'unit_percentage')"
+                                                            @keyup.right="focusInput(product_index, 'next', 'sale_percentage')"
                                                         />
 
                                                         <a-input-number
@@ -276,6 +297,9 @@
                                                             @keyup="calculateSalePrice(product_index, 'sale_percentage')"
                                                             @change="calculateSalePrice(product_index, 'sale_percentage')"
                                                             style="width: 45%"
+                                                            :ref="'sale_percentage'+product_index"
+                                                            @keyup.left="focusInput(product_index, 'previous', 'sale_price')"
+                                                            @keyup.right="focusInput(product_index, 'next', 'quantity')"
                                                         />
                                                     </div>
                                                     <div class="ant-form-item-explain-error text-danger"
@@ -290,7 +314,12 @@
                                                         v-model:value="product.quantity"
                                                         min="1"
                                                         @keyup="calculatePrices(product_index, 'quantity')"
-                                                        @change="calculatePrices(product_index, 'quantity')" style="width: 100%"/>
+                                                        @change="calculatePrices(product_index, 'quantity')"
+                                                        style="width: 100%"
+                                                        :ref="'quantity'+product_index"
+                                                        @keyup.left="focusInput(product_index, 'previous', 'sale_percentage')"
+                                                        @keyup.right="focusInput(product_index+1, 'next', 'mrp')"
+                                                    />
                                                     <div class="ant-form-item-explain-error text-danger"
                                                          v-if="formState.validation['products.'+product_index+'.quantity']">
                                                         {{
@@ -589,6 +618,7 @@ export default {
             loader: false,
             product_price: 100,
             searchProduct: null,
+            focusedIndex: 0,
 
             supplierFormState: {
                 responseCompanies: [],
@@ -660,7 +690,6 @@ export default {
         this.generateReference()
     },
     mounted() {
-
     },
     watch:{
         'formState.openStock': function (){
@@ -670,6 +699,13 @@ export default {
         }
     },
     methods: {
+        focusInput(index, type, next_input) {
+            if (type === 'next'){
+                this.$refs[next_input+index][0].focus();
+            }else if (type === 'previous'){
+                this.$refs[next_input+index][0].focus();
+            }
+        },
         async save() {
             await axios.post('/purchases', this.formState.formData)
                 .then(response => {
