@@ -331,5 +331,6 @@ return [
     'report' => 'Report',
     'due_amount' => 'Due amount',
     'no_data_found' => 'No data found.',
-    'total_profit_amount' => 'Total Profit amount'
+    'total_profit_amount' => 'Total Profit amount',
+    'pos_design' => 'POS Design',
 ];

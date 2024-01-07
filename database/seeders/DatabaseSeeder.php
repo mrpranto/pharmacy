@@ -118,12 +118,13 @@ class DatabaseSeeder extends Seeder
             'type' => 'general',
             'settings_info' => [
                 "date_format" => "F d, Y",
-                "time_format" => "H:i:s A",
+                "time_format" => "h:i:s A",
                 "currency_symbol" => '৳',
-                "currency_symbol_position" => "before_amount",
+                "currency_symbol_position" => "before_with_space_amount",
                 "pagination" => "10",
                 "notification_sound" => "on",
                 "notification_show_position" => "topRight",
+                "pos_design" => "cart_design",
             ]
         ]);
 

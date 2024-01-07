@@ -189,6 +189,33 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="notification_show_position" class="col-sm-3 col-form-label text-right">{{ __t('pos_design') }}</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][pos_design]" id="cart_design"
+                                           {{ $setting['pos_design'] == 'cart_design' ? 'checked' : '' }}
+                                           value="cart_design">
+                                    Cart Design
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][pos_design]" id="list_design"
+                                           {{ $setting['pos_design'] == 'list_design' ? 'checked' : '' }}
+                                           value="list_design">
+                                    List Design
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <div class="col-sm-12">
                         <button class="btn btn-sm btn-primary float-right">
                             <i data-feather="check"></i> Save

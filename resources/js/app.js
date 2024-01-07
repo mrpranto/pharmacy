@@ -131,6 +131,7 @@ app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
 app.config.globalProperties.$showErrorMessage = showErrorMessage;
 app.config.globalProperties.$notification_position = window._general_setting?.notification_show_position;
 app.config.globalProperties.$notification_sound = window._general_setting?.notification_sound;
+app.config.globalProperties.$pos_design = window._general_setting?.pos_design;
 app.config.globalProperties.$date_format = date_format;
 app.config.globalProperties.$time_format = time_format;
 app.config.globalProperties.$currency_symbol = window._general_setting?.currency_symbol;
