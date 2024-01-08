@@ -238,6 +238,17 @@
                                                                 <div>
                                                                     <p class="font-weight-bolder text-capital">{{ product.name.toUpperCase() }}</p>
                                                                     <p class="text-muted tx-13"><b>{{ __('default.barcode') }}:</b> {{ product?.barcode }}</p>
+                                                                    <p class="text-muted tx-13">
+                                                                        <span :title="__('default.purchase_type')"
+                                                                              class="badge badge-info"
+                                                                              v-if="product?.purchase_type === '%'">({{ product?.purchase_type }}) Percentage
+                                                                        </span>
+                                                                        <span :title="__('default.purchase_type')"
+                                                                              class="badge badge-success"
+                                                                              v-else>
+                                                                            ({{ $currency_symbol }}) Direct Price
+                                                                        </span>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </div>

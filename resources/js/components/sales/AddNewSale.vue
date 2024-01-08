@@ -1,25 +1,39 @@
 <template>
     <div class="row m-3">
 
+        <!--        This section is for list design-->
+
         <template v-if="$pos_design === 'list_design'">
 
             <!--        Product Select Area Start-->
             <div class="col-sm-12 col-md-6 col-lg-6">
                 <div class="row mb-3">
                     <div class="col-12">
-                        <a-input size="large"
-                                 :placeholder="__('default.search_sale_product')"
-                                 v-model:value="formState.request.search">
-                            <template #prefix>
-                                <SearchOutlined/>
+                        <a-select
+                            v-model:value="searchProduct"
+                            style="width: calc(100%)"
+                            show-search
+                            :placeholder="__('default.search_sale_product')"
+                            :options="formState.dependencies.products"
+                            :filter-option="false"
+                            @search="getProductsForList"
+                            @change="selectProduct"
+                            ref="product"
+                            :size="'large'"
+                        >
+                            <template
+                                #option="{ value: val, label, icon, barcode, purchase_type, stocks, stockType }">
+                                <a-image :width="35" :height="35" :src="icon"
+                                         class="img-sm rounded-circle" :aria-label="val"/>
+                                &nbsp;&nbsp;
+                                <span>
+                                    <b>{{ label }} ({{ barcode }})</b>,
+                                    <b>{{ __('default.purchase_type') }} </b> : <span class="text-muted">{{ purchase_type === '%' ? purchase_type : $currency_symbol }}, </span>
+                                    <b>{{ __('default.stock_type') }} </b> : <span class="text-muted">{{ stockType }}, </span>
+                                    <b>{{ __('default.available_stock') }} </b> : <span class="text-muted">{{ stocks }}</span>
+                                </span>
                             </template>
-                            <template #suffix v-if="formState.request.search">
-                                <a-tooltip class="text-muted" style="font-size: 10px" title="Clear"
-                                           @click.prevent="clearSearch">
-                                    <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
-                                </a-tooltip>
-                            </template>
-                        </a-input>
+                        </a-select>
                     </div>
                 </div>
             </div>
@@ -74,6 +88,10 @@
             <!--        Selected Product Area End-->
 
         </template>
+
+
+        <!--        This section is for pos design-->
+
         <template v-else>
             <!--        Product Select Area Start-->
             <div class="col-sm-12 col-md-6 col-lg-6">
@@ -574,6 +592,8 @@
             <!--        Selected Product Area End-->
         </template>
 
+
+
         <!--        Add customer drawer area start-->
         <AddNewCustomer :formState="customerFormState"/>
         <!--        Add customer drawer area end -->
@@ -705,6 +725,7 @@ export default {
     props: ['categories', 'companies', 'user_email'],
     data() {
         return {
+            searchProduct: null,
             windowHeight: window.innerHeight,
             customerFormState: {
                 callFrom: 'sale',
@@ -767,7 +788,7 @@ export default {
     created() {
         this.getCartHistory()
         this.setData()
-        this.getProduct()
+        this.loadInitialProduct()
     },
     watch: {
         'formState.formData.customer': function () {
@@ -1027,6 +1048,13 @@ export default {
                 openStock: true,
             };
         },
+        loadInitialProduct(){
+            if (this.$pos_design === 'list_design'){
+                this.getProductsForList()
+            }else {
+                this.getProduct()
+            }
+        },
         async getProduct() {
             this.formState.loader = true;
             this.formState.dependencies.products = [];
@@ -1037,6 +1065,27 @@ export default {
                 })
                 .catch(error => console.error(error))
 
+        },
+        async getProductsForList(value = '') {
+            await axios.get('/get-sales-products', {params: {search: value}})
+                .then(response => {
+                    const searchProduct = response.data.map(item => {
+                        return {
+                            label: item.name,
+                            barcode: item.barcode,
+                            value: item.id,
+                            icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
+                            unit: item.unit.name + `(${item.unit.pack_size})`,
+                            purchase_type: item.purchase_type,
+                            stocks: this.totalStock(item.stocks),
+                            stockType: item.stocks.length
+                        }
+                    })
+                    this.formState.dependencies.products = searchProduct
+                })
+                .catch(err => {
+                    console.error(err)
+                })
         },
         checkProductSelected(product_id) {
             const existProduct = this.formState.formData.products.find(item => item.product.id === product_id);
