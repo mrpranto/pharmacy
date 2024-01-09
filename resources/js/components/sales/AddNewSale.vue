@@ -14,7 +14,7 @@
                             style="width: calc(100%)"
                             show-search
                             :placeholder="__('default.search_sale_product')"
-                            :options="formState.dependencies.products"
+                            :options="formState.dependencies.optionProducts"
                             :filter-option="false"
                             @search="getProductsForList"
                             @change="selectProduct"
@@ -86,6 +86,246 @@
                 </div>
             </div>
             <!--        Selected Product Area End-->
+
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="labels col-12 row border-bottom no-gutters py-2 mb-0">
+                                <b class="col-2 text-muted text-left">{{ __('default.selected_product') }}</b>
+                                <b class="col-1 text-muted text-center">{{ __('default.mrp') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.price') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.discount') }}</b>
+                                <b class="col-3 text-muted text-center">{{ __('default.quantity') }}</b>
+                                <b class="col-1 text-muted text-center">{{ __('default.sub_total') }}</b>
+                                <b class="col-1 text-muted text-right"></b>
+                            </div>
+
+                            <div class="col-12 cart-area text-muted"
+                                 :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
+                                <template v-if="formState.formData.products.length"
+                                          v-for="(cart, cart_index) in formState.formData.products">
+                                    <div class="row border-bottom py-2 mb-0">
+                                        <div class="col-2 align-middle">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <p>
+                                                    {{ cart.product.name }}
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.barcode')
+                                                        }} :</span> {{ cart.product.barcode }},
+                                                    </small>
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.unit')
+                                                        }} :</span> {{ cart.product.unit }},
+                                                        <br>
+                                                        <span class="badge badge-info"
+                                                              v-if="cart.product.purchase_type === '%'">{{
+                                                                cart.product.purchase_type
+                                                            }} Percentage</span>
+                                                        <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <p>{{ $currency_symbol + ' ' + cart.mrp }}</p>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <a-form-item>
+                                                <a-input-number v-model:value="cart.sale_price"
+                                                                @change="calculatePrice(cart_index)"
+                                                                :id="'sale_price_'+cart_index"
+                                                                style="width: 100%"
+                                                                :prefix="$currency_symbol"
+                                                                :min="1"
+                                                                :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                                />
+                                                <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                    {{ __('default.cant_lower_sale_price') }}
+                                                </div>
+                                            </a-form-item>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <a-form-item>
+                                                <a-input
+                                                    v-if="cart.product.purchase_type !== '$'"
+                                                    v-model:value="cart.sale_percentage"
+                                                    @change="calculatePrice(cart_index)"
+                                                    style="width: 100%"
+                                                    :id="'sale_percentage_'+cart_index"
+                                                    :min="0"
+                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                >
+                                                    <template #prefix>
+                                                        %
+                                                    </template>
+                                                </a-input>
+                                                <a-input v-else
+                                                    v-model:value="cart.sale_percentage"
+                                                    style="width: 100%"
+                                                    disabled
+                                                    :min="0"
+                                                >
+                                                    <template #prefix>
+                                                        {{ $currency_symbol }}
+                                                    </template>
+                                                </a-input>
+
+                                                <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                    {{ __('default.cant_greater_sale_percentage') }}
+                                                </div>
+                                            </a-form-item>
+                                        </div>
+                                        <div class="col-3 text-center pt-3">
+
+                                            <a-input-group compact>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '-')"
+                                                          style="z-index: 1">
+                                                    <i class="mdi mdi-minus"></i>
+                                                </a-button>
+                                                <a-input v-model:value="cart.quantity"
+                                                         type="number"
+                                                         min="1"
+                                                         @input="calculatePrice(cart_index)"
+                                                         style="width: 150px;"/>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '+')">
+                                                    <i class="mdi mdi-plus"></i>
+                                                </a-button>
+                                            </a-input-group>
+
+                                            <div class="ant-form-item-explain-error text-danger"
+                                                 v-if="formState.validation['products.'+cart_index+'.quantity']">
+                                                {{
+                                                    formState.validation['products.' + cart_index + '.quantity'][0]
+                                                }}
+                                            </div>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <span>{{ $showCurrency(cart.sub_total) }}</span>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
+                                                          cancel-text="No"
+                                                          @confirm="removeFromCart(cart_index)">
+                                                <template #icon></template>
+
+                                                <a-tooltip :title="__('default.remove')">
+                                                    <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
+                                                </a-tooltip>
+                                            </a-popconfirm>
+                                        </div>
+                                        
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="row pt-5" style="margin-top: 50px">
+                                        <div class="col-12 mt-5">
+                                            <h1 class="text-center">
+                                                <i class="mdi mdi-cart"></i>
+                                            </h1>
+                                            <h3 class="text-center">No items to show</h3>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="col-12 pt-4">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_items') }} : {{ formState.formData.totalUnit }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_subtotal') }} :
+                                            {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="col-12">
+                                <dl class="row mt-4">
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.subtotal') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right h5 mb-3">
+                                        {{ $showCurrency(formState.formData.totalSubTotal) }}
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.other_cost') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6">
+                                        <input type="number"
+                                               style="width: 200px"
+                                               step="0.01"
+                                               v-model="formState.formData.otherCost"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black rounded"
+                                               :placeholder="__('default.other_cost') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">(-) {{ __('default.discount') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right">
+                                        <input type="number"
+                                               style="width: 200px;"
+                                               step="0.01"
+                                               v-model="formState.formData.discount"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black"
+                                               :placeholder="__('default.discount') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 text-center text-muted">
+                                        <hr/>
+                                    </dt>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ __('default.total') }} :</h4>
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right"><h5>
+                                        {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
+                            <i class="mdi mdi-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="save('draft')">
+                            <i class="mdi mdi-pause"></i> Draft
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-info btn-block" type="button" @click.prevent="save('confirmed')"><i
+                            class="mdi mdi-check-circle"></i> Confirmed
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         </template>
 
@@ -760,6 +1000,7 @@ export default {
                 pdfPreview: '',
                 dependencies: {
                     products: [],
+                    optionProducts: [],
                     customers: [],
                     categories: [],
                     companies: [],
@@ -917,6 +1158,11 @@ export default {
                     })
                     .catch(error => console.error(error))
             }
+        },
+        selectProduct(){
+            const product = this.formState.dependencies.products.find(item => item.id === this.searchProduct);
+            this.showProductDetails(product);
+            this.searchProduct = '';
         },
         selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);
@@ -1081,7 +1327,8 @@ export default {
                             stockType: item.stocks.length
                         }
                     })
-                    this.formState.dependencies.products = searchProduct
+                    this.formState.dependencies.optionProducts = searchProduct;
+                    this.formState.dependencies.products = response.data;
                 })
                 .catch(err => {
                     console.error(err)
