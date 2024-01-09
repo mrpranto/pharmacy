@@ -133,6 +133,17 @@ if (! function_exists('show_currency')){
     }
 }
 
+if (! function_exists('pos_setting')){
+    /**
+     * @return mixed
+     */
+    function pos_setting(): mixed
+    {
+        $general_setting = Cache::get('general_setting');
+        return $general_setting['pos_design'];
+    }
+}
+
 if (! function_exists('app_information')){
     /**
      * @param $key

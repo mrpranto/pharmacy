@@ -216,7 +216,7 @@
                                                 </a-tooltip>
                                             </a-popconfirm>
                                         </div>
-                                        
+
                                     </div>
                                 </template>
                                 <template v-else>
@@ -1161,8 +1161,12 @@ export default {
         },
         selectProduct(){
             const product = this.formState.dependencies.products.find(item => item.id === this.searchProduct);
-            this.showProductDetails(product);
-            this.searchProduct = '';
+            if (product.stocks.length > 1){
+                this.showProductDetails(product);
+            }else {
+                this.selectStockProduct(product.stocks[0], this.searchProduct)
+            }
+            this.searchProduct = null;
         },
         selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);
