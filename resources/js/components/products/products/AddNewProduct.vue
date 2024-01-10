@@ -13,6 +13,7 @@
                 <a-form-item :label="__('default.name')" required>
                     <a-input v-model:value="formState.formData.name" required=""
                              :placeholder="__('default.name')"
+                             @keyup="generateBarcode"
                              :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
                             formState.validation.name[0]
@@ -100,7 +101,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="formState.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
                         {{ formState.validation.description[0] }}
@@ -410,6 +411,16 @@ export default {
                         console.error(err)
                     }
                 })
+        },
+
+        generateBarcode(){
+            const slug =  this.formState.formData.name
+                .toLowerCase() // Convert the string to lowercase
+                .replace(/[^\w\s-]/g, '') // Remove non-word characters
+                .replace(/\s+/g, '_') // Replace spaces with a dash
+                .replace(/--+/g, '_') // Replace multiple dashes with a single dash
+                .trim();
+            this.formState.formData.barcode = slug;
         },
 
         /*
