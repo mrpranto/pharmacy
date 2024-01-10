@@ -149,29 +149,23 @@
                                         </div>
                                         <div class="col-2 text-center pt-3">
                                             <a-form-item>
-                                                <a-input
-                                                    v-if="cart.product.purchase_type !== '$'"
-                                                    v-model:value="cart.sale_percentage"
-                                                    @change="calculatePrice(cart_index)"
-                                                    style="width: 100%"
-                                                    :id="'sale_percentage_'+cart_index"
-                                                    :min="0"
-                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
-                                                >
-                                                    <template #prefix>
-                                                        %
-                                                    </template>
-                                                </a-input>
-                                                <a-input v-else
-                                                    v-model:value="cart.sale_percentage"
-                                                    style="width: 100%"
-                                                    disabled
-                                                    :min="0"
-                                                >
-                                                    <template #prefix>
-                                                        {{ $currency_symbol }}
-                                                    </template>
-                                                </a-input>
+                                                <a-input-number v-if="cart.product.purchase_type === '$'"
+                                                                v-model:value="cart.sale_percentage"
+                                                                style="width: 100%"
+                                                                prefix="%"
+                                                                :id="'sale_percentage_'+cart_index"
+                                                                disabled
+                                                                :min="1"
+                                                                />
+                                                <a-input-number v-else
+                                                                v-model:value="cart.sale_percentage"
+                                                                style="width: 100%"
+                                                                prefix="%"
+                                                                :id="'sale_percentage_'+cart_index"
+                                                                @change="calculatePrice(cart_index, 'sale_percentage_'+cart_index)"
+                                                                :min="1"
+                                                                :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                                />
 
                                                 <div class="ant-form-item-explain-error" v-if="cart.showAlert">
                                                     {{ __('default.cant_greater_sale_percentage') }}
@@ -682,7 +676,7 @@
                                                     <!--                                                @blur="setOriginalPrice(cart_index)"-->
                                                     <a-form-item :label="__('default.sale_price')">
                                                         <a-input-number v-model:value="cart.sale_price"
-                                                                        @change="calculatePrice(cart_index)"
+                                                                        @change="calculatePrice(cart_index, 'sale_price_'+cart_index)"
                                                                         :id="'sale_price_'+cart_index"
                                                                         style="width: 100%"
                                                                         :prefix="$currency_symbol"
@@ -709,7 +703,7 @@
                                                                         style="width: 100%"
                                                                         prefix="%"
                                                                         :id="'sale_percentage_'+cart_index"
-                                                                        @change="calculatePrice(cart_index)"
+                                                                        @change="calculatePrice(cart_index, 'sale_percentage_'+cart_index)"
                                                                         :min="1"
                                                                         :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
                                                                         size="small"/>
@@ -1207,15 +1201,16 @@ export default {
             this.calculateTotal()
             this.setCartHistory();
         },
-        calculatePrice(index) {
+        calculatePrice(index, call_from) {
+
             const original_sale_price = this.formState.formData.products[index].original_sale_price === null ? 0 : this.formState.formData.products[index].original_sale_price;
             const mrp = this.formState.formData.products[index].mrp === null ? 0 : this.formState.formData.products[index].mrp;
             const salePrice = this.formState.formData.products[index].sale_price === null ? 0 : this.formState.formData.products[index].sale_price;
             const salePercentage = this.formState.formData.products[index].sale_percentage === null ? 0 : this.formState.formData.products[index].sale_percentage;
 
-            if (event.target.id === 'sale_price_' + index) {
+            if (event.target.id === 'sale_price_' + index || call_from === 'sale_price_'+index) {
                 this.formState.formData.products[index].sale_percentage = (((mrp - salePrice) / mrp) * 100).toFixed(2);
-            } else if (event.target.id === 'sale_percentage_' + index) {
+            }else if (event.target.id === 'sale_percentage_' + index || call_from === 'sale_percentage_'+index) {
                 this.formState.formData.products[index].sale_price = (mrp - ((mrp * salePercentage) / 100)).toFixed(2);
             }
 
