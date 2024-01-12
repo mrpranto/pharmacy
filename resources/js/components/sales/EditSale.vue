@@ -1,503 +1,826 @@
 <template>
     <div class="row m-3">
 
-        <!--        Product Select Area Start-->
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="row mb-3">
-                <div class="col-10">
-                    <a-input size="large"
-                             :placeholder="__('default.search_sale_product')"
-                             v-model:value="formState.request.search">
-                        <template #prefix>
-                            <SearchOutlined/>
-                        </template>
-                        <template #suffix v-if="formState.request.search">
-                            <a-tooltip class="text-muted" style="font-size: 10px" title="Clear"
-                                       @click.prevent="clearSearch">
-                                <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
-                            </a-tooltip>
-                        </template>
-                    </a-input>
+        <template v-if="$pos_design === 'list_design'">
+
+            <!--        Product Select Area Start-->
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <a-select
+                            v-model:value="searchProduct"
+                            style="width: calc(100%)"
+                            show-search
+                            :placeholder="__('default.search_sale_product')"
+                            :options="formState.dependencies.optionProducts"
+                            :filter-option="false"
+                            @search="getProductsForList"
+                            @change="selectProduct"
+                            ref="product"
+                            :size="'large'"
+                        >
+                            <template
+                                #option="{ value: val, label, icon, barcode, purchase_type, stocks, stockType }">
+                                <a-image :width="35" :height="35" :src="icon"
+                                         class="img-sm rounded-circle" :aria-label="val"/>
+                                &nbsp;&nbsp;
+                                <span>
+                                    <b>{{ label }} ({{ barcode }})</b>,
+                                    <b>{{ __('default.purchase_type') }} </b> : <span class="text-muted">{{ purchase_type === '%' ? purchase_type : $currency_symbol }}, </span>
+                                    <b>{{ __('default.stock_type') }} </b> : <span class="text-muted">{{ stockType }}, </span>
+                                    <b>{{ __('default.available_stock') }} </b> : <span class="text-muted">{{ stocks }}</span>
+                                </span>
+                            </template>
+                        </a-select>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-block btn-lg" style="border-radius: 5px"
-                            @click.prevent="formState.showFilterArea = true">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="24" height="24"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="feather feather-filter">
-                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg>
-                    </button>
+            </div>
+            <!--        Product Select Are End-->
+
+            <!--        Selected Product Area Start-->
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="col-10">
+                        <a-form-item required>
+                            <a-input-group compact>
+                                <a-select
+                                    v-model:value="formState.formData.customer"
+                                    style="width: 100%"
+                                    :size="'large'"
+                                    show-search
+                                    :placeholder="__('default.customers')"
+                                    :options="formState.dependencies.customers"
+                                    :filter-option="selectFilterOption"
+                                    @search="getCustomers"
+                                >
+                                </a-select>
+                            </a-input-group>
+                        </a-form-item>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary btn-lg btn-block" style="border-radius: 5px"
+                                v-if="customerFormState.disabled">
+                        <span class="spinner-border spinner-border-sm" role="status"
+                              aria-hidden="true"></span>
+                        </button>
+                        <button class="btn btn-primary btn-lg btn-block" v-else style="border-radius: 5px"
+                                @click.prevent="showCustomerAddForm">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24" height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="feather feather-user-plus">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--        Selected Product Area End-->
+
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="labels col-12 row border-bottom no-gutters py-2 mb-0">
+                                <b class="col-2 text-muted text-left">{{ __('default.selected_product') }}</b>
+                                <b class="col-1 text-muted text-center">{{ __('default.mrp') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.price') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.discount') }}</b>
+                                <b class="col-3 text-muted text-center">{{ __('default.quantity') }}</b>
+                                <b class="col-1 text-muted text-center">{{ __('default.sub_total') }}</b>
+                                <b class="col-1 text-muted text-right"></b>
+                            </div>
+
+                            <div class="col-12 cart-area text-muted"
+                                 :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
+                                <template v-if="formState.formData.products.length"
+                                          v-for="(cart, cart_index) in formState.formData.products">
+                                    <div class="row border-bottom py-2 mb-0">
+                                        <div class="col-2 align-middle">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <p>
+                                                    {{ cart.product.name }}
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.barcode')
+                                                        }} :</span> {{ cart.product.barcode }},
+                                                    </small>
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.unit')
+                                                        }} :</span> {{ cart.product.unit }},
+                                                        <br>
+                                                        <span class="badge badge-info"
+                                                              v-if="cart.product.purchase_type === '%'">{{
+                                                                cart.product.purchase_type
+                                                            }} Percentage</span>
+                                                        <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <p>{{ $currency_symbol + ' ' + cart.mrp }}</p>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <a-form-item>
+                                                <a-input-number v-model:value="cart.sale_price"
+                                                                @change="calculatePrice(cart_index)"
+                                                                :id="'sale_price_'+cart_index"
+                                                                style="width: 100%"
+                                                                :prefix="$currency_symbol"
+                                                                :min="1"
+                                                                :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                />
+                                                <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                    {{ __('default.cant_lower_sale_price') }}
+                                                </div>
+                                            </a-form-item>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <a-form-item>
+                                                <a-input-number v-if="cart.product.purchase_type === '$'"
+                                                                v-model:value="cart.sale_percentage"
+                                                                style="width: 100%"
+                                                                prefix="%"
+                                                                :id="'sale_percentage_'+cart_index"
+                                                                disabled
+                                                                :min="1"
+                                                />
+                                                <a-input-number v-else
+                                                                v-model:value="cart.sale_percentage"
+                                                                style="width: 100%"
+                                                                prefix="%"
+                                                                :id="'sale_percentage_'+cart_index"
+                                                                @change="calculatePrice(cart_index, 'sale_percentage_'+cart_index)"
+                                                                :min="1"
+                                                                :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                />
+
+                                                <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                    {{ __('default.cant_greater_sale_percentage') }}
+                                                </div>
+                                            </a-form-item>
+                                        </div>
+                                        <div class="col-3 text-center pt-3">
+
+                                            <a-input-group compact>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '-')"
+                                                          style="z-index: 1">
+                                                    <i class="mdi mdi-minus"></i>
+                                                </a-button>
+                                                <a-input v-model:value="cart.quantity"
+                                                         type="number"
+                                                         min="1"
+                                                         @input="calculatePrice(cart_index)"
+                                                         style="width: 150px;"/>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '+')">
+                                                    <i class="mdi mdi-plus"></i>
+                                                </a-button>
+                                            </a-input-group>
+
+                                            <div class="ant-form-item-explain-error text-danger"
+                                                 v-if="formState.validation['products.'+cart_index+'.quantity']">
+                                                {{
+                                                    formState.validation['products.' + cart_index + '.quantity'][0]
+                                                }}
+                                            </div>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <span>{{ $showCurrency(cart.sub_total) }}</span>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
+                                                          cancel-text="No"
+                                                          @confirm="removeFromCart(cart_index)">
+                                                <template #icon></template>
+
+                                                <a-tooltip :title="__('default.remove')">
+                                                    <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
+                                                </a-tooltip>
+                                            </a-popconfirm>
+                                        </div>
+
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="row pt-5" style="margin-top: 50px">
+                                        <div class="col-12 mt-5">
+                                            <h1 class="text-center">
+                                                <i class="mdi mdi-cart"></i>
+                                            </h1>
+                                            <h3 class="text-center">No items to show</h3>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="col-12 pt-4">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_items') }} : {{ formState.formData.totalUnit }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_subtotal') }} :
+                                            {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="col-12">
+                                <dl class="row mt-4">
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.subtotal') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right h5 mb-3">
+                                        {{ $showCurrency(formState.formData.totalSubTotal) }}
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.other_cost') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6">
+                                        <input type="number"
+                                               style="width: 200px"
+                                               step="0.01"
+                                               v-model="formState.formData.otherCost"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black rounded"
+                                               :placeholder="__('default.other_cost') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">(-) {{ __('default.discount') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right">
+                                        <input type="number"
+                                               style="width: 200px;"
+                                               step="0.01"
+                                               v-model="formState.formData.discount"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black"
+                                               :placeholder="__('default.discount') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 text-center text-muted">
+                                        <hr/>
+                                    </dt>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ __('default.total') }} :</h4>
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right"><h5>
+                                        {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
+                            <i class="mdi mdi-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="update('draft')">
+                            <i class="mdi mdi-pause"></i> Draft
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-info btn-block" type="button" @click.prevent="update('confirmed')"><i
+                            class="mdi mdi-check-circle"></i> Confirmed
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="card" v-if="formState.showFilterArea">
-                        <div class="card-body">
-                            <div class="row border-bottom pb-2">
-                                <div class="col-sm-6">
-                                    <p class="text-muted h6">{{ __('default.product_filter') }}</p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <a class="text-primary float-right text-decoration-none cursor-pointer"
-                                       @click.prevent="clearSearch">
-                                        {{ __('default.clear_filter') }}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row pt-4">
-                                <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <a-form-item required>
-                                        <a-input-group compact>
-                                            <a-select
-                                                style="width: 100%"
-                                                show-search
-                                                v-model:value="formState.request.category"
-                                                :options="formState.dependencies.categories"
-                                                :filter-option="selectFilterOption"
-                                                :placeholder="__('default.category')">
-                                            </a-select>
-                                        </a-input-group>
+        </template>
+
+        <template v-else>
+            <!--        Product Select Area Start-->
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row mb-3">
+                    <div class="col-10">
+                        <a-input size="large"
+                                 :placeholder="__('default.search_sale_product')"
+                                 v-model:value="formState.request.search">
+                            <template #prefix>
+                                <SearchOutlined/>
+                            </template>
+                            <template #suffix v-if="formState.request.search">
+                                <a-tooltip class="text-muted" style="font-size: 10px" title="Clear"
+                                           @click.prevent="clearSearch">
+                                    <i class="mdi mdi-close-circle h5 cursor-pointer"></i>
+                                </a-tooltip>
+                            </template>
+                        </a-input>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary btn-block btn-lg" style="border-radius: 5px"
+                                @click.prevent="formState.showFilterArea = true">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24" height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="feather feather-filter">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" v-if="formState.showFilterArea">
+                            <div class="card-body">
+                                <div class="row border-bottom pb-2">
+                                    <div class="col-sm-6">
+                                        <p class="text-muted h6">{{ __('default.product_filter') }}</p>
+                                    </div>
+                                    <div class="col-sm-6">
                                         <a class="text-primary float-right text-decoration-none cursor-pointer"
-                                           @click.prevent="formState.request.category = null">
-                                            <small>{{ __('default.clear') }}</small>
+                                           @click.prevent="clearSearch">
+                                            {{ __('default.clear_filter') }}
                                         </a>
-                                    </a-form-item>
+                                    </div>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <a-form-item required>
-                                        <a-input-group compact>
-                                            <a-select
-                                                style="width: 100%"
-                                                show-search
-                                                v-model:value="formState.request.company"
-                                                :options="formState.dependencies.companies"
-                                                :filter-option="selectFilterOption"
-                                                :placeholder="__('default.company')">
-                                            </a-select>
-                                        </a-input-group>
-                                        <a class="text-primary float-right text-decoration-none cursor-pointer"
-                                           @click.prevent="formState.request.company = null">
-                                            <small>{{ __('default.clear') }}</small>
-                                        </a>
-                                    </a-form-item>
+                                <div class="row pt-4">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
+                                        <a-form-item required>
+                                            <a-input-group compact>
+                                                <a-select
+                                                    style="width: 100%"
+                                                    show-search
+                                                    v-model:value="formState.request.category"
+                                                    :options="formState.dependencies.categories"
+                                                    :filter-option="selectFilterOption"
+                                                    :placeholder="__('default.category')">
+                                                </a-select>
+                                            </a-input-group>
+                                            <a class="text-primary float-right text-decoration-none cursor-pointer"
+                                               @click.prevent="formState.request.category = null">
+                                                <small>{{ __('default.clear') }}</small>
+                                            </a>
+                                        </a-form-item>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
+                                        <a-form-item required>
+                                            <a-input-group compact>
+                                                <a-select
+                                                    style="width: 100%"
+                                                    show-search
+                                                    v-model:value="formState.request.company"
+                                                    :options="formState.dependencies.companies"
+                                                    :filter-option="selectFilterOption"
+                                                    :placeholder="__('default.company')">
+                                                </a-select>
+                                            </a-input-group>
+                                            <a class="text-primary float-right text-decoration-none cursor-pointer"
+                                               @click.prevent="formState.request.company = null">
+                                                <small>{{ __('default.clear') }}</small>
+                                            </a>
+                                        </a-form-item>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row" v-if="formState.loader">
-                <div class="col-12 text-center">
-                    <a-spin/>
+                <div class="row" v-if="formState.loader">
+                    <div class="col-12 text-center">
+                        <a-spin/>
+                    </div>
                 </div>
-            </div>
-            <div v-else class="row mt-3 products-area mr-0"
-                 :class="windowHeight > 620 ? 'products-area-height-700' : 'products-area-height-400'">
-                <div class="col-sm-12 col-md-6 col-lg-6 mb-3 cursor-pointer"
-                     v-for="(product, product_index) in this.formState.dependencies.products"
-                     :key="product_index" @click.prevent="showProductDetails(product)">
-                    <div class="card w-100 h-100 d-inline-block product-area">
-                        <div class="card-body">
-                            <div class="text-center mb-2">
-                                <div class="badge badge-success btn-block" v-if="checkProductSelected(product.id)">
-                                    <i class="mdi mdi-check-circle"></i> Already in cart.
+                <div v-else class="row mt-3 products-area mr-0"
+                     :class="windowHeight > 620 ? 'products-area-height-700' : 'products-area-height-400'">
+                    <div class="col-sm-12 col-md-6 col-lg-6 mb-3 cursor-pointer"
+                         v-for="(product, product_index) in this.formState.dependencies.products"
+                         :key="product_index" @click.prevent="showProductDetails(product)">
+                        <div class="card w-100 h-100 d-inline-block product-area">
+                            <div class="card-body">
+                                <div class="text-center mb-2">
+                                    <div class="badge badge-success btn-block" v-if="checkProductSelected(product.id)">
+                                        <i class="mdi mdi-check-circle"></i> Already in cart.
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="media d-block d-sm-flex flex-column align-items-center">
-                                <div class="d-flex align-items-center" style="height: 100px">
-                                    <figure class="mb-0 mr-3">
-                                        <img
-                                            v-if="product.product_photo"
-                                            :width="100"
-                                            :src="product.product_photo.full_url"
-                                            class="img-thumbnail rounded-circle"
-                                            :alt="product.name"/>
-                                        <img
-                                            v-else
-                                            :width="100"
-                                            :src="'/images/medicine.png'"
-                                            class="img-thumbnail rounded-circle"
-                                            :alt="product.name"/>
-                                        <div class="status online"></div>
-                                    </figure>
-                                </div>
+                                <div class="media d-block d-sm-flex flex-column align-items-center">
+                                    <div class="d-flex align-items-center" style="height: 100px">
+                                        <figure class="mb-0 mr-3">
+                                            <img
+                                                v-if="product.product_photo"
+                                                :width="100"
+                                                :src="product.product_photo.full_url"
+                                                class="img-thumbnail rounded-circle"
+                                                :alt="product.name"/>
+                                            <img
+                                                v-else
+                                                :width="100"
+                                                :src="'/images/medicine.png'"
+                                                class="img-thumbnail rounded-circle"
+                                                :alt="product.name"/>
+                                            <div class="status online"></div>
+                                        </figure>
+                                    </div>
 
-                                <div class="col-12">
-                                    <p class="font-weight-bolder text-center fw-bolder mt-3 mb-1">{{
-                                            product.name.toUpperCase()
-                                        }}</p>
-                                    <p class="d-flex justify-content-between mb-1">
+                                    <div class="col-12">
+                                        <p class="font-weight-bolder text-center fw-bolder mt-3 mb-1">{{
+                                                product.name.toUpperCase()
+                                            }}</p>
+                                        <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.barcode')
                                             }} : </span> <span> {{ product.barcode }}</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.company')
                                             }} : </span> <span> {{ product.company.name }} </span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.category')
                                             }} : </span> <span>{{ product.category.name }} </span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.unit')
                                             }} : </span> <span>{{
-                                            product.unit.name + `(${product.unit.pack_size})`
-                                        }}</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
-                                        <span class="font-weight-bold">{{ __('default.purchase_type') }} : </span>
-                                        <span v-if="product.purchase_type === '%'"
-                                              class="badge badge-info">{{ product.purchase_type }} Percentage</span>
-                                        <span v-else class="badge badge-success">{{
-                                                $currency_symbol
-                                            }} Direct Price</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
+                                                product.unit.name + `(${product.unit.pack_size})`
+                                            }}</span>
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
+                                            <span class="font-weight-bold">{{ __('default.purchase_type') }} : </span>
+                                            <span v-if="product.purchase_type === '%'"
+                                                  class="badge badge-info">{{ product.purchase_type }} Percentage</span>
+                                            <span v-else class="badge badge-success">{{
+                                                    $currency_symbol
+                                                }} Direct Price</span>
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
                                         <span class="font-weight-bold">{{
                                                 __('default.stock_type')
                                             }} : </span><span>{{ product.stocks.length }}</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between mb-1">
-                                        <span class="font-weight-bold">{{ __('default.total_stock') }} : </span> <span
-                                        class="badge badge-primary">{{ totalStock(product.stocks) }}</span>
-                                    </p>
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-1">
+                                            <span class="font-weight-bold">{{ __('default.total_stock') }} : </span> <span
+                                            class="badge badge-primary">{{ totalStock(product.stocks) }}</span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--        Product Select Are End-->
+            <!--        Product Select Are End-->
 
-        <!--        Selected Product Area Start-->
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="row">
-                <div class="col-10">
-                    <a-form-item required>
-                        <a-input-group compact>
-                            <a-select
-                                v-model:value="formState.formData.customer"
-                                style="width: 100%"
-                                :size="'large'"
-                                show-search
-                                :placeholder="__('default.customers')"
-                                :options="formState.dependencies.customers"
-                                :filter-option="selectFilterOption"
-                                @search="getCustomers"
-                            >
-                            </a-select>
-                        </a-input-group>
-                    </a-form-item>
-                </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-lg btn-block" style="border-radius: 5px"
-                            v-if="customerFormState.disabled">
+            <!--        Selected Product Area Start-->
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="col-10">
+                        <a-form-item required>
+                            <a-input-group compact>
+                                <a-select
+                                    v-model:value="formState.formData.customer"
+                                    style="width: 100%"
+                                    :size="'large'"
+                                    show-search
+                                    :placeholder="__('default.customers')"
+                                    :options="formState.dependencies.customers"
+                                    :filter-option="selectFilterOption"
+                                    @search="getCustomers"
+                                >
+                                </a-select>
+                            </a-input-group>
+                        </a-form-item>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary btn-lg btn-block" style="border-radius: 5px"
+                                v-if="customerFormState.disabled">
                         <span class="spinner-border spinner-border-sm" role="status"
                               aria-hidden="true"></span>
-                    </button>
-                    <button class="btn btn-primary btn-lg btn-block" v-else style="border-radius: 5px"
-                            @click.prevent="showCustomerAddForm">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="24" height="24"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="feather feather-user-plus">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
-                    </button>
+                        </button>
+                        <button class="btn btn-primary btn-lg btn-block" v-else style="border-radius: 5px"
+                                @click.prevent="showCustomerAddForm">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24" height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="feather feather-user-plus">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="labels col-12 row border-bottom no-gutters py-2 mb-0">
-                            <b class="col-4 text-muted text-center">{{ __('default.selected_product') }}</b>
-                            <b class="col-2 text-muted text-center">{{ __('default.price') }}</b>
-                            <b class="col-3 text-muted text-center">{{ __('default.quantity') }}</b>
-                            <b class="col-2 text-muted text-center">{{ __('default.sub_total') }}</b>
-                            <b class="col-1 text-muted text-right"></b>
-                        </div>
-
-                        <div class="col-12 cart-area text-muted"
-                             :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
-                            <template v-if="formState.formData.products.length"
-                                      v-for="(cart, cart_index) in formState.formData.products">
-                                <div class="row border-bottom py-2 mb-0">
-                                    <div class="col-4 align-middle">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <svg v-if="cart.discountArea === false"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 width="24" height="24"
-                                                 viewBox="0 0 24 24"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 stroke-width="2"
-                                                 stroke-linecap="round"
-                                                 stroke-linejoin="round"
-                                                 class="feather feather-chevron-down cursor-pointer"
-                                                 @click.prevent="showHideDiscountArea(cart_index, true)">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-
-                                            <svg v-else
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 width="24" height="24"
-                                                 viewBox="0 0 24 24"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 stroke-width="2"
-                                                 stroke-linecap="round"
-                                                 stroke-linejoin="round"
-                                                 class="feather feather-chevron-up cursor-pointer"
-                                                 @click.prevent="showHideDiscountArea(cart_index, false)">
-                                                <polyline points="18 15 12 9 6 15"></polyline>
-                                            </svg>
-
-
-                                            <p class="ml-3">
-                                                {{ cart.product.name }}
-                                                <br>
-                                                <small><span class="font-weight-bolder">{{
-                                                        __('default.barcode')
-                                                    }} :</span> {{ cart.product.barcode }},
-                                                </small>
-                                                <br>
-                                                <small><span class="font-weight-bolder">{{
-                                                        __('default.unit')
-                                                    }} :</span> {{ cart.product.unit }},
-                                                    <br>
-                                                    <span class="badge badge-info"
-                                                          v-if="cart.product.purchase_type === '%'">{{
-                                                            cart.product.purchase_type
-                                                        }} Percentage</span>
-                                                    <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
-                                                </small>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 text-center pt-3">
-                                        <span>{{ $showCurrency(cart.sale_price) }}</span>
-                                    </div>
-                                    <div class="col-3 text-center pt-3">
-
-                                        <a-input-group compact>
-                                            <a-button @click.prevent="incrementDecrement(cart_index, '-')" size="small"
-                                                      style="z-index: 1">
-                                                <i class="mdi mdi-minus"></i>
-                                            </a-button>
-                                            <a-input v-model:value="cart.quantity"
-                                                     size="small"
-                                                     type="number"
-                                                     min="1"
-                                                     @input="calculatePrice(cart_index)"
-                                                     style="width: 60px;"/>
-                                            <a-button @click.prevent="incrementDecrement(cart_index, '+')" size="small">
-                                                <i class="mdi mdi-plus"></i>
-                                            </a-button>
-                                        </a-input-group>
-
-                                        <div class="ant-form-item-explain-error text-danger"
-                                             v-if="formState.validation['products.'+cart_index+'.quantity']">
-                                            {{
-                                                formState.validation['products.' + cart_index + '.quantity'][0]
-                                            }}
-                                        </div>
-                                    </div>
-                                    <div class="col-2 text-center pt-3">
-                                        <span>{{ $showCurrency(cart.sub_total) }}</span>
-                                    </div>
-                                    <div class="col-1 text-center pt-3">
-                                        <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
-                                                      cancel-text="No"
-                                                      @confirm="removeFromCart(cart_index)">
-                                            <template #icon></template>
-
-                                            <a-tooltip :title="__('default.remove')">
-                                                <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
-                                            </a-tooltip>
-                                        </a-popconfirm>
-                                    </div>
-
-                                    <div class="col-12 pt-3" v-if="cart.discountArea === true">
-                                        <div class="row">
-                                            <div class="col-2">
-                                                <a-form-item :label="__('default.mrp')">
-                                                    <p>{{ $currency_symbol + ' ' + cart.mrp }}</p>
-                                                </a-form-item>
-                                            </div>
-                                            <div class="col-5">
-                                                <!--                                                @blur="setOriginalPrice(cart_index)"-->
-                                                <a-form-item :label="__('default.sale_price')">
-                                                    <a-input-number v-model:value="cart.sale_price"
-                                                                    @change="calculatePrice(cart_index)"
-                                                                    :id="'sale_price_'+cart_index"
-                                                                    style="width: 100%"
-                                                                    :prefix="$currency_symbol"
-                                                                    :min="1"
-                                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
-                                                                    size="small"/>
-                                                    <div class="ant-form-item-explain-error" v-if="cart.showAlert">
-                                                        {{ __('default.cant_lower_sale_price') }}
-                                                    </div>
-                                                </a-form-item>
-                                            </div>
-                                            <div class="col-5">
-                                                <a-form-item :label="__('default.discount')">
-                                                    <a-input-number v-if="cart.product.purchase_type === '$'"
-                                                                    v-model:value="cart.sale_percentage"
-                                                                    style="width: 100%"
-                                                                    prefix="%"
-                                                                    :id="'sale_percentage_'+cart_index"
-                                                                    disabled
-                                                                    :min="1"
-                                                                    size="small"/>
-                                                    <a-input-number v-else
-                                                                    v-model:value="cart.sale_percentage"
-                                                                    style="width: 100%"
-                                                                    prefix="%"
-                                                                    :id="'sale_percentage_'+cart_index"
-                                                                    @change="calculatePrice(cart_index)"
-                                                                    :min="1"
-                                                                    :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
-                                                                    size="small"/>
-                                                    <div class="ant-form-item-explain-error" v-if="cart.showAlert">
-                                                        {{ __('default.cant_greater_sale_percentage') }}
-                                                    </div>
-                                                </a-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div class="row pt-5" style="margin-top: 50px">
-                                    <div class="col-12 mt-5">
-                                        <h1 class="text-center">
-                                            <i class="mdi mdi-cart"></i>
-                                        </h1>
-                                        <h3 class="text-center">No items to show</h3>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="col-12 pt-4">
-                            <div class="row">
-                                <div class="col-4 text-center">
-                                    <h5>{{ __('default.total_items') }} : {{ formState.formData.totalUnit }}</h5>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <h5>{{ __('default.total_subtotal') }} :
-                                        {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
-                                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="labels col-12 row border-bottom no-gutters py-2 mb-0">
+                                <b class="col-4 text-muted text-center">{{ __('default.selected_product') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.price') }}</b>
+                                <b class="col-3 text-muted text-center">{{ __('default.quantity') }}</b>
+                                <b class="col-2 text-muted text-center">{{ __('default.sub_total') }}</b>
+                                <b class="col-1 text-muted text-right"></b>
                             </div>
-                            <hr>
-                        </div>
-                        <div class="col-12">
-                            <dl class="row mt-4">
 
-                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.subtotal') }}
-                                    ({{ $currency_symbol }}) :
-                                </dt>
-                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right h5 mb-3">
-                                    {{ $showCurrency(formState.formData.totalSubTotal) }}
-                                </dd>
+                            <div class="col-12 cart-area text-muted"
+                                 :class="windowHeight > 620 ? 'cart-area-height-420' : 'cart-area-height-300'">
+                                <template v-if="formState.formData.products.length"
+                                          v-for="(cart, cart_index) in formState.formData.products">
+                                    <div class="row border-bottom py-2 mb-0">
+                                        <div class="col-4 align-middle">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                                <svg v-if="cart.discountArea === false"
+                                                     xmlns="http://www.w3.org/2000/svg"
+                                                     width="24" height="24"
+                                                     viewBox="0 0 24 24"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     stroke-width="2"
+                                                     stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     class="feather feather-chevron-down cursor-pointer"
+                                                     @click.prevent="showHideDiscountArea(cart_index, true)">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
 
-                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.other_cost') }}
-                                    ({{ $currency_symbol }}) :
-                                </dt>
-                                <dd class="col-sm-12 col-md-6 col-lg-6">
-                                    <input type="number"
-                                           style="width: 200px"
-                                           step="0.01"
-                                           v-model="formState.formData.otherCost"
-                                           @input="calculateTotal"
-                                           class="form-control form-control-sm text-right float-right text-black rounded"
-                                           :placeholder="__('default.other_cost') +' ('+ $currency_symbol +')'"
-                                           autocomplete="off">
-                                </dd>
+                                                <svg v-else
+                                                     xmlns="http://www.w3.org/2000/svg"
+                                                     width="24" height="24"
+                                                     viewBox="0 0 24 24"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     stroke-width="2"
+                                                     stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     class="feather feather-chevron-up cursor-pointer"
+                                                     @click.prevent="showHideDiscountArea(cart_index, false)">
+                                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                                </svg>
 
-                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right">(-) {{ __('default.discount') }}
-                                    ({{ $currency_symbol }}) :
-                                </dt>
-                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right">
-                                    <input type="number"
-                                           style="width: 200px;"
-                                           step="0.01"
-                                           v-model="formState.formData.discount"
-                                           @input="calculateTotal"
-                                           class="form-control form-control-sm text-right float-right text-black"
-                                           :placeholder="__('default.discount') +' ('+ $currency_symbol +')'"
-                                           autocomplete="off">
-                                </dd>
 
-                                <dt class="col-sm-12 text-center text-muted">
-                                    <hr/>
-                                </dt>
+                                                <p class="ml-3">
+                                                    {{ cart.product.name }}
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.barcode')
+                                                        }} :</span> {{ cart.product.barcode }},
+                                                    </small>
+                                                    <br>
+                                                    <small><span class="font-weight-bolder">{{
+                                                            __('default.unit')
+                                                        }} :</span> {{ cart.product.unit }},
+                                                        <br>
+                                                        <span class="badge badge-info"
+                                                              v-if="cart.product.purchase_type === '%'">{{
+                                                                cart.product.purchase_type
+                                                            }} Percentage</span>
+                                                        <span class="badge badge-success" v-else>{{ $currency_symbol }} Direct Price</span>
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <span>{{ $showCurrency(cart.sale_price) }}</span>
+                                        </div>
+                                        <div class="col-3 text-center pt-3">
 
-                                <dt class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ __('default.total') }} :</h4>
-                                </dt>
-                                <dd class="col-sm-12 col-md-6 col-lg-6 text-right"><h5>
-                                    {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
-                            </dl>
+                                            <a-input-group compact>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '-')" size="small"
+                                                          style="z-index: 1">
+                                                    <i class="mdi mdi-minus"></i>
+                                                </a-button>
+                                                <a-input v-model:value="cart.quantity"
+                                                         size="small"
+                                                         type="number"
+                                                         min="1"
+                                                         @input="calculatePrice(cart_index)"
+                                                         style="width: 60px;"/>
+                                                <a-button @click.prevent="incrementDecrement(cart_index, '+')" size="small">
+                                                    <i class="mdi mdi-plus"></i>
+                                                </a-button>
+                                            </a-input-group>
+
+                                            <div class="ant-form-item-explain-error text-danger"
+                                                 v-if="formState.validation['products.'+cart_index+'.quantity']">
+                                                {{
+                                                    formState.validation['products.' + cart_index + '.quantity'][0]
+                                                }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-center pt-3">
+                                            <span>{{ $showCurrency(cart.sub_total) }}</span>
+                                        </div>
+                                        <div class="col-1 text-center pt-3">
+                                            <a-popconfirm placement="left" title="Are you sure ?" ok-text="Yes"
+                                                          cancel-text="No"
+                                                          @confirm="removeFromCart(cart_index)">
+                                                <template #icon></template>
+
+                                                <a-tooltip :title="__('default.remove')">
+                                                    <i class="mdi mdi-close-circle h5 cursor-pointer color-danger"></i>
+                                                </a-tooltip>
+                                            </a-popconfirm>
+                                        </div>
+
+                                        <div class="col-12 pt-3" v-if="cart.discountArea === true">
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <a-form-item :label="__('default.mrp')">
+                                                        <p>{{ $currency_symbol + ' ' + cart.mrp }}</p>
+                                                    </a-form-item>
+                                                </div>
+                                                <div class="col-5">
+                                                    <!--                                                @blur="setOriginalPrice(cart_index)"-->
+                                                    <a-form-item :label="__('default.sale_price')">
+                                                        <a-input-number v-model:value="cart.sale_price"
+                                                                        @change="calculatePrice(cart_index)"
+                                                                        :id="'sale_price_'+cart_index"
+                                                                        style="width: 100%"
+                                                                        :prefix="$currency_symbol"
+                                                                        :min="1"
+                                                                        :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                                        size="small"/>
+                                                        <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                            {{ __('default.cant_lower_sale_price') }}
+                                                        </div>
+                                                    </a-form-item>
+                                                </div>
+                                                <div class="col-5">
+                                                    <a-form-item :label="__('default.discount')">
+                                                        <a-input-number v-if="cart.product.purchase_type === '$'"
+                                                                        v-model:value="cart.sale_percentage"
+                                                                        style="width: 100%"
+                                                                        prefix="%"
+                                                                        :id="'sale_percentage_'+cart_index"
+                                                                        disabled
+                                                                        :min="1"
+                                                                        size="small"/>
+                                                        <a-input-number v-else
+                                                                        v-model:value="cart.sale_percentage"
+                                                                        style="width: 100%"
+                                                                        prefix="%"
+                                                                        :id="'sale_percentage_'+cart_index"
+                                                                        @change="calculatePrice(cart_index)"
+                                                                        :min="1"
+                                                                        :class="cart.showAlert ? 'ant-input ant-input-status-error': ''"
+                                                                        size="small"/>
+                                                        <div class="ant-form-item-explain-error" v-if="cart.showAlert">
+                                                            {{ __('default.cant_greater_sale_percentage') }}
+                                                        </div>
+                                                    </a-form-item>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="row pt-5" style="margin-top: 50px">
+                                        <div class="col-12 mt-5">
+                                            <h1 class="text-center">
+                                                <i class="mdi mdi-cart"></i>
+                                            </h1>
+                                            <h3 class="text-center">No items to show</h3>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="col-12 pt-4">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_items') }} : {{ formState.formData.totalUnit }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_unit') }} : {{ formState.formData.totalUnitQuantity }}</h5>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h5>{{ __('default.total_subtotal') }} :
+                                            {{ $showCurrency(formState.formData.totalSubTotal) }}</h5>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="col-12">
+                                <dl class="row mt-4">
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.subtotal') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right h5 mb-3">
+                                        {{ $showCurrency(formState.formData.totalSubTotal) }}
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">{{ __('default.other_cost') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6">
+                                        <input type="number"
+                                               style="width: 200px"
+                                               step="0.01"
+                                               v-model="formState.formData.otherCost"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black rounded"
+                                               :placeholder="__('default.other_cost') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right">(-) {{ __('default.discount') }}
+                                        ({{ $currency_symbol }}) :
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right">
+                                        <input type="number"
+                                               style="width: 200px;"
+                                               step="0.01"
+                                               v-model="formState.formData.discount"
+                                               @input="calculateTotal"
+                                               class="form-control form-control-sm text-right float-right text-black"
+                                               :placeholder="__('default.discount') +' ('+ $currency_symbol +')'"
+                                               autocomplete="off">
+                                    </dd>
+
+                                    <dt class="col-sm-12 text-center text-muted">
+                                        <hr/>
+                                    </dt>
+
+                                    <dt class="col-sm-12 col-md-4 col-lg-4 text-right"><h4>{{ __('default.total') }} :</h4>
+                                    </dt>
+                                    <dd class="col-sm-12 col-md-6 col-lg-6 text-right"><h5>
+                                        {{ $showCurrency(formState.formData.grandTotal) }}</h5></dd>
+                                </dl>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="row mt-2">
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
+                            <i class="mdi mdi-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="update('draft')">
+                            <i class="mdi mdi-pause"></i> Draft
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <button v-else class="btn btn-info btn-block" type="button" @click.prevent="update('confirmed')"><i
+                            class="mdi mdi-check-circle"></i> Confirmed
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-4">
-                    <button class="btn btn-primary btn-block" v-if="formState.showPreviewLoader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
-                    </button>
-                    <button v-else class="btn btn-primary btn-block" @click.prevent="printPreviewArea">
-                        <i class="mdi mdi-eye"></i> Preview
-                    </button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-warning btn-block" v-if="formState.showDraftLoader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
-                    </button>
-                    <button v-else class="btn btn-warning btn-block" type="button" @click.prevent="update('draft')">
-                        <i class="mdi mdi-pause"></i> Draft
-                    </button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-info btn-block" v-if="formState.showConfirmLoader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
-                    </button>
-                    <button v-else class="btn btn-info btn-block" type="button" @click.prevent="update('confirmed')"><i
-                        class="mdi mdi-check-circle"></i> Confirmed
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!--        Selected Product Area End-->
+            <!--        Selected Product Area End-->
+
+        </template>
 
         <!--        Add customer drawer area start-->
         <AddNewCustomer :formState="customerFormState"/>
@@ -630,6 +953,7 @@ export default {
     props: ['sale', 'categories', 'companies', 'user_email'],
     data() {
         return {
+            searchProduct: null,
             windowHeight: window.innerHeight,
             customerFormState: {
                 callFrom: 'sale',
@@ -692,6 +1016,7 @@ export default {
     created() {
         this.getProduct()
         this.setOldData()
+        this.loadInitialProduct()
     },
     watch: {
         'formState.formData.customer': function () {
@@ -823,6 +1148,15 @@ export default {
                     .catch(error => console.error(error))
             }
         },
+        selectProduct(){
+            const product = this.formState.dependencies.products.find(item => item.id === this.searchProduct);
+            if (product.stocks.length > 1){
+                this.showProductDetails(product);
+            }else {
+                this.selectStockProduct(product.stocks[0], this.searchProduct)
+            }
+            this.searchProduct = null;
+        },
         selectStockProduct(stock, product_id) {
             const product = this.formState.dependencies.products.find(item => item.id === product_id);
             const existProduct = this.formState.formData.products.find(item => item.product.id === product_id && item.sale_price === stock.sale_price)
@@ -948,6 +1282,13 @@ export default {
                 openStock: true,
             };
         },
+        loadInitialProduct(){
+            if (this.$pos_design === 'list_design'){
+                this.getProductsForList()
+            }else {
+                this.getProduct()
+            }
+        },
         async getProduct() {
             this.formState.loader = true;
             this.formState.dependencies.products = [];
@@ -958,6 +1299,28 @@ export default {
                 })
                 .catch(error => console.error(error))
 
+        },
+        async getProductsForList(value = '') {
+            await axios.get('/get-sales-products', {params: {search: value}})
+                .then(response => {
+                    const searchProduct = response.data.map(item => {
+                        return {
+                            label: item.name,
+                            barcode: item.barcode,
+                            value: item.id,
+                            icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
+                            unit: item.unit.name + `(${item.unit.pack_size})`,
+                            purchase_type: item.purchase_type,
+                            stocks: this.totalStock(item.stocks),
+                            stockType: item.stocks.length
+                        }
+                    })
+                    this.formState.dependencies.optionProducts = searchProduct;
+                    this.formState.dependencies.products = response.data;
+                })
+                .catch(err => {
+                    console.error(err)
+                })
         },
         checkProductSelected(product_id) {
             const existProduct = this.formState.formData.products.find(item => item.product.id === product_id);
