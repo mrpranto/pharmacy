@@ -43,7 +43,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="updateUnit">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="updateUnit">
                     <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
@@ -61,7 +64,7 @@ export default {
     },
     data() {
         return {
-
+            loading:false
         }
     },
     watch: {
@@ -69,6 +72,7 @@ export default {
     },
     methods: {
         async updateUnit() {
+            this.loading = true
             await axios.put('/product/units/'+this.formState.current_id, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -80,17 +84,21 @@ export default {
                         this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.formState.validation = err.response.data.errors
+                        this.loading = false
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.loading = false
                     }
                 })
         }

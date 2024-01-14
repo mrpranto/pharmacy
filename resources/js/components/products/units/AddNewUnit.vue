@@ -44,7 +44,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="saveUnit">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="saveUnit">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -62,7 +65,7 @@ export default {
     },
     data() {
         return {
-
+            loading:false
         }
     },
     watch: {
@@ -70,6 +73,7 @@ export default {
     },
     methods: {
         async saveUnit() {
+            this.loading = true
             await axios.post('/product/units', this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -79,18 +83,22 @@ export default {
                         this.formState.formData.status = true
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.loading = false
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.formState.validation = err.response.data.errors
+                        this.loading = false
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.loading = false
                     }
                 })
         }
