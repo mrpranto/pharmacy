@@ -99,16 +99,7 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :name="['description']" :label="__('default.description')">
-                    <a-textarea v-model:value="formState.formData.description"
-                                :placeholder="__('default.description')"
-                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
-                        {{ formState.validation.description[0] }}
-                    </div>
-                </a-form-item>
-
-                <a-form-item :label="__('default.purchase_type')">
+                <a-form-item :label="__('default.purchase_type')" required>
                     <a-radio-group v-model:value="formState.formData.purchase_type"
                                    :class="formState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
                         <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
@@ -119,8 +110,17 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.status')">
+                <a-form-item :label="__('default.status')" required>
                     <a-switch v-model:checked="formState.formData.status"/>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="formState.formData.description"
+                                :placeholder="__('default.description')"
+                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
+                        {{ formState.validation.description[0] }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.image')">
@@ -155,7 +155,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="saveProduct">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="saveProduct">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -187,7 +190,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewCategory">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveCategory">
+                <a-button v-if="categoryFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveCategory">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -218,7 +224,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewCompany">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveCompany">
+                <a-button v-if="companyFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveCompany">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -259,7 +268,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewUnit">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveUnit">
+                <a-button v-if="unitFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveUnit">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -288,6 +300,7 @@ export default {
             openAddNewCompany: false,
             openAddNewUnit: false,
             categoryFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     description: '',
@@ -300,6 +313,7 @@ export default {
                 }
             },
             companyFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     description: '',
@@ -312,6 +326,7 @@ export default {
                 }
             },
             unitFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     pack_size: '',
@@ -336,6 +351,7 @@ export default {
         * Product Create functions
         * */
         async saveProduct() {
+            this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
             this.formData.append('category', this.formState.formData.category);
@@ -357,20 +373,24 @@ export default {
                         this.formState.formData.purchase_type = '';
                         this.imageFileName = "";
                         this.previewURL = '/images/medicine.png';
-                        this.$parent.getData()
-                        this.$parent.onClose()
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$parent.getData();
+                        this.$parent.onClose();
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
                     } else {
-                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.formState.validation = err.response.data.errors
+                        this.formState.validation = err.response.data.errors;
+                        this.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
-                        console.error(err)
+                        console.error(err);
+                        this.loading = false;
                     }
                 })
         },
@@ -389,6 +409,7 @@ export default {
             this.openAddNewCategory = false
         },
         async saveCategory() {
+            this.categoryFormData.loading = true;
             await axios.post('/product/categories', this.categoryFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -397,18 +418,22 @@ export default {
                         this.categoryFormData.formData.status = true
                         this.closeAddNewCategory()
                         this.$parent.getDependency('addCategory')
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.categoryFormData.loading = false;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.categoryFormData.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Category : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.categoryFormData.validation = err.response.data.errors
+                        this.categoryFormData.validation = err.response.data.errors;
+                        this.categoryFormData.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
-                        console.error(err)
+                        console.error(err);
+                        this.categoryFormData.loading = false;
                     }
                 })
         },
@@ -437,6 +462,7 @@ export default {
             this.openAddNewCompany = false
         },
         async saveCompany() {
+            this.companyFormData.loading = true;
             await axios.post('/product/companies', this.companyFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -445,18 +471,22 @@ export default {
                         this.companyFormData.formData.status = true
                         this.closeAddNewCompany()
                         this.$parent.getDependency('addCompany')
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.companyFormData.loading = false;
                     } else {
-                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.companyFormData.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Company : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.companyFormData.validation = err.response.data.errors
+                        this.companyFormData.validation = err.response.data.errors;
+                        this.companyFormData.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.companyFormData.loading = false;
                     }
                 })
         },
@@ -476,6 +506,7 @@ export default {
             this.openAddNewUnit = false
         },
         async saveUnit() {
+            this.unitFormData.loading = true;
             await axios.post('/product/units', this.unitFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -485,18 +516,22 @@ export default {
                         this.unitFormData.formData.status = true
                         this.closeAddNewUnit()
                         this.$parent.getDependency('addUnit')
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.unitFormData.loading = false;
                     } else {
-                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.unitFormData.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Unit : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.unitFormData.validation = err.response.data.errors
+                        this.unitFormData.validation = err.response.data.errors;
+                        this.unitFormData.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
-                        console.error(err)
+                        console.error(err);
+                        this.unitFormData.loading = false;
                     }
                 })
         },
