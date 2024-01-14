@@ -180,7 +180,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="categoryFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="categoryFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="categoryFormData.validation.description">
                         {{ categoryFormData.validation.description[0] }}
@@ -214,7 +214,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="companyFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="companyFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="companyFormData.validation.description">
                         {{ companyFormData.validation.description[0] }}
@@ -258,7 +258,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="unitFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="unitFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.description">
                         {{ unitFormData.validation.description[0] }}

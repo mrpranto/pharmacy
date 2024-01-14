@@ -155,7 +155,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="updateProduct">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="updateProduct">
                     <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
@@ -177,7 +180,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="categoryFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="categoryFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="categoryFormData.validation.description">
                         {{ categoryFormData.validation.description[0] }}
@@ -187,7 +190,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewCategory">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveCategory">
+                <a-button v-if="categoryFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveCategory">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -208,7 +214,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="companyFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="companyFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="companyFormData.validation.description">
                         {{ companyFormData.validation.description[0] }}
@@ -218,7 +224,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewCompany">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveCompany">
+                <a-button v-if="companyFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveCompany">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -249,7 +258,7 @@
 
                 <a-form-item :name="['description']" :label="__('default.description')">
                     <a-textarea v-model:value="unitFormData.formData.description"
-                                :placeholder="__('default.description')" rows="6"
+                                :placeholder="__('default.description')"
                                 :class="unitFormData.validation.description ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.description">
                         {{ unitFormData.validation.description[0] }}
@@ -259,7 +268,10 @@
 
             <template #footer>
                 <a-button key="back" @click="closeAddNewUnit">{{ __('default.close') }}</a-button>
-                <a-button key="submit" type="primary" :loading="loading" @click="saveUnit">
+                <a-button v-if="unitFormData.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveUnit">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -288,6 +300,7 @@ export default {
             openAddNewCompany: false,
             openAddNewUnit: false,
             categoryFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     description: '',
@@ -300,6 +313,7 @@ export default {
                 }
             },
             companyFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     description: '',
@@ -312,6 +326,7 @@ export default {
                 }
             },
             unitFormData: {
+                loading: false,
                 formData: {
                     name: '',
                     pack_size: '',
@@ -346,6 +361,7 @@ export default {
         * Product Create functions
         * */
         async updateProduct() {
+            this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
             this.formData.append('category', this.formState.formData.category);
@@ -377,17 +393,21 @@ export default {
                         this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.loading = false;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.formState.validation = err.response.data.errors
+                        this.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.loading = false;
                     }
                 })
         },
@@ -415,6 +435,7 @@ export default {
             this.openAddNewCategory = false
         },
         async saveCategory() {
+            this.categoryFormData.loading = true;
             await axios.post('/product/categories', this.categoryFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -424,17 +445,21 @@ export default {
                         this.closeAddNewCategory()
                         this.$parent.getDependency('addCategory')
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.categoryFormData.loading = false;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.categoryFormData.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Category : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.categoryFormData.validation = err.response.data.errors
+                        this.categoryFormData.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.categoryFormData.loading = false;
                     }
                 })
         },
@@ -453,6 +478,7 @@ export default {
             this.openAddNewCompany = false
         },
         async saveCompany() {
+            this.companyFormData.loading = true;
             await axios.post('/product/companies', this.companyFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -462,17 +488,21 @@ export default {
                         this.closeAddNewCompany()
                         this.$parent.getDependency('addCompany')
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.companyFormData.loading = true;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.companyFormData.loading = true;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Company : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.companyFormData.validation = err.response.data.errors
+                        this.companyFormData.loading = true;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.companyFormData.loading = true;
                     }
                 })
         },
@@ -492,6 +522,7 @@ export default {
             this.openAddNewUnit = false
         },
         async saveUnit() {
+            this.unitFormData.loading = true;
             await axios.post('/product/units', this.unitFormData.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -502,17 +533,21 @@ export default {
                         this.closeAddNewUnit()
                         this.$parent.getDependency('addUnit')
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.unitFormData.loading = false;
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.unitFormData.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage('Unit : '+ err.response.data.message, this.$notification_position, this.$notification_sound)
                         this.unitFormData.validation = err.response.data.errors
+                        this.unitFormData.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
                         console.error(err)
+                        this.unitFormData.loading = false;
                     }
                 })
         },
