@@ -69,6 +69,7 @@ export default {
                 list_path: '',
                 current_list_url: '',
                 selectAll: false,
+                validation: {},
                 formData: {
                     name: '',
                     description: '',
@@ -197,6 +198,7 @@ export default {
                 permissions: [],
                 module_ids: [],
             }
+            this.formState.validation = {};
             this.formState.selectAll = false;
             this.formState.openCreateRole = true;
             this.loader = false
@@ -208,6 +210,7 @@ export default {
             const role_permissions = role.permissions
             this.loader = true
             this.getPermissions()
+            this.formState.validation = {};
             this.formState.current_id = role.id;
             this.formState.formData.name = role.name;
             this.formState.formData.description = role.description;

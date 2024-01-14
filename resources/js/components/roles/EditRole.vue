@@ -9,29 +9,29 @@
             @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
-                <a-form-item :label="__('default.name')">
+                <a-form-item :label="__('default.name')" required>
                     <a-input v-model:value="formState.formData.name"
-                             :class="validation.name ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.name">{{
-                            validation.name[0]
+                             :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
+                            formState.validation.name[0]
                         }}
                     </div>
                 </a-form-item>
-                <a-form-item :name="['description']" :label="__('default.description')">
+                <a-form-item :label="__('default.description')" required>
                     <a-textarea v-model:value="formState.formData.description"
-                                :class="validation.description ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="validation.description">
-                        {{ validation.description[0] }}
+                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
+                        {{ formState.validation.description[0] }}
                     </div>
                 </a-form-item>
                 <a-form-item :label="__('default.is_delete_able')">
                     <a-switch v-model:checked="formState.formData.isDeleteAble"/>
                 </a-form-item>
-                <a-form-item :name="['permissions']" :label="__('default.permissions')">
+                <a-form-item :name="['permissions']" :label="__('default.permissions')" required>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="ant-form-item-explain-error mt-2" style="" v-if="validation.permissions">
-                                {{ validation.permissions[0] }}
+                            <div class="ant-form-item-explain-error mt-2" style="" v-if="formState.validation.permissions">
+                                {{ formState.validation.permissions[0] }}
                             </div>
 
                             <div class="form-group">
@@ -90,7 +90,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="editRole">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="editRole">
                     <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
@@ -110,7 +113,7 @@ export default {
     },
     data() {
         return {
-            validation: {},
+            loading: false
         }
     },
     watch: {
@@ -120,6 +123,7 @@ export default {
     },
     methods: {
         async editRole() {
+            this.loading = true
             await axios.put(`/roles/${this.formState.current_id}`, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -130,17 +134,21 @@ export default {
                         this.$parent.getData(current_path)
                         this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.validation = err.response.data.errors
+                        this.formState.validation = err.response.data.errors
+                        this.loading = false
                     } else {
                         console.error(err)
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        this.loading = false
                     }
                 })
         },

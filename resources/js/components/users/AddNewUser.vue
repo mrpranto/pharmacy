@@ -86,7 +86,10 @@
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
-                <a-button type="primary" style="margin-right: 8px" @click.prevent="save">
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="save">
                     <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
                 </a-button>
             </template>
@@ -108,6 +111,7 @@ export default {
     components: {UserOutlined, LockOutlined, PhoneOutlined, UploadOutlined},
     data() {
         return {
+            loading:false,
             selectedImage: null, // To store the selected image file
             previewURL: 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
             formData: new FormData(),
@@ -130,6 +134,7 @@ export default {
     },
     methods: {
         async save() {
+            this.loading = true;
             this.formData.append('role_id', this.formState.formData.role_id);
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('email', this.formState.formData.email);
@@ -149,18 +154,22 @@ export default {
                         this.formState.formData.profile_picture = {}
                         this.$parent.getData()
                         this.$parent.onClose()
-                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
                     } else {
-                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
                     }
                 })
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.formState.validation = err.response.data.errors
+                        this.formState.validation = err.response.data.errors;
+                        this.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
-                        console.error(err)
+                        console.error(err);
+                        this.loading = false;
                     }
                 })
         },
