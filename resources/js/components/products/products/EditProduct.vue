@@ -30,7 +30,7 @@
                             }}
                         </div>
                         <template #suffix>
-                            <a-tooltip title="Generate new barcode" @click="$parent.generateBarcode">
+                            <a-tooltip title="Generate new barcode" @click="$parent.generateBarcode" placement="leftBottom">
                                 <sync-outlined style="color: rgba(0, 0, 0, 0.45)"/>
                             </a-tooltip>
                         </template>
@@ -47,7 +47,7 @@
                             :options="formState.dependencies.categories"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_category')">
+                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
                             <a-button @click="showAddNewCategoryModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
@@ -68,7 +68,7 @@
                             :options="formState.dependencies.companies"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_company')">
+                        <a-tooltip :title="__('default.add_new_company')" placement="leftBottom">
                             <a-button @click="showAddNewCompanyModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
@@ -88,7 +88,7 @@
                             :options="formState.dependencies.units"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
-                        <a-tooltip :title="__('default.add_new_unit')">
+                        <a-tooltip :title="__('default.add_new_unit')" placement="leftBottom">
                             <a-button @click="showAddNewUnitModal">
                                 <i class="mdi mdi-plus"></i>
                             </a-button>
@@ -99,16 +99,7 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :name="['description']" :label="__('default.description')">
-                    <a-textarea v-model:value="formState.formData.description"
-                                :placeholder="__('default.description')"
-                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
-                        {{ formState.validation.description[0] }}
-                    </div>
-                </a-form-item>
-
-                <a-form-item :label="__('default.purchase_type')">
+                <a-form-item :label="__('default.purchase_type')" required>
                     <a-radio-group v-model:value="formState.formData.purchase_type"
                                    :class="formState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
                         <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
@@ -119,8 +110,17 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.status')">
+                <a-form-item :label="__('default.status')" required>
                     <a-switch v-model:checked="formState.formData.status"/>
+                </a-form-item>
+
+                <a-form-item :name="['description']" :label="__('default.description')">
+                    <a-textarea v-model:value="formState.formData.description"
+                                :placeholder="__('default.description')"
+                                :class="formState.validation.description ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.description">
+                        {{ formState.validation.description[0] }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.image')">

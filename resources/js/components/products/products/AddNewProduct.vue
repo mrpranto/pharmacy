@@ -30,7 +30,7 @@
                             }}
                         </div>
                         <template #suffix>
-                            <a-tooltip title="Generate new barcode" @click="$parent.generateBarcode">
+                            <a-tooltip title="Generate new barcode" @click="$parent.generateBarcode"  placement="leftBottom">
                                 <sync-outlined style="color: rgba(0, 0, 0, 0.45)"/>
                             </a-tooltip>
                         </template>
