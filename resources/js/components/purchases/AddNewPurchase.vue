@@ -48,7 +48,7 @@
                                             @keyup.right="$refs.status.focus()"
                                         ></a-select>
                                         <a-tooltip :title="__('default.add_supplier')" placement="top">
-                                            <a-button @click="showAddNewSupplierModal">
+                                            <a-button @click="showAddNewSupplierModal" tabindex="-1">
                                                 <i class="mdi mdi-plus"></i>
                                             </a-button>
                                         </a-tooltip>
@@ -130,7 +130,7 @@
                                             </template>
                                         </a-select>
                                         <a-tooltip :title="__('default.add_new_product')" placement="top">
-                                            <a-button @click="showAddNewProductModal">
+                                            <a-button @click="showAddNewProductModal" tabindex="-1">
                                                 <i class="mdi mdi-plus"></i>
                                             </a-button>
                                         </a-tooltip>
@@ -216,6 +216,7 @@
                                                     <a-input-number
                                                         v-if="product.product.purchase_type === '%'"
                                                         :class="product.stock_id ? 'readonly' : ''"
+                                                        :tabindex="product.stock_id ? '-1' : ''"
                                                         v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
                                                         type="number"
@@ -238,6 +239,7 @@
                                                     <div>
                                                         <a-input-number
                                                             :class="product.stock_id ? 'readonly' : ''"
+                                                            :tabindex="product.stock_id ? '-1' : ''"
                                                             v-model:value="product.unit_price"
                                                             :prefix="$currency_symbol"
                                                             type="number"
@@ -253,6 +255,7 @@
                                                         <a-input-number
                                                             v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
+                                                            :tabindex="product.stock_id ? '-1' : ''"
                                                             v-model:value="product.unit_percentage"
                                                             :prefix="'%'"
                                                             type="number"
@@ -277,6 +280,7 @@
                                                     <div>
                                                         <a-input-number
                                                             :class="product.stock_id ? 'readonly' : ''"
+                                                            :tabindex="product.stock_id ? '-1' : ''"
                                                             v-model:value="product.sale_price"
                                                             :prefix="$currency_symbol"
                                                             min="0"
@@ -291,6 +295,7 @@
                                                         <a-input-number
                                                             v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
+                                                            :tabindex="product.stock_id ? '-1' : ''"
                                                             v-model:value="product.sale_percentage"
                                                             :prefix="'%'"
                                                             min="0"
