@@ -45,7 +45,6 @@
                                             :filter-option="selectFilterOption"
                                             @change="checkValueIsSet('supplier')"
                                             ref="supplier"
-                                            @keyup.right="$refs.status.focus()"
                                         ></a-select>
                                         <a-tooltip :title="__('default.add_supplier')" placement="top">
                                             <a-button @click="showAddNewSupplierModal" tabindex="-1">
@@ -80,8 +79,7 @@
                                         <a-select v-model:value="formState.formData.status"
                                                   @change="checkValueIsSet('status')"
                                                   style="width: 100%"
-                                                  ref="status"
-                                                  @keyup.right="$refs.product.focus()">
+                                                  ref="status">
                                             <a-select-option value="received">{{ __('default.received') }}</a-select-option>
                                             <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
                                             <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
@@ -705,11 +703,11 @@ export default {
     },
     methods: {
         focusInput(index, type, next_input) {
-            if (type === 'next'){
+            /*if (type === 'next'){
                 this.$refs[next_input+index][0].focus();
             }else if (type === 'previous'){
                 this.$refs[next_input+index][0].focus();
-            }
+            }*/
         },
         async save() {
             await axios.post('/purchases', this.formState.formData)
