@@ -978,7 +978,7 @@ export default {
             this.formState.formData.subtotal = this.formState.totalPrice;
             const otherCost = this.formState.formData.otherCost;
             const discount = this.formState.formData.discount;
-            this.formState.formData.total = parseFloat((parseFloat(otherCost) + parseFloat(this.formState.totalPrice)) - parseFloat(discount)).toFixed(2)
+            this.formState.formData.total = parseInt((parseFloat(otherCost) + parseFloat(this.formState.totalPrice)) - parseFloat(discount))
         },
         generateReference() {
             this.formState.formData.reference = Math.floor(10000000000000 + Math.random() * 90000000000000)

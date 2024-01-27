@@ -50,7 +50,10 @@ class ReportController extends Controller
         return view('pages.report.sale',['customers' => $this->services->customers()]);
     }
 
-    public function getSalesData()
+    /**
+     * @return array
+     */
+    public function getSalesData(): array
     {
         set_time_limit(300);
 

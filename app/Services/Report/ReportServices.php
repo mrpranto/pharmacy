@@ -13,6 +13,8 @@ use App\Services\BaseServices;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ReportServices extends BaseServices
 {
@@ -219,7 +221,12 @@ class ReportServices extends BaseServices
             });
     }
 
-    public function getSaleData()
+    /**
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getSaleData(): array
     {
         $sales = $this->sale
             ->newQuery()
