@@ -19,7 +19,6 @@
                                     {{ __('default.date') }}
                                 </a-button>
 
-
                                 <div class="dropdown">
                                     <a-button type="dashed" shape="round" size="small"
                                               :class="request.payment_type.length ? 'active-button' : ''"
@@ -79,6 +78,35 @@
                                     </form>
                                 </div>
 
+                                <div class="dropdown">
+                                    <a-button type="dashed" shape="round" size="small"
+                                              :class="request.payment_for ? 'active-button' : ''"
+                                              class="dropdown-toggle" id="payment_for"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false" style="margin-right: 5px;">
+                                        <template #icon>
+                                            <i class="mdi mdi-plus-circle mr-1"></i>
+                                        </template>
+                                        {{ __('default.payment_for') }}
+                                    </a-button>
+                                    <form class="dropdown-menu p-4" aria-labelledby="payment_for">
+                                        <a-radio-group v-model:value="request.payment_for" style="width: 250px">
+                                            <a-row>
+                                                <a-col :span="12" v-for="(payment_for_label) in payment_for">
+                                                    <a-radio :value="payment_for_label">
+                                                        {{ payment_for_label }}
+                                                    </a-radio>
+                                                </a-col>
+                                            </a-row>
+                                        </a-radio-group>
+                                        <a class="text-primary mt-2 float-right text-decoration-none cursor-pointer"
+                                           v-if="request.payment_for"
+                                           @click.prevent="request.payment_for = null">
+                                            <small>{{ __('default.clear') }}</small>
+                                        </a>
+                                    </form>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -97,7 +125,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.cash_flow') }} {{ __('default.in') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(cash_flow_in) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +141,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.cash_flow') }} {{ __('default.out') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(0) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(cash_flow_out) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -160,30 +188,21 @@
 
                                 <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
                                       v-if="request.cash_flow">
-                                {{ cash_flow.toUpperCase() }}
+                                {{ request.cash_flow.toUpperCase() }}
                                 <a class="text-decoration-none cursor-pointer ml-2 mr-2"
-                                   @click.prevent="request.cash_flow = []">
+                                   @click.prevent="request.cash_flow = null">
                                     <i class="mdi mdi-close-circle"></i>
                                 </a>
                             </span>
-                            </div>
-                            <div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <a-input v-model:value="request.search"
-                                                 style="border-radius: 20px;"
-                                                 size="small"
-                                                 @pressEnter="searchData"
-                                                 :placeholder="__('default.search')+'...'">
-                                            <template #suffix>
-                                                <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!request.search"/>
-                                                <a-tooltip title="Clear Search" placement="left" @click.prevent="clearSearch" v-else>
-                                                    <close-circle-filled style="color: rgba(0, 0, 0, 0.45)"/>
-                                                </a-tooltip>
-                                            </template>
-                                        </a-input>
-                                    </div>
-                                </div>
+
+                                <span class="pt-1 pl-3 pb-1 text-primary border bg-gray radius-20 mr-2"
+                                      v-if="request.payment_for">
+                                {{ request.payment_for.toUpperCase() }}
+                                <a class="text-decoration-none cursor-pointer ml-2 mr-2"
+                                   @click.prevent="request.payment_for = null">
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
+                            </span>
                             </div>
                         </div>
 
@@ -206,8 +225,15 @@
                                     </td>
                                 </tr>
                                 <template v-else>
-                                    <template v-if="purchase_reports.length">
-
+                                    <template v-if="payment_reports.length">
+                                        <tr v-for="(payment, payment_index) in payment_reports">
+                                            <td>{{ (payment_index+1) }}</td>
+                                            <td>{{ $date_format(payment.date) }}</td>
+                                            <td>{{ $showCurrency(payment.paid_amount) }}</td>
+                                            <td>{{ payment.type }}</td>
+                                            <td>{{ payment.payment_for.toUpperCase() }}</td>
+                                            <td>{{ payment.cash_flow.toUpperCase() }}</td>
+                                        </tr>
                                     </template>
                                     <tr v-else>
                                         <td colspan="10" class="text-center">
@@ -247,24 +273,18 @@ export default {
             cash_flow: [
                 'IN', 'OUT'
             ],
+            payment_for:[
+              'SALE', 'PURCHASE', 'INCOME', 'EXPENSE'
+            ],
             request: {
                 date: this.$today + ' to ' + this.$today,
                 payment_type: [],
                 cash_flow: null,
-                search: null,
+                payment_for: null,
             },
             payment_reports: [],
-            total_subtotal: 0,
-            total_grand_total: 0,
-            total_paid: 0,
-            total_due: 0,
-            total_purchase: 0,
-            calculated:{
-                total_subtotal: 0,
-                total_grand_total: 0,
-                total_paid: 0,
-                total_due: 0,
-            }
+            cash_flow_in: 0,
+            cash_flow_out: 0,
         }
     },
     created() {
@@ -278,6 +298,9 @@ export default {
             this.getData()
         },
         'request.cash_flow': function () {
+            this.getData()
+        },
+        'request.payment_for': function () {
             this.getData()
         },
     },
@@ -329,12 +352,9 @@ export default {
             this.loader = true;
             await axios.get('/report/get-payment', {params: this.request})
                 .then(response => {
-                    this.purchase_reports = response.data.purchase_reports;
-                    this.total_subtotal = response.data.total_subtotal;
-                    this.total_grand_total = response.data.total_grand_total;
-                    this.total_paid = response.data.total_paid;
-                    this.total_due = response.data.total_due;
-                    this.total_purchase = response.data.total_purchase;
+                    this.payment_reports = response.data.payments;
+                    this.cash_flow_in = response.data.cashIn;
+                    this.cash_flow_out = response.data.cashOut;
                     this.loader = false;
                 })
                 .catch(err => console.error(err))
@@ -342,7 +362,8 @@ export default {
         async refresh(){
             this.request.date = this.$today + ' to ' + this.$today;
             this.request.payment_type = [];
-            this.request.cash_flow = [];
+            this.request.cash_flow = null;
+            this.request.payment_for = null;
             this.request.search = null;
             await this.getData();
         },

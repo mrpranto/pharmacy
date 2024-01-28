@@ -276,13 +276,27 @@ class ReportServices extends BaseServices
         ];
     }
 
-    public function getPaymentData()
+    /**
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getPaymentData(): array
     {
-        return $this->payment->newQuery()
+        $payments = $this->payment->newQuery()
             ->when(request()->filled('date'), function ($q) {
                 $dates = explode(' to ', request()->get('date'));
                 $q->whereDate('date', '>=', $dates[0])->whereDate('date', '<=', $dates[1]);
             })
+            ->when(request()->filled('payment_type'), fn($q) => $q->whereIn('type', request()->get('payment_type')))
+            ->when(request()->filled('cash_flow'), fn($q) => $q->where('cash_flow', request()->get('cash_flow')))
+            ->when(request()->filled('payment_for'), fn($q) => $q->where('payment_for', request()->get('payment_for')))
             ->get();
+
+        return [
+          'payments' => $payments,
+          'cashIn' => $payments->where('cash_flow', 'in')->sum('paid_amount'),
+          'cashOut' => $payments->where('cash_flow', 'out')->sum('paid_amount')
+        ];
     }
 }

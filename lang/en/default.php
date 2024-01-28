@@ -337,4 +337,5 @@ return [
     'in' => 'In',
     'out' => 'Out',
     'due' => 'Due',
+    'payment_for' => 'Payment For',
 ];
