@@ -143,6 +143,10 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('sale', [ReportController::class, 'salePage'])->name('report.sale');
         Route::get('get-sale', [ReportController::class, 'getSalesData']);
 
+        //Payment report route
+        Route::get('payment', [ReportController::class, 'paymentPage'])->name('report.payment');
+        Route::get('get-payment', [ReportController::class, 'getPaymentData']);
+
     });
 });
 

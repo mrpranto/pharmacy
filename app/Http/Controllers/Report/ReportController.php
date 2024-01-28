@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Report;
 use App\Http\Controllers\Controller;
 use App\Services\Report\ReportServices;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class ReportController extends Controller
 {
@@ -21,6 +22,8 @@ class ReportController extends Controller
      */
     public function summary(): View
     {
+        Gate::authorize('app.report.summary');
+
         return view('pages.report.summary', $this->services->summary());
     }
 
@@ -29,6 +32,8 @@ class ReportController extends Controller
      */
     public function purchasePage(): View
     {
+        Gate::authorize('app.report.purchase');
+
         return view('pages.report.purchase',['suppliers' => $this->services->suppliers()]);
     }
 
@@ -37,6 +42,8 @@ class ReportController extends Controller
      */
     public function getPurchaseData(): array
     {
+        Gate::authorize('app.report.purchase');
+
         set_time_limit(300);
 
         return $this->services->getPurchaseData();
@@ -47,6 +54,8 @@ class ReportController extends Controller
      */
     public function salePage(): View
     {
+        Gate::authorize('app.report.sales');
+
         return view('pages.report.sale',['customers' => $this->services->customers()]);
     }
 
@@ -55,8 +64,25 @@ class ReportController extends Controller
      */
     public function getSalesData(): array
     {
+        Gate::authorize('app.report.sales');
+
         set_time_limit(300);
 
         return $this->services->getSaleData();
+    }
+
+    /**
+     * @return View
+     */
+    public function paymentPage(): View
+    {
+        return view('pages.report.payment');
+    }
+
+    public function getPaymentData()
+    {
+        set_time_limit(300);
+
+        return $this->services->getPaymentData();
     }
 }

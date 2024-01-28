@@ -5,7 +5,7 @@
             <MoreOutlined :style="{fontSize: '20px'}"/>
             <template #overlay>
                 <a-menu>
-                    <a-menu-item key="1" v-if="permission.payment_add &&  (row.payment_status === 'DUE' || row.payment_status === 'PARTIAL-PAID')" @click="$parent.$parent.showAddPaymentForm(row.id, row)">
+                    <a-menu-item key="1" v-if="permission.payment_add && (row.payment_status === 'DUE' || row.payment_status === 'PARTIAL-PAID')" @click="$parent.$parent.showAddPaymentForm(row.id, row)">
                         <span class="color-warning">
                             <DollarOutlined :style="{fontSize: '15px', marginRight: '4px'}"/>
                             {{ __('default.add_payment') }}

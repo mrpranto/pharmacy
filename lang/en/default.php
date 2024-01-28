@@ -333,4 +333,8 @@ return [
     'no_data_found' => 'No data found.',
     'total_profit_amount' => 'Total Profit amount',
     'pos_design' => 'POS Design',
+    'cash_flow' => 'Cash Flow',
+    'in' => 'In',
+    'out' => 'Out',
+    'due' => 'Due',
 ];

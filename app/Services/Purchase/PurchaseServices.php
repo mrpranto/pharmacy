@@ -631,6 +631,8 @@ class PurchaseServices extends BaseServices
                             'transaction_number' => $payment['transaction_number'],
                             'paymentable_type' => Purchase::class,
                             'paymentable_id' => request()->get('current_id'),
+                            'payment_for' => Payment::PAYMENT_FOR_PURCHASE,
+                            'cash_flow' => Payment::CASH_FLOW_OUT,
                             'created_by' => auth()->id(),
                             'updated_by' => auth()->id(),
                             'created_at' => now(),

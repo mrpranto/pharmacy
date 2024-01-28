@@ -132,12 +132,6 @@
                         <dt class="col-sm-4 text-right">{{ __('default.supplier') }}</dt>
                         <dd class="col-sm-8">: {{ payment.purchase_info.supplier.name }} <template v-if="payment.purchase_info.supplier.phone_number">({{ payment.purchase_info.supplier.phone_number }})</template></dd>
 
-                        <dt class="col-sm-4 text-right">{{ __('default.subtotal') }}</dt>
-                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.purchase_info.subtotal) }}</b></dd>
-
-                        <dt class="col-sm-4 text-right">{{ __('default.total') }}</dt>
-                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.purchase_info.total) }}</b></dd>
-
                         <dt class="col-sm-4 text-right">{{ __('default.status') }}</dt>
                         <dd class="col-sm-8">:
                             <span v-if="payment.purchase_info.status === 'received'" class="badge badge-primary">{{ payment.purchase_info.status.toUpperCase() }}</span>
@@ -152,6 +146,12 @@
                             <span class="badge badge-warning" v-else-if="payment.purchase_info.payment_status === 'OVER-DUE'">{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
                             <span class="badge badge-success" v-else>{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
                         </dd>
+
+                        <dt class="col-sm-4 text-right">{{ __('default.subtotal') }}</dt>
+                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.purchase_info.subtotal) }}</b></dd>
+
+                        <dt class="col-sm-4 text-right"><span class="h4">{{ __('default.total') }}</span></dt>
+                        <dd class="col-sm-8">: <b class="h4">{{ $showCurrency(payment.purchase_info.total) }}</b></dd>
                     </dl>
                 </div>
 
@@ -206,6 +206,11 @@
                         <tr>
                             <th>{{ __('default.total') }} : </th>
                             <th class="text-right">{{ $showCurrency(totalPaidAmount) }}</th>
+                            <th colspan="4"></th>
+                        </tr>
+                        <tr>
+                            <th>{{ __('default.due') }} : </th>
+                            <th class="text-right">{{ $showCurrency(totalDue) }}</th>
                             <th colspan="4"></th>
                         </tr>
                         </tfoot>
@@ -474,7 +479,10 @@ export default {
             }else {
                 this.payment.paymentStatus = 'DUE';
             }
-            return this.payment.totalPaid;
+            return isNaN(this.payment.totalPaid) ? 0 : this.payment.totalPaid;
+        },
+        totalDue(){
+            return (this.payment.purchase_info.total - this.totalPaidAmount)
         }
     },
     methods: {

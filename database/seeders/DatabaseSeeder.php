@@ -96,9 +96,9 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Customer seeder created successful.');
 
-        Purchase::factory(200)->create();
+        Purchase::factory(100)->create();
 
-        PurchaseProduct::factory(1200)->create();
+        PurchaseProduct::factory(400)->create();
 
         $this->command->info('Purchase seeder created successful.');
 

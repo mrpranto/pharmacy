@@ -3,6 +3,7 @@
 namespace App\Services\Report;
 
 use App\Models\Expense\Expense;
+use App\Models\Payment;
 use App\Models\People\Customer;
 use App\Models\People\Supplier;
 use App\Models\Purchase\Purchase;
@@ -20,11 +21,17 @@ class ReportServices extends BaseServices
 {
     public Purchase $purchase;
     public PurchaseProduct $purchaseProduct;
+
     public Sale $sale;
     public SaleProducts $saleProduct;
+
     public Expense $expense;
+
     public Supplier $supplier;
+
     public Customer $customer;
+
+    public Payment $payment;
 
     /**
      * @param Purchase $purchase
@@ -34,11 +41,13 @@ class ReportServices extends BaseServices
      * @param Expense $expense
      * @param Supplier $supplier
      * @param Customer $customer
+     * @param Payment $payment
      */
     public function __construct(
         Purchase $purchase, PurchaseProduct $purchaseProduct,
         Sale     $sale, SaleProducts $saleProduct, Expense $expense,
-        Supplier $supplier, Customer $customer
+        Supplier $supplier, Customer $customer,
+        Payment $payment
     )
     {
         $this->purchase = $purchase;
@@ -48,6 +57,7 @@ class ReportServices extends BaseServices
         $this->expense = $expense;
         $this->supplier = $supplier;
         $this->customer = $customer;
+        $this->payment = $payment;
     }
 
     /**
@@ -264,5 +274,15 @@ class ReportServices extends BaseServices
             'totalProfit' => round($sales->sum('totalRevenue'), 2),
             'total_sales' => $sales->count(),
         ];
+    }
+
+    public function getPaymentData()
+    {
+        return $this->payment->newQuery()
+            ->when(request()->filled('date'), function ($q) {
+                $dates = explode(' to ', request()->get('date'));
+                $q->whereDate('date', '>=', $dates[0])->whereDate('date', '<=', $dates[1]);
+            })
+            ->get();
     }
 }

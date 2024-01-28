@@ -105,6 +105,12 @@ class SubMenuComposer
                 'path' => 'report/sale',
                 'permission' => auth()->user()->can('app.report.sales')
             ],
+            [
+                'name' => __t('payment'),
+                'url' => route('report.payment'),
+                'path' => 'report/payment',
+                'permission' => auth()->user()->can('app.report.sales')
+            ],
         ];
     }
 

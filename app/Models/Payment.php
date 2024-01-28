@@ -17,9 +17,19 @@ class Payment extends Model
     const TYPE_BKSH = 'BKASH';
     const TYPE_NAGOD = 'NAGOD';
 
+
+    const PAYMENT_FOR_PURCHASE = 'purchase';
+    const PAYMENT_FOR_SALE  = 'sale';
+    const PAYMENT_FOR_EXPENSE = 'expanse';
+    const PAYMENT_FOR_INCOME = 'income';
+
+
+    const CASH_FLOW_IN = 'in';
+    const CASH_FLOW_OUT = 'out';
+
     protected $fillable = [
-        'paid_amount', 'type', 'account_number', 'bank_name',
-        'transaction_number', 'paymentable', 'created_by', 'updated_by',
+        'date', 'paid_amount', 'type', 'account_number', 'bank_name', 'transaction_number',
+        'paymentable', 'payment_for', 'cash_flow', 'created_by', 'updated_by',
     ];
 
     /**
@@ -27,5 +37,9 @@ class Payment extends Model
      */
     protected $hidden = [
         'paymentable_type', 'paymentable_id'
+    ];
+
+    protected $casts = [
+        'date' => 'datetime:Y-m-d',
     ];
 }

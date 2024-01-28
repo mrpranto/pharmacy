@@ -116,6 +116,8 @@ import PurchaseReportComponent from './components/reports/Purchase.vue';
 app.component('purchase-report-component', PurchaseReportComponent);
 import SalesReportComponent from './components/reports/Sales.vue';
 app.component('sales-report-component', SalesReportComponent);
+import PaymentReportComponent from './components/reports/Payment.vue';
+app.component('payment-report-component', PaymentReportComponent);
 
 /*
 * App core component

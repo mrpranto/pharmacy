@@ -586,6 +586,8 @@ class SalesServices extends BaseServices
                             'transaction_number' => $payment['transaction_number'],
                             'paymentable_type' => Sale::class,
                             'paymentable_id' => request()->get('current_id'),
+                            'payment_for' => Payment::PAYMENT_FOR_SALE,
+                            'cash_flow' => Payment::CASH_FLOW_IN,
                             'created_by' => auth()->id(),
                             'updated_by' => auth()->id(),
                             'created_at' => now(),

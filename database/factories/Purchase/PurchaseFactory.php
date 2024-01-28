@@ -25,7 +25,7 @@ class PurchaseFactory extends Factory
         $status = array_rand($statuses);
         return [
             'supplier_id' => $suppliers[$supplier],
-            'date' => fake()->date(),
+            'date' => fake()->dateTimeBetween(now()->subMonths(2), now()),
             'status' => $statuses[$status],
             'reference' => fake()->unique()->randomNumber(9, 10),
             'subtotal' => fake()->randomNumber(8),
