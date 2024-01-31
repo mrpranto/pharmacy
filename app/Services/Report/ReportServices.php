@@ -238,41 +238,55 @@ class ReportServices extends BaseServices
      */
     public function getSaleData(): array
     {
-        $sales = $this->sale
-            ->newQuery()
-            ->select([
-                'id', 'invoice_number', 'invoice_date', 'customer_id',
-                'total_unit_qty', 'subtotal', 'grand_total', 'status',
-                'payment_status', 'total_paid', DB::raw('(grand_total - total_paid) as totalDue')
-            ])
-            ->with('customer:id,name,phone_number')
-            ->withCount(['saleProducts as totalRevenue' => function (Builder $builder) {
-                $builder->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity)) as revenue'));
-            }])
-            ->when(request()->filled('date'), function ($q) {
-                $dates = explode(' to ', request()->get('date'));
-                $q->whereDate('invoice_date', '>=', $dates[0])->whereDate('invoice_date', '<=', $dates[1]);
-            })
-            ->when(request()->filled('customer'), fn($q) => $q->where('customer_id', request()->get('customer')))
-            ->when(request()->filled('sale_status'), fn($q) => $q->whereIn('status', request()->get('sale_status')))
-            ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('payment_status', request()->get('payment_status')))
-            ->when(request()->filled('search'), fn($q) => $q->whereHas('customer',
-                fn($q) => $q->where('name', 'like', "%" . request()->get('search') . "%")
-                    ->orWhere('phone_number', 'like', "%" . request()->get('search') . "%"))
-                ->orWhere('invoice_number', 'like', "%" . request()->get('search') . "%")
-            )
-            ->orderByDesc('id')
-            ->get();
+        if (request()->filled('date') || request()->filled('customer') || request()->filled('sale_status') || request()->filled('payment_status'))
+        {
+            $sales = $this->sale
+                ->newQuery()
+                ->select([
+                    'id', 'invoice_number', 'invoice_date', 'customer_id',
+                    'total_unit_qty', 'subtotal', 'grand_total', 'status',
+                    'payment_status', 'total_paid', DB::raw('(grand_total - total_paid) as totalDue')
+                ])
+                ->with('customer:id,name,phone_number')
+                ->withCount(['saleProducts as totalRevenue' => function (Builder $builder) {
+                    $builder->select(DB::raw('sum((sale_price * quantity) - (unit_price * quantity)) as revenue'));
+                }])
+                ->when(request()->filled('date'), function ($q) {
+                    $dates = explode(' to ', request()->get('date'));
+                    $q->whereDate('invoice_date', '>=', $dates[0])->whereDate('invoice_date', '<=', $dates[1]);
+                })
+                ->when(request()->filled('customer'), fn($q) => $q->where('customer_id', request()->get('customer')))
+                ->when(request()->filled('sale_status'), fn($q) => $q->whereIn('status', request()->get('sale_status')))
+                ->when(request()->filled('payment_status'), fn($q) => $q->whereIn('payment_status', request()->get('payment_status')))
+                ->when(request()->filled('search'), fn($q) => $q->whereHas('customer',
+                    fn($q) => $q->where('name', 'like', "%" . request()->get('search') . "%")
+                        ->orWhere('phone_number', 'like', "%" . request()->get('search') . "%"))
+                    ->orWhere('invoice_number', 'like', "%" . request()->get('search') . "%")
+                )
+                ->orderByDesc('id')
+                ->get();
+
+            return [
+                'sales' => $sales,
+                'totalQuantity' => $sales->sum('total_unit_qty'),
+                'totalSubtotal' => $sales->sum('subtotal'),
+                'totalGrandTotal' => $sales->sum('grand_total'),
+                'totalPaid' => $sales->sum('total_paid'),
+                'totalDue' => $sales->sum('totalDue'),
+                'totalProfit' => round($sales->sum('totalRevenue'), 2),
+                'total_sales' => $sales->count(),
+            ];
+        }
 
         return [
-            'sales' => $sales,
-            'totalQuantity' => $sales->sum('total_unit_qty'),
-            'totalSubtotal' => $sales->sum('subtotal'),
-            'totalGrandTotal' => $sales->sum('grand_total'),
-            'totalPaid' => $sales->sum('total_paid'),
-            'totalDue' => $sales->sum('totalDue'),
-            'totalProfit' => round($sales->sum('totalRevenue'), 2),
-            'total_sales' => $sales->count(),
+            'sales' => [],
+            'totalQuantity' => 0,
+            'totalSubtotal' => 0,
+            'totalGrandTotal' => 0,
+            'totalPaid' => 0,
+            'totalDue' => 0,
+            'totalProfit' => 0,
+            'total_sales' => 0,
         ];
     }
 

@@ -120,7 +120,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="list-card-icon">
-                                        <h1><i class="mdi mdi-checkbox-multiple-marked-circle text-primary"></i>
+                                        <h1><i class="mdi mdi mdi-plus-circle-multiple-outline text-primary"></i>
                                         </h1>
                                     </div>
                                     <div class="pl-4">
@@ -137,7 +137,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="list-card-icon">
-                                        <h1><i class="mdi mdi-checkbox-multiple-blank-circle-outline text-primary"></i></h1>
+                                        <h1><i class="mdi mdi mdi-minus-circle-multiple-outline text-primary"></i></h1>
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.cash_flow') }} {{ __('default.out') }}</p>
@@ -274,7 +274,7 @@ export default {
                 'IN', 'OUT'
             ],
             payment_for:[
-              'SALE', 'PURCHASE', 'INCOME', 'EXPENSE'
+              'SALE', 'PURCHASE', 'EXPENSE'
             ],
             request: {
                 date: this.$today + ' to ' + this.$today,

@@ -129,7 +129,7 @@
                                     </div>
                                     <div class="pl-4">
                                         <p>{{ __('default.total') }} {{ __('default.unit_qty') }}</p>
-                                        <h4 class="mt-2 font-weight-light">{{ $showCurrency(totalQuantity) }}</h4>
+                                        <h4 class="mt-2 font-weight-light">{{ (totalQuantity) }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -307,6 +307,7 @@
                                     <th class="bg-gray">{{ __('default.invoice_number') }}</th>
                                     <th class="bg-gray">{{ __('default.customer') }}</th>
                                     <th class="bg-gray">{{ __('default.date') }}</th>
+                                    <th class="bg-gray">{{ __('default.unit_qty') }}</th>
                                     <th class="bg-gray">{{ __('default.subtotal') }}</th>
                                     <th class="bg-gray">{{ __('default.total_amount') }}</th>
                                     <th class="bg-gray">{{ __('default.paid_amount') }}</th>
@@ -318,7 +319,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-if="loader">
-                                    <td colspan="10" class="text-center">
+                                    <td colspan="12" class="text-center">
                                         <a-spin :tip="__('default.loading')"/>
                                     </td>
                                 </tr>
@@ -341,6 +342,9 @@
                                             <td>
                                                 {{ $date_format(sale.invoice_date) }} <br>
                                                 <small>{{ $time_format(sale.invoice_date) }}</small>
+                                            </td>
+                                            <td>
+                                                {{ sale.total_unit_qty }}
                                             </td>
                                             <td>{{ $showCurrency(sale.subtotal) }}</td>
                                             <td>{{ $showCurrency(sale.grand_total) }}</td>
@@ -385,6 +389,7 @@
                                                 {{ __('default.total') }}
                                                 {{ totalCalculate }}
                                             </th>
+                                            <th>{{ (calculated.total_unit_qty) }}</th>
                                             <th>{{ $showCurrency(calculated.total_subtotal) }}</th>
                                             <th>{{ $showCurrency(calculated.total_grand_total) }}</th>
                                             <th>{{ $showCurrency(calculated.total_paid) }}</th>
@@ -394,7 +399,7 @@
                                         </tr>
                                     </template>
                                     <tr v-else>
-                                        <td colspan="11" class="text-center">
+                                        <td colspan="12" class="text-center">
                                             {{ __('default.no_data_found') }}
                                         </td>
                                     </tr>
@@ -448,6 +453,7 @@ export default {
             total_sales: 0,
             totalProfit: 0,
             calculated: {
+                total_unit_qty: 0,
                 total_subtotal: 0,
                 total_grand_total: 0,
                 total_paid: 0,
@@ -499,6 +505,10 @@ export default {
     },
     computed: {
         totalCalculate() {
+            this.calculated.total_unit_qty = this.sales.reduce((accumulator, item) => {
+                return parseFloat(accumulator) + parseFloat(item.total_unit_qty);
+            }, 0);
+
             this.calculated.total_subtotal = this.sales.reduce((accumulator, item) => {
                 return parseFloat(accumulator) + parseFloat(item.subtotal);
             }, 0);
