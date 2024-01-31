@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Expense;
 
 use App\Http\Controllers\Controller;
 use App\Services\Expense\ExpenseServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,7 +67,7 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         return $this->services->deleteExpense($id);
     }

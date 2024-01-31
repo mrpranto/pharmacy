@@ -3,9 +3,11 @@
 namespace App\Models\Expense;
 
 use App\Models\File;
+use App\Models\Payment;
 use App\Models\trait\BootTrait;
 use App\Models\trait\CreatedByRelationship;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Expense extends Model
@@ -28,5 +30,13 @@ class Expense extends Model
     {
         return $this->morphOne(File::class, 'fileable')
             ->where('type', self::EXPANSE_ATTACHMENT);
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function payment(): MorphOne
+    {
+        return $this->morphOne(Payment::class, 'paymentable');
     }
 }

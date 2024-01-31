@@ -20,7 +20,7 @@ class Payment extends Model
 
     const PAYMENT_FOR_PURCHASE = 'purchase';
     const PAYMENT_FOR_SALE  = 'sale';
-    const PAYMENT_FOR_EXPENSE = 'expanse';
+    const PAYMENT_FOR_EXPENSE = 'expense';
     const PAYMENT_FOR_INCOME = 'income';
 
 

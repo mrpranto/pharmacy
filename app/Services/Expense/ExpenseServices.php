@@ -3,6 +3,7 @@
 namespace App\Services\Expense;
 
 use App\Models\Expense\Expense;
+use App\Models\Payment;
 use App\Models\trait\FileHandler;
 use App\Services\BaseServices;
 use Illuminate\Http\JsonResponse;
@@ -14,9 +15,12 @@ class ExpenseServices extends BaseServices
 {
     use FileHandler;
 
-    public function __construct(Expense $expense)
+    public Payment $payment;
+
+    public function __construct(Expense $expense, Payment $payment)
     {
         $this->model = $expense;
+        $this->payment = $payment;
     }
 
     /**
@@ -87,17 +91,36 @@ class ExpenseServices extends BaseServices
     public function storeExpenses($request): JsonResponse
     {
         try {
-            $this->model = $this->model->newQuery()->create([
-                'date' => date('Y-m-d H:i:s', strtotime($request->date)),
-                'title' => $request->title,
-                'item_details' => $request->item_details,
-                'details' => $request->details,
-                'total_amount' => $request->total_amount,
-            ]);
+            DB::transaction(function () use ($request){
 
-            if ($request->has('attachment')) {
-                $this->uploadAttachment($request->file('attachment'), $this->model);
-            }
+                $this->model = $this->model->newQuery()->create([
+                    'date' => date('Y-m-d H:i:s', strtotime($request->date)),
+                    'title' => $request->title,
+                    'item_details' => $request->item_details,
+                    'details' => $request->details,
+                    'total_amount' => $request->total_amount,
+                ]);
+
+                $this->payment
+                    ->newQuery()
+                    ->insert([
+                        'paid_amount' => $request->total_amount,
+                        'type' => Payment::TYPE_CASH,
+                        'paymentable_type' => Expense::class,
+                        'paymentable_id' => $this->model->id,
+                        'payment_for' => Payment::PAYMENT_FOR_EXPENSE,
+                        'cash_flow' => Payment::CASH_FLOW_OUT,
+                        'created_by' => auth()->id(),
+                        'updated_by' => auth()->id(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                if ($request->has('attachment')) {
+                    $this->uploadAttachment($request->file('attachment'), $this->model);
+                }
+
+            });
 
             return response()->json(['success' => __t('expense_create_successful')]);
 
@@ -106,26 +129,41 @@ class ExpenseServices extends BaseServices
         }
     }
 
-    public function updateExpense($request, $id)
+    /**
+     * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updateExpense($request, $id): JsonResponse
     {
         try {
-            $this->model = $this->model
-                ->newQuery()
-                ->where('id', $id)
-                ->first();
+            DB::transaction(function () use ($request, $id){
 
-            $this->model
-                ->update([
-                    'date' => date('Y-m-d H:i:s', strtotime($request->date)),
-                    'title' => $request->title,
-                    'item_details' => $request->item_details,
-                    'details' => $request->details,
-                    'total_amount' => $request->total_amount,
-                ]);
+                $this->model = $this->model
+                    ->newQuery()
+                    ->where('id', $id)
+                    ->first();
 
-            if ($request->has('attachment')) {
-                $this->uploadAttachment($request->file('attachment'), $this->model);
-            }
+                $this->model
+                    ->update([
+                        'date' => date('Y-m-d H:i:s', strtotime($request->date)),
+                        'title' => $request->title,
+                        'item_details' => $request->item_details,
+                        'details' => $request->details,
+                        'total_amount' => $request->total_amount,
+                    ]);
+
+                $this->model
+                    ->payment()
+                    ->update([
+                        'paid_amount' => $request->total_amount
+                    ]);
+
+                if ($request->has('attachment')) {
+                    $this->uploadAttachment($request->file('attachment'), $this->model);
+                }
+
+            });
 
             return response()->json(['success' => __t('expense_edit_successful')]);
 
