@@ -106,6 +106,7 @@
                                             @search="getProducts"
                                             @change="selectProduct"
                                             ref="product"
+                                            :loading="formState.productLoading"
                                         >
                                             <template
                                                 #option="{ value: val, label, icon, company, category, unit, barcode, purchase_type }">
@@ -659,9 +660,8 @@ export default {
                     wrapperCol: {span: 20},
                 }
             },
-
-
             formState: {
+                productLoading: false,
                 totalItems: 0,
                 totalUnits: 0,
                 totalPrice: 0,
@@ -692,7 +692,14 @@ export default {
         this.getSuppliers()
         this.generateReference()
     },
+    beforeMount() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    },
+    beforeDestroy() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    },
     mounted() {
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
     },
     watch:{
         'formState.openStock': function (){
@@ -702,6 +709,11 @@ export default {
         }
     },
     methods: {
+        handleBeforeUnload(event) {
+            const message = 'Are you sure you want to leave?';
+            event.returnValue = message; // Standard for most browsers
+            return message; // For some older browsers
+        },
         focusInput(index, type, next_input) {
             /*if (type === 'next'){
                 this.$refs[next_input+index][0].focus();
@@ -746,6 +758,8 @@ export default {
             this.generateReference()
         },
         async getProducts(value = '') {
+            this.loader = true;
+            this.formState.productLoading = true;
             await axios.get('/get-purchases-products', {params: {search: value}})
                 .then(response => {
                     const searchProduct = response.data.map(item => {
@@ -761,7 +775,9 @@ export default {
                             stocks: item.stocks
                         }
                     })
-                    this.formState.dependencies.products = searchProduct
+                    this.formState.dependencies.products = searchProduct;
+                    this.formState.productLoading = false;
+                    this.loader = false;
                 })
                 .catch(err => {
                     console.error(err)
