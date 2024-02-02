@@ -351,6 +351,7 @@
                                                                                 <table class="table table-striped table-bordered border">
                                                                                     <tr>
                                                                                         <th class="text-center">#</th>
+                                                                                        <th class="text-center">{{ __('default.sku') }}</th>
                                                                                         <th class="text-center">{{ __('default.unit_price') }}</th>
                                                                                         <th class="text-center">{{ __('default.sale_price') }}</th>
                                                                                         <th class="text-center">{{ __('default.discount') }}</th>
@@ -362,6 +363,7 @@
 
                                                                                     <tr v-for="(stock, stock_index) in product.stocks" :key="stock_index"  :class="isEven(stock_index) ? 'row-color' : ''">
                                                                                         <th class="text-center">{{ (stock_index+1) }}</th>
+                                                                                        <th class="text-center">{{ stock.sku }}</th>
                                                                                         <td class="text-center">{{ $showCurrency(stock.unit_price) }}</td>
                                                                                         <td class="text-center">{{ $showCurrency(stock.sale_price) }}</td>
                                                                                         <td class="text-center">{{ stock.discount }} {{ stock.discount_type }}</td>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product\Product;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
@@ -193,5 +194,30 @@ if (! function_exists('generate_pdf')){
 
         // Get file back from storage with the give header information
         return Storage::disk('public')->download('Pdf-preview.pdf', 'Request', $header);
+    }
+}
+
+if (! function_exists('make_sku')){
+    /**
+     * @param $product_id
+     * @param $mrp
+     * @param $unit_price
+     * @return string
+     * @throws Exception
+     */
+    function make_sku($product_id, $unit_price, $mrp): string
+    {
+        $product = Product::query()->where('id', $product_id)->first(['name']);
+        if ($product){
+            $productName = $product->name;
+            $productShort = mb_substr($productName, 0, 3);
+            if ($mrp){
+                return $productShort.'-'.$product_id.'-'.$mrp;
+            }else{
+                return $productShort.'-'.$product_id.'-'.$unit_price;
+            }
+        }else{
+            throw new Exception("Product not found with this { {$product_id} } product id");
+        }
     }
 }

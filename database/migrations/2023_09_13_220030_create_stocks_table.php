@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products', 'id');
+            $table->string('sku', 30)->index()->unique();
             $table->double('mrp')->default(0);
             $table->double('unit_price')->default(0);
             $table->double('unit_percentage')->default(0);

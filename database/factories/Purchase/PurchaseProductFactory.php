@@ -35,6 +35,7 @@ class PurchaseProductFactory extends Factory
         $mrp = fake()->randomNumber(4);
         $unitPercentage = rand(1, 50);
         $salePercentage = ($unitPercentage - 5) > 0 ? ($unitPercentage - 5) : 0;
+        $salePrice = ($mrp - (($mrp * $salePercentage) / 100));
 
         $purchaseInformation = [
             'purchase_id' => $purchases[$purchase],
@@ -42,7 +43,7 @@ class PurchaseProductFactory extends Factory
             'mrp' => $mrp,
             'unit_price' => ($mrp - (($mrp * $unitPercentage) / 100)),
             'unit_percentage' => $unitPercentage,
-            'sale_price' => ($mrp - (($mrp * $salePercentage) / 100)),
+            'sale_price' => $salePrice,
             'sale_percentage' => $salePercentage,
             'quantity' => fake()->randomNumber(3),
             'subTotal' => ($mrp - (($mrp - $unitPercentage) / 100)) * fake()->randomNumber(3),
@@ -76,6 +77,7 @@ class PurchaseProductFactory extends Factory
             Stock::query()->create([
                 'product_id' => $purchaseInformation['product_id'],
                 'mrp' => $purchaseInformation['mrp'],
+                'sku' => make_sku($purchaseInformation['product_id'], $purchaseInformation['sale_price'], $purchaseInformation['mrp']),
                 'unit_price' => $purchaseInformation['unit_price'],
                 'unit_percentage' => $purchaseInformation['unit_percentage'],
                 'sale_price' => $purchaseInformation['sale_price'],

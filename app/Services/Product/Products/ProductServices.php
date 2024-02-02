@@ -109,7 +109,7 @@ class ProductServices extends BaseServices
     public function validateStore($request): static
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|min:3',
             'barcode' => 'required|unique:products,barcode',
             'category' => 'required|exists:categories,id',
             'company' => 'required|exists:companies,id',
