@@ -85,6 +85,28 @@ if (! function_exists('pos_setting')){
     }
 }
 
+if (! function_exists('variant')){
+    /**
+     * @return mixed
+     */
+    function variant(): mixed
+    {
+        $general_setting = Cache::get('general_setting');
+        return $general_setting['variant'];
+    }
+}
+
+if (! function_exists('variant')){
+    /**
+     * @return mixed
+     */
+    function opening_stock(): mixed
+    {
+        $general_setting = Cache::get('general_setting');
+        return $general_setting['opening_stock'];
+    }
+}
+
 if (! function_exists('app_information')){
     /**
      * @param $key

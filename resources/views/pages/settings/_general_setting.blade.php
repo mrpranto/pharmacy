@@ -216,6 +216,60 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="notification_show_position" class="col-sm-3 col-form-label text-right">{{ __t('variant') }}</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][variant]" id="variant_yes"
+                                           {{ $setting['variant'] == 'yes' ? 'checked' : '' }}
+                                           value="yes">
+                                    Yes
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][variant]" id="variant_no"
+                                           {{ $setting['variant'] == 'no' ? 'checked' : '' }}
+                                           value="no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="notification_show_position" class="col-sm-3 col-form-label text-right">{{ __t('opening_stock') }}</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][opening_stock]" id="opening_stock_yes"
+                                           {{ $setting['opening_stock'] == 'yes' ? 'checked' : '' }}
+                                           value="yes">
+                                    Yes
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           name="setting[general][opening_stock]" id="opening_stock_no"
+                                           {{ $setting['opening_stock'] == 'no' ? 'checked' : '' }}
+                                           value="no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <div class="col-sm-12">
                         <button class="btn btn-sm btn-primary float-right">
                             <i data-feather="check"></i> Save

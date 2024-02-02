@@ -339,6 +339,8 @@ return [
     'in' => 'ইন',
     'out' => 'আউট',
     'due' => 'বাকি',
-    'payment_for' => 'পেমেন্ট ফর '
+    'payment_for' => 'পেমেন্ট ফর',
+    'variant' => 'ভ্যারিয়েন্ট',
+    'opening_stock' => 'ওপেনিং স্টক',
 
 ];

@@ -125,6 +125,8 @@ class DatabaseSeeder extends Seeder
                 "notification_sound" => "on",
                 "notification_show_position" => "topRight",
                 "pos_design" => "cart_design",
+                "variant" => "yes",
+                "opening_stock" => "yes",
             ]
         ]);
 

@@ -338,4 +338,6 @@ return [
     'out' => 'Out',
     'due' => 'Due',
     'payment_for' => 'Payment For',
+    'variant' => 'Variant',
+    'opening_stock' => 'Opening Stock',
 ];
