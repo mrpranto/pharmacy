@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\People\CustomerController;
 use App\Http\Controllers\People\SupplierController;
+use App\Http\Controllers\Product\AttributeController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\CompanyController;
 use App\Http\Controllers\Product\ProductController;
@@ -88,6 +89,10 @@ Route::group(['middleware' => 'authenticate'], function (){
 
         Route::resource('units', UnitController::class);
         Route::get('get-units', [UnitController::class, 'getUnits']);
+
+        Route::resource('attributes', AttributeController::class);
+        Route::get('get-attributes', [AttributeController::class, 'getAttributes']);
+
     });
 
     //People route

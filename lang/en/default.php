@@ -343,4 +343,12 @@ return [
     'notification' => 'Notification',
     'sounds_and_notification' => 'Sounds & Notification',
     'system' => 'System',
+    'attributes' => 'Attributes',
+    'attribute' => 'Attribute',
+    'add_new_attribute' => 'Add New Attribute',
+    'item_name' => 'Item Name',
+    'attribute_create' => 'Attribute create successful.',
+    'attribute_delete' => 'Attribute delete successful.',
+    'attribute_details' => 'Attribute details',
+    'attribute_edit' => 'Attribute edit successful.',
 ];

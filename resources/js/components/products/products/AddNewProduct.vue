@@ -46,7 +46,8 @@
                             :placeholder="__('default.category')"
                             :options="formState.dependencies.categories"
                             :filter-option="$parent.selectFilterOption"
-                        ></a-select>
+                        >
+                        </a-select>
                         <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
                             <a-button @click="showAddNewCategoryModal">
                                 <i class="mdi mdi-plus"></i>

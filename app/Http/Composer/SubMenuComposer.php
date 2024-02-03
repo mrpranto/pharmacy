@@ -144,6 +144,12 @@ class SubMenuComposer
                 'path' => 'product/units',
                 'permission' => auth()->user()->can('app.unit.index')
             ],
+            [
+                'name' => __t('attributes'),
+                'url' => route('attributes.index'),
+                'path' => 'product/attributes',
+                'permission' => auth()->user()->can('app.unit.index')
+            ],
         ];
     }
 }

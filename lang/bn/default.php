@@ -345,4 +345,12 @@ return [
     'notification' => 'নোটিফিকেশন',
     'sounds_and_notification' => 'সাউন্ডস & নোটিফিকেশন',
     'system' => 'সিস্টেম',
+    'attributes' => 'এট্রিবিউট',
+    'attribute' => 'এট্রিবিউট',
+    'add_new_attribute' => 'নতুন এট্রিবিউট করুন',
+    'item_name' => 'আইটেম নাম',
+    'attribute_create' => 'এট্রিবিউট তৈরি সফল হয়েছে।',
+    'attribute_delete' => 'এট্রিবিউট মুছে ফেলা সফল হয়েছে।',
+    'attribute_details' => 'এট্রিবিউট বিস্তারিত',
+    'attribute_edit' => 'এট্রিবিউট সম্পাদনা সফল হয়েছে।',
 ];
