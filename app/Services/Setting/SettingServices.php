@@ -69,8 +69,14 @@ class SettingServices extends BaseServices
 
         Artisan::call('cache:clear');
 
-        $setting = Setting::query()->where('type', 'general')->first();
-        Cache::set('general_setting', $setting->settings_info);
+        $settings = Setting::query()/*->where('type', 'general')*/->get();
+        foreach ($settings as $setting){
+            if ($setting->type == 'general'){
+                Cache::set('general_setting', $setting->settings_info);
+            }else{
+                Cache::set($setting->type, $setting->settings_info);
+            }
+        }
 
         return redirect()->back()->with('success', 'Setting created successful.');
     }

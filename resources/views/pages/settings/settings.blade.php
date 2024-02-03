@@ -26,6 +26,16 @@
                                                 <span class="icon"><i data-feather="globe"></i></span> {{ __t('general') }}
                                             </a>
                                         </li>
+                                        <li class="{{ request()->get('type') == 'notification' ? 'active' : '' }}">
+                                            <a href="{{ route('setting') }}?type=notification">
+                                                <span class="icon"><i data-feather="bell"></i></span> {{ __t('notification') }}
+                                            </a>
+                                        </li>
+                                        <li class="{{ request()->get('type') == 'system' ? 'active' : '' }}">
+                                            <a href="{{ route('setting') }}?type=system">
+                                                <span class="icon"><i data-feather="airplay"></i></span> {{ __t('system') }}
+                                            </a>
+                                        </li>
                                         <li class="{{ request()->get('type') == 'backup' ? 'active' : '' }}">
                                             <a href="{{ route('setting') }}?type=backup">
                                                 <span class="icon"><i data-feather="download-cloud"></i></span> {{ __t('backup') }}
@@ -41,6 +51,10 @@
                             @include('pages.settings._general_setting')
                         @elseif(request()->get('type') == 'app_setting')
                             @include('pages.settings._app_setting')
+                        @elseif(request()->get('type') == 'notification')
+                            @include('pages.settings._notification')
+                        @elseif(request()->get('type') == 'system')
+                            @include('pages.settings._system')
                         @elseif(request()->get('type') == 'backup')
                             @include('pages.settings._backup')
                         @endif

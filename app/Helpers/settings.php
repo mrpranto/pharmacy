@@ -80,7 +80,7 @@ if (! function_exists('pos_setting')){
      */
     function pos_setting(): mixed
     {
-        $general_setting = Cache::get('general_setting');
+        $general_setting = Cache::get('system');
         return $general_setting['pos_design'];
     }
 }
@@ -91,7 +91,7 @@ if (! function_exists('variant')){
      */
     function variant(): mixed
     {
-        $general_setting = Cache::get('general_setting');
+        $general_setting = Cache::get('system');
         return $general_setting['variant'];
     }
 }
@@ -102,7 +102,7 @@ if (! function_exists('variant')){
      */
     function opening_stock(): mixed
     {
-        $general_setting = Cache::get('general_setting');
+        $general_setting = Cache::get('system');
         return $general_setting['opening_stock'];
     }
 }

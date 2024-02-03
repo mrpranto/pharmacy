@@ -30,6 +30,18 @@ class AppServiceProvider extends ServiceProvider
                     Cache::set('general_setting', $setting->settings_info);
                 }
             }
+            if (Cache::get('notification') == null){
+                $setting = Setting::query()->where('type', 'notification')->first();
+                if ($setting){
+                    Cache::set('notification', $setting->settings_info);
+                }
+            }
+            if (Cache::get('system') == null){
+                $setting = Setting::query()->where('type', 'system')->first();
+                if ($setting){
+                    Cache::set('system', $setting->settings_info);
+                }
+            }
 
             if (Cache::get('app_setting') == null){
                 $setting = Setting::query()->where('type', 'app_setting')->first();

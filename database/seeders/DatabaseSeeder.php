@@ -122,8 +122,25 @@ class DatabaseSeeder extends Seeder
                 "currency_symbol" => '৳',
                 "currency_symbol_position" => "before_with_space_amount",
                 "pagination" => "10",
+                /*"notification_sound" => "on",
+                "notification_show_position" => "topRight",
+                "pos_design" => "cart_design",
+                "variant" => "yes",
+                "opening_stock" => "yes",*/
+            ]
+        ]);
+
+        Setting::query()->updateOrCreate([
+            'type' => 'notification',
+            'settings_info' => [
                 "notification_sound" => "on",
                 "notification_show_position" => "topRight",
+            ]
+        ]);
+
+        Setting::query()->updateOrCreate([
+            'type' => 'system',
+            'settings_info' => [
                 "pos_design" => "cart_design",
                 "variant" => "yes",
                 "opening_stock" => "yes",

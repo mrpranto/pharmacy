@@ -340,4 +340,7 @@ return [
     'payment_for' => 'Payment For',
     'variant' => 'Variant',
     'opening_stock' => 'Opening Stock',
+    'notification' => 'Notification',
+    'sounds_and_notification' => 'Sounds & Notification',
+    'system' => 'System',
 ];

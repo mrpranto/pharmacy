@@ -342,5 +342,7 @@ return [
     'payment_for' => 'পেমেন্ট ফর',
     'variant' => 'ভ্যারিয়েন্ট',
     'opening_stock' => 'ওপেনিং স্টক',
-
+    'notification' => 'নোটিফিকেশন',
+    'sounds_and_notification' => 'সাউন্ডস & নোটিফিকেশন',
+    'system' => 'সিস্টেম',
 ];

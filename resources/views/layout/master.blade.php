@@ -101,17 +101,29 @@
         });
 
         @if(session()->get('success'))
-            @if(is_array(cache('general_setting')))
+            @if(is_array(cache('notification')))
                 @php
-                    $position = cache('general_setting')['notification_show_position'];
-                    $notification_position = $position == 'topLeft' ? 'top-start' : ($position == 'topRight' ? 'top-end' : 'top')
+                    $position = cache('notification')['notification_show_position'];
+                    if($position == 'topLeft'){
+                        $notification_position = 'top-start';
+                    }elseif ($position == 'topRight'){
+                        $notification_position = 'top-end';
+                    }elseif ($position == 'bottomRight'){
+                        $notification_position = 'bottom-end';
+                    }elseif ($position == 'bottomLeft'){
+                        $notification_position = 'bottom-start';
+                    }elseif ($position == 'bottom'){
+                        $notification_position = 'bottom';
+                    }else{
+                        $notification_position = 'top';
+                    }
                 @endphp
                 Toast.fire({
                     position: "{{ $notification_position }}",
                     icon: 'success',
                     title: '{{ session()->get('success') }}'
                 })
-                @if(cache('general_setting')['notification_sound'] == 'on')
+                @if(cache('notification')['notification_sound'] == 'on')
                     let audio = new Audio('{{ asset('/assets/sounds/success.mp3') }}');
                     audio.play();
                 @endif
@@ -132,9 +144,13 @@
     @else
         window._translations = {!! cache('translations') !!};
     @php
-        $general_setting = json_encode(cache('general_setting'))
+        $general_setting = json_encode(cache('general_setting'));
+        $notification = json_encode(cache('notification'));
+        $systemSetting = json_encode(cache('system'));
     @endphp
         window._general_setting = {!! $general_setting !!};
+        window._notification_setting = {!! $notification !!};
+        window._system_setting = {!! $systemSetting !!};
     @endif
 
 </script>
