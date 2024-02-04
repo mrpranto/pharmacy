@@ -1,12 +1,12 @@
 <template>
     <div>
         <a-drawer
-            :title="__('default.add_new_attribute')"
+            :title="__('default.edit_attribute')"
             :width="720"
-            :open="formState.openCreate"
+            :open="formState.openEdit"
             :body-style="{ paddingBottom: '80px' }"
             :footer-style="{ textAlign: 'right' }"
-            @close="$parent.onClose"
+            @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
                 <a-form-item :label="__('default.name')" required>
@@ -25,10 +25,10 @@
                         style="display: flex;"
                         align="baseline"
                     >
-                        <a-form-item required>
-                            <a-input v-model:value="item.name" :placeholder="__('default.item_name')"/>
+                        <a-form-item>
+                            <a-input v-model:value="item.name" :placeholder="__('default.item_name')" />
                         </a-form-item>
-                        <a-form-item required>
+                        <a-form-item>
                             <a-input v-model:value="item.note" :placeholder="__('default.note')" />
                         </a-form-item>
                         <MinusCircleOutlined v-if="(item_index + 1) !==  formState.formData.details.length" @click="removeItems(item_index)" :style="{fontSize: '20px'}" class="color-danger"/>
@@ -49,8 +49,8 @@
                 <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
                     {{ __('default.loading') }}
                 </a-button>
-                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="saveAttribute">
-                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="updateAttribute">
+                    <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
                 </a-button>
             </template>
         </a-drawer>
@@ -61,7 +61,7 @@ import {notification} from 'ant-design-vue';
 import {MinusCircleOutlined, PlusCircleOutlined, PlusOutlined} from "@ant-design/icons-vue";
 
 export default {
-    name: "AddNewAttribute",
+    name: "EditAttribute",
     components: {PlusOutlined, MinusCircleOutlined, PlusCircleOutlined},
     props: {
         formState: {
@@ -87,16 +87,17 @@ export default {
         removeItems(key){
             this.formState.formData.details.splice(key, 1);
         },
-        async saveAttribute() {
+        async updateAttribute() {
             this.loading = true
-            await axios.post('/product/attributes', this.formState.formData)
+            await axios.put(`/product/attributes/${this.formState.current_id}`, this.formState.formData)
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = ''
                         this.formState.formData.details = []
                         this.formState.formData.status = true
-                        this.$parent.getData()
-                        this.$parent.onClose()
+                        let current_path = this.formState.list_path+'?page=' + this.formState.current_list_url
+                        this.$parent.getData(current_path)
+                        this.$parent.onEditClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
                         this.loading = false
                     } else {

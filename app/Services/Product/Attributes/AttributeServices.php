@@ -81,7 +81,7 @@ class AttributeServices extends BaseServices
 
             $this->model->fill([
                 'name' => $request->name,
-                'details' => $request->details,
+                'details' => $this->sanitizeDetail($request->details),
                 'status' => $request->status,
             ])->save();
 
@@ -90,6 +90,24 @@ class AttributeServices extends BaseServices
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * @param $requestDetails
+     * @return array
+     */
+    public function sanitizeDetail($requestDetails): array
+    {
+        $details = [];
+        foreach ($requestDetails as $detail){
+            if (isset($detail['name']) && $detail['name'] != null){
+                $details[] = [
+                    'name' => $detail['name'],
+                    'note' => $detail['note'] == null ? '' : $detail['note']
+                ];
+            }
+        }
+        return $details;
     }
 
     /**
@@ -123,7 +141,7 @@ class AttributeServices extends BaseServices
 
             $this->model->fill([
                 'name' => $request->name,
-                'details' => $request->details,
+                'details' => $this->sanitizeDetail($request->details),
                 'status' => $request->status,
             ])->save();
 

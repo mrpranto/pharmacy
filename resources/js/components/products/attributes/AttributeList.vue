@@ -78,16 +78,18 @@
 
         <AddNewAttribute :formState="formState"/>
         <AttributeDetails :show="show"/>
+        <EditAttribute :formState="formState"/>
 
     </div>
 </template>
 <script>
 import AddNewAttribute from "./AddNewAttribute.vue";
 import AttributeDetails from "./AttributeDetails.vue";
+import EditAttribute from "./EditAttribute.vue";
 
 export default {
     name: "AttributeList",
-    components: {AttributeDetails, AddNewAttribute},
+    components: {EditAttribute, AttributeDetails, AddNewAttribute},
     props: ['permission'],
     data() {
         return {
@@ -164,7 +166,7 @@ export default {
                         type: 'action',
                         key: 'action',
                         permission: this.permission,
-                        componentName: 'category-action-component',
+                        componentName: 'attribute-action-component',
                         isVisible: true,
                         width: '15',
                     },
@@ -238,9 +240,18 @@ export default {
         getEditData(row) {
             this.formState.formData = {
                 name: row.name,
-                description: row.description,
+                details: row.details,
                 status: row.status == '1' ? true : false,
             }
+            if (row.details.length){
+                this.formState.formData.details = row.details;
+            }else {
+                this.formState.formData.details = [{
+                    name: '',
+                    note: '',
+                }];
+            }
+
             this.formState.current_id = row.id;
             this.formState.validation = {};
             this.formState.openEdit = true;

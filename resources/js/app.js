@@ -45,6 +45,8 @@ app.component('unit-action-component', UnitAction);
 
 import AttributeListComponent from './components/products/attributes/AttributeList.vue';
 app.component('attribute-list-component', AttributeListComponent);
+import AttributeAction from './components/products/attributes/Action.vue';
+app.component('attribute-action-component', AttributeAction);
 
 import ProductListComponent from './components/products/products/ProductList.vue';
 app.component('product-list-component', ProductListComponent);
