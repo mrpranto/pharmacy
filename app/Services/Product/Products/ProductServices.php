@@ -2,6 +2,7 @@
 
 namespace App\Services\Product\Products;
 
+use App\Models\Product\Attribute;
 use App\Models\Product\Category;
 use App\Models\Product\Company;
 use App\Models\Product\Product;
@@ -99,6 +100,7 @@ class ProductServices extends BaseServices
           'categories' => Category::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
           'companies' => Company::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
           'units' => Unit::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'pack_size']),
+          'attributes' => Attribute::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'details']),
         ];
     }
 

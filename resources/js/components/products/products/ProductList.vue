@@ -144,11 +144,14 @@ export default {
                     description: '',
                     purchase_type: null,
                     status: true,
+                    attributes: [],
                 },
                 dependencies: {
                     categories: [],
                     companies: [],
                     units: [],
+                    attributes: [],
+                    attributeItems : []
                 },
                 validation: {},
                 layout: {
@@ -387,6 +390,13 @@ export default {
                     this.formState.dependencies.categories = this.options.filters[0].option;
                     this.formState.dependencies.companies = this.options.filters[1].option;
                     this.formState.dependencies.units = this.options.filters[2].option;
+                    this.formState.dependencies.attributes = response.data.attributes.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name,
+                            details: item.details
+                        }
+                    });
 
                     if (callFrom === 'addCategory') {
                         this.formState.formData.category = this.options.filters[0].option[0].value

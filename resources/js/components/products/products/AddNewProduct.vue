@@ -151,6 +151,35 @@
                          style="width: 300px; height: 150px;">
                 </a-form-item>
 
+                <template v-if="$variant === 'yes'">
+                    <a-form-item :label="__('default.attributes')" required>
+                        <a-input-group compact :class="formState.validation.attributes ? 'ant-input ant-input-status-error': ''">
+                            <a-select
+                                v-model:value="formState.formData.attributes" style="width: 100%"
+                                show-search
+                                mode="multiple"
+                                :placeholder="__('default.attributes')"
+                                :options="formState.dependencies.attributes"
+                                :filter-option="$parent.selectFilterOption"
+                                @change="loadAttributeItems"
+                            ></a-select>
+                        </a-input-group>
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.attributes">
+                            {{ formState.validation.attributes[0] }}
+                        </div>
+                    </a-form-item>
+
+                    <template v-for="(attributeItem, attributeItemIndex) in attributeItems">
+                        <a-form-item :label="attributeItem.label">
+                            <a-checkbox-group v-model:value="formState.formData.attributeItems">
+                                <template v-for="itemDetail in attributeItem.details">
+                                    <a-checkbox :value="itemDetail.name" name="type">{{ itemDetail.name }}</a-checkbox>
+                                </template>
+                            </a-checkbox-group>
+                        </a-form-item>
+                    </template>
+                </template>
+
             </a-form>
             <template #footer>
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onClose">
@@ -340,7 +369,8 @@ export default {
                     wrapperCol: {span: 18},
                 }
             },
-            formData: new FormData()
+            formData: new FormData(),
+            attributeItems: []
         }
     },
     watch: {},
@@ -394,6 +424,13 @@ export default {
                         this.loading = false;
                     }
                 })
+        },
+        loadAttributeItems(){
+            this.attributeItems = this.formState.dependencies.attributes.filter(
+                item => this.formState.formData.attributes.some(
+                    element => element === item.value
+                )
+            );
         },
 
         /*
