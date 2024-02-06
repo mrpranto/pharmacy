@@ -171,9 +171,9 @@
 
                     <template v-for="(attributeItem, attributeItemIndex) in attributeItems">
                         <a-form-item :label="attributeItem.label">
-                            <a-checkbox-group v-model:value="formState.formData.attributeItems">
+                            <a-checkbox-group>
                                 <template v-for="itemDetail in attributeItem.details">
-                                    <a-checkbox :value="itemDetail.name" name="type">{{ itemDetail.name }}</a-checkbox>
+                                    <a-checkbox :value="itemDetail.name" @change="addAttributeItems(attributeItem.label, itemDetail.name)" name="type">{{ itemDetail.name }}</a-checkbox>
                                 </template>
                             </a-checkbox-group>
                         </a-form-item>
@@ -373,9 +373,13 @@ export default {
             attributeItems: []
         }
     },
-    watch: {},
+    watch: {
+        'formState.formData.attributes': function (){
+            this.loadAttributeItems()
+        }
+    },
     mounted() {
-
+        this.loadAttributeItems();
     },
     methods: {
         /*
@@ -426,11 +430,22 @@ export default {
                 })
         },
         loadAttributeItems(){
-            this.attributeItems = this.formState.dependencies.attributes.filter(
-                item => this.formState.formData.attributes.some(
-                    element => element === item.value
-                )
-            );
+            if (this.formState.formData.attributes.length > 0){
+                this.attributeItems = this.formState.dependencies.attributes.filter(
+                    item => this.formState.formData.attributes.some(
+                        element => element === item.value
+                    )
+                );
+            }else {
+                this.attributeItems = []
+            }
+        },
+        addAttributeItems(attribute, attributeItem){
+            const attributeArray = [];
+            attributeArray[attribute] = attributeItem;
+            console.log(attributeArray)
+            this.formState.formData.attributeItems[attribute].push(attributeItem);
+            console.log(this.formState.formData.attributeItems)
         },
 
         /*

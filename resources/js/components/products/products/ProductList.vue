@@ -145,6 +145,7 @@ export default {
                     purchase_type: null,
                     status: true,
                     attributes: [],
+                    attributeItems: [],
                 },
                 dependencies: {
                     categories: [],
@@ -432,6 +433,8 @@ export default {
                 description: '',
                 image: '',
                 status: true,
+                attributes:[],
+                attributeItems:[]
             }
             this.generateBarcode()
             this.formState.validation = {};
