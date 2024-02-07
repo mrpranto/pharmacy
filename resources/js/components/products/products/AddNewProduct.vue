@@ -370,7 +370,9 @@ export default {
                 }
             },
             formData: new FormData(),
-            attributeItems: []
+            attributeItems: [],
+            onlyAttributeItems: [],
+            attributeObj: {}
         }
     },
     watch: {
@@ -441,10 +443,29 @@ export default {
             }
         },
         addAttributeItems(attribute, attributeItem){
-            const attributeArray = [];
-            attributeArray[attribute] = attributeItem;
-            console.log(attributeArray)
-            this.formState.formData.attributeItems[attribute].push(attributeItem);
+            // const attributeArray = [];
+            // attributeArray[attribute] = [];
+            // attributeArray[attribute].push(attributeItem);
+            // console.log(attributeArray)
+            // // this.formState.formData.attributeItems[attribute].push(attributeItem);
+            // console.log(this.formState.formData.attributeItems)
+
+            this.attributeItems.forEach(key => {
+                console.log(event.target.checked)
+                if (attribute === key.label){
+                    if (this.attributeObj.hasOwnProperty(key.label)) {
+                        if (event.target.checked){
+                            this.attributeObj[key.label].push(attributeItem);
+                        }else {
+                            this.attributeObj[key.label] = this.attributeObj[key.label].filter(item => item !== attributeItem);
+                        }
+                    } else {
+                        this.attributeObj[key.label] = [attributeItem];
+                    }
+                }
+
+            })
+            this.formState.formData.attributeItems = this.attributeObj;
             console.log(this.formState.formData.attributeItems)
         },
 
