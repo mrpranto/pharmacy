@@ -397,6 +397,7 @@ export default {
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
             this.formData.append('purchase_type', this.formState.formData.purchase_type);
+            this.formData.append('attribute_items', this.formState.formData.attributeItems);
             await axios.post('/product/products', this.formData)
                 .then(response => {
                     if (response.data.success) {
@@ -443,21 +444,15 @@ export default {
             }
         },
         addAttributeItems(attribute, attributeItem){
-            // const attributeArray = [];
-            // attributeArray[attribute] = [];
-            // attributeArray[attribute].push(attributeItem);
-            // console.log(attributeArray)
-            // // this.formState.formData.attributeItems[attribute].push(attributeItem);
-            // console.log(this.formState.formData.attributeItems)
-
             this.attributeItems.forEach(key => {
-                console.log(event.target.checked)
                 if (attribute === key.label){
                     if (this.attributeObj.hasOwnProperty(key.label)) {
-                        if (event.target.checked){
+                        const checkItemExists = this.attributeObj[key.label].find(attItem => attItem === attributeItem)
+                        if (!checkItemExists){
                             this.attributeObj[key.label].push(attributeItem);
                         }else {
-                            this.attributeObj[key.label] = this.attributeObj[key.label].filter(item => item !== attributeItem);
+                            const attIndex = this.attributeObj[key.label].indexOf(attributeItem)
+                            this.attributeObj[key.label].splice(attIndex, 1)
                         }
                     } else {
                         this.attributeObj[key.label] = [attributeItem];
@@ -466,7 +461,6 @@ export default {
 
             })
             this.formState.formData.attributeItems = this.attributeObj;
-            console.log(this.formState.formData.attributeItems)
         },
 
         /*
