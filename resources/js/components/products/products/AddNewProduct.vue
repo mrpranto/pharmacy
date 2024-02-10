@@ -152,7 +152,7 @@
                 </a-form-item>
 
                 <template v-if="$variant === 'yes'">
-                    <a-form-item :label="__('default.attributes')" required>
+                    <a-form-item :label="__('default.attributes')">
                         <a-input-group compact :class="formState.validation.attributes ? 'ant-input ant-input-status-error': ''">
                             <a-select
                                 v-model:value="formState.formData.attributes" style="width: 100%"
@@ -388,6 +388,9 @@ export default {
         * Product Create functions
         * */
         async saveProduct() {
+
+            console.log(this.formState.formData.attributeItems)
+
             this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
@@ -397,8 +400,13 @@ export default {
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
             this.formData.append('purchase_type', this.formState.formData.purchase_type);
-            this.formData.append('attribute_items', this.formState.formData.attributeItems);
-            await axios.post('/product/products', this.formData)
+            this.formData.append('attribute_items', JSON.stringify(this.formState.formData.attributeItems));
+
+            await axios.post('/product/products', this.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if (response.data.success) {
                         this.formState.formData.name = '';

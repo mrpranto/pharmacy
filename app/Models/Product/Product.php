@@ -74,4 +74,13 @@ class Product extends Model
         return $this->hasMany(Stock::class, 'product_id', 'id')
             ->where('available_quantity', '>', 0);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function attributes(): HasMany
+    {
+        return $this->hasMany(ProductAttribute::class, 'product_id', 'id')
+            ->select(['product_id', 'key', 'value']);
+    }
 }

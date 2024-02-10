@@ -46,6 +46,18 @@
                     <span v-else class="badge badge-danger">In-active </span>
                 </dd>
 
+                <dt class="col-sm-3">{{ __('default.attributes') }}</dt>
+                <dd class="col-sm-9">
+                    <table class="table table-bordered">
+                        <tr v-for="(attribute, attribute_index) in show.product.attributes" :key="attribute_index">
+                            <th>{{ attribute_index }}</th>
+                            <td>
+                                <template v-for="(item, item_index) in attribute" :key="item_index"><span class="badge badge-dark mr-1">{{ item.value }}</span></template>
+                            </td>
+                        </tr>
+                    </table>
+                </dd>
+
                 <dt class="col-sm-3">{{ __('default.image') }}</dt>
                 <dd class="col-sm-9">
                     <div class="d-flex align-items-center">

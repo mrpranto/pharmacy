@@ -119,7 +119,8 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE
+            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'attribute_items' => 'required|string'
         ]);
 
         return $this;
@@ -135,20 +136,25 @@ class ProductServices extends BaseServices
 
             DB::transaction(function () use ($request){
 
-                $this->model = $this->model->newQuery()->create([
-                    'category_id' => $request->category,
-                    'company_id' => $request->company,
-                    'unit_id' => $request->unit,
-                    'barcode' => $request->barcode,
-                    'name' => $request->name,
-                    'slug' => Str::slug($request->name.'-'.Str::uuid(), '-'),
-                    'description' => $request->description,
-                    'status' => $request->status === 'true' ? true : false,
-                    'purchase_type' => $request->purchase_type,
-                ]);
+                $this->model = $this->model
+                    ->newQuery()
+                    ->create([
+                        'category_id' => $request->category,
+                        'company_id' => $request->company,
+                        'unit_id' => $request->unit,
+                        'barcode' => $request->barcode,
+                        'name' => $request->name,
+                        'slug' => Str::slug($request->name . '-' . Str::uuid(), '-'),
+                        'description' => $request->description,
+                        'status' => $request->status === 'true' ? true : false,
+                        'purchase_type' => $request->purchase_type,
+                    ]);
 
                 if ($request->has('product_photo')){
                     $this->uploadProductPhoto($request->file('product_photo'), $this->model);
+                }
+                if ($request->filled('attribute_items')){
+                    $this->storeAttributes($request->attribute_items, $this->model);
                 }
             });
 
@@ -175,6 +181,25 @@ class ProductServices extends BaseServices
         ], [
             'path' => $file_path
         ]);
+    }
+
+    /**
+     * @param $attribute_items
+     * @param $product
+     * @return void
+     */
+    public function storeAttributes($attribute_items, $product): void
+    {
+        $attribute_items = json_decode($attribute_items);
+        foreach ($attribute_items as $attribute => $attribute_item){
+            foreach ($attribute_item as $item){
+                $product->attributes()->create([
+                    'product_id' => $product->id,
+                    'key' => $attribute,
+                    'value' => $item
+                ]);
+            }
+        }
     }
 
     /**
@@ -264,13 +289,14 @@ class ProductServices extends BaseServices
     {
         $product = $this->model
             ->newQuery()
-            ->with(['createdBy', 'updatedBy', 'category', 'company', 'unit',])
+            ->with(['createdBy', 'updatedBy', 'category', 'company', 'unit', 'attributes'])
             ->where('id', $id)
             ->first();
 
         $this->model = $product->toArray();
         $this->model['created_at'] = $product->created_at->format(format_date()).' '.$product->created_at->format(format_time());
         $this->model['updated_at'] = $product->updated_at->format(format_date()).' '.$product->updated_at->format(format_time());
+        $this->model['attributes'] = $product->attributes->groupBy('key');
 
         return $this->model;
     }
