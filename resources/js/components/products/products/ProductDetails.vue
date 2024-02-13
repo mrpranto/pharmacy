@@ -48,14 +48,19 @@
 
                 <dt class="col-sm-3">{{ __('default.attributes') }}</dt>
                 <dd class="col-sm-9">
-                    <table class="table table-bordered">
-                        <tr v-for="(attribute, attribute_index) in show.product.attributes" :key="attribute_index">
-                            <th>{{ attribute_index }}</th>
-                            <td>
-                                <template v-for="(item, item_index) in attribute" :key="item_index"><span class="badge badge-dark mr-1">{{ item.value }}</span></template>
-                            </td>
-                        </tr>
-                    </table>
+
+                    <div id="test" class="tree" v-if="show.product.attributes.length">
+                        <ul>
+                            <li class="parent_li" v-for="(attribute, attribute_index) in show.product.attributes" :key="attribute_index">
+                                <span title="Verkleinern">{{ attribute_index }}</span>
+                                <ul>
+                                    <li class="parent_li" v-for="(item, item_index) in attribute" :key="item_index">
+                                        <span title="Verkleinern">{{ item.value }}</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </dd>
 
                 <dt class="col-sm-3">{{ __('default.image') }}</dt>
@@ -179,5 +184,63 @@ export default {
 }
 </script>
 <style scoped>
-
+.tree {
+    min-height:20px;
+    margin-bottom:20px;
+    background-color:#fbfbfb;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05)
+}
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:10px 5px 0 5px;
+    position:relative
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:1px solid #999;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:1px solid #999;
+    height:20px;
+    top:25px;
+    width:25px
+}
+.tree li span:not(.glyphicon) {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    display:inline-block;
+    padding:4px 9px;
+    text-decoration:none
+}
+.tree li.parent_li>span:not(.glyphicon) {
+    cursor:pointer
+}
+.tree>ul>li::before, .tree>ul>li::after {
+    border:0
+}
+.tree li:last-child::before {
+    height:30px
+}
+.tree li.parent_li>span:not(.glyphicon):hover, .tree li.parent_li>span:not(.glyphicon):hover+ul li span:not(.glyphicon) {
+    background:#eee;
+    border:1px solid #999;
+    padding:3px 8px;
+    color:#000
+}
 </style>

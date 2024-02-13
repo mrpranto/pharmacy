@@ -191,44 +191,6 @@
                             </div>
                         </div>
 
-<!--                        <div class="btn-group" v-if="filter.type === 'date'">
-                            <div class="dropdown mr-1">
-                                <span class="filter-button">
-                                <span v-if="filter.filterValue !== null" class="mr-1"
-                                      :class="filter.filterValue !== null ? 'text-primary' : ''"
-                                      @click.prevent="clearFilter(filter_index, filter.key)">
-                                    <i class="mdi mdi-close-circle"></i>
-                                </span>
-                                <span data-toggle="dropdown">
-                                    <span v-if="filter.filterValue !== null"
-                                          :class="filter.filterValue !== null ? 'text-primary' : ''">
-                                        {{ __('default.' + filter.title) }}
-                                        | {{
-                                            filter.filterValue ? filter.filterValue[0].format('YYYY-MM-DD') + ' to ' + filter.filterValue[1].format('YYYY-MM-DD') : ''
-                                        }}
-                                    </span>
-                                    <span v-else>
-                                        <i class="mdi mdi-plus-circle"></i>
-                                        {{ __('default.' + filter.title) }}
-                                    </span>
-                                </span>
-
-                                <div class="dropdown-menu filter-column">
-                                    <div class="dropdown-item">
-                                        <a-form-item :label="__('default.date')" required>
-                                            <a-range-picker
-                                                v-model:value="filter.filterValue"
-                                                :presets="rangePresets"
-                                                style="min-width: 300px; max-width: 130%"
-                                                @change="getDateFilter"/>
-                                        </a-form-item>
-                                    </div>
-                                </div>
-                            </span>
-
-                            </div>
-                        </div>-->
-
                         <div class="btn-group" v-if="filter.type === 'date'">
                             <div class="mr-1">
                                 <span class="filter-button">
@@ -413,7 +375,7 @@
                                     v-model:value="page"
                                     show-search
                                     placeholder="Pages"
-                                    style="width: 100%"
+                                    style="width: 70px"
                                     :options="pages"
                                     @change="getPaginate"
                                 ></a-select>
