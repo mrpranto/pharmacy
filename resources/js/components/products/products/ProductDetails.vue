@@ -49,7 +49,7 @@
                 <dt class="col-sm-3">{{ __('default.attributes') }}</dt>
                 <dd class="col-sm-9">
 
-                    <div id="test" class="tree" v-if="show.product.attributes.length">
+                    <div id="test" class="tree" v-if="Object.keys(show.product.attributes).length">
                         <ul>
                             <li class="parent_li" v-for="(attribute, attribute_index) in show.product.attributes" :key="attribute_index">
                                 <span title="Verkleinern">{{ attribute_index }}</span>
