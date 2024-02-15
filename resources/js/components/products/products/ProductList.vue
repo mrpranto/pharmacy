@@ -448,6 +448,15 @@ export default {
             this.formState.openCreate = false;
         },
         getEditData(row) {
+            const selectedAttributes = this.makeGroupBy(row.attributes, 'key');
+            let attributeNames = Object.keys(selectedAttributes);
+            let attributes = [];
+            this.formState.dependencies.attributes.forEach(item => {
+                if (attributeNames.includes(item.label)){
+                    attributes.push(item.value)
+                }
+            })
+
             this.formState.formData = {
                 name: row.name,
                 barcode: row.barcode,
@@ -458,12 +467,22 @@ export default {
                 image: row.product_photo?.full_url,
                 status: row.status == '1' ? true : false,
                 purchase_type: row.purchase_type,
-                attributes:[],
-                attributeItems:[]
+                attributes: attributes,
+                attributeItems: selectedAttributes
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};
             this.formState.openEdit = true;
+        },
+        makeGroupBy(array, property) {
+            return array.reduce((acc, obj) => {
+                const key = obj[property];
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(obj.value);
+                return acc;
+            }, {});
         },
         onEditClose() {
             this.formState.openEdit = false;

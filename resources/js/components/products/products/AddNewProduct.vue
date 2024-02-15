@@ -388,9 +388,6 @@ export default {
         * Product Create functions
         * */
         async saveProduct() {
-
-            console.log(this.formState.formData.attributeItems)
-
             this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);

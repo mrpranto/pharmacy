@@ -150,6 +150,35 @@
                          style="width: 300px; height: 150px;">
                 </a-form-item>
 
+                <template v-if="$variant === 'yes'">
+                    <a-form-item :label="__('default.attributes')">
+                        <a-input-group compact :class="formState.validation.attributes ? 'ant-input ant-input-status-error': ''">
+                            <a-select
+                                v-model:value="formState.formData.attributes" style="width: 100%"
+                                show-search
+                                mode="multiple"
+                                :placeholder="__('default.attributes')"
+                                :options="formState.dependencies.attributes"
+                                :filter-option="$parent.selectFilterOption"
+                                @change="loadAttributeItems"
+                            ></a-select>
+                        </a-input-group>
+                        <div class="ant-form-item-explain-error" style="" v-if="formState.validation.attributes">
+                            {{ formState.validation.attributes[0] }}
+                        </div>
+                    </a-form-item>
+
+                    <template v-for="(attributeItem, attributeItemIndex) in attributeItems">
+                        <a-form-item :label="attributeItem.label">
+                            <a-checkbox-group>
+                                <template v-for="itemDetail in attributeItem.details">
+                                    <a-checkbox :value="itemDetail.name" checked @change="addAttributeItems(attributeItem.label, itemDetail.name)" name="type">{{ itemDetail.name }}</a-checkbox>
+                                </template>
+                            </a-checkbox-group>
+                        </a-form-item>
+                    </template>
+                </template>
+
             </a-form>
             <template #footer>
                 <a-button type="primary" danger style="margin-right: 8px" @click="$parent.onEditClose">
@@ -339,7 +368,10 @@ export default {
                     wrapperCol: {span: 18},
                 }
             },
-            formData: new FormData()
+            formData: new FormData(),
+            attributeItems: [],
+            onlyAttributeItems: [],
+            attributeObj: {}
         }
     },
     watch: {
@@ -351,10 +383,13 @@ export default {
                 this.previewURL = '/images/medicine.png'
                 this.imageFileName = ''
             }
+        },
+        'formState.formData.attributes': function (){
+            this.loadAttributeItems()
         }
     },
     mounted() {
-
+        this.loadAttributeItems();
     },
     methods: {
         /*
@@ -419,6 +454,41 @@ export default {
                 .replace(/--+/g, '_') // Replace multiple dashes with a single dash
                 .trim();
             this.formState.formData.barcode = slug;
+        },
+        loadAttributeItems(){
+            if (this.formState.formData.attributes.length > 0){
+                this.attributeItems = this.formState.dependencies.attributes.filter(
+                    item => this.formState.formData.attributes.some(
+                        element => element === item.value
+                    )
+                );
+            }else {
+                this.attributeItems = []
+            }
+        },
+        isChecked(itemName){
+            return true;
+            console.log()
+        },
+
+        addAttributeItems(attribute, attributeItem){
+            this.attributeItems.forEach(key => {
+                if (attribute === key.label){
+                    if (this.attributeObj.hasOwnProperty(key.label)) {
+                        const checkItemExists = this.attributeObj[key.label].find(attItem => attItem === attributeItem)
+                        if (!checkItemExists){
+                            this.attributeObj[key.label].push(attributeItem);
+                        }else {
+                            const attIndex = this.attributeObj[key.label].indexOf(attributeItem)
+                            this.attributeObj[key.label].splice(attIndex, 1)
+                        }
+                    } else {
+                        this.attributeObj[key.label] = [attributeItem];
+                    }
+                }
+
+            })
+            this.formState.formData.attributeItems = this.attributeObj;
         },
 
         /*

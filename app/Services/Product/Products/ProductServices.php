@@ -53,7 +53,7 @@ class ProductServices extends BaseServices
     {
         $productsQuery = $this->model->newQuery()
             ->select(['products.*', 'categories.name as category_name', 'companies.name as company_name', 'units.name as unit_name'])
-            ->with(['category', 'company', 'unit'])
+            ->with(['category', 'company', 'unit', 'attributes'])
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->join('companies', 'products.company_id', '=', 'companies.id')
             ->join('units', 'products.unit_id', '=', 'units.id')
