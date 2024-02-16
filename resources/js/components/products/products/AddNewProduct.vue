@@ -173,7 +173,14 @@
                         <a-form-item :label="attributeItem.label">
                             <a-checkbox-group>
                                 <template v-for="itemDetail in attributeItem.details">
-                                    <a-checkbox :value="itemDetail.name" @change="addAttributeItems(attributeItem.label, itemDetail.name)" name="type">{{ itemDetail.name }}</a-checkbox>
+                                    <div class="form-check ml-5">
+                                        <label class="form-check-label cursor-pointer">
+                                            <input type="checkbox" class="form-check-input"
+                                                   :value="itemDetail.name"
+                                                   @change="addAttributeItems(attributeItem.label, itemDetail.name)">
+                                            {{ itemDetail.name }}
+                                            <i class="input-frame"></i></label>
+                                    </div>
                                 </template>
                             </a-checkbox-group>
                         </a-form-item>

@@ -172,7 +172,15 @@
                         <a-form-item :label="attributeItem.label">
                             <a-checkbox-group>
                                 <template v-for="itemDetail in attributeItem.details">
-                                    <a-checkbox :value="itemDetail.name" checked @change="addAttributeItems(attributeItem.label, itemDetail.name)" name="type">{{ itemDetail.name }}</a-checkbox>
+                                    <div class="form-check ml-5">
+                                        <label class="form-check-label cursor-pointer">
+                                            <input type="checkbox" class="form-check-input"
+                                                   :value="itemDetail.name"
+                                                   :checked="isChecked(itemDetail.name)"
+                                                   @change="addAttributeItems(attributeItem.label, itemDetail.name)">
+                                            {{ itemDetail.name }}
+                                            <i class="input-frame"></i></label>
+                                    </div>
                                 </template>
                             </a-checkbox-group>
                         </a-form-item>
@@ -405,6 +413,7 @@ export default {
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
             this.formData.append('purchase_type', this.formState.formData.purchase_type);
+            this.formData.append('attribute_items', JSON.stringify(this.formState.formData.attributeItems));
             this.formData.append("_method", "put");
             await axios.post('/product/products/'+this.formState.current_id, this.formData, {
                 headers: {
@@ -465,10 +474,18 @@ export default {
             }else {
                 this.attributeItems = []
             }
+            this.attributeObj = this.formState.formData.attributeItems
         },
         isChecked(itemName){
-            return true;
-            console.log()
+            let onlyAttributeItems = []
+            Object.keys(this.formState.formData.attributeItems).forEach(item => {
+                this.formState.formData.attributeItems[item].forEach(attItem => onlyAttributeItems.push(attItem))
+            })
+            if (onlyAttributeItems.includes(itemName)){
+                return true
+            }else {
+                return false
+            }
         },
 
         addAttributeItems(attribute, attributeItem){

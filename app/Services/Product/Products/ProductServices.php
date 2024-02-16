@@ -218,7 +218,8 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE
+            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'attribute_items' => 'required|string'
         ]);
 
         return $this;
@@ -253,6 +254,9 @@ class ProductServices extends BaseServices
                 if ($request->has('product_photo')){
                     $this->uploadProductPhoto($request->file('product_photo'), $this->model);
                 }
+                if ($request->filled('attribute_items')){
+                    $this->updateAttributes($request->attribute_items, $this->model);
+                }
             });
 
             return response()->json(['success' => __t('product_edit')]);
@@ -260,6 +264,39 @@ class ProductServices extends BaseServices
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * @param $attribute_items
+     * @param $product
+     * @return void
+     */
+    public function updateAttributes($attribute_items, $product): void
+    {
+        $oldAttributes = [];
+        foreach ($product->attributes as $attribute){
+            array_push($oldAttributes, $attribute->value);
+        }
+        $newAttributes = [];
+        $attribute_items = json_decode($attribute_items);
+        foreach ($attribute_items as $attribute => $attribute_item){
+            foreach ($attribute_item as $item){
+                array_push($newAttributes, $item);
+                $exists = $product->attributes()->where('value', $item)->first();
+                if(!$exists){
+                    $product->attributes()->create([
+                        'product_id' => $product->id,
+                        'key' => $attribute,
+                        'value' => $item
+                    ]);
+                }
+            }
+        }
+        $deleteAbleAttribute = array_diff($oldAttributes, $newAttributes);
+        foreach ($deleteAbleAttribute as $value){
+            $product->attributes()->where('value', $value)->delete();
+        }
+
     }
 
     /**
