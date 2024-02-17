@@ -1084,6 +1084,13 @@ export default {
                     this.productFormState.dependencies.categories = categories;
                     this.productFormState.dependencies.companies = companies;
                     this.productFormState.dependencies.units = units;
+                    this.productFormState.dependencies.attributes = response.data.attributes.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.name,
+                            details: item.details
+                        }
+                    });
 
                     if (callFrom === 'addCategory') {
                         this.productFormState.formData.category = categories[0].value

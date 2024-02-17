@@ -445,7 +445,7 @@ export default {
                 })
         },
         loadAttributeItems(){
-            if (this.formState.formData.attributes.length > 0){
+            if (this.formState.formData.attributes?.length > 0){
                 this.attributeItems = this.formState.dependencies.attributes.filter(
                     item => this.formState.formData.attributes.some(
                         element => element === item.value
