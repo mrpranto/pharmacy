@@ -425,7 +425,7 @@ export default {
                 this.options.request.purchase_type = filterValue
             }
         },
-        showAddForm() {
+        async showAddForm() {
             this.formState.disabled = true;
             this.formState.formData = {
                 name: '',
@@ -438,8 +438,11 @@ export default {
             }
             this.generateBarcode()
             this.formState.validation = {};
-            this.formState.openCreate = true;
-            this.formState.disabled = false;
+
+            await setTimeout(() => {
+                this.formState.openCreate = true;
+                this.formState.disabled = false;
+            })
         },
         generateBarcode() {
             this.formState.formData.barcode = Math.floor(100000000000 + Math.random() * 900000000000)
@@ -447,7 +450,9 @@ export default {
         onClose() {
             this.formState.openCreate = false;
         },
-        getEditData(row) {
+        async getEditData(row) {
+            this.loader = true;
+
             const selectedAttributes = this.makeGroupBy(row.attributes, 'key');
             let attributeNames = Object.keys(selectedAttributes);
             let attributes = [];
@@ -472,7 +477,11 @@ export default {
             }
             this.formState.current_id = row.id;
             this.formState.validation = {};
-            this.formState.openEdit = true;
+
+            await setTimeout(() => {
+                this.formState.openEdit = true;
+                this.loader = false;
+            })
         },
         makeGroupBy(array, property) {
             return array.reduce((acc, obj) => {
