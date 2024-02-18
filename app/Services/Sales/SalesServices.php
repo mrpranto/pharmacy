@@ -271,7 +271,10 @@ class SalesServices extends BaseServices
 
                 $salesProducts = [];
 
+                $invoiceTotalAmount = 0;
                 foreach ($request->products ?? [] as $saleProduct) {
+                    $profitAmount = ($saleProduct['sale_price'] - $saleProduct['unit_price']);
+                    $totalProfitAmount = (($saleProduct['sale_price'] - $saleProduct['unit_price']) * $saleProduct['quantity']);
                     $salesProducts[] = [
                         'sale_id' => $this->model->id,
                         'product_id' => $saleProduct['product']['id'],
@@ -282,16 +285,21 @@ class SalesServices extends BaseServices
                         'sale_percentage' => $saleProduct['sale_percentage'],
                         'quantity' => $saleProduct['quantity'],
                         'subtotal' => $saleProduct['sub_total'],
+                        'profit_amount' => $profitAmount,
+                        'total_profit_amount' => $totalProfitAmount,
                         'sale_product_details' => json_encode($saleProduct),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+                    $invoiceTotalAmount += $totalProfitAmount;
                 }
 
                 $this->model->saleProducts()->insert($salesProducts);
                 if ($this->status() === Sale::STATUS_DELIVERED) {
                     $this->adjustStock($salesProducts);
                 }
+
+                $this->model->update(['total_profit_amount' => $invoiceTotalAmount]);
             });
 
             return response()->json(['success' => __t('sales_invoice_created_successful')]);

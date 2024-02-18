@@ -14,7 +14,7 @@ class SaleProducts extends Model
 
     protected $fillable = [
         'sale_id', 'product_id', 'mrp', 'original_sale_price', 'sale_price', 'unit_price',
-        'sale_percentage', 'quantity', 'subtotal', 'sale_product_details',
+        'sale_percentage', 'quantity', 'subtotal', 'profit_amount', 'total_profit_amount', 'sale_product_details',
     ];
 
     /**

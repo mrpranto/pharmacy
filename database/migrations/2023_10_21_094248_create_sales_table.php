@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('status', 50)->default(Sale::STATUS_CONFIRMED);
             $table->string('payment_status')->default(Sale::PAYMENT_STATUS_DUE);
             $table->float('total_paid', 18, 2)->default(0);
+            $table->float('total_profit_amount')->default(0);
             $table->mediumText('invoice_details')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

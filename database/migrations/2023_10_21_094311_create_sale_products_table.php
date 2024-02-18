@@ -23,6 +23,8 @@ return new class extends Migration
             $table->float('sale_percentage')->default(0);
             $table->integer('quantity');
             $table->float('subtotal', 18, 2)->default(0);
+            $table->float('profit_amount')->default(0);
+            $table->float('total_profit_amount')->default(0);
             $table->text('sale_product_details')->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -30,7 +30,7 @@ class Sale extends Model
 
     protected $fillable = [
         'invoice_number', 'invoice_date', 'customer_id', 'total_unit_qty', 'subtotal', 'status', 'payment_status',
-        'total_paid', 'other_cost', 'discount', 'grand_total', 'invoice_details', 'created_by', 'updated_by'
+        'total_paid', 'other_cost', 'discount', 'grand_total', 'total_profit_amount', 'invoice_details', 'created_by', 'updated_by'
     ];
 
     protected $casts = [
