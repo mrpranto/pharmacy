@@ -13,7 +13,7 @@
 
             <dl class="row">
                 <dt class="col-sm-3">{{ __('default.name') }}</dt>
-                <dd class="col-sm-9"> {{ show.product.name }}</dd>
+                <dd class="col-sm-9"> {{ show.product.name.toUpperCase() }}</dd>
 
                 <dt class="col-sm-3">{{ __('default.barcode') }}</dt>
                 <dd class="col-sm-9"> {{ show.product.barcode }}</dd>

@@ -297,7 +297,7 @@ class PurchaseServices extends BaseServices
                     ->newQuery()
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
-                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['unit_price'], $purchaseProduct['mrp']),
+                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
                         'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],
                         'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
@@ -518,7 +518,7 @@ class PurchaseServices extends BaseServices
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
                         'mrp' => $purchaseProduct['mrp'] ?? 0,
-                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['unit_price'], $purchaseProduct['mrp']),
+                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
                         'unit_price' => $purchaseProduct['unit_price'],
                         'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                         'sale_price' => $purchaseProduct['sale_price'],

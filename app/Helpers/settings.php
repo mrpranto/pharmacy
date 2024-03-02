@@ -167,7 +167,7 @@ if (! function_exists('make_sku')){
      * @return string
      * @throws Exception
      */
-    function make_sku($product_id, $unit_price, $mrp): string
+    function make_sku($product_id, $sale_price, $mrp): string
     {
         $product = Product::query()->where('id', $product_id)->first(['name']);
         if ($product){
@@ -176,7 +176,7 @@ if (! function_exists('make_sku')){
             if ($mrp){
                 return $productShort.'-'.$product_id.'-'.$mrp;
             }else{
-                return $productShort.'-'.$product_id.'-'.$unit_price;
+                return $productShort.'-'.$product_id.'-'.$sale_price;
             }
         }else{
             throw new Exception("Product not found with this { {$product_id} } product id");

@@ -98,5 +98,28 @@ export const time_format = (date_time) => {
     }
 }
 
+export const attributeCombine = (attributes) => {
+    // Convert attributes object to array of entries
+    const attributeEntries = Object.entries(attributes);
+
+    // Use reduce to combine attribute values
+    const combinations = attributeEntries.reduce((acc, [key, values]) => {
+        // Map each value to form combinations
+        const mappedValues = values.map(value => ({
+            [key]: value.value,
+            "product_id": value.product_id
+        }));
+
+        // Generate combinations
+        const newCombinations = acc.flatMap(combination =>
+            mappedValues.map(mappedValue => Object.assign({}, combination, mappedValue))
+        );
+
+        return newCombinations;
+    }, [{}]); // Start with an array containing an empty object
+
+    return combinations;
+}
+
 
 export default {showSuccessMessage, showErrorMessage};

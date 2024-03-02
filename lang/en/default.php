@@ -340,6 +340,7 @@ return [
     'payment_for' => 'Payment For',
     'variant' => 'Variant',
     'opening_stock' => 'Opening Stock',
+    'add_opening_stock' => 'Add opening stock',
     'notification' => 'Notification',
     'sounds_and_notification' => 'Sounds & Notification',
     'system' => 'System',

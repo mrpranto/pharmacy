@@ -135,7 +135,14 @@ app.component('app-table-counter-component', Counter);
 app.config.globalProperties.$general_setting = window._general_setting;
 app.config.globalProperties.$notification_setting = window._notification_setting;
 app.config.globalProperties.$system_setting = window._system_setting;
-import {date_format, showCurrency, showErrorMessage, showSuccessMessage, time_format} from './helper.js';
+import {
+    attributeCombine,
+    date_format,
+    showCurrency,
+    showErrorMessage,
+    showSuccessMessage,
+    time_format
+} from './helper.js';
 app.config.globalProperties.$showSuccessMessage = showSuccessMessage;
 app.config.globalProperties.$showErrorMessage = showErrorMessage;
 app.config.globalProperties.$notification_position = window._notification_setting?.notification_show_position;
@@ -150,6 +157,7 @@ app.config.globalProperties.$currency_symbol_position = window._general_setting?
 app.config.globalProperties.$showCurrency = showCurrency;
 app.config.globalProperties.$today = moment().format("YYYY-MM-DD");
 app.config.globalProperties.$today_time = moment().format("YYYY-MM-DD HH:mm:ss");
+app.config.globalProperties.$attributeCombine = attributeCombine;
 
 const trans = {
     methods: {

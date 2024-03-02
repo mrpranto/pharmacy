@@ -112,6 +112,7 @@
         <AddNewProduct :formState="formState"/>
         <EditProduct :formState="formState"/>
         <ProductDetails :show="show"/>
+        <AddOpeningStockForm :show="show"/>
 
     </div>
 </template>
@@ -120,10 +121,11 @@
 import AddNewProduct from "./AddNewProduct.vue";
 import EditProduct from "./EditProduct.vue";
 import ProductDetails from "./ProductDetails.vue";
+import AddOpeningStockForm from "./AddOpeningStockForm.vue";
 
 export default {
     name: "ProductList",
-    components: {ProductDetails, EditProduct, AddNewProduct},
+    components: {ProductDetails, EditProduct, AddNewProduct, AddOpeningStockForm},
     props: ['permission'],
     data() {
         return {
@@ -308,7 +310,8 @@ export default {
             },
             show:{
                 product:{},
-                open:false
+                open:false,
+                openAddOpeningStock:false,
             }
         }
     },
@@ -360,6 +363,18 @@ export default {
                 .then(response => {
                     this.show.product = response.data
                     this.show.open = true
+                    this.loader = false
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        },
+        async showAddOpeningStockForm(id) {
+            this.loader = true
+            await axios.get('/product/products/' + id)
+                .then(response => {
+                    this.show.product = response.data
+                    this.show.openAddOpeningStock = true
                     this.loader = false
                 })
                 .catch(err => {

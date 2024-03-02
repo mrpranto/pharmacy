@@ -5,6 +5,10 @@
             <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
                          @click="$parent.$parent.showDetails(row.id)"/>
         </a-tooltip>
+        <a-tooltip :title="__('default.add_opening_stock')" class="mr-1"  v-if="$opening_stock === 'yes'">
+            <CloudServerOutlined class="color-success" :style="{fontSize: '20px', marginLeft: '6px'}"
+                         @click="$parent.$parent.showAddOpeningStockForm(row.id)"/>
+        </a-tooltip>
         <a-tooltip :title="__('default.edit')" class="mr-1" v-if="permission.edit">
             <FormOutlined class="color-primary" :style="{fontSize: '20px', marginLeft: '6px'}"
                           @click.prevent="$parent.$parent.getEditData(row)"/>
@@ -16,10 +20,10 @@
     </div>
 </template>
 <script>
-import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined, CloudServerOutlined} from '@ant-design/icons-vue';
 export default {
     name: "Action",
-    components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined},
+    components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined, CloudServerOutlined},
     props:['row', 'permission'],
     mounted() {
 
