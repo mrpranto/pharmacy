@@ -3,9 +3,9 @@
     <div>
 
         <a-modal v-model:open="show.openAddOpeningStock"
-                 width="40%"
+                 width="70%"
                  style="top: 10px"
-                 :title="__('default.product_details')"
+                 :title="__('default.add_opening_stock')"
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }">
 
@@ -81,26 +81,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(attribute, attribute_index) in this.attributeDetails" :key="attribute_index">
-                                <td>{{ (attribute_index+1) }}</td>
-                                <td>{{ show.product.name.toUpperCase() }}-{{ attribute.Color }}-{{ attribute.Size }}</td>
-                                <td>
-                                    <a-input-number id="quantity" v-model:value="attribute.quantity" />
-                                </td>
-                                <td>
-                                    <a-input-number id="mrp" v-model:value="attribute.mrp" />
-                                </td>
-                                <td>
-                                    <a-input-number id="unit_price" v-model:value="attribute.unit_price" />
-                                </td>
-                                <td>
-                                    <a-input-number id="sale_price" v-model:value="attribute.sale_price" />
-                                </td>
-                            </tr>
+                            <template v-if="this.attributeDetails.length > 1">
+                                <tr v-for="(attribute, attribute_index) in this.attributeDetails" :key="attribute_index">
+                                    <td>{{ (attribute_index+1) }}</td>
+                                    <td>{{ show.product.name.toUpperCase() }}-{{ attribute.Color }}-{{ attribute.Size }}</td>
+                                    <td>
+                                        <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="mrp" v-model:value="attribute.mrp" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="unit_price" v-model:value="attribute.unit_price" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="sale_price" v-model:value="attribute.sale_price" style="width: 100%"/>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr v-for="(attribute, attribute_index) in this.attributeDetails" :key="attribute_index">
+                                    <td>{{ (attribute_index+1) }}</td>
+                                    <td>{{ show.product.name.toUpperCase() }}</td>
+                                    <td>
+                                        <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="mrp" v-model:value="attribute.mrp" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="unit_price" v-model:value="attribute.unit_price" style="width: 100%"/>
+                                    </td>
+                                    <td>
+                                        <a-input-number id="sale_price" v-model:value="attribute.sale_price" style="width: 100%"/>
+                                    </td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <template #footer>
+                <a-button key="back" @click="closeOpeningStock">{{ __('default.close') }}</a-button>
+                <a-button v-if="loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else key="submit" type="primary" :loading="loading" @click="saveOpeningStock">
+                    <i class="mdi mdi-content-save mr-1"></i> {{ __('default.save') }}
+                </a-button>
+            </template>
 
         </a-modal>
     </div>
@@ -113,7 +143,8 @@ export default {
     props:['show'],
     data(){
         return {
-            attributeDetails: []
+            attributeDetails: [],
+            loading: false,
         }
     },
     watch: {
@@ -134,6 +165,12 @@ export default {
                 this.attributeDetails = this.$attributeCombine(requestAttributes);
                 return this.attributeDetails;
             }
+        },
+        closeOpeningStock(){
+            this.show.openAddOpeningStock = false
+        },
+        async saveOpeningStock(){
+            this.loading = true
         }
     }
 }
