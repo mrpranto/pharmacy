@@ -148,6 +148,7 @@ class ProductServices extends BaseServices
                         'description' => $request->description,
                         'status' => $request->status === 'true' ? true : false,
                         'purchase_type' => $request->purchase_type,
+                        'variant_order' => $this->getVariantOrder($request->attribute_group, $request->attribute_items)
                     ]);
 
                 if ($request->has('product_photo')){
@@ -162,6 +163,28 @@ class ProductServices extends BaseServices
 
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $attributes
+     * @param $attribute_items
+     * @return string|void
+     */
+    private function getVariantOrder($attributes, $attribute_items)
+    {
+        $decode_attribute_items = json_decode($attribute_items);
+        if ($attribute_items != "[]"){
+            $splitAttributes = explode(',', $attributes);
+            $dbAttributes = Attribute::query()->whereIn('id', $splitAttributes)->get(['id', 'name']);
+            $variantBadge = '';
+            foreach ($splitAttributes as $key => $attribute){
+                $specificAttribute = $dbAttributes->where('id', $attribute)->first();
+                if ($specificAttribute && $decode_attribute_items->{$specificAttribute->name}){
+                    $variantBadge .= $key > 0 ? ('/'. $specificAttribute->name) : $specificAttribute->name;
+                }
+            }
+            return $variantBadge;
         }
     }
 
