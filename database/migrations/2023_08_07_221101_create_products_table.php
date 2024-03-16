@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('purchase_type', 5);
             $table->string('slug', 191)->unique()->index();
+            $table->string('variant_order')->nullable();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();

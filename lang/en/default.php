@@ -353,4 +353,7 @@ return [
     'attribute_details' => 'Attribute details',
     'attribute_edit' => 'Attribute edit successful.',
     'edit_attribute' => 'Edit Attribute',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'add_bulk' => 'Add bulk',
 ];

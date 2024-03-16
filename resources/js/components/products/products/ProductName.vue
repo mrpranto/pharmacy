@@ -29,6 +29,11 @@
             <div>
                 <p class="font-weight-bolder text-capital">{{ value }}</p>
                 <p class="text-muted tx-13"><b>{{ __('default.barcode') }}:</b> {{ item?.barcode }}</p>
+                <p class="text-muted tx-13">
+                    <b>{{ __('default.variant') }} : </b>
+                    <span class="badge badge-success" v-if="item?.attributes.length > 0">{{ __('default.yes') }}</span>
+                    <span class="badge badge-primary-muted" v-else>{{ __('default.no') }}</span>
+                </p>
             </div>
         </div>
     </div>

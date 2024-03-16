@@ -20,7 +20,7 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'company_id', 'unit_id', 'barcode', 'name', 'purchase_type',
-        'slug', 'description', 'status', 'created_by', 'updated_by'
+        'slug', 'variant_order', 'description', 'status', 'created_by', 'updated_by'
     ];
 
     const PURCHASE_TYPE_DIRECT_PRICE = '$';

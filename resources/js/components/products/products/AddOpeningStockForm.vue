@@ -74,17 +74,92 @@
                         <tr>
                             <td>{{ __('default.sl') }}</td>
                             <td>{{ __('default.name') }}</td>
-                            <td>{{ __('default.quantity') }}</td>
-                            <td>{{ __('default.mrp') }}</td>
-                            <td>{{ __('default.unit_price') }}</td>
-                            <td>{{ __('default.sale_price') }}</td>
+                            <td>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        {{ __('default.quantity') }}
+                                    </span>
+                                    <a-tooltip v-if="showBulkQty == false"
+                                               @click.prevent="showBulkQty = true"
+                                               :title="__('default.add_bulk') +' '+__('default.quantity')"
+                                               class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkQty = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkQty" id="quantity" v-model:value="bulk_quantity"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.quantity')"
+                                                style="width: 100%"/>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        {{ __('default.mrp') }}
+                                    </span>
+                                    <a-tooltip  v-if="showBulkMrp == false"
+                                                @click.prevent="showBulkMrp = true"
+                                                :title="__('default.add_bulk') +' '+__('default.mrp')" class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkMrp = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkMrp" id="mrp" v-model:value="bulk_mrp"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.mrp')"
+                                                style="width: 100%"/>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        {{ __('default.unit_price') }}
+                                    </span>
+                                    <a-tooltip  v-if="showBulkUnitCost == false"
+                                                @click.prevent="showBulkUnitCost = true"
+                                                :title="__('default.add_bulk') +' '+__('default.unit_price')" class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkUnitCost = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkUnitCost" id="unit_price" v-model:value="bulk_unit_price"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.unit_price')"
+                                                style="width: 100%"/>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        {{ __('default.sale_price') }}
+                                    </span>
+                                    <a-tooltip  v-if="showBulkUnitSalePrice == false"
+                                                @click.prevent="showBulkUnitSalePrice = true"
+                                                :title="__('default.add_bulk') +' '+__('default.sale_price')" class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkUnitSalePrice = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkUnitSalePrice" id="sale_price" v-model:value="bulk_sale_price"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.sale_price')"
+                                                style="width: 100%"/>
+                            </td>
                         </tr>
                         </thead>
                         <tbody>
                             <template v-if="this.attributeDetails.length > 1">
                                 <tr v-for="(attribute, attribute_index) in this.attributeDetails" :key="attribute_index">
                                     <td>{{ (attribute_index+1) }}</td>
-                                    <td>{{ show.product.name.toUpperCase() }}-{{ attribute.Color }}-{{ attribute.Size }}</td>
+                                    <td class="text-center">
+                                        <small class="mb-1">{{ show.product.name.toUpperCase() }}</small> <p>{{ attribute.Color }}/{{ attribute.Size }}</p>
+                                    </td>
                                     <td>
                                         <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
                                     </td>
@@ -136,15 +211,24 @@
     </div>
 </template>
 <script>
-import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined, CloseSquareOutlined} from '@ant-design/icons-vue';
 export default {
     name: "ProductDetails",
-    components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined},
+    components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined, CloseSquareOutlined},
     props:['show'],
     data(){
         return {
             attributeDetails: [],
             loading: false,
+            bulk_quantity: null,
+            bulk_mrp: null,
+            bulk_unit_price: null,
+            bulk_sale_price: null,
+
+            showBulkQty: false,
+            showBulkMrp: false,
+            showBulkUnitCost: false,
+            showBulkUnitSalePrice: false,
         }
     },
     watch: {
@@ -163,6 +247,7 @@ export default {
             const requestAttributes = this.show.product.attributes;
             if (requestAttributes){
                 this.attributeDetails = this.$attributeCombine(requestAttributes);
+                console.log(this.attributeDetails)
                 return this.attributeDetails;
             }
         },
@@ -170,7 +255,9 @@ export default {
             this.show.openAddOpeningStock = false
         },
         async saveOpeningStock(){
-            this.loading = true
+            // this.loading = true
+
+            console.log(this.attributeDetails)
         }
     }
 }
