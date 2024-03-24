@@ -54,6 +54,9 @@
                                 <span class="font-weight-bolder">{{
                                         __('default.unit')
                                     }} : </span>{{ show.product.unit.name }} <br>
+                                <span class="font-weight-bolder">{{
+                                        __('default.variant')
+                                    }} : </span>{{ show.product.variant_order }} <br>
                                 <span class="font-weight-bolder">{{ __('default.purchase_type') }} : </span>
                                 <span class="badge badge-info" v-if="show.product.purchase_type === '%'">
                                     (%) Percentage
@@ -247,7 +250,6 @@ export default {
             const requestAttributes = this.show.product.attributes;
             if (requestAttributes){
                 this.attributeDetails = this.$attributeCombine(requestAttributes);
-                console.log(this.attributeDetails)
                 return this.attributeDetails;
             }
         },

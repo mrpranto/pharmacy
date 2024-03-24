@@ -272,6 +272,7 @@ class ProductServices extends BaseServices
                     'description' => $request->description,
                     'status' => $request->status === 'true' ? true : false,
                     'purchase_type' => $request->purchase_type,
+                    'variant_order' => $this->getVariantOrder($request->attribute_group, $request->attribute_items)
                 ]);
 
                 if ($request->has('product_photo')){

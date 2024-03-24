@@ -46,6 +46,9 @@
                     <span v-else class="badge badge-danger">In-active </span>
                 </dd>
 
+                <dt class="col-sm-3">{{ __('default.variant') }}</dt>
+                <dd class="col-sm-9"> {{ show.product.variant_order }}</dd>
+
                 <dt class="col-sm-3">{{ __('default.attributes') }}</dt>
                 <dd class="col-sm-9">
 

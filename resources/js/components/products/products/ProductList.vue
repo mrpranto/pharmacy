@@ -468,14 +468,23 @@ export default {
         async getEditData(row) {
             this.loader = true;
 
+            const variantOrder = row.variant_order ? row.variant_order.split("/") : [];
+            console.log(variantOrder, 'sss')
             const selectedAttributes = this.makeGroupBy(row.attributes, 'key');
-            let attributeNames = Object.keys(selectedAttributes);
-            let attributes = [];
-            this.formState.dependencies.attributes.forEach(item => {
-                if (attributeNames.includes(item.label)){
-                    attributes.push(item.value)
+
+            let originalArray = Object.keys(selectedAttributes);
+            let orderArray = variantOrder;
+
+            originalArray.sort(function(a, b) {
+                return orderArray.indexOf(a) - orderArray.indexOf(b);
+            });
+
+            let attributes = []
+            originalArray.map(label => this.formState.dependencies.attributes.find(obj => {
+                if (obj.label === label){
+                    attributes.push(obj.value)
                 }
-            })
+            }));
 
             this.formState.formData = {
                 name: row.name,

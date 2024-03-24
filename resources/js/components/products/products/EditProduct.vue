@@ -413,6 +413,7 @@ export default {
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
             this.formData.append('purchase_type', this.formState.formData.purchase_type);
+            this.formData.append('attribute_group', this.formState.formData.attributes);
             this.formData.append('attribute_items', JSON.stringify(this.formState.formData.attributeItems));
             this.formData.append("_method", "put");
             await axios.post('/product/products/'+this.formState.current_id, this.formData, {
