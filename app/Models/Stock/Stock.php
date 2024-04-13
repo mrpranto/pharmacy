@@ -15,7 +15,7 @@ class Stock extends Model
     use HasFactory, SoftDeletes, BootTrait, CreatedByRelationship, ProductRelationship;
 
     protected $fillable = [
-        'product_id', 'unit_price', 'unit_percentage', 'mrp', 'sale_price', 'sale_percentage', 'sku',
+        'product_id', 'supplier_id', 'unit_price', 'unit_percentage', 'mrp', 'sale_price', 'sale_percentage', 'sku',
         'purchase_quantity', 'sale_quantity', 'available_quantity', 'created_by', 'updated_by',
     ];
 

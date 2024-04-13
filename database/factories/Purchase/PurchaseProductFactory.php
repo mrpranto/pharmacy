@@ -60,12 +60,17 @@ class PurchaseProductFactory extends Factory
      */
     public function storeStock($purchaseInformation): void
     {
+        $purchaseSupplierId = Purchase::query()
+            ->where('id', $purchaseInformation['purchase_id'])
+            ->first(['supplier_id']);
+
         $checkExistStock = Stock::query()
             ->where('product_id', $purchaseInformation['product_id'])
             ->where('unit_price', $purchaseInformation['unit_price'])
             ->where('sale_price', $purchaseInformation['sale_price'])
             ->where('unit_percentage', $purchaseInformation['unit_percentage'])
             ->where('sale_percentage', $purchaseInformation['sale_percentage'])
+            ->where('supplier_id', $purchaseSupplierId->supplier_id)
             ->first();
 
         if ($checkExistStock){
@@ -77,7 +82,7 @@ class PurchaseProductFactory extends Factory
             Stock::query()->create([
                 'product_id' => $purchaseInformation['product_id'],
                 'mrp' => $purchaseInformation['mrp'],
-                'sku' => make_sku($purchaseInformation['product_id'], $purchaseInformation['sale_price'], $purchaseInformation['mrp']),
+                'sku' => make_sku($purchaseInformation['product_id'], $purchaseSupplierId->supplier_id, $purchaseInformation['sale_price'], $purchaseInformation['mrp']),
                 'unit_price' => $purchaseInformation['unit_price'],
                 'unit_percentage' => $purchaseInformation['unit_percentage'],
                 'sale_price' => $purchaseInformation['sale_price'],
@@ -85,6 +90,7 @@ class PurchaseProductFactory extends Factory
                 'purchase_quantity' => $purchaseInformation['quantity'],
                 'sale_quantity' => 0,
                 'available_quantity' => $purchaseInformation['quantity'],
+                'supplier_id' => $purchaseSupplierId->supplier_id,
             ]);
         }
     }

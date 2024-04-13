@@ -469,7 +469,7 @@ export default {
             this.loader = true;
 
             const variantOrder = row.variant_order ? row.variant_order.split("/") : [];
-            console.log(variantOrder, 'sss')
+
             const selectedAttributes = this.makeGroupBy(row.attributes, 'key');
 
             let originalArray = Object.keys(selectedAttributes);

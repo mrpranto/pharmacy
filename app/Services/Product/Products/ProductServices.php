@@ -355,6 +355,7 @@ class ProductServices extends BaseServices
             ->first();
 
         $this->model = $product->toArray();
+        $this->model['variant_order'] = $product->variant_order ? explode('/', $product->variant_order) : '';
         $this->model['created_at'] = $product->created_at->format(format_date()).' '.$product->created_at->format(format_time());
         $this->model['updated_at'] = $product->updated_at->format(format_date()).' '.$product->updated_at->format(format_time());
         $this->model['attributes'] = $product->attributes->groupBy('key');

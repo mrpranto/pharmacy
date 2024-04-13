@@ -244,7 +244,7 @@ class PurchaseServices extends BaseServices
                     ];
 
                     if ($request->status == Purchase::STATUS_RECEIVED){
-                        $this->storeStock($purchaseProduct);
+                        $this->storeStock($purchaseProduct, $request->supplier);
                     }
                 }
 
@@ -262,7 +262,7 @@ class PurchaseServices extends BaseServices
      * @param $purchaseProduct
      * @return JsonResponse|void
      */
-    public function storeStock($purchaseProduct)
+    public function storeStock($purchaseProduct, $supplierId)
     {
         try {
 
@@ -297,7 +297,7 @@ class PurchaseServices extends BaseServices
                     ->newQuery()
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
-                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
+                        'sku' => make_sku($purchaseProduct['product']['id'], $supplierId, $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
                         'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],
                         'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
@@ -458,7 +458,7 @@ class PurchaseServices extends BaseServices
                             ]);
                     }
                     if ($request->status === Purchase::STATUS_RECEIVED){
-                        $this->updateStock($purchaseProduct);
+                        $this->updateStock($purchaseProduct, $request->supplier);
                     }
                 }
 
@@ -480,7 +480,7 @@ class PurchaseServices extends BaseServices
      * @param $purchaseProduct
      * @return JsonResponse|void
      */
-    public function updateStock($purchaseProduct)
+    public function updateStock($purchaseProduct, $supplierId)
     {
         try {
 
@@ -518,7 +518,7 @@ class PurchaseServices extends BaseServices
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
                         'mrp' => $purchaseProduct['mrp'] ?? 0,
-                        'sku' => make_sku($purchaseProduct['product']['id'], $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
+                        'sku' => make_sku($purchaseProduct['product']['id'], $supplierId, $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
                         'unit_price' => $purchaseProduct['unit_price'],
                         'unit_percentage' => $purchaseProduct['unit_percentage'] ?? 0,
                         'sale_price' => $purchaseProduct['sale_price'],

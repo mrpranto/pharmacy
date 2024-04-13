@@ -76,7 +76,13 @@
                         <thead>
                         <tr>
                             <td>{{ __('default.sl') }}</td>
-                            <td>{{ __('default.name') }}</td>
+                            <td class="text-center">
+                                {{ __('default.name') }}
+                                <br>
+                                <template v-for="(variant, variant_index) in Object.keys(show.product.variant_order)">
+                                    {{ variant_index > 0 ? '/'+show.product.variant_order[variant] : show.product.variant_order[variant] }}
+                                </template>
+                            </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>
@@ -161,7 +167,13 @@
                                 <tr v-for="(attribute, attribute_index) in this.attributeDetails" :key="attribute_index">
                                     <td>{{ (attribute_index+1) }}</td>
                                     <td class="text-center">
-                                        <small class="mb-1">{{ show.product.name.toUpperCase() }}</small> <p>{{ attribute.Color }}/{{ attribute.Size }}</p>
+                                        <b class="mb-1">{{ show.product.name.toUpperCase() }}</b>
+                                        <br>
+                                        <p>
+                                            <template v-for="(variant, variant_index) in Object.keys(show.product.variant_order)">
+                                                {{ variant_index > 0 ? '/'+attribute[show.product.variant_order[variant]] : attribute[show.product.variant_order[variant]] }}
+                                            </template>
+                                        </p>
                                     </td>
                                     <td>
                                         <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
