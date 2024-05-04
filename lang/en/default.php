@@ -356,4 +356,5 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'add_bulk' => 'Add bulk',
+    'product_opening_stock_create' => 'Product opening stock added successful.',
 ];

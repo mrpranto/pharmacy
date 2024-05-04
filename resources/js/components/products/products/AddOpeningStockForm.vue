@@ -513,15 +513,30 @@ export default {
             this.loading = true
             this.formData = {
                 attributeDetails: this.attributeDetails,
-                product_id: this.show.product.id
+                product_id: this.show.product.id,
+                variant_order: this.show.product.variant_order,
             }
             await axios.post('/product/products-opening-stock', this.formData)
                 .then(response => {
-                    console.log(response)
-                    this.loading = false
+                    if (response.data.success) {
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
+                        this.closeOpeningStock();
+                    }else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
+                        this.loading = false;
+                    }
                 })
-                .catch(error => {
-                    this.loading = false
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
+                        this.formState.validation = err.response.data.errors;
+                        this.loading = false;
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err);
+                        this.loading = false;
+                    }
                 })
         }
     }

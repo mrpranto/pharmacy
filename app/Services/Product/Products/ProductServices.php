@@ -7,6 +7,8 @@ use App\Models\Product\Category;
 use App\Models\Product\Company;
 use App\Models\Product\Product;
 use App\Models\Product\Unit;
+use App\Models\Stock\Stock;
+use App\Models\Stock\StockLog;
 use App\Models\trait\FileHandler;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -20,12 +22,16 @@ class ProductServices extends BaseServices
 {
     use FileHandler;
 
+    public Stock $stock;
+
     /**
      * @param Product $product
+     * @param Stock $stock
      */
-    public function __construct(Product $product)
+    public function __construct(Product $product, Stock $stock)
     {
         $this->model = $product;
+        $this->stock = $stock;
     }
 
     /**
@@ -381,9 +387,65 @@ class ProductServices extends BaseServices
         return $this;
     }
 
-    public function storeOpeningStock($request)
+    /**
+     * @param $request
+     * @return JsonResponse
+     */
+    public function storeOpeningStock($request): JsonResponse
     {
+        try {
 
+            $stocks = [];
+
+            foreach ($request->attributeDetails ?? [] as $item)
+            {
+                $skuExtend = null;
+
+                foreach ($request->variant_order ?? [] as $key => $variant){
+                    $skuExtend .= count($request->variant_order) != ($key+1) ? $item[$variant] : '-'. $item[$variant];
+                }
+
+                $sku = make_sku($request->product_id, null, $item['sale_price'], $item['mrp'], $skuExtend);
+
+                $existStock = $this->stock
+                    ->newQuery()
+                    ->where('sku', $sku)
+                    ->first();
+
+                if ($existStock){
+
+                    $existStock->update([
+                        'available_quantity' => $existStock->available_quantity + $item['quantity']
+                    ]);
+
+                }else{
+
+                    $stocks[] = [
+                        'product_id' => $request->product_id,
+                        'unit_price' => $item['unit_price'] ?? 0,
+                        'unit_percentage' => $item['unit_percentage'] ?? 0,
+                        'mrp' => $item['mrp'] ?? 0,
+                        'sale_price' => $item['sale_price'] ?? 0,
+                        'sale_percentage' => $item['sale_percentage'] ?? 0,
+                        'sku' => $sku,
+                        'available_quantity' => $existStock ? $existStock->available_quantity + $item['quantity'] : $item['quantity'],
+                        'opening_stock_quantity' => $item['quantity'],
+                        'created_by' => auth()->id(),
+                        'updated_by' => auth()->id(),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                }
+            }
+
+            $this->stock->newQuery()->insert($stocks);
+
+            return response()->json(['success' => __t('product_opening_stock_create')]);
+
+        }catch (\Exception $exception){
+
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 
 }

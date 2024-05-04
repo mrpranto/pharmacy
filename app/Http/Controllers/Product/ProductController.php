@@ -100,11 +100,10 @@ class ProductController extends Controller
         return $this->services->delete($id);
     }
 
-    public function storeOpeningStock(Request $request)
+    public function storeOpeningStock(Request $request): JsonResponse
     {
-        $this->services
+        return $this->services
             ->validateOpeningStock($request)
             ->storeOpeningStock($request);
-        dd($request->all());
     }
 }
