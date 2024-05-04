@@ -335,6 +335,7 @@
                                                                                             <b>{{ product.name.toUpperCase() }}</b> have {{ product.stocks.length }} different types of stock.
                                                                                         </p>
                                                                                         <p class="tx-14 text-muted">
+                                                                                            <span class="mr-3"><b>{{ __('default.total_opening_stock_qty') }} : </b> {{ totalQty(product.stocks, 'opening_stock_quantity') }},</span>
                                                                                             <span class="mr-3"><b>{{ __('default.total_purchase_qty') }} : </b> {{ totalQty(product.stocks, 'purchase_quantity') }},</span>
                                                                                             <span class="mr-3"><b>{{ __('default.total_sale_qty') }} : </b> {{ totalQty(product.stocks, 'sale_quantity') }},</span>
                                                                                             <span class="mr-3"><b>{{ __('default.total_available_qty') }} : </b> {{ totalQty(product.stocks, 'available_quantity') }}</span>
@@ -352,9 +353,11 @@
                                                                                     <tr>
                                                                                         <th class="text-center">#</th>
                                                                                         <th class="text-center">{{ __('default.sku') }}</th>
+                                                                                        <th class="text-center">{{ __('default.mrp') }}</th>
                                                                                         <th class="text-center">{{ __('default.unit_price') }}</th>
                                                                                         <th class="text-center">{{ __('default.sale_price') }}</th>
                                                                                         <th class="text-center">{{ __('default.discount') }}</th>
+                                                                                        <th class="text-center">{{ __('default.opening_stock_quantity') }}</th>
                                                                                         <th class="text-center">{{ __('default.purchase_quantity') }}</th>
                                                                                         <th class="text-center">{{ __('default.sale_quantity') }}</th>
                                                                                         <th class="text-center">{{ __('default.available_quantity') }}</th>
@@ -364,9 +367,11 @@
                                                                                     <tr v-for="(stock, stock_index) in product.stocks" :key="stock_index"  :class="isEven(stock_index) ? 'row-color' : ''">
                                                                                         <th class="text-center">{{ (stock_index+1) }}</th>
                                                                                         <th class="text-center">{{ stock.sku }}</th>
+                                                                                        <td class="text-center">{{ $showCurrency(stock.mrp) }}</td>
                                                                                         <td class="text-center">{{ $showCurrency(stock.unit_price) }}</td>
                                                                                         <td class="text-center">{{ $showCurrency(stock.sale_price) }}</td>
                                                                                         <td class="text-center">{{ stock.discount }} {{ stock.discount_type }}</td>
+                                                                                        <td class="text-center">{{ stock.opening_stock_quantity }}</td>
                                                                                         <td class="text-center">{{ stock.purchase_quantity }}</td>
                                                                                         <td class="text-center">{{ stock.sale_quantity }}</td>
                                                                                         <td class="text-center">{{ stock.available_quantity }}</td>

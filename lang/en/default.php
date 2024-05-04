@@ -199,8 +199,8 @@ return [
     'available_quantity' => 'Available quantity',
 
     'stock_list' => 'Stock List',
-    'total_available_qty' => 'Available Quantity',
-    'total_purchase_qty' => 'Total Purchase Quantity',
+    'total_available_qty' => 'Available quantity',
+    'total_purchase_qty' => 'Total Purchase quantity',
     'total_sale_qty' => 'Total Sale quantity',
 
     'total_customer' => 'Total Customer',
@@ -357,4 +357,6 @@ return [
     'no' => 'No',
     'add_bulk' => 'Add bulk',
     'product_opening_stock_create' => 'Product opening stock added successful.',
+    'total_opening_stock_qty' => 'Total opening stock quantity',
+    'opening_stock_quantity' => 'Opening stock quantity',
 ];
