@@ -106,7 +106,7 @@
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
                                     <b>
-                                        {{ __('default.mrp') }}
+                                        {{ __('default.mrp') }} ({{ $currency_symbol }})
                                     </b>
                                     <a-tooltip  v-if="showBulkMrp == false"
                                                 @click.prevent="showBulkMrp = true"
@@ -118,14 +118,39 @@
                                         <CloseSquareOutlined  class="color-primary"/>
                                     </a-tooltip>
                                 </div>
-                                <a-input-number v-if="showBulkMrp" id="mrp" v-model:value="bulk_mrp"
+                                <a-input-number v-if="showBulkMrp"
+                                                id="mrp"
+                                                v-model:value="bulk_mrp"
                                                 :placeholder="__('default.add_bulk') +' '+__('default.mrp')"
+                                                :prefix="$currency_symbol"
+                                                style="width: 100%"/>
+                            </td>
+                            <td v-if="show.product.purchase_type === '%'">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <b>
+                                        {{ __('default.unit_percentage') }} (%)
+                                    </b>
+                                    <a-tooltip  v-if="showBulkUnitCostPercentage == false"
+                                                @click.prevent="showBulkUnitCostPercentage = true"
+                                                :title="__('default.add_bulk') +' '+__('default.unit_percentage')" class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkUnitCostPercentage = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkUnitCostPercentage"
+                                                id="unit_percentage"
+                                                v-model:value="bulk_unit_percentage"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.unit_percentage')"
+                                                prefix="%"
                                                 style="width: 100%"/>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
                                     <b>
-                                        {{ __('default.unit_price') }}
+                                        {{ __('default.unit_price') }} ({{ $currency_symbol }})
                                     </b>
                                     <a-tooltip  v-if="showBulkUnitCost == false"
                                                 @click.prevent="showBulkUnitCost = true"
@@ -137,14 +162,39 @@
                                         <CloseSquareOutlined  class="color-primary"/>
                                     </a-tooltip>
                                 </div>
-                                <a-input-number v-if="showBulkUnitCost" id="unit_price" v-model:value="bulk_unit_price"
+                                <a-input-number v-if="showBulkUnitCost"
+                                                id="unit_price"
+                                                v-model:value="bulk_unit_price"
                                                 :placeholder="__('default.add_bulk') +' '+__('default.unit_price')"
+                                                :prefix="$currency_symbol"
+                                                style="width: 100%"/>
+                            </td>
+                            <td v-if="show.product.purchase_type === '%'">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <b>
+                                        {{ __('default.sale_percentage') }} (%)
+                                    </b>
+                                    <a-tooltip  v-if="showBulkUnitSalePercentage == false"
+                                                @click.prevent="showBulkUnitSalePercentage = true"
+                                                :title="__('default.add_bulk') +' '+__('default.sale_percentage')" class="mr-1" >
+                                        <FormOutlined class="color-primary"/>
+                                    </a-tooltip>
+
+                                    <a-tooltip v-else @click.prevent="showBulkUnitSalePercentage = false" :title="__('default.close')" class="mr-1" >
+                                        <CloseSquareOutlined  class="color-primary"/>
+                                    </a-tooltip>
+                                </div>
+                                <a-input-number v-if="showBulkUnitSalePercentage"
+                                                id="sale_percentage"
+                                                v-model:value="bulk_sale_percentage"
+                                                :placeholder="__('default.add_bulk') +' '+__('default.sale_percentage')"
+                                                prefix="%"
                                                 style="width: 100%"/>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
                                     <b>
-                                        {{ __('default.sale_price') }}
+                                        {{ __('default.sale_price') }} ({{ $currency_symbol }})
                                     </b>
                                     <a-tooltip  v-if="showBulkUnitSalePrice == false"
                                                 @click.prevent="showBulkUnitSalePrice = true"
@@ -156,8 +206,11 @@
                                         <CloseSquareOutlined  class="color-primary"/>
                                     </a-tooltip>
                                 </div>
-                                <a-input-number v-if="showBulkUnitSalePrice" id="sale_price" v-model:value="bulk_sale_price"
+                                <a-input-number v-if="showBulkUnitSalePrice"
+                                                id="sale_price"
+                                                v-model:value="bulk_sale_price"
                                                 :placeholder="__('default.add_bulk') +' '+__('default.sale_price')"
+                                                :prefix="$currency_symbol"
                                                 style="width: 100%"/>
                             </td>
                         </tr>
@@ -176,16 +229,44 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
+                                        <a-input-number id="quantity"
+                                                        v-model:value="attribute.quantity"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="mrp" v-model:value="attribute.mrp" style="width: 100%"/>
+                                        <a-input-number id="mrp"
+                                                        v-model:value="attribute.mrp"
+                                                        @keyup.prevent="calculateWithMrp(attribute_index)"
+                                                        :prefix="$currency_symbol"
+                                                        style="width: 100%"/>
+                                    </td>
+                                    <td v-if="show.product.purchase_type === '%'">
+                                        <a-input-number id="unit_percentage"
+                                                        v-model:value="attribute.unit_percentage"
+                                                        @keyup.prevent="calculateUnitPrice(attribute_index)"
+                                                        prefix="%"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="unit_price" v-model:value="attribute.unit_price" style="width: 100%"/>
+                                        <a-input-number id="unit_price"
+                                                        v-model:value="attribute.unit_price"
+                                                        @keyup.prevent="calculateUnitPercentage(attribute_index)"
+                                                        :prefix="$currency_symbol"
+                                                        style="width: 100%"/>
+                                    </td>
+                                    <td v-if="show.product.purchase_type === '%'">
+                                        <a-input-number id="sale_percentage"
+                                                        v-model:value="attribute.sale_percentage"
+                                                        @keyup.prevent="calculateSalePrice(attribute_index)"
+                                                        prefix="%"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="sale_price" v-model:value="attribute.sale_price" style="width: 100%"/>
+                                        <a-input-number id="sale_price"
+                                                        v-model:value="attribute.sale_price"
+                                                        @keyup.prevent="calculateSalePercentage(attribute_index)"
+                                                        :prefix="$currency_symbol"
+                                                        style="width: 100%"/>
                                     </td>
                                 </tr>
                             </template>
@@ -194,16 +275,44 @@
                                     <td>{{ (attribute_index+1) }}</td>
                                     <td>{{ show.product.name.toUpperCase() }}</td>
                                     <td>
-                                        <a-input-number id="quantity" v-model:value="attribute.quantity" style="width: 100%"/>
+                                        <a-input-number id="quantity"
+                                                        v-model:value="attribute.quantity"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="mrp" v-model:value="attribute.mrp" style="width: 100%"/>
+                                        <a-input-number id="mrp"
+                                                        v-model:value="attribute.mrp"
+                                                        :prefix="$currency_symbol"
+                                                         @keyup.prevent="calculateWithMrp(attribute_index)"
+                                                        style="width: 100%"/>
+                                    </td>
+                                     <td v-if="show.product.purchase_type === '%'">
+                                        <a-input-number id="unit_percentage"
+                                                        v-model:value="attribute.unit_percentage"
+                                                         @keyup.prevent="calculateUnitPrice(attribute_index)"
+                                                        prefix="%"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="unit_price" v-model:value="attribute.unit_price" style="width: 100%"/>
+                                        <a-input-number id="unit_price"
+                                                        v-model:value="attribute.unit_price"
+                                                         @keyup.prevent="calculateUnitPercentage(attribute_index)"
+                                                        :prefix="$currency_symbol"
+                                                        style="width: 100%"/>
+                                    </td>
+                                    <td v-if="show.product.purchase_type === '%'">
+                                        <a-input-number id="sale_percentage"
+                                                        v-model:value="attribute.sale_percentage"
+                                                         @keyup.prevent="calculateSalePrice(attribute_index)"
+                                                        prefix="%"
+                                                        style="width: 100%"/>
                                     </td>
                                     <td>
-                                        <a-input-number id="sale_price" v-model:value="attribute.sale_price" style="width: 100%"/>
+                                        <a-input-number id="sale_price"
+                                                        v-model:value="attribute.sale_price"
+                                                         @keyup.prevent="calculateSalePercentage(attribute_index)"
+                                                        :prefix="$currency_symbol"
+                                                        style="width: 100%"/>
                                     </td>
                                 </tr>
                             </template>
@@ -240,12 +349,16 @@ export default {
             bulk_quantity: null,
             bulk_mrp: null,
             bulk_unit_price: null,
+            bulk_unit_percentage: null,
             bulk_sale_price: null,
+            bulk_sale_percentage: null,
 
             showBulkQty: false,
             showBulkMrp: false,
             showBulkUnitCost: false,
+            showBulkUnitCostPercentage: false,
             showBulkUnitSalePrice: false,
+            showBulkUnitSalePercentage: false,
         }
     },
     watch: {
@@ -254,6 +367,18 @@ export default {
             deep: true,
             handler() {
                 if (this.show) {
+                    this.bulk_quantity = null;
+                    this.bulk_mrp = null;
+                    this.bulk_unit_price = null;
+                    this.bulk_unit_percentage = null;
+                    this.bulk_sale_price = null;
+                    this.bulk_sale_percentage = null;
+                    this.showBulkQty = false;
+                    this.showBulkMrp = false;
+                    this.showBulkUnitCost = false;
+                    this.showBulkUnitCostPercentage = false;
+                    this.showBulkUnitSalePrice = false;
+                    this.showBulkUnitSalePercentage = false;
                     this.combineAttributes();
                 }
             },
@@ -262,13 +387,27 @@ export default {
             this.attributeDetails.map(item => item.quantity = this.bulk_quantity)
         },
         'bulk_mrp': function (){
-            this.attributeDetails.map(item => item.mrp = this.bulk_mrp)
+            this.attributeDetails.map(item => item.mrp = this.bulk_mrp);
+            this.calculateBulkUnitPercentage();
+            this.calculateBulkSalePercentage();
+            this.calculateBulkUnitPrice();
+            this.calculateBulkSalePrice();
         },
         'bulk_unit_price': function (){
             this.attributeDetails.map(item => item.unit_price = this.bulk_unit_price)
+            this.calculateBulkUnitPercentage();
+        },
+        'bulk_unit_percentage': function (){
+            this.attributeDetails.map(item => item.unit_percentage = this.bulk_unit_percentage)
+            this.calculateBulkUnitPrice();
         },
         'bulk_sale_price': function (){
             this.attributeDetails.map(item => item.sale_price = this.bulk_sale_price)
+            this.calculateBulkSalePercentage();
+        },
+        'bulk_sale_percentage': function (){
+            this.attributeDetails.map(item => item.sale_percentage = this.bulk_sale_percentage)
+            this.calculateBulkSalePrice();
         },
     },
     methods:{
@@ -282,6 +421,94 @@ export default {
         closeOpeningStock(){
             this.show.openAddOpeningStock = false
         },
+        calculateWithMrp(index){
+            this.calculateUnitPercentage(index);
+            this.calculateSalePercentage(index);
+        },
+        calculateBulkUnitPercentage(){
+            this.attributeDetails.map(function (item){
+                const mrp = item.mrp;
+                const unit_price = item.unit_price;
+
+                if (mrp && unit_price){
+                    let cal_unit_percentage = (((mrp - unit_price)/ mrp) * 100);
+                    item.unit_percentage = cal_unit_percentage.toFixed(2)
+                }
+            });
+        },
+        calculateBulkSalePercentage(){
+            this.attributeDetails.map(function (item){
+                const mrp = item.mrp;
+                const sale_price = item.sale_price;
+
+                if (mrp && sale_price){
+                    let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                    item.sale_percentage = cal_sale_percentage.toFixed(2)
+                }
+            });
+        },
+        calculateBulkUnitPrice(){
+            this.attributeDetails.map(function (item){
+                const mrp = item.mrp;
+                const unit_percentage = item.unit_percentage;
+                if (mrp && unit_percentage){
+                    let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100));
+                    item.unit_price = cal_unit_price.toFixed(2)
+                }
+            });
+        },
+        calculateBulkSalePrice(){
+            this.attributeDetails.map(function (item){
+                const mrp = item.mrp;
+                const sale_percentage = item.sale_percentage;
+                if (mrp && sale_percentage){
+                    let cal_sale_price = (mrp - ((mrp * sale_percentage) / 100));
+                    item.sale_price = cal_sale_price.toFixed(2)
+                }
+            });
+        },
+
+
+        calculateUnitPercentage(index){
+            const currentAttribute = this.attributeDetails[index];
+            const mrp = currentAttribute.mrp;
+            const unit_price = currentAttribute.unit_price;
+
+            if (mrp && unit_price){
+                let cal_unit_percentage = (((mrp - unit_price)/ mrp) * 100);
+                currentAttribute.unit_percentage = cal_unit_percentage.toFixed(2)
+            }
+        },
+        calculateSalePercentage(index){
+            const currentAttribute = this.attributeDetails[index];
+            const mrp = currentAttribute.mrp;
+            const sale_price = currentAttribute.sale_price;
+
+            if (mrp && sale_price){
+                let cal_sale_percentage = (((mrp - sale_price)/ mrp) * 100);
+                currentAttribute.sale_percentage = cal_sale_percentage.toFixed(2)
+            }
+        },
+
+        calculateUnitPrice(index){
+            const currentAttribute = this.attributeDetails[index];
+            const mrp = currentAttribute.mrp;
+            const unit_percentage = currentAttribute.unit_percentage;
+            if (mrp && unit_percentage){
+                let cal_unit_price = (mrp - ((mrp * unit_percentage) / 100));
+                currentAttribute.unit_price = cal_unit_price.toFixed(2)
+            }
+        },
+        calculateSalePrice(index){
+            const currentAttribute = this.attributeDetails[index];
+            const mrp = currentAttribute.mrp;
+            const sale_percentage = currentAttribute.sale_percentage;
+            if (mrp && sale_percentage){
+                let cal_sale_price = (mrp - ((mrp * sale_percentage) / 100));
+                currentAttribute.sale_price = cal_sale_price.toFixed(2)
+            }
+        },
+
         async saveOpeningStock(){
             this.loading = true
             this.formData = {
