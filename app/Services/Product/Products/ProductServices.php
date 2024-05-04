@@ -8,10 +8,8 @@ use App\Models\Product\Company;
 use App\Models\Product\Product;
 use App\Models\Product\Unit;
 use App\Models\Stock\Stock;
-use App\Models\Stock\StockLog;
 use App\Models\trait\FileHandler;
 use App\Services\BaseServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -44,7 +42,8 @@ class ProductServices extends BaseServices
                 'create' => auth()->user()->can('app.product.create'),
                 'edit' => auth()->user()->can('app.product.edit'),
                 'show' => auth()->user()->can('app.product.show'),
-                'delete' => auth()->user()->can('app.product.delete')
+                'delete' => auth()->user()->can('app.product.delete'),
+                'add_opening_stock' => auth()->user()->can('app.product.add-opening-stock'),
             ]
         ];
     }

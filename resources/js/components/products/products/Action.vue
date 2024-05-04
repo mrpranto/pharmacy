@@ -5,7 +5,7 @@
             <EyeOutlined class="color-info" :style="{fontSize: '20px', marginLeft: '6px'}"
                          @click="$parent.$parent.showDetails(row.id)"/>
         </a-tooltip>
-        <a-tooltip :title="__('default.add_opening_stock')" class="mr-1"  v-if="$opening_stock === 'yes'">
+        <a-tooltip :title="__('default.add_opening_stock')" class="mr-1"  v-if="$opening_stock === 'yes' && permission.add_opening_stock">
             <CloudServerOutlined class="color-success" :style="{fontSize: '20px', marginLeft: '6px'}"
                          @click="$parent.$parent.showAddOpeningStockForm(row.id)"/>
         </a-tooltip>

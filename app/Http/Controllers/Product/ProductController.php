@@ -100,8 +100,14 @@ class ProductController extends Controller
         return $this->services->delete($id);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function storeOpeningStock(Request $request): JsonResponse
     {
+        Gate::authorize('app.product.add-opening-stock');
+
         return $this->services
             ->validateOpeningStock($request)
             ->storeOpeningStock($request);

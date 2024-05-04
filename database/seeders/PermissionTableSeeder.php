@@ -208,6 +208,11 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Delete Product',
                 'slug' => 'app.product.delete'
             ],
+            [
+                'module_id' => $this->module('Products'),
+                'name' => 'Add Opening stock',
+                'slug' => 'app.product.add-opening-stock'
+            ],
 
             /*
              * Supplier permission
