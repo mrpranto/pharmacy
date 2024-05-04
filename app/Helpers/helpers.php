@@ -62,3 +62,20 @@ if (!function_exists('__t')) {
     }
 }
 
+if (! function_exists('has_variant')){
+
+    /**
+     * @return bool
+     */
+    function has_variant(): bool
+    {
+        $systemSetting = cache('system');
+
+        if ($systemSetting['variant'] == 'no'){
+
+            return false;
+        }
+        return true;
+    }
+}
+
