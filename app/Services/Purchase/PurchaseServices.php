@@ -297,6 +297,7 @@ class PurchaseServices extends BaseServices
                     ->newQuery()
                     ->create([
                         'product_id' => $purchaseProduct['product']['id'],
+                        'supplier_id' => $supplierId,
                         'sku' => make_sku($purchaseProduct['product']['id'], $supplierId, $purchaseProduct['sale_price'], $purchaseProduct['mrp']),
                         'mrp' => $purchaseProduct['mrp'] ?? 0,
                         'unit_price' => $purchaseProduct['unit_price'],

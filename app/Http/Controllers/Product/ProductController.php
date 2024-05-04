@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
 use App\Services\Product\Products\ProductServices;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -99,5 +98,13 @@ class ProductController extends Controller
         Gate::authorize('app.product.delete');
 
         return $this->services->delete($id);
+    }
+
+    public function storeOpeningStock(Request $request)
+    {
+        $this->services
+            ->validateOpeningStock($request)
+            ->storeOpeningStock($request);
+        dd($request->all());
     }
 }

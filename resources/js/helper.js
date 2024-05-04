@@ -107,7 +107,8 @@ export const attributeCombine = (attributes) => {
         // Map each value to form combinations
         const mappedValues = values.map(value => ({
             [key]: value.value,
-            "product_id": value.product_id
+            "product_id": value.product_id,
+            "has_variant": true
         }));
 
         // Generate combinations

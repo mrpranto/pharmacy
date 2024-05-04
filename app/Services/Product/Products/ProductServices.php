@@ -97,10 +97,10 @@ class ProductServices extends BaseServices
     public function getDependency(): array
     {
         return [
-          'categories' => Category::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
-          'companies' => Company::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
-          'units' => Unit::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'pack_size']),
-          'attributes' => Attribute::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'details']),
+            'categories' => Category::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
+            'companies' => Company::query()->active()->orderBy('id', 'desc')->get(['id', 'name']),
+            'units' => Unit::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'pack_size']),
+            'attributes' => Attribute::query()->active()->orderBy('id', 'desc')->get(['id', 'name', 'details']),
         ];
     }
 
@@ -119,7 +119,7 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'purchase_type' => 'required|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
             'attribute_items' => 'required|string'
         ]);
 
@@ -134,7 +134,7 @@ class ProductServices extends BaseServices
     {
         try {
 
-            DB::transaction(function () use ($request){
+            DB::transaction(function () use ($request) {
 
                 $this->model = $this->model
                     ->newQuery()
@@ -151,17 +151,17 @@ class ProductServices extends BaseServices
                         'variant_order' => $this->getVariantOrder($request->attribute_group, $request->attribute_items)
                     ]);
 
-                if ($request->has('product_photo')){
+                if ($request->has('product_photo')) {
                     $this->uploadProductPhoto($request->file('product_photo'), $this->model);
                 }
-                if ($request->filled('attribute_items')){
+                if ($request->filled('attribute_items')) {
                     $this->storeAttributes($request->attribute_items, $this->model);
                 }
             });
 
             return response()->json(['success' => __t('product_create')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -174,14 +174,14 @@ class ProductServices extends BaseServices
     private function getVariantOrder($attributes, $attribute_items)
     {
         $decode_attribute_items = json_decode($attribute_items);
-        if ($attribute_items != "[]"){
+        if ($attribute_items != "[]") {
             $splitAttributes = explode(',', $attributes);
             $dbAttributes = Attribute::query()->whereIn('id', $splitAttributes)->get(['id', 'name']);
             $variantBadge = '';
-            foreach ($splitAttributes as $key => $attribute){
+            foreach ($splitAttributes as $key => $attribute) {
                 $specificAttribute = $dbAttributes->where('id', $attribute)->first();
-                if ($specificAttribute && $decode_attribute_items->{$specificAttribute->name}){
-                    $variantBadge .= $key > 0 ? ('/'. $specificAttribute->name) : $specificAttribute->name;
+                if ($specificAttribute && $decode_attribute_items->{$specificAttribute->name}) {
+                    $variantBadge .= $key > 0 ? ('/' . $specificAttribute->name) : $specificAttribute->name;
                 }
             }
             return $variantBadge;
@@ -214,8 +214,8 @@ class ProductServices extends BaseServices
     public function storeAttributes($attribute_items, $product): void
     {
         $attribute_items = json_decode($attribute_items);
-        foreach ($attribute_items as $attribute => $attribute_item){
-            foreach ($attribute_item as $item){
+        foreach ($attribute_items as $attribute => $attribute_item) {
+            foreach ($attribute_item as $item) {
                 $product->attributes()->create([
                     'product_id' => $product->id,
                     'key' => $attribute,
@@ -234,14 +234,14 @@ class ProductServices extends BaseServices
     {
         $request->validate([
             'name' => 'required|string',
-            'barcode' => 'required|unique:products,barcode,'.$id,
+            'barcode' => 'required|unique:products,barcode,' . $id,
             'category' => 'required|exists:categories,id',
             'company' => 'required|exists:companies,id',
             'unit' => 'required|exists:units,id',
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:'.Product::PURCHASE_TYPE_PERCENTAGE.','.Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'purchase_type' => 'required|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
             'attribute_items' => 'required|string'
         ]);
 
@@ -256,7 +256,7 @@ class ProductServices extends BaseServices
     public function update($request, $id): JsonResponse
     {
         try {
-            DB::transaction(function () use ($request, $id){
+            DB::transaction(function () use ($request, $id) {
 
                 $this->model = $this->model->newQuery()
                     ->where('id', $id)
@@ -268,24 +268,24 @@ class ProductServices extends BaseServices
                     'unit_id' => $request->unit,
                     'barcode' => $request->barcode,
                     'name' => $request->name,
-                    'slug' => Str::slug($request->name.'-'.Str::uuid(), '-'),
+                    'slug' => Str::slug($request->name . '-' . Str::uuid(), '-'),
                     'description' => $request->description,
                     'status' => $request->status === 'true' ? true : false,
                     'purchase_type' => $request->purchase_type,
                     'variant_order' => $this->getVariantOrder($request->attribute_group, $request->attribute_items)
                 ]);
 
-                if ($request->has('product_photo')){
+                if ($request->has('product_photo')) {
                     $this->uploadProductPhoto($request->file('product_photo'), $this->model);
                 }
-                if ($request->filled('attribute_items')){
+                if ($request->filled('attribute_items')) {
                     $this->updateAttributes($request->attribute_items, $this->model);
                 }
             });
 
             return response()->json(['success' => __t('product_edit')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -298,16 +298,16 @@ class ProductServices extends BaseServices
     public function updateAttributes($attribute_items, $product): void
     {
         $oldAttributes = [];
-        foreach ($product->attributes as $attribute){
+        foreach ($product->attributes as $attribute) {
             array_push($oldAttributes, $attribute->value);
         }
         $newAttributes = [];
         $attribute_items = json_decode($attribute_items);
-        foreach ($attribute_items as $attribute => $attribute_item){
-            foreach ($attribute_item as $item){
+        foreach ($attribute_items as $attribute => $attribute_item) {
+            foreach ($attribute_item as $item) {
                 array_push($newAttributes, $item);
                 $exists = $product->attributes()->where('value', $item)->first();
-                if(!$exists){
+                if (!$exists) {
                     $product->attributes()->create([
                         'product_id' => $product->id,
                         'key' => $attribute,
@@ -317,7 +317,7 @@ class ProductServices extends BaseServices
             }
         }
         $deleteAbleAttribute = array_diff($oldAttributes, $newAttributes);
-        foreach ($deleteAbleAttribute as $value){
+        foreach ($deleteAbleAttribute as $value) {
             $product->attributes()->where('value', $value)->delete();
         }
 
@@ -337,7 +337,7 @@ class ProductServices extends BaseServices
 
             return response()->json(['success' => __t('product_delete')]);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()]);
         }
     }
@@ -356,11 +356,34 @@ class ProductServices extends BaseServices
 
         $this->model = $product->toArray();
         $this->model['variant_order'] = $product->variant_order ? explode('/', $product->variant_order) : '';
-        $this->model['created_at'] = $product->created_at->format(format_date()).' '.$product->created_at->format(format_time());
-        $this->model['updated_at'] = $product->updated_at->format(format_date()).' '.$product->updated_at->format(format_time());
+        $this->model['created_at'] = $product->created_at->format(format_date()) . ' ' . $product->created_at->format(format_time());
+        $this->model['updated_at'] = $product->updated_at->format(format_date()) . ' ' . $product->updated_at->format(format_time());
         $this->model['attributes'] = $product->attributes->groupBy('key');
 
         return $this->model;
+    }
+
+    /**
+     * @param $request
+     * @return $this
+     */
+    public function validateOpeningStock($request): static
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'attributeDetails' => 'required|array',
+            'attributeDetails.*.quantity' => 'nullable|numeric',
+            'attributeDetails.*.mrp' => 'nullable|numeric',
+            'attributeDetails.*.sale_price' => 'nullable|numeric',
+            'attributeDetails.*.unit_price' => 'nullable|numeric',
+        ]);
+
+        return $this;
+    }
+
+    public function storeOpeningStock($request)
+    {
+
     }
 
 }

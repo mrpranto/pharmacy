@@ -16,7 +16,7 @@ class Stock extends Model
 
     protected $fillable = [
         'product_id', 'supplier_id', 'unit_price', 'unit_percentage', 'mrp', 'sale_price', 'sale_percentage', 'sku',
-        'purchase_quantity', 'sale_quantity', 'available_quantity', 'created_by', 'updated_by',
+        'purchase_quantity', 'sale_quantity', 'available_quantity', 'opening_stock_quantity', 'created_by', 'updated_by',
     ];
 
     /**

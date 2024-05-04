@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->double('sale_price')->default(0);
             $table->double('sale_percentage')->default(0);
             $table->integer('purchase_quantity')->default(0);
+            $table->integer('opening_stock_quantity')->default(0);
             $table->integer('sale_quantity')->default(0);
             $table->integer('available_quantity')->default(0);
             $table->unsignedBigInteger('created_by')->nullable();

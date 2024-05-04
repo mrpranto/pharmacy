@@ -75,9 +75,9 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <td>{{ __('default.sl') }}</td>
+                            <td><b>{{ __('default.sl') }}</b></td>
                             <td class="text-center">
-                                {{ __('default.name') }}
+                                <b class="mb-5">{{ __('default.name') }}</b>
                                 <br>
                                 <template v-for="(variant, variant_index) in Object.keys(show.product.variant_order)">
                                     {{ variant_index > 0 ? '/'+show.product.variant_order[variant] : show.product.variant_order[variant] }}
@@ -85,9 +85,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>
+                                    <b>
                                         {{ __('default.quantity') }}
-                                    </span>
+                                    </b>
                                     <a-tooltip v-if="showBulkQty == false"
                                                @click.prevent="showBulkQty = true"
                                                :title="__('default.add_bulk') +' '+__('default.quantity')"
@@ -105,9 +105,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>
+                                    <b>
                                         {{ __('default.mrp') }}
-                                    </span>
+                                    </b>
                                     <a-tooltip  v-if="showBulkMrp == false"
                                                 @click.prevent="showBulkMrp = true"
                                                 :title="__('default.add_bulk') +' '+__('default.mrp')" class="mr-1" >
@@ -124,9 +124,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>
+                                    <b>
                                         {{ __('default.unit_price') }}
-                                    </span>
+                                    </b>
                                     <a-tooltip  v-if="showBulkUnitCost == false"
                                                 @click.prevent="showBulkUnitCost = true"
                                                 :title="__('default.add_bulk') +' '+__('default.unit_price')" class="mr-1" >
@@ -143,9 +143,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>
+                                    <b>
                                         {{ __('default.sale_price') }}
-                                    </span>
+                                    </b>
                                     <a-tooltip  v-if="showBulkUnitSalePrice == false"
                                                 @click.prevent="showBulkUnitSalePrice = true"
                                                 :title="__('default.add_bulk') +' '+__('default.sale_price')" class="mr-1" >
@@ -228,12 +228,14 @@
 <script>
 import {MoreOutlined, FormOutlined, EyeOutlined, DeleteOutlined, CloseSquareOutlined} from '@ant-design/icons-vue';
 export default {
-    name: "ProductDetails",
+    name: "AddOpeningStockForm",
     components:{DeleteOutlined, EyeOutlined, MoreOutlined, FormOutlined, CloseSquareOutlined},
     props:['show'],
     data(){
         return {
+            formData: {},
             attributeDetails: [],
+
             loading: false,
             bulk_quantity: null,
             bulk_mrp: null,
@@ -256,6 +258,18 @@ export default {
                 }
             },
         },
+        'bulk_quantity': function (){
+            this.attributeDetails.map(item => item.quantity = this.bulk_quantity)
+        },
+        'bulk_mrp': function (){
+            this.attributeDetails.map(item => item.mrp = this.bulk_mrp)
+        },
+        'bulk_unit_price': function (){
+            this.attributeDetails.map(item => item.unit_price = this.bulk_unit_price)
+        },
+        'bulk_sale_price': function (){
+            this.attributeDetails.map(item => item.sale_price = this.bulk_sale_price)
+        },
     },
     methods:{
         combineAttributes(){
@@ -269,9 +283,19 @@ export default {
             this.show.openAddOpeningStock = false
         },
         async saveOpeningStock(){
-            // this.loading = true
-
-            console.log(this.attributeDetails)
+            this.loading = true
+            this.formData = {
+                attributeDetails: this.attributeDetails,
+                product_id: this.show.product.id
+            }
+            await axios.post('/product/products-opening-stock', this.formData)
+                .then(response => {
+                    console.log(response)
+                    this.loading = false
+                })
+                .catch(error => {
+                    this.loading = false
+                })
         }
     }
 }
