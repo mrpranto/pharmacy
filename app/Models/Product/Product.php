@@ -33,6 +33,8 @@ class Product extends Model
      */
     protected $with = ['productPhoto', 'category:id,name', 'company:id,name', 'unit:id,name,pack_size'];
 
+    protected $appends = ['has_opening_stock'];
+
     /**
      * @return BelongsTo
      */
@@ -82,5 +84,21 @@ class Product extends Model
     {
         return $this->hasMany(ProductAttribute::class, 'product_id', 'id')
             ->select(['product_id', 'key', 'value']);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function getHasOpeningStockAttribute(): bool
+    {
+        $openingStock = $this->stocks()
+            ->where('opening_stock_quantity' , '>', 0)
+            ->count();
+
+        if ($openingStock){
+            return true;
+        }
+        return false;
     }
 }
