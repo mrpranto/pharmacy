@@ -274,7 +274,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .bg-gray {
     background-color: #f2f4f9;
 }
