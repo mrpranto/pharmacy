@@ -17,6 +17,7 @@ use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Stock\StockController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,9 +36,9 @@ Route::get('/', function () {
 });
 
 Route::get('/cache-clear', function () {
-    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-    \Illuminate\Support\Facades\Artisan::call('cache:clear');
-    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    Artisan::call('optimize:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('storage:link');
     dd('ok');
 });
 
