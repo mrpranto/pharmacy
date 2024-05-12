@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->date('date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->date('date')->nullable();
             $table->float('paid_amount', 18, 2)->default(0);
             $table->string('type')->nullable();
             $table->string('bank_name')->nullable();
