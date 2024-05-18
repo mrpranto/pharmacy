@@ -225,7 +225,7 @@
                     <a-input v-model:value="options.request.search"
                              style="border-radius: 20px;"
                              autofocus
-                             @pressEnter="searchData"
+                             @keyup.prevent="searchData"
                              :placeholder="__('default.search')+'...'">
                         <template #suffix>
                             <search-outlined style="color: rgba(0, 0, 0, 0.45)" v-if="!options.request.search"/>

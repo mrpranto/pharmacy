@@ -19,6 +19,10 @@
                             formState.validation.name[0]
                         }}
                     </div>
+                    <div class="ant-form-item-explain-error" style="" v-if="alertMessage != ''">{{
+                            alertMessage
+                        }}
+                    </div>
                 </a-form-item>
 
                 <a-form-item :label="__('default.barcode')" required>
@@ -334,6 +338,7 @@ export default {
             imageFileName: '',
             loading: false,
             openAddNewCategory: false,
+            alertMessage: '',
             openAddNewCompany: false,
             openAddNewUnit: false,
             categoryFormData: {
@@ -527,6 +532,22 @@ export default {
                 .replace(/--+/g, '_') // Replace multiple dashes with a single dash
                 .trim();
             this.formState.formData.barcode = slug;
+            if (this.formState.formData.barcode){
+                this.checkIsProductExist(this.formState.formData.barcode)
+            }
+        },
+        async checkIsProductExist(barcode) {
+            this.alertMessage = "";
+            await axios.get(`/product/products/${barcode}/check`)
+                .then(res => {
+                    if (res.data.message){
+                        this.alertMessage = res.data.message;
+                    }
+                })
+                .catch(err => {
+                    this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                    console.error(err);
+                })
         },
 
         /*

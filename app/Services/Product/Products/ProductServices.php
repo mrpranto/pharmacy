@@ -110,6 +110,22 @@ class ProductServices extends BaseServices
     }
 
     /**
+     * @param $barcode
+     * @return JsonResponse|void
+     */
+    public function checkIsExist($barcode)
+    {
+        $productCount = $this->model
+            ->newQuery()
+            ->where('barcode', $barcode)
+            ->count();
+
+        if ($productCount > 0){
+            return response()->json(['message' => __t('product_already_exist')]);
+        }
+    }
+
+    /**
      * @param $request
      * @return $this
      */

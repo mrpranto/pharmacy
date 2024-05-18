@@ -56,6 +56,15 @@ class ProductController extends Controller
     }
 
     /**
+     * @param $barcode
+     * @return JsonResponse|null
+     */
+    public function checkIsExist($barcode): ?JsonResponse
+    {
+        return $this->services->checkIsExist($barcode);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): ?JsonResponse

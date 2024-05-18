@@ -359,4 +359,5 @@ return [
     'product_opening_stock_create' => 'Product opening stock added successful.',
     'total_opening_stock_qty' => 'Total opening stock quantity',
     'opening_stock_quantity' => 'Opening stock quantity',
+    'product_already_exist' => 'Product Already exist',
 ];

@@ -82,6 +82,7 @@ Route::group(['middleware' => 'authenticate'], function (){
         Route::get('get-products', [ProductController::class, 'getProducts']);
         Route::get('get-dependency', [ProductController::class, 'getDependency']);
         Route::post('products-opening-stock', [ProductController::class, 'storeOpeningStock']);
+        Route::get('products/{barcode}/check', [ProductController::class, 'checkIsExist']);
 
         Route::resource('categories', CategoryController::class);
         Route::get('get-categories', [CategoryController::class, 'getCategories']);
