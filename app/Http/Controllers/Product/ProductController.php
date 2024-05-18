@@ -64,6 +64,11 @@ class ProductController extends Controller
         return $this->services->checkIsExist($barcode);
     }
 
+    public function updatePurchaseType(Request $request, $id)
+    {
+        return $this->services->updatePurchaseType($request, $id);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

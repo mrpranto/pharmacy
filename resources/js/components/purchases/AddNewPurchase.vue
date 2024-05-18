@@ -185,7 +185,11 @@
                                                             <p class="font-weight-bolder text-capital">
                                                                 {{ product.product.name }} <small class="text-muted" :title="__('default.unit')">{{
                                                                     product.product.unit
-                                                                }}</small></p>
+                                                                }}</small>
+                                                                <a-tooltip :title="__('default.edit') +' '+ __('default.purchase_type')" @click.prevent="showProductEditForm(product.product)">
+                                                                    <FormOutlined :style="{fontSize: '15px', marginLeft: '10px'}"/>
+                                                                </a-tooltip>
+                                                            </p>
                                                             <p class="text-muted tx-13"><b>{{
                                                                     __('default.barcode')
                                                                 }}: </b>{{ product.product.barcode }}</p>
@@ -590,6 +594,67 @@
             </div>
         </a-modal>
 
+        <a-modal v-model:open="productFormState.editMode"
+                 width="1000px"
+                 :ok-button-props="{ hidden: true }"
+                 :cancel-button-props="{ hidden: true }"
+                 :title="__('default.edit_product')">
+            <hr>
+            <div class="row">
+                <div class="col-sm-6 mx-auto">
+                    <div class="media d-block d-sm-flex">
+                        <div class="d-flex align-items-center">
+                            <figure class="mb-0 mr-3">
+                                <a-image :width="80"
+                                         :src="productFormState.formData.photo"
+                                         class="img-sm img-thumbnail rounded-circle"
+                                         :alt="productFormState.formData.name"/>
+                            </figure>
+                        </div>
+
+                        <div class="media-body">
+                            <h4 class="mt-0 mb-1">{{ productFormState.formData.name }}</h4>
+                            <p>
+                                <span class="font-weight-bolder">{{ __('default.barcode') }} : </span>{{ productFormState.formData.barcode }} <br>
+                                <span class="font-weight-bolder">{{ __('default.company') }} : </span>{{ productFormState.formData.company }} <br>
+                                <span class="font-weight-bolder">{{ __('default.category') }} : </span>{{ productFormState.formData.category }} <br>
+                                <span class="font-weight-bolder">{{ __('default.unit') }} : </span>{{ productFormState.formData.unit }} <br>
+                                <span class="font-weight-bolder">{{ __('default.purchase_type') }} : </span>
+                                <span class="badge badge-info" v-if="productFormState.formData.purchase_type === '%'">
+                                    ({{ productFormState.formData.purchase_type }}) Percentage
+                                </span>
+                                <span class="badge badge-success" v-else>
+                                    ({{ $currency_symbol }}) Direct Price
+                                </span>
+
+                                <a-form-item :label="__('default.purchase_type')" required style="margin-top: 10px">
+                                    <a-radio-group v-model:value="productFormState.formData.purchase_type"
+                                                   :class="productFormState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
+                                        <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
+                                        <a-radio value="%"> Percentage (%)</a-radio>
+                                    </a-radio-group>
+                                    <div class="ant-form-item-explain-error" style="" v-if="productFormState.validation.purchase_type">
+                                        {{ productFormState.validation.purchase_type[0] }}
+                                    </div>
+                                </a-form-item>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button type="primary" danger style="margin-right: 8px" @click="productFormState.editMode = false">
+                    <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
+                </a-button>
+                <a-button v-if="productFormState.loading" type="primary" style="margin-right: 8px" loading>
+                    {{ __('default.loading') }}
+                </a-button>
+                <a-button v-else type="primary" style="margin-right: 8px" @click.prevent="updateProduct">
+                    <i class="mdi mdi-check-all mr-1"></i> {{ __('default.update') }}
+                </a-button>
+            </template>
+        </a-modal>
+
     </div>
 </template>
 <script>
@@ -641,6 +706,7 @@ export default {
                 validation: {},
             },
             productFormState: {
+                editMode: false,
                 formData: {
                     name: '',
                     barcode: '',
@@ -720,6 +786,36 @@ export default {
             }else if (type === 'previous'){
                 this.$refs[next_input+index][0].focus();
             }*/
+        },
+        showProductEditForm(product){
+            this.productFormState.loading = false;
+            this.productFormState.editMode = true;
+            this.productFormState.formData = product;
+        },
+        async updateProduct(){
+            this.productFormState.loading = true;
+            await axios.post('/product/products/'+this.productFormState.formData.id+'/update-purchase-type', this.productFormState.formData)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)
+                        this.productFormState.loading = false;
+                        this.productFormState.editMode = false;
+                    } else {
+                        this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound)
+                        this.productFormState.loading = false;
+                    }
+                })
+                .catch(err => {
+                    if (err.response.status === 422) {
+                        this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
+                        this.formState.validation = err.response.data.errors
+                        this.productFormState.loading = false;
+                    } else {
+                        this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
+                        console.error(err)
+                        this.productFormState.loading = false;
+                    }
+                })
         },
         async save() {
             await axios.post('/purchases', this.formState.formData)

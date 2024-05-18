@@ -127,6 +127,34 @@ class ProductServices extends BaseServices
 
     /**
      * @param $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updatePurchaseType($request, $id): JsonResponse
+    {
+        $request->validate([
+            'purchase_type' => 'required'
+        ]);
+
+        try {
+
+            $this->model
+                ->newQuery()
+                ->where('id', $id)
+                ->update([
+                    'purchase_type' => $request->purchase_type
+                ]);
+
+            return response()->json(['success' => __t('product_edit')]);
+
+        }catch (\Exception $exception){
+
+            return response()->json(['error' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param $request
      * @return $this
      */
     public function validateStore($request): static
