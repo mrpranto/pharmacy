@@ -64,7 +64,7 @@ class UnitServices extends BaseServices
     public function validateStore($request): static
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'nullable|string',
             'pack_size' => 'required',
             'description' => 'nullable',
             'status' => 'required|boolean',

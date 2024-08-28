@@ -59,7 +59,7 @@ class ProductServices extends BaseServices
         $productsQuery = $this->model->newQuery()
             ->select(['products.*', 'categories.name as category_name', 'companies.name as company_name', 'units.name as unit_name'])
             ->with(['category', 'company', 'unit', 'attributes'])
-            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
             ->join('companies', 'products.company_id', '=', 'companies.id')
             ->join('units', 'products.unit_id', '=', 'units.id')
             ->when(request()->filled('search'), fn($q) => $q->where('products.name', 'like', '%' . request()->get('search') . '%')
@@ -162,7 +162,7 @@ class ProductServices extends BaseServices
         $request->validate([
             'name' => 'required|string|min:3',
             'barcode' => 'required|unique:products,barcode',
-            'category' => 'required|exists:categories,id',
+            'category' => 'nullable|exists:categories,id',
             'company' => 'required|exists:companies,id',
             'unit' => 'required|exists:units,id',
             'description' => 'nullable|string',

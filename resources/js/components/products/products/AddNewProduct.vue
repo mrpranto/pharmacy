@@ -41,28 +41,6 @@
                     </a-input>
                 </a-form-item>
 
-                <a-form-item :label="__('default.category')" required>
-                    <a-input-group compact
-                                   :class="formState.validation.category ? 'ant-input ant-input-status-error': ''">
-                        <a-select
-                            v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
-                            show-search
-                            :placeholder="__('default.category')"
-                            :options="formState.dependencies.categories"
-                            :filter-option="$parent.selectFilterOption"
-                        >
-                        </a-select>
-                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
-                            <a-button @click="showAddNewCategoryModal">
-                                <i class="mdi mdi-plus"></i>
-                            </a-button>
-                        </a-tooltip>
-                    </a-input-group>
-                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
-                        {{ formState.validation.category[0] }}
-                    </div>
-                </a-form-item>
-
                 <a-form-item :label="__('default.company')" required>
                     <a-input-group compact
                                    :class="formState.validation.company ? 'ant-input ant-input-status-error': ''">
@@ -101,6 +79,28 @@
                     </a-input-group>
                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.unit">
                         {{ formState.validation.unit[0] }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.category')">
+                    <a-input-group compact
+                                   :class="formState.validation.category ? 'ant-input ant-input-status-error': ''">
+                        <a-select
+                            v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
+                            show-search
+                            :placeholder="__('default.category')"
+                            :options="formState.dependencies.categories"
+                            :filter-option="$parent.selectFilterOption"
+                        >
+                        </a-select>
+                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
+                            <a-button @click="showAddNewCategoryModal">
+                                <i class="mdi mdi-plus"></i>
+                            </a-button>
+                        </a-tooltip>
+                    </a-input-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
+                        {{ formState.validation.category[0] }}
                     </div>
                 </a-form-item>
 
@@ -277,22 +277,22 @@
         <!--Add New Unit-->
         <a-modal v-model:open="openAddNewUnit" :title="__('default.add_new_unit')" @ok="saveUnit">
             <a-form v-bind="unitFormData.layout" class="mt-4">
-                <a-form-item :label="__('default.name')" required>
-                    <a-input v-model:value="unitFormData.formData.name" required=""
-                             :placeholder="__('default.name')"
-                             :class="unitFormData.validation.name ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.name">{{
-                            unitFormData.validation.name[0]
-                        }}
-                    </div>
-                </a-form-item>
-
                 <a-form-item :label="__('default.pack_size')" required>
                     <a-input v-model:value="unitFormData.formData.pack_size" required=""
                              :placeholder="__('default.pack_size')"
                              :class="unitFormData.validation.pack_size ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.pack_size">{{
                             unitFormData.validation.pack_size[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.name')">
+                    <a-input v-model:value="unitFormData.formData.name" required=""
+                             :placeholder="__('default.name')"
+                             :class="unitFormData.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="unitFormData.validation.name">{{
+                            unitFormData.validation.name[0]
                         }}
                     </div>
                 </a-form-item>
@@ -403,7 +403,7 @@ export default {
             this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
-            this.formData.append('category', this.formState.formData.category);
+            this.formData.append('category', this.formState.formData.category ?? '');
             this.formData.append('company', this.formState.formData.company);
             this.formData.append('unit', this.formState.formData.unit);
             this.formData.append('description', this.formState.formData.description);

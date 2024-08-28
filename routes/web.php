@@ -39,6 +39,7 @@ Route::get('/cache-clear', function () {
     Artisan::call('optimize:clear');
     Artisan::call('cache:clear');
     Artisan::call('storage:link');
+    Artisan::call('migrate --force');
     dd('ok');
 });
 

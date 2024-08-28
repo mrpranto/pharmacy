@@ -188,7 +188,7 @@ export default {
                         width: '23',
                         orderAble: true,
                     },
-                    {
+                    /*{
                         title: 'category',
                         type: 'object',
                         key: 'category',
@@ -198,7 +198,7 @@ export default {
                         modifier: (category) => {
                             return category?.name;
                         }
-                    },
+                    },*/
                     {
                         title: 'company',
                         type: 'object',
@@ -218,7 +218,7 @@ export default {
                         orderAble: true,
                         width: '15',
                         modifier: (unit) => {
-                            return unit?.name + `(${unit?.pack_size})`;
+                            return unit?.name ? unit?.name + `(${unit?.pack_size})` : unit?.pack_size;
                         }
                     },
                     {
@@ -399,7 +399,7 @@ export default {
                     this.options.filters[2].option = response.data.units.map(item => {
                         return {
                             value: item.id,
-                            label: item.name + ` (${item.pack_size})`
+                            label: item.pack_size
                         }
                     });
 
