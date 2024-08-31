@@ -149,7 +149,8 @@ class UnitServices extends BaseServices
             return response()->json(['success' => __t('unit_edit')]);
 
         }catch (\Exception $exception){
-            return response()->json(['error' => $exception->getMessage()]);
+
+            return exception_message_handle($exception);
         }
     }
 

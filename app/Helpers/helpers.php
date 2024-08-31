@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
+
 include 'settings.php';
 
 if (!function_exists('active_class')) {
@@ -76,6 +78,21 @@ if (! function_exists('has_variant')){
             return false;
         }
         return true;
+    }
+}
+
+if(! function_exists('forgain_key_error')){
+    /**
+     * @param $exception
+     * @return JsonResponse
+     */
+    function exception_message_handle($exception): JsonResponse
+    {
+        if ($exception->getCode() == '23000'){
+            return response()->json(['error' => __t('cant_delete_foreign_key')]);
+        }else{
+            return response()->json(['error' => $exception->getMessage()]);
+        }
     }
 }
 

@@ -164,7 +164,7 @@ class AttributeServices extends BaseServices
             return response()->json(['success' => __t('attribute_delete')]);
 
         }catch (\Exception $exception){
-            return response()->json(['error' => $exception->getMessage()]);
+            return exception_message_handle($exception);
         }
     }
 

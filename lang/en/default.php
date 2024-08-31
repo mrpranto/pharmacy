@@ -362,4 +362,5 @@ return [
     'product_already_exist' => 'Product Already exist',
 
     'please_select_purchase_type' => 'Please select purchase type.',
+    'cant_delete_foreign_key' => 'You cant\'t delete relation data, this data is use in another table.',
 ];

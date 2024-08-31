@@ -151,7 +151,7 @@ class CompaniesServices extends BaseServices
 
             return response()->json(['success' => __t('company_delete')]);
         } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()]);
+            return exception_message_handle($exception);
         }
     }
 
