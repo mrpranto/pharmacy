@@ -168,7 +168,7 @@ class ProductServices extends BaseServices
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'purchase_type' => 'nullable|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
             'attribute_items' => 'required|string'
         ]);
 
@@ -284,13 +284,13 @@ class ProductServices extends BaseServices
         $request->validate([
             'name' => 'required|string',
             'barcode' => 'required|unique:products,barcode,' . $id,
-            'category' => 'required|exists:categories,id',
+            'category' => 'nullable|exists:categories,id',
             'company' => 'required|exists:companies,id',
             'unit' => 'required|exists:units,id',
             'description' => 'nullable|string',
             'status' => 'required|in:true,false',
             'product_photo' => 'nullable|image|max:2048',
-            'purchase_type' => 'required|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
+            'purchase_type' => 'nullable|in:' . Product::PURCHASE_TYPE_PERCENTAGE . ',' . Product::PURCHASE_TYPE_DIRECT_PRICE,
             'attribute_items' => 'required|string'
         ]);
 

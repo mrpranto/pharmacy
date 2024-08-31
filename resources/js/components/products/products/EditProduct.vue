@@ -37,27 +37,6 @@
                     </a-input>
                 </a-form-item>
 
-                <a-form-item :label="__('default.category')" required>
-                    <a-input-group compact
-                                   :class="formState.validation.category ? 'ant-input ant-input-status-error': ''">
-                        <a-select
-                            v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
-                            show-search
-                            :placeholder="__('default.category')"
-                            :options="formState.dependencies.categories"
-                            :filter-option="$parent.selectFilterOption"
-                        ></a-select>
-                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
-                            <a-button @click="showAddNewCategoryModal">
-                                <i class="mdi mdi-plus"></i>
-                            </a-button>
-                        </a-tooltip>
-                    </a-input-group>
-                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
-                        {{ formState.validation.category[0] }}
-                    </div>
-                </a-form-item>
-
                 <a-form-item :label="__('default.company')" required>
                     <a-input-group compact
                                    :class="formState.validation.company ? 'ant-input ant-input-status-error': ''">
@@ -99,7 +78,28 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.purchase_type')" required>
+                <a-form-item :label="__('default.category')" >
+                    <a-input-group compact
+                                   :class="formState.validation.category ? 'ant-input ant-input-status-error': ''">
+                        <a-select
+                            v-model:value="formState.formData.category" style="width: calc(100% - 45px)"
+                            show-search
+                            :placeholder="__('default.category')"
+                            :options="formState.dependencies.categories"
+                            :filter-option="$parent.selectFilterOption"
+                        ></a-select>
+                        <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
+                            <a-button @click="showAddNewCategoryModal">
+                                <i class="mdi mdi-plus"></i>
+                            </a-button>
+                        </a-tooltip>
+                    </a-input-group>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.category">
+                        {{ formState.validation.category[0] }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.purchase_type')">
                     <a-radio-group v-model:value="formState.formData.purchase_type"
                                    :class="formState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
                         <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
@@ -407,12 +407,12 @@ export default {
             this.loading = true;
             this.formData.append('name', this.formState.formData.name);
             this.formData.append('barcode', this.formState.formData.barcode);
-            this.formData.append('category', this.formState.formData.category);
+            this.formData.append('category', this.formState.formData.category ?? '');
             this.formData.append('company', this.formState.formData.company);
             this.formData.append('unit', this.formState.formData.unit);
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
-            this.formData.append('purchase_type', this.formState.formData.purchase_type);
+            this.formData.append('purchase_type', this.formState.formData.purchase_type ?? '');
             this.formData.append('attribute_group', this.formState.formData.attributes);
             this.formData.append('attribute_items', JSON.stringify(this.formState.formData.attributeItems));
             this.formData.append("_method", "put");

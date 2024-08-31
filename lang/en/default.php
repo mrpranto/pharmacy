@@ -131,7 +131,7 @@ return [
     'peoples' => 'Peoples',
     'suppliers' => 'Suppliers',
     'customers' => 'Customers',
-    'unit_pack_size' => 'Unit (Pack Size)',
+    'unit_pack_size' => 'Pack Size',
     'add_supplier' => 'Add new supplier',
     'edit_supplier' => 'Edit supplier',
     'supplier_create' => 'Supplier create successful.',

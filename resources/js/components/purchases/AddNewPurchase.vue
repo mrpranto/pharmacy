@@ -866,7 +866,7 @@ export default {
                             icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
                             company: item.company.name,
                             category: item.category.name,
-                            unit: item.unit.name + `(${item.unit.pack_size})`,
+                            unit: item.unit?.name ? item.unit?.name + `(${item.unit.pack_size})` : item.unit.pack_size,
                             purchase_type: item.purchase_type,
                             stocks: item.stocks
                         }
@@ -1173,7 +1173,7 @@ export default {
                     const units = response.data.units.map(item => {
                         return {
                             value: item.id,
-                            label: item.name + ` (${item.pack_size})`
+                            label: item?.name ? item?.name + ` (${item.pack_size})` : item.pack_size
                         }
                     });
 

@@ -9,20 +9,21 @@
             @close="$parent.onEditClose"
         >
             <a-form v-bind="formState.layout">
-                <a-form-item :label="__('default.name')" required>
-                    <a-input v-model:value="formState.formData.name" required="" :placeholder="__('default.name')"
-                             :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
-                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
-                            formState.validation.name[0]
-                        }}
-                    </div>
-                </a-form-item>
 
                 <a-form-item :label="__('default.pack_size')" required>
                     <a-input v-model:value="formState.formData.pack_size" required="" :placeholder="__('default.pack_size')"
                              :class="formState.validation.pack_size ? 'ant-input ant-input-status-error': ''"/>
                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.pack_size">{{
                             formState.validation.pack_size[0]
+                        }}
+                    </div>
+                </a-form-item>
+
+                <a-form-item :label="__('default.name')">
+                    <a-input v-model:value="formState.formData.name" required="" :placeholder="__('default.name')"
+                             :class="formState.validation.name ? 'ant-input ant-input-status-error': ''"/>
+                    <div class="ant-form-item-explain-error" style="" v-if="formState.validation.name">{{
+                            formState.validation.name[0]
                         }}
                     </div>
                 </a-form-item>

@@ -104,7 +104,7 @@
                     </div>
                 </a-form-item>
 
-                <a-form-item :label="__('default.purchase_type')" required>
+                <a-form-item :label="__('default.purchase_type')">
                     <a-radio-group v-model:value="formState.formData.purchase_type"
                                    :class="formState.validation.purchase_type ? 'ant-input ant-input-status-error': ''">
                         <a-radio value="$"> Direct Price ({{ $currency_symbol }})</a-radio>
@@ -408,7 +408,7 @@ export default {
             this.formData.append('unit', this.formState.formData.unit);
             this.formData.append('description', this.formState.formData.description);
             this.formData.append('status', this.formState.formData.status);
-            this.formData.append('purchase_type', this.formState.formData.purchase_type);
+            this.formData.append('purchase_type', this.formState.formData.purchase_type ?? '');
             this.formData.append('attribute_group', this.formState.formData.attributes);
             this.formData.append('attribute_items', JSON.stringify(this.formState.formData.attributeItems));
 

@@ -230,7 +230,7 @@ export default {
                         width: '10',
                         modifier: (purchase_type) => {
                             return purchase_type === '%' ? `<span class="badge badge-info">(${purchase_type}) Percentage</span>` :
-                                `<span class="badge badge-success">(${this.$currency_symbol}) Direct Price</span>`
+                                (purchase_type === '$' ? `<span class="badge badge-success">(${this.$currency_symbol}) Direct Price</span>` : '')
                         }
                     },
                     {

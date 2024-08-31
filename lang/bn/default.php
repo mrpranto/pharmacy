@@ -131,7 +131,7 @@ return [
     'peoples' => 'জনগণ',
     'suppliers' => 'সরবরাহকারী',
     'customers' => 'ক্রেতা',
-    'unit_pack_size' => 'ইউনিট (প্যাক সাইজ)',
+    'unit_pack_size' => 'প্যাক সাইজ',
     'add_supplier' => 'নতুন সরবরাহকারী তৈরি করুন',
     'edit_supplier' => 'সরবরাহকারী সম্পাদনা করুন',
     'supplier_create' => 'সরবরাহকারী তৈরি সফল হয়েছে',
