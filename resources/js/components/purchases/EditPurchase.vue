@@ -405,7 +405,7 @@
                                     <a-input-group :wrapper-col="{span: 16}" compact
                                                    :class="formState.validation.note ? 'ant-input ant-input-status-error': ''">
                                         <a-textarea v-model:value="formState.formData.note"
-                                                    rows="6"
+                                                    :rows="6"
                                                     :placeholder="__('default.note')" style="width: 100%"></a-textarea>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style="" v-if="formState.validation.note">
@@ -601,9 +601,9 @@ export default {
                     name: item.product.name,
                     barcode: item.product.barcode,
                     company: item.product.company.name,
-                    category: item.product.category.name,
+                    category: item.product.category?.name,
                     purchase_type: item.product.purchase_type,
-                    unit: item.product.unit.name + `(${item.product.unit.pack_size})`,
+                    unit: item.product.unit?.name ? item.product.unit?.name + `(${item.product.unit.pack_size})` : item.product.unit.pack_size,
                     photo: `${item.product.product_photo ? item.product.product_photo?.full_url : '/images/medicine.png'}`
                 }
                 item.purchase_product_id = item.id
@@ -662,9 +662,9 @@ export default {
                             value: item.id,
                             icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
                             company: item.company.name,
-                            category: item.category.name,
+                            category: item.category?.name,
                             purchase_type: item.purchase_type,
-                            unit: item.unit.name + `(${item.unit.pack_size})`
+                            unit: item.unit?.name ? item.unit?.name + `(${item.unit.pack_size})` : item.unit.pack_size
                         }
                     })
                     this.formState.dependencies.products = searchProduct
@@ -897,7 +897,7 @@ export default {
                     const units = response.data.units.map(item => {
                         return {
                             value: item.id,
-                            label: item.name + ` (${item.pack_size})`
+                            label: item.name ? item.name + ` (${item.pack_size})` : item.pack_size
                         }
                     });
 
