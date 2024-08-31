@@ -82,7 +82,6 @@
                                                   ref="status">
                                             <a-select-option value="received">{{ __('default.received') }}</a-select-option>
                                             <a-select-option value="pending">{{ __('default.pending') }}</a-select-option>
-                                            <a-select-option value="canceled">{{ __('default.canceled') }}</a-select-option>
                                         </a-select>
                                     </a-input-group>
                                     <div class="ant-form-item-explain-error" style=""
@@ -124,7 +123,7 @@
                                                         }}</span>, <b>{{ __('default.unit') }}:</b> <span
                                                     class="text-muted">{{ unit }}</span>,
                                                     <b>{{ __('default.purchase_type') }}:</b> <span
-                                                    class="text-muted">{{ purchase_type === '%' ? purchase_type : $currency_symbol }}</span>
+                                                    class="text-muted">{{ purchase_type === '%' ? purchase_type : (purchase_type === '$' ? $currency_symbol : '-' ) }}</span>
 												</span>
                                             </template>
                                         </a-select>
@@ -208,7 +207,7 @@
                                                                 </span>
                                                                 <span :title="__('default.purchase_type')"
                                                                       class="badge badge-success"
-                                                                      v-else>
+                                                                      v-else-if="product.product.purchase_type === '$'">
                                                                     ({{ $currency_symbol }}) Direct Price
                                                                 </span>
                                                             </p>
@@ -219,7 +218,7 @@
                                                     <a-input-number
                                                         v-if="product.product.purchase_type === '%'"
                                                         :class="product.stock_id ? 'readonly' : ''"
-                                                        :tabindex="product.stock_id ? '-1' : ''"
+                                                        :tabindex="product.stock_id ? -1 : 0"
                                                         v-model:value="product.mrp"
                                                         :prefix="$currency_symbol"
                                                         type="number"
@@ -242,7 +241,7 @@
                                                     <div>
                                                         <a-input-number
                                                             :class="product.stock_id ? 'readonly' : ''"
-                                                            :tabindex="product.stock_id ? '-1' : ''"
+                                                            :tabindex="product.stock_id ? -1 : 0"
                                                             v-model:value="product.unit_price"
                                                             :prefix="$currency_symbol"
                                                             type="number"
@@ -258,7 +257,7 @@
                                                         <a-input-number
                                                             v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
-                                                            :tabindex="product.stock_id ? '-1' : ''"
+                                                            :tabindex="product.stock_id ? -1 : 0"
                                                             v-model:value="product.unit_percentage"
                                                             :prefix="'%'"
                                                             type="number"
@@ -283,7 +282,7 @@
                                                     <div>
                                                         <a-input-number
                                                             :class="product.stock_id ? 'readonly' : ''"
-                                                            :tabindex="product.stock_id ? '-1' : ''"
+                                                            :tabindex="product.stock_id ? -1 : 0"
                                                             v-model:value="product.sale_price"
                                                             :prefix="$currency_symbol"
                                                             min="0"
@@ -298,7 +297,7 @@
                                                         <a-input-number
                                                             v-if="product.product.purchase_type === '%'"
                                                             :class="product.stock_id ? 'readonly' : ''"
-                                                            :tabindex="product.stock_id ? '-1' : ''"
+                                                            :tabindex="product.stock_id ? -1 : 0"
                                                             v-model:value="product.sale_percentage"
                                                             :prefix="'%'"
                                                             min="0"
@@ -596,9 +595,12 @@
 
         <a-modal v-model:open="productFormState.editMode"
                  width="1000px"
+                 :closable="false"
+                 :maskClosable="false"
+                 :keyboard="false"
                  :ok-button-props="{ hidden: true }"
                  :cancel-button-props="{ hidden: true }"
-                 :title="__('default.edit_product')">
+                 :title="__('default.please_select_purchase_type')">
             <hr>
             <div class="row">
                 <div class="col-sm-6 mx-auto">
@@ -623,7 +625,7 @@
                                 <span class="badge badge-info" v-if="productFormState.formData.purchase_type === '%'">
                                     ({{ productFormState.formData.purchase_type }}) Percentage
                                 </span>
-                                <span class="badge badge-success" v-else>
+                                <span class="badge badge-success" v-else-if="productFormState.formData.purchase_type === '$'">
                                     ({{ $currency_symbol }}) Direct Price
                                 </span>
 
@@ -643,7 +645,7 @@
                 </div>
             </div>
             <template #footer>
-                <a-button type="primary" danger style="margin-right: 8px" @click="productFormState.editMode = false">
+                <a-button type="primary" v-if="productFormState.purchase_type" danger style="margin-right: 8px" @click="productFormState.editMode = false">
                     <i class="mdi mdi-window-close"></i> {{ __('default.close') }}
                 </a-button>
                 <a-button v-if="productFormState.loading" type="primary" style="margin-right: 8px" loading>
@@ -790,6 +792,7 @@ export default {
         showProductEditForm(product){
             this.productFormState.loading = false;
             this.productFormState.editMode = true;
+            this.productFormState.purchase_type = product.purchase_type;
             this.productFormState.formData = product;
         },
         async updateProduct(){
@@ -808,7 +811,7 @@ export default {
                 .catch(err => {
                     if (err.response.status === 422) {
                         this.$showErrorMessage(err.response.data.message, this.$notification_position, this.$notification_sound)
-                        this.formState.validation = err.response.data.errors
+                        this.productFormState.validation = err.response.data.errors
                         this.productFormState.loading = false;
                     } else {
                         this.$showErrorMessage(err, this.$notification_position, this.$notification_sound)
@@ -865,7 +868,7 @@ export default {
                             value: item.id,
                             icon: `${item.product_photo ? item.product_photo?.full_url : '/images/medicine.png'}`,
                             company: item.company.name,
-                            category: item.category.name,
+                            category: item.category?.name,
                             unit: item.unit?.name ? item.unit?.name + `(${item.unit.pack_size})` : item.unit.pack_size,
                             purchase_type: item.purchase_type,
                             stocks: item.stocks
@@ -906,7 +909,7 @@ export default {
                 stocks: selectedProduct.stocks,
                 purchase_type: selectedProduct.purchase_type
             };
-
+            this.showProductEditForm(productInfo);
             if (productInfo.stocks.length > 0){
 
                 this.formState.selectedProduct = productInfo;

@@ -358,4 +358,5 @@ return [
     'no' => 'না',
     'add_bulk' => 'বাল্ক যোগ করুন',
     'product_already_exist' => 'প্রোডাক্ট  ইতিমধ্যে বিদ্যমান',
+    'please_select_purchase_type' => 'ক্রয় ধরণ নির্বাচন করুন.',
 ];

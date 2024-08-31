@@ -360,4 +360,6 @@ return [
     'total_opening_stock_qty' => 'Total opening stock quantity',
     'opening_stock_quantity' => 'Opening stock quantity',
     'product_already_exist' => 'Product Already exist',
+
+    'please_select_purchase_type' => 'Please select purchase type.',
 ];
