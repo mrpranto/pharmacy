@@ -19,13 +19,20 @@
                 <dd class="col-sm-9"> {{ show.product.barcode }}</dd>
 
                 <dt class="col-sm-3">{{ __('default.category') }}</dt>
-                <dd class="col-sm-9"> {{ show.product.category.name }}</dd>
+                <dd class="col-sm-9"> {{ show.product.category?.name }}</dd>
 
                 <dt class="col-sm-3">{{ __('default.company') }}</dt>
                 <dd class="col-sm-9"> {{ show.product.company.name }}</dd>
 
                 <dt class="col-sm-3">{{ __('default.unit') }}</dt>
-                <dd class="col-sm-9"> {{ show.product.unit.name }} ({{ show.product.unit.pack_size }})</dd>
+                <dd class="col-sm-9">
+                    <template v-if="show.product.unit?.name">
+                        {{ show.product.unit?.name }} ({{ show.product.unit.pack_size }})
+                    </template>
+                    <template v-else>
+                        {{ show.product.unit.pack_size }}
+                    </template>
+                </dd>
 
                 <dt class="col-sm-3">{{ __('default.description') }}</dt>
                 <dd class="col-sm-9"> {{ show.product.description }}</dd>
@@ -35,9 +42,10 @@
                     <template v-if="show.product.purchase_type == '%'">
                         <span class="badge badge-info">%</span> Percentage
                     </template>
-                    <template v-else>
+                    <template v-else-if="show.product.purchase_type == '$'">
                         <span class="badge badge-success">{{ $currency_symbol }}</span> Direct Price
                     </template>
+
                 </dd>
 
                 <dt class="col-sm-3">{{ __('default.status') }}</dt>
@@ -106,6 +114,7 @@
                                     :width="35"
                                     :height="35"
                                     :src="show.product.created_by?.profile_picture?.full_url"
+                                    fallback="/images/avatar.png"
                                     class="img-sm rounded-circle"
                                     :alt="show.product.created_by?.name"
                                 />
@@ -142,6 +151,7 @@
                                     :width="35"
                                     :height="35"
                                     :src="show.product.updated_by?.profile_picture?.full_url"
+                                    fallback="/images/avatar.png"
                                     class="img-sm rounded-circle"
                                     :alt="show.product.updated_by?.name"
                                 />

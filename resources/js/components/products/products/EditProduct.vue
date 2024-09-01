@@ -45,6 +45,7 @@
                             show-search
                             :placeholder="__('default.company')"
                             :options="formState.dependencies.companies"
+                            :field-names="{ label: 'label', value: 'value' }"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
                         <a-tooltip :title="__('default.add_new_company')" placement="leftBottom">
@@ -65,6 +66,7 @@
                             show-search
                             :placeholder="__('default.unit')"
                             :options="formState.dependencies.units"
+                            :field-names="{ label: 'label', value: 'value' }"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
                         <a-tooltip :title="__('default.add_new_unit')" placement="leftBottom">
@@ -86,6 +88,7 @@
                             show-search
                             :placeholder="__('default.category')"
                             :options="formState.dependencies.categories"
+                            :field-names="{ label: 'label', value: 'value' }"
                             :filter-option="$parent.selectFilterOption"
                         ></a-select>
                         <a-tooltip :title="__('default.add_new_category')" placement="leftBottom">
