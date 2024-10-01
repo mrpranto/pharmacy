@@ -69,3 +69,18 @@ body:hover::-webkit-scrollbar-thumb {
     background-color: #dbe3f3;padding: 8px 16px 0;border-radius: 5px
 }
 
+.logo-design{
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .5s ease;
+    font-weight: 900;
+    font-size: 25px;
+    letter-spacing: -1px;
+    color: #031a61;
+}
+
+.logo-design span{
+    color: #727cf5;
+    font-weight: 300;
+}
+

@@ -13,8 +13,12 @@
                             <h5 class="mb-2 text-muted">{{ __('default.supplier') }} : {{
                                     show.purchase.supplier.name
                                 }}</h5>
-                            <p>{{ __('default.phone_number') }} : {{ show.purchase.supplier.phone_number }},
-                                {{ __('default.email') }} : {{ show.purchase.supplier.email }}</p>
+                            <p>
+                                {{ __('default.phone_number') }} : {{ show.purchase.supplier.phone_number }},
+                                <template v-if="show.purchase.supplier.email">
+                                    {{ __('default.email') }} : {{ show.purchase.supplier.email }}
+                                </template>
+                            </p>
                             <p>{{ show.purchase.supplier.address }}</p>
                         </div>
                         <div class="col-lg-6 pr-0">
@@ -71,8 +75,13 @@
                                                 <p class="font-weight-bolder text-capital">
                                                     {{ purchase_product.product.name }}
                                                     <small class="text-muted" :title="__('default.unit')">
-                                                        {{ purchase_product.product.unit.name }}
-                                                        ({{ purchase_product.product.unit.pack_size }})
+                                                        <template v-if="purchase_product.product.unit?.name">
+                                                            {{ purchase_product.product.unit.name }}
+                                                            ({{ purchase_product.product.unit.pack_size }})
+                                                        </template>
+                                                        <template v-else>
+                                                            {{ purchase_product.product.unit.pack_size }}
+                                                        </template>
                                                     </small>
                                                 </p>
                                                 <p class="text-muted tx-13"><b>{{
@@ -83,7 +92,7 @@
                                                                         purchase_product.product.company.name
                                                                     }}</span>,
                                                     <span :title="__('default.category')">{{
-                                                            purchase_product.product.category.name
+                                                            purchase_product.product.category?.name
                                                         }}</span>,
                                                     <span :title="__('default.purchase_type')">
                                                         {{ purchase_product.product.purchase_type === '%' ? '(%) Percentage' : `(${$currency_symbol}) Direct Price` }}

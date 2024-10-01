@@ -52,12 +52,23 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="container-fluid mt-3 d-flex justify-content-between">
+                                <div class="col-lg-12 text-center">
+                                    <span class="logo-design">
+                                        Chief <span>Drug</span>
+                                    </span>
+                                    <p>{{ app_information('mobile') }} <br> {{ app_information('address') }}</p>
+                                </div>
+                            </div>
+                            <div class="container-fluid mt-3 d-flex justify-content-between">
                                 <div class="col-lg-6 pl-0">
                                     <h5 class="mb-2 text-muted">{{ __('default.supplier') }} : {{
                                     $purchase->supplier['name']
                                 }}</h5>
-                                    <p>{{ __('default.phone_number') }} : {{ $purchase->supplier['phone_number'] }},
-                                        {{ __('default.email') }} : {{ $purchase->supplier['email'] }}</p>
+                                    <p>{{ __('default.phone_number') }} : {{ $purchase->supplier['phone_number'] }}
+                                        @if($purchase->supplier['email'])
+                                            ,
+                                            {{ __('default.email') }} : {{ $purchase->supplier['email'] }}</p>
+                                        @endif
                                     <p>{{ $purchase->supplier['address'] }}</p>
                                 </div>
                                 <div class="col-lg-6 pr-0">
@@ -123,7 +134,7 @@
                                                             </p>
                                                             <p class="text-muted tx-13">
                                                                 <span title="{{__('default.company')}}">{{ $purchase_products['product']['company']['name'] }}</span>,
-                                                                <span title="{{__('default.category')}}">{{ $purchase_products['product']['category']['name'] }}</span>
+                                                                <span title="{{__('default.category')}}">{{ isset($purchase_products['product']['category']['name']) ? $purchase_products['product']['category']['name'] : '' }}</span>
                                                             </p>
                                                         </div>
                                                     </div>

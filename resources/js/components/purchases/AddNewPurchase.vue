@@ -909,7 +909,7 @@ export default {
                 stocks: selectedProduct.stocks,
                 purchase_type: selectedProduct.purchase_type
             };
-            this.showProductEditForm(productInfo);
+
             if (productInfo.stocks.length > 0){
 
                 this.formState.selectedProduct = productInfo;
@@ -929,6 +929,7 @@ export default {
                     })
                     message.success(isExistProduct.product.name + ' already added in list.');
                 } else {
+                    this.showProductEditForm(productInfo);
                     this.formState.formData.products.push({
                         product: productInfo,
                         stock_id: null,
