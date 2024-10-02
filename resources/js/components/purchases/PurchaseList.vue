@@ -35,10 +35,18 @@
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.received') }} {{ __('default.purchase') }}</p>
-                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.received.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.received.total_purchase }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.received.total_unit }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{__('default.quantity') }} : {{ options.received.total_quantity }}</span>
+                                <h4 class="mt-2 font-weight-light">{{
+                                        $showCurrency(options.received.total_amount ?? 0)
+                                    }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.total_purchase')
+                                    }} : {{ options.received.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.unit')
+                                    }} : {{ options.received.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.quantity')
+                                    }} : {{ options.received.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -54,10 +62,18 @@
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.pending') }} {{ __('default.purchase') }}</p>
-                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.pending.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.pending.total_purchase }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.pending.total_unit }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.pending.total_quantity }}</span>
+                                <h4 class="mt-2 font-weight-light">{{
+                                        $showCurrency(options.pending.total_amount ?? 0)
+                                    }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.total_purchase')
+                                    }} : {{ options.pending.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.unit')
+                                    }} : {{ options.pending.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.quantity')
+                                    }} : {{ options.pending.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -73,10 +89,18 @@
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.canceled') }} {{ __('default.purchase') }}</p>
-                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.canceled.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.canceled.total_purchase }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.canceled.total_unit }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.canceled.total_quantity }}</span>
+                                <h4 class="mt-2 font-weight-light">{{
+                                        $showCurrency(options.canceled.total_amount ?? 0)
+                                    }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.total_purchase')
+                                    }} : {{ options.canceled.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.unit')
+                                    }} : {{ options.canceled.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.quantity')
+                                    }} : {{ options.canceled.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -92,10 +116,18 @@
                             </div>
                             <div class="pl-4">
                                 <p>{{ __('default.total') }} {{ __('default.purchase') }}</p>
-                                <h4 class="mt-2 font-weight-light">{{ $showCurrency(options.all.total_amount ?? 0) }}</h4>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.total_purchase') }} : {{ options.all.total_purchase }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.unit') }} : {{ options.all.total_unit }}</span>
-                                <span class="badge badge-primary badge-pill m-1">{{ __('default.quantity') }} : {{ options.all.total_quantity }}</span>
+                                <h4 class="mt-2 font-weight-light">{{
+                                        $showCurrency(options.all.total_amount ?? 0)
+                                    }}</h4>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.total_purchase')
+                                    }} : {{ options.all.total_purchase }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.unit')
+                                    }} : {{ options.all.total_unit }}</span>
+                                <span class="badge badge-primary badge-pill m-1">{{
+                                        __('default.quantity')
+                                    }} : {{ options.all.total_quantity }}</span>
                             </div>
                         </div>
                     </div>
@@ -127,24 +159,40 @@
                         <dd class="col-sm-8">: {{ payment.purchase_info.reference }}</dd>
 
                         <dt class="col-sm-4 text-right">{{ __('default.invoice_date') }}</dt>
-                        <dd class="col-sm-8">: {{ $date_format(payment.purchase_info.date) }} </dd>
+                        <dd class="col-sm-8">: {{ $date_format(payment.purchase_info.date) }}</dd>
 
                         <dt class="col-sm-4 text-right">{{ __('default.supplier') }}</dt>
-                        <dd class="col-sm-8">: {{ payment.purchase_info.supplier.name }} <template v-if="payment.purchase_info.supplier.phone_number">({{ payment.purchase_info.supplier.phone_number }})</template></dd>
+                        <dd class="col-sm-8">: {{ payment.purchase_info.supplier.name }}
+                            <template v-if="payment.purchase_info.supplier.phone_number">
+                                ({{ payment.purchase_info.supplier.phone_number }})
+                            </template>
+                        </dd>
 
                         <dt class="col-sm-4 text-right">{{ __('default.status') }}</dt>
                         <dd class="col-sm-8">:
-                            <span v-if="payment.purchase_info.status === 'received'" class="badge badge-primary">{{ payment.purchase_info.status.toUpperCase() }}</span>
-                            <span v-else-if="payment.purchase_info.status === 'pending'" class="badge badge-warning">{{ payment.purchase_info.status.toUpperCase() }}</span>
-                            <span v-else-if="payment.purchase_info.status === 'canceled'" class="badge badge-danger">{{ payment.purchase_info.status.toUpperCase() }}</span>
+                            <span v-if="payment.purchase_info.status === 'received'"
+                                  class="badge badge-primary">{{ payment.purchase_info.status.toUpperCase() }}</span>
+                            <span v-else-if="payment.purchase_info.status === 'pending'"
+                                  class="badge badge-warning">{{ payment.purchase_info.status.toUpperCase() }}</span>
+                            <span v-else-if="payment.purchase_info.status === 'canceled'"
+                                  class="badge badge-danger">{{ payment.purchase_info.status.toUpperCase() }}</span>
                         </dd>
 
                         <dt class="col-sm-4 text-right">{{ __('default.payment_status') }}</dt>
                         <dd class="col-sm-8">:
-                            <span class="badge badge-danger" v-if="payment.purchase_info.payment_status === 'DUE'">{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
-                            <span class="badge badge-info" v-else-if="payment.purchase_info.payment_status === 'PARTIAL-PAID'">{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
-                            <span class="badge badge-warning" v-else-if="payment.purchase_info.payment_status === 'OVER-DUE'">{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
-                            <span class="badge badge-success" v-else>{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
+                            <span class="badge badge-danger" v-if="payment.purchase_info.payment_status === 'DUE'">{{
+                                    payment.purchase_info.payment_status.toUpperCase()
+                                }}</span>
+                            <span class="badge badge-info"
+                                  v-else-if="payment.purchase_info.payment_status === 'PARTIAL-PAID'">{{
+                                    payment.purchase_info.payment_status.toUpperCase()
+                                }}</span>
+                            <span class="badge badge-warning"
+                                  v-else-if="payment.purchase_info.payment_status === 'OVER-DUE'">{{
+                                    payment.purchase_info.payment_status.toUpperCase()
+                                }}</span>
+                            <span class="badge badge-success"
+                                  v-else>{{ payment.purchase_info.payment_status.toUpperCase() }}</span>
                         </dd>
 
                         <dt class="col-sm-4 text-right">{{ __('default.subtotal') }}</dt>
@@ -152,6 +200,12 @@
 
                         <dt class="col-sm-4 text-right"><span class="h4">{{ __('default.total') }}</span></dt>
                         <dd class="col-sm-8">: <b class="h4">{{ $showCurrency(payment.purchase_info.total) }}</b></dd>
+
+                        <dt class="col-sm-4 text-right"><span>{{ __('default.paid_amount') }}</span></dt>
+                        <dd class="col-sm-8">: <b>{{ $showCurrency(paidAmount(payment.purchase_info.payments)) }}</b></dd>
+
+                        <dt class="col-sm-4 text-right"><span>{{ __('default.due_amount') }}</span></dt>
+                        <dd class="col-sm-8">: <b>{{ $showCurrency(payment.purchase_info.total - paidAmount(payment.purchase_info.payments)) }}</b></dd>
                     </dl>
                 </div>
 
@@ -175,27 +229,59 @@
                         <tbody>
                         <tr v-for="(payment_data, payment_data_index) in payment.formData">
                             <td>
-                                <a-select v-model:value="payment_data.type"
-                                          @change="setPaymentType(payment_data_index, payment_data.type)"
-                                          :placeholder="__('default.payment_type')"
-                                          style="width: 100%;">
-                                    <a-select-option v-for="(type, type_index) in payment_type" :key="type_index" :value="type">{{ type }}</a-select-option>
-                                </a-select>
+                                <template v-if="!payment_data.id">
+                                    <a-select v-model:value="payment_data.type"
+                                              @change="setPaymentType(payment_data_index, payment_data.type)"
+                                              :placeholder="__('default.payment_type')"
+                                              style="width: 100%;">
+                                        <a-select-option v-for="(type, type_index) in payment_type" :key="type_index"
+                                                         :value="type">{{ type }}
+                                        </a-select-option>
+                                    </a-select>
+                                </template>
+                                <template v-else>
+                                    {{ payment_data.type }}
+                                </template>
+
                             </td>
                             <td>
-                                <a-input v-model:value="payment_data.paid_amount" class="text-right" type="number"/>
+                                <template v-if="!payment_data.id">
+                                    <a-input v-model:value="payment_data.paid_amount" class="text-right" type="number"/>
+                                </template>
+                                <template v-else>
+                                    <b>{{ payment_data.paid_amount }}</b>
+                                </template>
                             </td>
                             <td>
-                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.bank_name"/>
+                                <template v-if="!payment_data.id">
+                                    <a-input v-if="payment_data.hideAccountArea === false"
+                                             v-model:value="payment_data.bank_name"/>
+                                </template>
+                                <template v-else>
+                                    <b>{{ payment_data.bank_name }}</b>
+                                </template>
                             </td>
                             <td>
-                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.account_number"/>
+                                <template v-if="!payment_data.id">
+                                    <a-input v-if="payment_data.hideAccountArea === false"
+                                             v-model:value="payment_data.account_number"/>
+                                </template>
+                                <template v-else>
+                                    <b>{{ payment_data.account_number }}</b>
+                                </template>
                             </td>
                             <td>
-                                <a-input v-if="payment_data.hideAccountArea === false" v-model:value="payment_data.transaction_number"/>
+                                <template v-if="!payment_data.id">
+                                    <a-input v-if="payment_data.hideAccountArea === false"
+                                             v-model:value="payment_data.transaction_number"/>
+                                </template>
+                                <template v-else>
+                                    <b>{{ payment_data.account_number }}</b>
+                                </template>
                             </td>
                             <td>
                                 <MinusCircleOutlined
+                                    v-if="!payment_data.id"
                                     @click.prevent="removePayment(payment_data_index)"
                                     class="cursor-pointer color-danger"
                                     :style="{fontSize: '20px'}"/>
@@ -204,12 +290,12 @@
                         </tbody>
                         <tfoot v-if="payment.formData.length">
                         <tr>
-                            <th>{{ __('default.total') }} : </th>
+                            <th>{{ __('default.total') }} :</th>
                             <th class="text-right">{{ $showCurrency(totalPaidAmount) }}</th>
                             <th colspan="4"></th>
                         </tr>
                         <tr>
-                            <th>{{ __('default.due') }} : </th>
+                            <th>{{ __('default.due') }} :</th>
                             <th class="text-right">{{ $showCurrency(totalDue) }}</th>
                             <th colspan="4"></th>
                         </tr>
@@ -355,7 +441,7 @@ export default {
                                 return `<span class="badge badge-danger" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             } else if (payment_status === 'PARTIAL-PAID') {
                                 return `<span class="badge badge-info" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
-                            }  else if (payment_status === 'OVER-DUE') {
+                            } else if (payment_status === 'OVER-DUE') {
                                 return `<span class="badge badge-warning" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
                             } else {
                                 return `<span class="badge badge-success" title="${this.$showCurrency(row.total_paid)}">${payment_status}</span>`;
@@ -435,8 +521,8 @@ export default {
                 purchase_info: {},
                 totalPaid: 0,
                 paymentStatus: null,
-                formData:[],
-                validation:{}
+                formData: [],
+                validation: {}
             }
         }
     },
@@ -464,28 +550,37 @@ export default {
         totalPaidAmount() {
             let totalPaidAmount = 0;
             this.payment.formData.forEach(item => {
-                const paidAmount = item.paid_amount === null ? 0 : parseFloat(item.paid_amount);
+                const paidAmount = item.paid_amount === null || item.paid_amount === ''  ? 0 : parseFloat(item.paid_amount);
                 totalPaidAmount += paidAmount;
             });
 
             this.payment.totalPaid = parseFloat(totalPaidAmount.toFixed(2));
 
-            if (this.payment.purchase_info.total === this.payment.totalPaid){
+            if (this.payment.purchase_info.total === this.payment.totalPaid) {
                 this.payment.paymentStatus = 'PAID';
-            }else if (this.payment.totalPaid !== 0.00 && this.payment.purchase_info.total > this.payment.totalPaid) {
+            } else if (this.payment.totalPaid !== 0.00 && this.payment.purchase_info.total > this.payment.totalPaid) {
                 this.payment.paymentStatus = 'PARTIAL-PAID';
-            }else if (this.payment.purchase_info.total < this.payment.totalPaid) {
+            } else if (this.payment.purchase_info.total < this.payment.totalPaid) {
                 this.payment.paymentStatus = 'OVER-DUE';
-            }else {
+            } else {
                 this.payment.paymentStatus = 'DUE';
             }
-            return isNaN(this.payment.totalPaid) ? 0 : this.payment.totalPaid;
+
+            return isNaN(this.payment.totalPaid) ? totalPaidAmount : this.payment.totalPaid;
         },
-        totalDue(){
+        totalDue() {
             return (this.payment.purchase_info.total - this.totalPaidAmount)
         }
     },
     methods: {
+        paidAmount(paymentData){
+            let totalPaidAmount = 0;
+            paymentData.forEach(item => {
+                const paidAmount = item.paid_amount === null || item.paid_amount === ''  ? 0 : parseFloat(item.paid_amount);
+                totalPaidAmount += paidAmount;
+            });
+            return totalPaidAmount;
+        },
         async getData(url) {
             this.options.loader = true;
             this.options.responseData = [];
@@ -578,7 +673,7 @@ export default {
                     this.$showErrorMessage(err.data.error, this.$notification_position, this.$notification_sound)
                 })
         },
-        showAddPaymentForm(id, row){
+        showAddPaymentForm(id, row) {
             this.payment.open = true;
             this.payment.current_id = id;
             this.payment.purchase_info = row;
@@ -595,7 +690,7 @@ export default {
                 return newItem
             })
         },
-        addNewPayment(){
+        addNewPayment() {
             this.payment.formData.push({
                 paid_amount: null,
                 type: null,
@@ -605,26 +700,35 @@ export default {
                 hideAccountArea: false
             })
         },
-        removePayment(key){
+        removePayment(key) {
             message.warning('Payment information remove successful.');
             this.payment.formData.splice(key, 1);
         },
         setPaymentType(key, value) {
             const payment = this.payment.formData[key];
             const existHasThisPaymentType = this.payment.formData.filter(item => item.type === value);
+            const hasPayment = this.payment.formData.find(item => item.type === value);
             const paymentType = payment.type;
-            if (existHasThisPaymentType.length > 1){
-                message.error('Already added this payment type.');
-                this.payment.formData[key].type = null
-            }else {
+            if (hasPayment.id) {
                 if (paymentType === 'CASH') {
                     payment.hideAccountArea = true
-                }else {
+                } else {
                     payment.hideAccountArea = false
+                }
+            } else {
+                if (existHasThisPaymentType.length > 1) {
+                    message.error('Already added this payment type.');
+                    this.payment.formData[key].type = null
+                } else {
+                    if (paymentType === 'CASH') {
+                        payment.hideAccountArea = true
+                    } else {
+                        payment.hideAccountArea = false
+                    }
                 }
             }
         },
-        async savePayment(){
+        async savePayment() {
             this.payment.loader = true
             await axios.post('/purchase-payment', this.payment)
                 .then(response => {
@@ -634,7 +738,7 @@ export default {
                         this.payment.open = false;
                         this.payment.loader = true;
                         this.getData()
-                    }else {
+                    } else {
                         this.$showErrorMessage(response.data.error, this.$notification_position, this.$notification_sound);
                         this.payment.validation = {};
                     }
