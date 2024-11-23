@@ -360,4 +360,5 @@ return [
     'product_already_exist' => 'প্রোডাক্ট  ইতিমধ্যে বিদ্যমান',
     'please_select_purchase_type' => 'ক্রয় ধরণ নির্বাচন করুন.',
     'cant_delete_foreign_key' => 'আপনি রিলেশনাল ডেটা মুছতে পারবেন না, এই ডেটা অন্য টেবিলে ব্যবহার করা হয়েছে ।',
+    'is_supplier' => 'সরবরাহকারী?'
 ];

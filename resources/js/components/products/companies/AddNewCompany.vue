@@ -48,6 +48,9 @@
                 <a-form-item :label="__('default.status')">
                     <a-switch v-model:checked="formState.formData.status" />
                 </a-form-item>
+                <a-form-item :label="__('default.is_supplier')">
+                    <a-switch v-model:checked="formState.formData.as_supplier" />
+                </a-form-item>
 
             </a-form>
             <template #footer>
@@ -92,6 +95,7 @@ export default {
                         this.formState.formData.phone_number = ''
                         this.formState.formData.description = ''
                         this.formState.formData.status = true
+                        this.formState.formData.as_supplier = true
                         this.$parent.getData()
                         this.$parent.onClose()
                         this.$showSuccessMessage(response.data.success, this.$notification_position, this.$notification_sound)

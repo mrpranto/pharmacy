@@ -108,6 +108,7 @@ export default {
                     phone_number: '',
                     description: '',
                     status: true,
+                    as_supplier: true,
                 },
                 validation: {},
                 layout: {
@@ -249,6 +250,7 @@ export default {
                 phone_number: '',
                 description: '',
                 status: true,
+                as_supplier: true,
             }
             this.formState.validation = {};
             this.formState.openCreate = true;

@@ -2,10 +2,12 @@
 
 namespace App\Services\Product\Companies;
 
+use App\Models\People\Supplier;
 use App\Models\Product\Company;
 use App\Services\BaseServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -69,7 +71,8 @@ class CompaniesServices extends BaseServices
             'email' => 'nullable|email|unique:companies,email',
             'phone_number' => 'nullable|unique:companies,phone_number',
             'description' => 'nullable',
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
+            'as_supplier' => 'boolean',
         ]);
 
         return $this;
@@ -81,7 +84,10 @@ class CompaniesServices extends BaseServices
      */
     public function store($request): JsonResponse
     {
+
         try {
+            DB::beginTransaction();
+
             $this->model->fill([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -89,6 +95,15 @@ class CompaniesServices extends BaseServices
                 'description' => $request->description,
                 'status' => $request->status,
             ])->save();
+
+            if ($request->filled('as_supplier') && $request->as_supplier) {
+                (new Supplier())->fill([
+                    'name' => $request->name,
+                    'companies' => json_encode([])
+                ])->save();
+            }
+
+            DB::commit();
 
             return response()->json(['success' => __t('company_create')]);
 
